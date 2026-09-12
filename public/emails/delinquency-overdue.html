@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A payment is overdue</title>
+<!--
+  WBS, Notifications -> "Receive delinquency notifications" (Borrower):
+  "Borrower shall receive notifications about overdue payments, late fees,
+  default status and loan acceleration." Comment: "Notification timing follows
+  OPA business rules. Not configurable."
+
+  ONE STORY, THREE EMAILS, because the WBS's own rules are three different
+  moments with three different consequences (Manage Payments -> "Apply late
+  payment fees"):
+    day 16   a late fee of $5.00 or 5%% of the instalment, whichever is LESS,
+             and only one fee per missed payment
+    day 90   default; the full past due balance within 30 days or the loan is
+             accelerated
+    day 120  acceleration; the whole remaining balance, interest and fees
+             included, within 30 days of the notice of default. The APR stays
+             at 1%%.
+  Sending one email for all three would either overstate day 16 or understate
+  day 120.
+
+  Standalone HTML rather than a component because an email is not rendered by a
+  browser engine we control (Outlook uses Word's), so it is built the way email
+  has to be built: tables, inline styles, no external CSS, no flexbox, no web
+  fonts, no images.
+
+  MERGE FIELDS for Dev:
+    {{firstName}}    the recipient's first name
+    {{pastDue}}      what is late, fee included
+    {{lateFee}}      the fee applied
+    {{daysLate}}     how many days past the due date
+    {{paymentsUrl}}  deep link to the payments page
+
+  Colours are the product's own (src/theme/tokens.ts): primary #2456E6,
+  ink #141A25, border #E4E8EF. Repeated here because an email cannot import.
+-->
+</head>
+<body style="margin:0;padding:0;background-color:#F5F7FA;">
+
+<!-- Preheader: the grey line inboxes show next to the subject. Hidden in the
+     body itself, so it never appears twice. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+  {{pastDue}} is past due.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-color:#F5F7FA;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;background-color:#FFFFFF;border:1px solid #E4E8EF;border-radius:12px;">
+
+        <!-- Wordmark. Type, not an image: images are blocked by default in
+             most clients, and a logo that does not load is a broken email. -->
+        <tr>
+          <td style="padding:32px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:18px;font-weight:700;letter-spacing:0.02em;color:#141A25;">
+            OPA
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:24px;line-height:32px;font-weight:600;color:#141A25;">
+            A payment is overdue
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:12px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#5A6473;">
+            Hello {{firstName}},<br><br>A scheduled payment has not reached us. A late fee has been applied under the terms of your loan agreement.
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                   style="background-color:#FFF7E6;border-radius:10px;">
+              <tr>
+                <td style="padding:20px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#5A6473;">
+                  <strong style="color:#141A25;font-size:15px;">Where the account stands</strong><br><br>
+                  Past due: <strong style='color:#141A25;'>{{pastDue}}</strong><br>Late fee applied: {{lateFee}}<br>Days past due: {{daysLate}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Bulletproof button: a table cell with a background, not a styled
+             link. Outlook ignores padding and background on <a>. -->
+        <tr>
+          <td style="padding:28px 32px 0 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center" bgcolor="#2456E6" style="border-radius:8px;">
+                  <a href="{{paymentsUrl}}"
+                     style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:8px;">
+                    Make a payment
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- The same link as text. Some clients strip buttons, some readers
+             will not press one, and a link nobody can copy is a dead end. -->
+        <tr>
+          <td style="padding:20px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            If the button doesn't work, paste this into your browser:<br>
+            <span style="color:#2456E6;word-break:break-all;">{{paymentsUrl}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td style="border-top:1px solid #E4E8EF;font-size:0;line-height:0;">&nbsp;</td></tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 32px 32px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            A late fee is charged on the 16th day after a due date and is $5.00 or 5% of the missed instalment, whichever is less. Only one fee is charged per missed payment.<br>Questions? Call <span style="color:#141A25;">(800) 555-0142</span> or write to <span style="color:#141A25;">support@opa.example</span>.
+          </td>
+        </tr>
+
+      </table>
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;">
+        <tr>
+          <td align="center" style="padding:20px 16px 0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#8A94A6;">
+            One Percent for America &middot; 1200 Wilshire Blvd, Suite 400, Los Angeles, CA 90017
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

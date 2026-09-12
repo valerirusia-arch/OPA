@@ -1,0 +1,33 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*storybook.log
+storybook-static
+
+# impeccable ships a 12MB per-platform native binary (x2, one per harness).
+# Do not commit it: it is downloaded on first run and only works on the arch
+# it was built for.
+**/skills/impeccable/scripts/bin/
+.impeccable/config.local.json

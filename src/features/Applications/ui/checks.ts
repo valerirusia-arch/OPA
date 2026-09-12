@@ -1,0 +1,61 @@
+// src/features/Applications/ui/checks.ts
+//
+// The checks and their names. Separate from CheckTags so that file exports
+// components only — the repo's fast-refresh rule, and a good one: a constant
+// living next to a component is a constant that gets re-created on every edit.
+
+import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
+import type { CheckKey } from "./types";
+
+/**
+ * The order the WBS runs them in, which is the order they are shown.
+ *
+ * Identity before credit is a requirement, not a preference: "Identity
+ * verification is performed before initiating a credit inquiry to minimize
+ * external credit bureau costs."
+ */
+export const CHECK_KEYS: CheckKey[] = [
+  "identity",
+  "ofac",
+  "noLend",
+  "credit",
+  "income",
+  "rules",
+];
+
+/**
+ * Who answers each check, named on the row.
+ *
+ * NOT this epic's own text — it comes from **Integrations**, which names the
+ * providers one by one: "Integrate with Instant ID to Verify borrower identity
+ * / LexisNexis" and "Integrate with Equifax to retrieve credit report". The
+ * wireframe prints them under each check for the same reason the WBS lists
+ * them: an underwriter reading "Pass" needs to know who said so, and an
+ * "unavailable" is a named integration to chase rather than a mystery.
+ *
+ * OFAC has no provider of its own on purpose: "OFAC screening is performed as
+ * part of the identity verification process through the LexisNexis InstantID
+ * integration", so its source is the sanctions list it was matched against.
+ *
+ * The credit line carries the WBS's constraint rather than a vendor: "Internal
+ * scoring, business rules and decision logic are NOT exposed to the borrower",
+ * so a score on this page exists nowhere the applicant can reach it, and the
+ * person reading it should know that.
+ */
+export const checkProviderKeys: Record<CheckKey, TranslationKey> = {
+  identity: "check.viaInstantId",
+  ofac: "check.viaSanctions",
+  noLend: "check.viaNoLendList",
+  credit: "check.viaEquifax",
+  income: "check.viaOcr",
+  rules: "check.viaRules",
+};
+
+export const checkLabelKeys: Record<CheckKey, TranslationKey> = {
+  identity: "check.identity",
+  ofac: "check.ofac",
+  noLend: "check.noLend",
+  credit: "check.credit",
+  income: "check.income",
+  rules: "check.rules",
+};

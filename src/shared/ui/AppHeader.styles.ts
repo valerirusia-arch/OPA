@@ -1,0 +1,121 @@
+// src/shared/ui/AppHeader.styles.ts
+
+import type { CSSProperties } from "react";
+import type { GlobalToken, ThemeConfig } from "antd";
+import { brand } from "../../theme/tokens";
+
+/** What the top bar's contents keep off each edge of the window. */
+export const HEADER_INSET = 32;
+/** ...and on a phone, where 32 each side is a sixth of the screen. */
+export const HEADER_INSET_COMPACT = 16;
+
+/**
+ * The bar's height. Shared so a page that wants to fill what is left of the
+ * window can subtract it instead of guessing — the back office's own header is
+ * the same height, so one number covers both shells.
+ */
+export const HEADER_HEIGHT = 64;
+
+export const logoMark: CSSProperties = { width: 32, height: 32, borderRadius: 8 };
+/** Transparent, or the nav paints an opaque strip over the bar's own blur. */
+export const navMenu: CSSProperties = {
+  flex: 1,
+  minWidth: 0,
+  borderBottom: "none",
+  background: "transparent",
+};
+
+/**
+ * The top bar's own menu spacing.
+ *
+ * The global Menu tokens are tuned for the back-office RAIL, where rows sit
+ * one above the other and 8px of side padding is right. Laid out in a line
+ * those same 8s leave the links 16px apart, which reads as one long word.
+ * 12 each side puts 24px between them — scoped here, so the rail is untouched.
+ */
+export const navTheme: ThemeConfig = {
+  components: {
+    Menu: {
+      itemPaddingInline: 12,
+      /**
+       * The active link's underline is drawn on the BOTTOM of its menu item,
+       * so the item has to be as tall as the bar for the underline to land on
+       * the bar's own edge. At antd's default 46px it floats in mid-air a few
+       * pixels above the border, reading as a stray rule rather than as the
+       * tab it is. Matching the bar's height sits it directly on the border.
+       */
+      horizontalLineHeight: `${HEADER_HEIGHT}px`,
+      itemMarginBlock: 0,
+    },
+  },
+};
+/**
+ * How far to pull the unread count in from the button's corner.
+ *
+ * Measured, not guessed: the header's bell is a 48px button around a ~16px
+ * glyph, so antd's default corner lands the count 24px out from the centre on
+ * both axes — a good 16px clear of anything drawn, which is why it read as a
+ * red dot floating in the header. 14 back along each axis puts it on the
+ * bell's own top-right corner.
+ */
+export const badgeOffset: [number, number] = [-14, 14];
+
+/**
+ * The notification panel supplies its own padding, row by row, because a row
+ * has to run to the panel's edges to be pressable across its whole width.
+ */
+export const popoverBody: CSSProperties = { padding: 0 };
+
+export const userButton: CSSProperties = { height: 40, paddingInline: 8 };
+
+export const getStyles = (token: GlobalToken, compact = false) =>
+  ({
+    /** Fixed: the menu beside it is the one that gives way. */
+    account: { flex: "none" },
+    logoPlaceholder: {
+      ...logoMark,
+      background: token.colorFillSecondary,
+    },
+    /** Full-bleed bar: the background and rule run edge to edge... */
+    header: {
+      position: "sticky",
+      top: 0,
+      zIndex: 10,
+      display: "flex",
+      alignItems: "center",
+      height: HEADER_HEIGHT,
+      /**
+       * Translucent, with what shows through blurred.
+       *
+       * Pinned and opaque, the bar is a lid: text scrolls up to it and
+       * vanishes at a hard line. Frosted, the page visibly continues under it
+       * — you can see that something is up there — while the blur keeps the
+       * nav readable over whatever happens to be passing beneath.
+       *
+       * The colour still falls back to white where backdrop-filter is not
+       * supported; the bar just loses the blur, not its legibility.
+       */
+      background: brand.headerVeil,
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      borderBottom: `1px solid ${token.colorBorderSecondary}`,
+    },
+    /**
+     * The bar's CONTENTS keep a fixed inset off each edge rather than sitting
+     * on the page's centred content column.
+     *
+     * The bar is chrome, not content: the logo belongs near the corner it
+     * anchors and the account menu near the opposite one, the way a browser's
+     * own toolbar sits. Pinned to the 1216px column instead, both drift
+     * inwards on a wide screen and the bar reads as a card that forgot its
+     * edges. Only this header does this — the page below it stays on the grid.
+     */
+    inner: {
+      width: "100%",
+      paddingInline: compact ? HEADER_INSET_COMPACT : HEADER_INSET,
+      boxSizing: "border-box",
+      display: "flex",
+      alignItems: "center",
+      gap: compact ? token.padding : token.paddingLG,
+    },
+  }) satisfies Record<string, CSSProperties>;

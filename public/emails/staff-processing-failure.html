@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An application is stuck after a technical failure</title>
+<!--
+  WBS, Notifications -> "Notify OPA Staff about application processing
+  failures" (System): "The system shall notify OPA Staff when a technical
+  failure prevents an application from progressing after the borrower account
+  has been created." Comment: "Notifications are triggered only for technical
+  failures occurring after account creation. OPA Staff uses the notification to
+  proactively contact the borrower and assist with completing the application."
+
+  SO THE POINT OF THIS EMAIL IS A PHONE CALL. The borrower cannot fix a failed
+  integration and has not been told anything is wrong; Loan Decisioning's own
+  note is that "the application shall remain in its current state, OPA Staff
+  shall be notified, and the borrower shall be able to resume the application
+  from the point where the failure occurred once the issue is resolved."
+  Everything in here is what somebody needs in order to make that call.
+
+  Standalone HTML rather than a component because an email is not rendered by a
+  browser engine we control (Outlook uses Word's), so it is built the way email
+  has to be built: tables, inline styles, no external CSS, no flexbox, no web
+  fonts, no images.
+
+  MERGE FIELDS for Dev:
+    {{reference}}    the application reference
+    {{borrowerName}} who to call
+    {{phone}}        their number
+    {{step}}         where it stopped
+    {{failedOn}}     when
+    {{recordUrl}}    deep link to the application record
+
+  Colours are the product's own (src/theme/tokens.ts): primary #2456E6,
+  ink #141A25, border #E4E8EF. Repeated here because an email cannot import.
+-->
+</head>
+<body style="margin:0;padding:0;background-color:#F5F7FA;">
+
+<!-- Preheader: the grey line inboxes show next to the subject. Hidden in the
+     body itself, so it never appears twice. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+  {{reference}} stopped at {{step}}.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-color:#F5F7FA;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;background-color:#FFFFFF;border:1px solid #E4E8EF;border-radius:12px;">
+
+        <!-- Wordmark. Type, not an image: images are blocked by default in
+             most clients, and a logo that does not load is a broken email. -->
+        <tr>
+          <td style="padding:32px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:18px;font-weight:700;letter-spacing:0.02em;color:#141A25;">
+            OPA
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:24px;line-height:32px;font-weight:600;color:#141A25;">
+            An application is stuck after a technical failure
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:12px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#5A6473;">
+            An application could not progress because of a technical failure. It has kept its state and the applicant can resume it once the issue is cleared — they have not been told anything is wrong.
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                   style="background-color:#FFF7E6;border-radius:10px;">
+              <tr>
+                <td style="padding:20px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#5A6473;">
+                  <strong style="color:#141A25;font-size:15px;">What stopped</strong><br><br>
+                  Reference: <strong style='color:#141A25;'>{{reference}}</strong><br>Applicant: {{borrowerName}} · {{phone}}<br>Stopped at: {{step}}<br>When: {{failedOn}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Bulletproof button: a table cell with a background, not a styled
+             link. Outlook ignores padding and background on <a>. -->
+        <tr>
+          <td style="padding:28px 32px 0 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center" bgcolor="#2456E6" style="border-radius:8px;">
+                  <a href="{{recordUrl}}"
+                     style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:8px;">
+                    Open the application
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- The same link as text. Some clients strip buttons, some readers
+             will not press one, and a link nobody can copy is a dead end. -->
+        <tr>
+          <td style="padding:20px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            If the button doesn't work, paste this into your browser:<br>
+            <span style="color:#2456E6;word-break:break-all;">{{recordUrl}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td style="border-top:1px solid #E4E8EF;font-size:0;line-height:0;">&nbsp;</td></tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 32px 32px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            Call the applicant once the failure is cleared. They kept their place and nothing they entered was lost.<br>Questions? Call <span style="color:#141A25;">(800) 555-0142</span> or write to <span style="color:#141A25;">support@opa.example</span>.
+          </td>
+        </tr>
+
+      </table>
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;">
+        <tr>
+          <td align="center" style="padding:20px 16px 0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#8A94A6;">
+            One Percent for America &middot; 1200 Wilshire Blvd, Suite 400, Los Angeles, CA 90017
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

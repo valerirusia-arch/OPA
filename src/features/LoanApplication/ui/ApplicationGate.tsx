@@ -1,0 +1,286 @@
+// src/features/LoanApplication/ui/ApplicationGate.tsx
+//
+// What a borrower is told when they open the Application tab: the invitation
+// to start one, or the reason they cannot, or where their application has got
+// to while Loan Decisioning runs.
+//
+// Seven states, from two epics:
+//
+//   Epic 3, "start a new loan application"
+//     open              — nothing in the way
+//     hasActive         — "One active application per borrower is assumed"
+//     notEligible       — "If the user is on the DO NOT lend list, the
+//                          applicant is not allowed to create a new
+//                          application"
+//   Epic 3, the co-borrower's half
+//     invited           — somebody has been asked onto an application and has
+//                          not started their part. It exists because the
+//                          invitation arrives by EMAIL and the site has to be
+//                          able to say the same thing: open the tab and you
+//                          are told whose application it is, that it is
+//                          yours to start, and the date it expires.
+//     assignedDone      — a co-borrower whose part is in. Story 4's "view the
+//                          current application status" is all that is left
+//                          for them to do with it. Only this one: being a
+//                          co-borrower is a relationship to an application,
+//                          not an account type, so with no application the
+//                          reader is an ordinary borrower on `open`.
+//   Epic 4, Loan Decisioning
+//     needsInfo         — an underwriter asked for something (story 12's door)
+//     coBorrowerNeeded  — "email is sent about requiring a co-borrower"
+//     checkPaused       — a check could not run; explicitly NOT a refusal
+//     stopped           — "unable to proceed, they receive a message to call
+//                          customer service"
+//
+// A component rather than seven blocks inside the screen, because six of them
+// are otherwise unreachable: the route renders one state and there is no way
+// to walk the app into the others. Here each is a story, and the whole set can
+// be judged side by side.
+//
+// Dumb: it takes a state and reports which button was pressed. It navigates
+// nowhere — ApplicationStartScreen does that.
+
+import { Button, Card, Result, theme } from "antd";
+import { useT } from "../../../shared/ui/i18n/useT";
+import { ApplicationMark } from "./ApplicationMark";
+import { InvitationMark } from "./InvitationMark";
+import { SubmittedMark } from "./SubmittedMark";
+import { getStyles, styles } from "./ApplicationGate.styles";
+
+/** Where a borrower's application has got to, as far as they need to know. */
+export type ApplicationGateState =
+  | "open"
+  | "invited"
+  | "assignedDone"
+  | "hasActive"
+  | "notEligible"
+  | "needsInfo"
+  | "coBorrowerNeeded"
+  | "checkPaused"
+  | "stopped";
+
+export type ApplicationGateProps = {
+  state?: ApplicationGateState;
+  onStart?: () => void;
+  /** The invited person's way into their own part of the application. */
+  onOpenInvitation?: () => void;
+  /** …and, once it is submitted, the way to where its status lives. */
+  onViewStatus?: () => void;
+  /**
+   * Who asked them, and when the invitation lapses. WBS: five calendar days
+   * from sending, and the status is tracked, so the date is stated rather
+   * than left to the email they may not have open.
+   */
+  invitation?: {
+    invitedBy: string;
+    invitee: string;
+    inviteeEmail: string;
+    expiresOn: string;
+  };
+  onResume?: () => void;
+  onContact?: () => void;
+  onSendInformation?: () => void;
+  onInviteCoBorrower?: () => void;
+  onProfile?: () => void;
+};
+
+export function ApplicationGate({
+  state = "open",
+  onStart,
+  onOpenInvitation,
+  onViewStatus,
+  invitation,
+  onResume,
+  onContact,
+  onSendInformation,
+  onInviteCoBorrower,
+  onProfile,
+}: ApplicationGateProps) {
+  const t = useT();
+  const { token } = theme.useToken();
+  const s = getStyles(token);
+
+  /**
+   * ONE SIZE FOR THE ARTWORK, whichever drawing a state uses.
+   *
+   * The three marks carry their own defaults — 140 for the application
+   * packet, 112 for the invitation and the submitted sheet — because each was
+   * sized for the page it was drawn for. Here they are alternatives in the
+   * SAME slot on the same card, so a state that happened to use one of the
+   * smaller two came out visibly lighter than its neighbours: same card, same
+   * words, smaller picture. The gate names the size and the defaults stay
+   * for the screens that own them.
+   */
+  const MARK = 140;
+
+  const content = {
+    /* EVERY STATE GETS THE DRAWING. Four of them used to be a 56px antd icon
+       in a grey avatar, so half the page's states looked like a different
+       product from the other half. The packet is the same packet in all of
+       them; what differs is the badge on it and the tint behind it, which is
+       exactly the difference between these states. */
+    open: {
+      icon: <ApplicationMark badge="add" />,
+      title: t("application.startTitle"),
+      subTitle: t("application.startSubtitle"),
+      action: (
+        <Button type="primary" size="large" onClick={onStart}>
+          {t("application.start")}
+        </Button>
+      ),
+    },
+    /*
+      INVITED, AND NOT STARTED. The invitation is an email, and an email is
+      easy to lose — so the site says the same thing the email said. Who it
+      belongs to, that it is theirs to do, and the deadline, which is the one
+      fact nobody can work out for themselves: "a co-borrower invitation
+      expires 5 calendar days after it is sent."
+    */
+    invited: {
+      icon: <InvitationMark size={MARK} />,
+      title: t("application.invitedTitle", { name: invitation?.invitedBy ?? "" }),
+      subTitle: t("application.invitedBody", { date: invitation?.expiresOn ?? "" }),
+      action: (
+        <Button type="primary" size="large" onClick={onOpenInvitation}>
+          {t("application.invitedAction")}
+        </Button>
+      ),
+    },
+    /* THEIR PART IS IN. Not the borrower's "you already have an application"
+       — that sentence is about a door being closed, and this one is about a
+       job being finished. The application carries on without them; what they
+       keep is the right to see where it has got to. */
+    assignedDone: {
+      icon: <SubmittedMark size={MARK} />,
+      title: t("application.assignedDoneTitle"),
+      subTitle: t("application.assignedDoneBody"),
+      action: (
+        <Button type="primary" size="large" onClick={onViewStatus}>
+          {t("application.assignedDoneAction")}
+        </Button>
+      ),
+    },
+    /*
+      THE BORROWER HAS JUST FINISHED ONE, and that is what this is.
+
+      It used to be drawn as a refusal — a waiting badge and "OPA takes one
+      application at a time" — which is the WBS rule ("If a user already has a
+      loan application, the new application should not be allowed") but not
+      what brought them here. Almost nobody arrives on this tab trying to open
+      a second application; they arrive having just sent the first one and
+      wanting to know what happens next. So it is the same sheet-with-a-tick
+      the confirmation screen uses, and the same news the co-borrower gets:
+      it is in, OPA has it, here is where to watch it. The one-at-a-time rule
+      is still said, in the sentence, where it belongs.
+    */
+    hasActive: {
+      icon: <SubmittedMark size={MARK} />,
+      title: t("application.blockedActiveTitle"),
+      subTitle: t("application.blockedActiveBody"),
+      action: (
+        <Button type="primary" size="large" onClick={onResume}>
+          {t("application.resume")}
+        </Button>
+      ),
+    },
+    notEligible: {
+      icon: <ApplicationMark badge="blocked" />,
+      title: t("application.blockedFlagTitle"),
+      subTitle: t("application.blockedFlagBody"),
+      action: (
+        <Button size="large" onClick={onContact}>
+          {t("nav.contact")}
+        </Button>
+      ),
+    },
+    needsInfo: {
+      icon: <ApplicationMark badge="more" />,
+      title: t("application.needsInfoTitle"),
+      subTitle: t("application.needsInfoBody"),
+      action: (
+        <Button type="primary" size="large" onClick={onSendInformation}>
+          {t("application.needsInfoAction")}
+        </Button>
+      ),
+    },
+    /*
+      THE SAME STATE, WORDED FOR WHAT HAS ACTUALLY HAPPENED.
+
+      "Your application needs a co-borrower — invite one" is true right up to
+      the moment one is invited, and then it is not: the WBS has the system
+      send the invitation itself when decisioning requires one, and the
+      borrower may have sent it in the wizard. Telling somebody to invite
+      a person they have already invited is the page failing to read its own
+      record. So when an invitation is out it says whose it is and when it
+      lapses — which is also what makes story 14's replace an informed choice
+      rather than a guess.
+    */
+    coBorrowerNeeded: invitation
+      ? {
+          icon: <InvitationMark size={MARK} />,
+          title: t("application.coBorrowerWaitingTitle"),
+          subTitle: t("application.coBorrowerWaitingBody", {
+            name: invitation.invitee,
+            date: invitation.expiresOn,
+          }),
+          action: (
+            <Button type="primary" size="large" onClick={onInviteCoBorrower}>
+              {t("coBorrowerStep.replace")}
+            </Button>
+          ),
+        }
+      : {
+          icon: <InvitationMark size={MARK} />,
+          title: t("application.coBorrowerNeededTitle"),
+          subTitle: t("application.coBorrowerNeededBody"),
+          action: (
+            <Button type="primary" size="large" onClick={onInviteCoBorrower}>
+              {t("application.coBorrowerNeededAction")}
+            </Button>
+          ),
+        },
+    /* A check did not answer. The WBS is explicit that this is not a refusal,
+       so the screen says so and offers nothing to do about it: there is
+       nothing the borrower can do, and a button that pretends otherwise would
+       be a lie. The way out goes somewhere else in the product. */
+    checkPaused: {
+      icon: <ApplicationMark badge="paused" />,
+      title: t("application.checkPausedTitle"),
+      subTitle: t("application.checkPausedBody"),
+      action: (
+        <Button size="large" onClick={onProfile}>
+          {t("application.checkPausedAction")}
+        </Button>
+      ),
+    },
+    /* WBS: "the user is unable to proceed, they receive a message to call
+       customer service." A phone number, not an explanation: the reason is a
+       sanctions screening, which is neither the borrower's to argue with on a
+       screen nor ours to publish on one. */
+    stopped: {
+      icon: <ApplicationMark badge="blocked" />,
+      title: t("application.stoppedTitle"),
+      subTitle: t("application.stoppedBody"),
+      action: (
+        <Button type="primary" size="large" href="tel:+18005550142">
+          {t("application.stoppedAction")}
+        </Button>
+      ),
+    },
+  }[state];
+
+  return (
+    <Card style={s.card}>
+      <Result
+        style={styles.result}
+        icon={content.icon}
+        title={content.title}
+        subTitle={content.subTitle}
+        styles={{ title: s.title, subTitle: s.subTitle, extra: s.extra }}
+        extra={content.action}
+      />
+    </Card>
+  );
+}
+
+export default ApplicationGate;

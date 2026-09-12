@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pago recibido</title>
+<!--
+  Ver la versión en inglés: WBS, Notifications -> "Receive payment
+  confirmation".
+
+  Standalone HTML rather than a component because an email is not rendered by a
+  browser engine we control (Outlook uses Word's), so it is built the way email
+  has to be built: tables, inline styles, no external CSS, no flexbox, no web
+  fonts, no images.
+
+  MERGE FIELDS for Dev:
+    {{firstName}}, {{amount}}, {{paidOn}}, {{cardLast4}}, {{reference}}, {{outstanding}}, {{paymentsUrl}}
+
+  Colours are the product's own (src/theme/tokens.ts): primary #2456E6,
+  ink #141A25, border #E4E8EF. Repeated here because an email cannot import.
+-->
+</head>
+<body style="margin:0;padding:0;background-color:#F5F7FA;">
+
+<!-- Preheader: the grey line inboxes show next to the subject. Hidden in the
+     body itself, so it never appears twice. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+  Se cobraron {{amount}} de tu tarjeta.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-color:#F5F7FA;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;background-color:#FFFFFF;border:1px solid #E4E8EF;border-radius:12px;">
+
+        <!-- Wordmark. Type, not an image: images are blocked by default in
+             most clients, and a logo that does not load is a broken email. -->
+        <tr>
+          <td style="padding:32px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:18px;font-weight:700;letter-spacing:0.02em;color:#141A25;">
+            OPA
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:24px;line-height:32px;font-weight:600;color:#141A25;">
+            Pago recibido
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:12px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#5A6473;">
+            Hola {{firstName}}:<br><br>Gracias, tu pago se completó.
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                   style="background-color:#F5F7FA;border-radius:10px;">
+              <tr>
+                <td style="padding:20px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#5A6473;">
+                  <strong style="color:#141A25;font-size:15px;">Este pago</strong><br><br>
+                  Importe: <strong style='color:#141A25;'>{{amount}}</strong><br>Fecha: {{paidOn}}<br>Desde: tarjeta terminada en {{cardLast4}}<br>Referencia: {{reference}}<br>Saldo restante: {{outstanding}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Bulletproof button: a table cell with a background, not a styled
+             link. Outlook ignores padding and background on <a>. -->
+        <tr>
+          <td style="padding:28px 32px 0 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center" bgcolor="#2456E6" style="border-radius:8px;">
+                  <a href="{{paymentsUrl}}"
+                     style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:8px;">
+                    Ver mis pagos
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- The same link as text. Some clients strip buttons, some readers
+             will not press one, and a link nobody can copy is a dead end. -->
+        <tr>
+          <td style="padding:20px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            Si el botón no funciona, pega esto en tu navegador:<br>
+            <span style="color:#2456E6;word-break:break-all;">{{paymentsUrl}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td style="border-top:1px solid #E4E8EF;font-size:0;line-height:0;">&nbsp;</td></tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 32px 32px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            ¿Dudas? Llama al <span style="color:#141A25;">(800) 555-0142</span> o escribe a <span style="color:#141A25;">support@opa.example</span>.
+          </td>
+        </tr>
+
+      </table>
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;">
+        <tr>
+          <td align="center" style="padding:20px 16px 0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#8A94A6;">
+            One Percent for America &middot; 1200 Wilshire Blvd, Suite 400, Los Angeles, CA 90017
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

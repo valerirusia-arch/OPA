@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A decision on your OPA application</title>
+<!--
+  WBS, Notifications -> "Receive Application declined notification"
+  (Borrower / Co-borrower). Underwriter -> "Decline application": the WBS's own
+  note is "Decline reason is mandatory", which is why the reason is a merge
+  field and not optional chrome.
+
+  TONE: this is the one email in the set somebody reads in a bad moment. It
+  says the thing in the first sentence rather than burying it, gives the
+  reason, and offers a person to talk to. It does not say "unfortunately",
+  and it does not congratulate anybody on anything.
+
+  A DECLINE IS A REGULATED COMMUNICATION in US lending (an adverse action
+  notice under ECOA/FCRA has required content and timing). This template is the
+  DESIGN; the legally required wording is OPA's counsel to supply, and it is
+  deliberately not invented here.
+
+  Standalone HTML rather than a component because an email is not rendered by a
+  browser engine we control (Outlook uses Word's), so it is built the way email
+  has to be built: tables, inline styles, no external CSS, no flexbox, no web
+  fonts, no images.
+
+  MERGE FIELDS for Dev:
+    {{firstName}}         the recipient's first name
+    {{declineReason}}     the underwriter's reason - mandatory, per the WBS
+    {{contactUrl}}        link to the contact page
+
+  Colours are the product's own (src/theme/tokens.ts): primary #2456E6,
+  ink #141A25, border #E4E8EF. Repeated here because an email cannot import.
+-->
+</head>
+<body style="margin:0;padding:0;background-color:#F5F7FA;">
+
+<!-- Preheader: the grey line inboxes show next to the subject. Hidden in the
+     body itself, so it never appears twice. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+  What this means, and what you can do next.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background-color:#F5F7FA;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;background-color:#FFFFFF;border:1px solid #E4E8EF;border-radius:12px;">
+
+        <!-- Wordmark. Type, not an image: images are blocked by default in
+             most clients, and a logo that does not load is a broken email. -->
+        <tr>
+          <td style="padding:32px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:18px;font-weight:700;letter-spacing:0.02em;color:#141A25;">
+            OPA
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:24px;line-height:32px;font-weight:600;color:#141A25;">
+            We couldn't approve your application
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:12px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#5A6473;">
+            Hello {{firstName}},<br><br>
+            OPA has reviewed your application and cannot approve it this time. We know this is not the answer you wanted, and we would rather tell you plainly than leave you waiting.
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                   style="background-color:#F5F7FA;border-radius:10px;">
+              <tr>
+                <td style="padding:20px 24px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#5A6473;">
+                  <strong style="color:#141A25;font-size:15px;">Reason</strong><br><br>
+                  {{declineReason}}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Bulletproof button: a table cell with a background, not a styled
+             link. Outlook ignores padding and background on <a>. -->
+        <tr>
+          <td style="padding:28px 32px 0 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center" bgcolor="#2456E6" style="border-radius:8px;">
+                  <a href="{{contactUrl}}"
+                     style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#FFFFFF;text-decoration:none;border-radius:8px;">
+                    Talk to us
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- The same link as text. Some clients strip buttons, some readers
+             will not press one, and a link nobody can copy is a dead end. -->
+        <tr>
+          <td style="padding:20px 32px 0 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            If the button doesn't work, paste this into your browser:<br>
+            <span style="color:#2456E6;word-break:break-all;">{{contactUrl}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:24px 32px 0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr><td style="border-top:1px solid #E4E8EF;font-size:0;line-height:0;">&nbsp;</td></tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 32px 32px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:20px;color:#8A94A6;">
+            You are entitled to ask why this decision was made, and to have it looked at again. Call <span style="color:#141A25;">(800) 555-0142</span> or write to <span style="color:#141A25;">support@opa.example</span> and a person will answer.
+          </td>
+        </tr>
+
+      </table>
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="width:600px;max-width:100%;">
+        <tr>
+          <td align="center" style="padding:20px 16px 0 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#8A94A6;">
+            One Percent for America &middot; 1200 Wilshire Blvd, Suite 400, Los Angeles, CA 90017
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

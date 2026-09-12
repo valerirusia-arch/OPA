@@ -1,0 +1,137 @@
+// src/features/Dashboard/ui/ShortcutTiles.styles.ts
+
+import type { CSSProperties } from "react";
+import type { GlobalToken } from "antd";
+import { brand } from "../../../theme/tokens";
+import { getFigureStyles } from "../../../shared/ui/figures.styles";
+
+export const styles = {
+  inner: { width: "100%", height: "100%" },
+  /** The chevron is pushed to the end of this row; the label and its mark
+   *  stay together at the start, as `labelGroup`. */
+  labelRow: { width: "100%" },
+  /** `minWidth: 0` so a long label ellipses inside the group rather than
+   *  shoving the chevron off the cell. */
+  labelGroup: { minWidth: 0 },
+  /**
+   * 12, and it is the one place in the product set below 13.
+   *
+   * 13 is right for a footnote that stands on its own line, which this was
+   * when it was one. It is NOT a footnote any more: it rides beside a 20px
+   * figure on the same baseline, and at 13 it read as a second fact competing
+   * with the first rather than as the qualifier it is — *"გრძელია
+   * ზედმეტად"*. One step down puts it where a qualifier belongs.
+   *
+   * The WORDS are as short as they can honestly go: "Due" replaced "Next"
+   * already, and cutting the date itself would buy four characters and cost
+   * the rule that a date is written one way everywhere in this product.
+   */
+  hint: { fontSize: 12 },
+  /**
+   * The held-open figure slot, at the figure's own line box.
+   *
+   * `rowValue` is 15px on the theme's 1.5 line height, so the line box is 22
+   * and the bar is centred in it by the 4px margins. It was a bare 14 + 4,
+   * under a comment claiming it matched the figure — the band with nothing to
+   * say still comes out shorter than one that has, because the hint line is
+   * missing too, but this slot at least no longer lies about why.
+   */
+  placeholder: { width: 72, minWidth: 72, height: 14, borderRadius: 4, marginBlock: 4 },
+} satisfies Record<string, CSSProperties>;
+
+export const getStyles = (token: GlobalToken) => {
+  const figures = getFigureStyles(token);
+  return {
+    /**
+     * One cell of the band.
+     *
+     * The 148px floor is gone — the box used to hold it open under about 70px
+     * of content, which is most of what made the band heavy. What replaces it
+     * is `height: 100%` of a stretched Row cell, so the band is as tall as its
+     * tallest fact and no taller.
+     *
+     * It has to be 100% and not `auto`: Documents carries no hint line, so on
+     * `auto` its cell came out 23px shorter than the other three and its
+     * hairline stopped short of theirs — a ragged rule in a row of four.
+     */
+    tile: {
+      display: "block",
+      width: "100%",
+      /* Equal heights across the row, from the Row's own stretch rather than
+         from a floor. The 148px minimum that used to be here held open about
+         70px of content, which was most of what made the band heavy. */
+      height: "100%",
+      /* 24 inline, the inset every other card face in the product takes, and
+         a little more block so the three lines inside have somewhere to sit.
+         The figures are what this band is for; boxed tight to them they read
+         as a table. */
+      padding: "24px 24px 26px",
+      textAlign: "start",
+      background: token.colorBgContainer,
+      borderColor: token.colorBorderSecondary,
+      borderRadius: token.borderRadiusLG,
+      /* A card at rest, not a rectangle drawn on the page. See `shadowRest`. */
+      boxShadow: brand.shadowRest,
+    },
+    /**
+     * THE SAME CARD UNDER THE POINTER — same place, same colour.
+     *
+     * Two versions were rejected before this one, and both for the same
+     * reason: they changed the card instead of acknowledging the pointer.
+     * Lifting it to the product's full card shadow gave four tiles a 28px
+     * cast to take in turn, and the band heaved. Washing it with the page's
+     * lightest fill turned a white card grey — *"ჰოვერზე ეს ფერი არ
+     * მომწონს"*.
+     *
+     * So nothing moves and nothing is tinted: the card's own outline comes
+     * forward one step, and the chevron travels 2px toward where it is about
+     * to take you. That is the whole affordance, and it is the quietest one
+     * that still exists.
+     *
+     * The ink is pinned here too, because antd's default Button would
+     * otherwise turn its border and its text the accent colour on hover —
+     * a form control announcing itself, on a band that was taken off blue
+     * deliberately.
+     */
+    tileRaised: {
+      borderColor: brand.borderHover,
+      color: token.colorText,
+    },
+    /**
+     * The label's mark.
+     *
+     * It was a 40px square filled with `colorFillQuaternary`. An icon at the
+     * size of the word it belongs to needs no container at all: the label
+     * treatment's own tertiary ink, and the flex is only here to stop the
+     * glyph sitting on a text baseline.
+     */
+    mark: { color: token.colorTextTertiary, fontSize: 14, flex: "none" },
+    /** The "this goes somewhere" mark. Quieter than the label it ends, because
+     *  it is an affordance and not a word. */
+    chevron: { color: token.colorTextQuaternary, fontSize: 12, flex: "none" },
+    /** Darker, and two pixels along. The distance is the point: it is the
+     *  smallest movement that reads as "this goes somewhere". */
+    chevronRaised: {
+      color: token.colorTextTertiary,
+      fontSize: 12,
+      flex: "none",
+      transform: "translateX(2px)",
+    },
+    /** The product's own label treatment, so a tile reads like every other
+     *  labelled figure in the app. */
+    label: { ...figures.microLabel, display: "block" },
+    /**
+     * The tile's figure.
+     *
+     * `rowValue`'s treatment at the figure scale's own 20.
+     *
+     * It has been 20, then 15, then 16, and the designer settled it at 20: in
+     * a card of its own the value IS the content, not a footnote under
+     * somebody else's headline, and the tile is the only place on this page a
+     * borrower reads these four facts. The band can carry it now that the
+     * containers around it stopped shouting — no chip, no 148px floor, and
+     * the qualifier beside the figure rather than under it.
+     */
+    value: { ...figures.rowValue, fontSize: 20, display: "block" },
+  } satisfies Record<string, CSSProperties>;
+};

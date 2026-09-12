@@ -1,0 +1,1260 @@
+
+===== PAGE 1 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Authentication and 
+profile management
+Borrower Register The system shall allow a new user to create a personal account by 
+providing the required personal information and completing email and 
+phone verification. 
+Borrower shall provide the country of their origination. first, middle and last 
+name, DoB, email address, phone number, SSN, US address, set 
+password, select communication preferences (SMS/email)
+Borrower Verify email As a part of registration flow the system shall ask the user to verify their 
+email address through a one-time code/link sent to their email address
+Borrower Verify phone number As a part of registration flow the system shall ask the user to verify their 
+phone number through a one-time code sent to their phone number
+User Accept Terms and Privacy PolicyDuring registration the user shall acknowledge the Terms of Use and 
+Privacy Policy
+User Login with email and passwordIncludes 'Remember me' feature
+The system shall allow users to remain authenticated on trusted devices 
+for a configurable period.        
+Lock account after consequal unsuccessful attempts to login
+User Logout The system shall securely terminate the current user session.
+User Reset password The system shall allow users to reset forgotten passwords through a 
+verification process (email).
+Borrower / 
+Co-borrower
+View profile The user shall be able to review all their personal information stored in the 
+system.
+===== PAGE 2 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Borrower / 
+Co-borrower
+Update profile Approved Borrowers and Co-borrowers shall be able to update their 
+contact information, including email address, phone number and mailing 
+address.
+Updated information shall be used for borrower communication and 
+servicing activities.
+When phone number/email are updated - the verification process should 
+re-occur
+User Change password The system shall allow authenticated users to change their password.
+Admin / 
+Underwriter / OPA 
+Staff
+View profile Admin/underwriter shall be able to see in their profile their name and email
+User Select the languge for interfaceSelect the interface language: English/Spanish
+Users managementAdmin Create, change, delete 
+admin/underwriter
+Assuming that admin should provide name and email to create an 
+admin/underwriter and then the sytem shall send an email to the new user 
+that would allow them to set their password
+User Set password When a new user is registered, the system shall send them an email with a 
+link that allows the user to set their password
+Admin / OPA StaffView admin/underwriter A simple list of users is assumed + search by name/email
+Admin / 
+Underwriter / OPA 
+Staff
+View the list of borrower/co-
+borrowers
+See a list of borrowers/co-borrowers. 
+Assuming that main borrower info would be provided: name, email, phone 
+number, address, state, application status (in progress/approved/declined)
+Assuming to display up to 8 columns
+Admin / 
+Underwriter / OPA 
+Staff
+View borrower details Admin/Underwriter shall be able to open a borrower profile and review all 
+available borrower, co-borrower, application and loan information.
+Admin / 
+Underwriter / OPA 
+Staff
+Search and filter borrowers/co-
+borrowers
+Admin/underwrites shall be able to user search by name, email, phone 
+number
+Admin/underwriter shall be able to filter by state and application status
+Admin / 
+Underwriter
+Manage borrower accounts Admin/Underwriter shall be able to manually update borrower/co-borrower 
+personal date (line name, email, address, etc.)
+===== PAGE 3 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Admin / 
+Underwriter
+Send/resend set password linkAdmin shall be able to send set password link to any user
+Underwriter shall be able to send set password link to borrower/co-
+borrower
+Admin Activate/inactivate user's accountAdmin shall be able to withdrow and reinstantiate access to the system for 
+any user
+Admin / 
+Underwriter / OPA 
+Staff
+Add a borowwer to DO NOT LOAN 
+list
+Admin/underwrites shall be able to add potential borrowers to DO NOT 
+loan lists 
+Loan Application Borrower Sign credit authorization, electronic 
+disclosures and consent 
+documents
+The system shall dynamically generate the required credit authorization, 
+electronic disclosures, consent forms and other application documents 
+based on the borrower's state of residence and applicant role (Borrower / 
+Co-borrower).
+The Borrower and Co-borrower shall be able to review and electronically 
+sign the Credit Authorization and other application consents required to 
+initiate the loan underwriting process.
+Electronic signature is performed using DocuSign. 
+Different document packages are generated for Borrowers and Co-
+borrowers
+Borrower Start a loan application The system shall allow an authenticated borrower to start a new loan 
+application.
+One active application per borrower is assumed.Or if the user is on the DO 
+NOT lend list, the applicant is not allowed to create a new application
+If a user already has a loan application, the new application should not be 
+allowed.
+===== PAGE 4 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Borrower Pass Income verification The borrower shall provide employment and income information required 
+for loan processing: 
+- provide the annual income
+- upload documents that prove the income (select document type and 
+upload a document).
+Borrower View loan information and select 
+loan application details
+The system shall present the loan information to the borrower.
+The borrowers should select their application details and confirm the 
+application:
+- their USCIS application (single select from the list of predefined values)
+- the application type, which defines the size of the loan(single select from 
+the list of predefined values)
+Borrower Add a co-borrower and submit the 
+application
+The borrower shall be able to invite a co-borrower when required or 
+desired.
+The following should be provide for a co-borrower:
+- first and last name
+- email
+The borrower shall submit the completed loan application for processing.
+Borrower Provide debit card details Borrower shall provide the details of a debit card details they own
+Borrower Finish application process and 
+review the next steps
+The borrower should be able to:
+- see the confirmation of application submission
+- provide their household info (income, size), if they are veterans and 
+select how they hert about OPA
+
+===== PAGE 5 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Borrower View contact information Borrower shall be able to access a static page with support contacts 
+details (information only, no interactive elements)
+Co-borrower Accept borrower invitation 
+(registration throuth the invitation)
+The system shall allow a co-borrower to create a personal account, if 
+required, to securely access the assigned loan application and complete 
+the required application steps. The invitation shall securely associate the 
+co-borrower with the corresponding loan application.
+Co-borrower Complete assigned applicationThe co-borrower shall provide all required personal and financial 
+information associated with the borrower's application. 
+Assuming that they should provide the same info as borrower
+Co-borrower Sign credit authorization, electronic 
+disclosures and consent 
+documents
+Same as borrower, co-borrower should sign all the required documents via 
+electronic signature in DocuSign
+Co-borrower Upload supporting documents to 
+prove income and provide card 
+details
+The co-borrower shall upload all required supporting documents to prove 
+their income.
+Co-borrower shall provide their debit card details
+Borrower / Co-
+borrower
+Move back and force through the 
+application process
+After the account for a borrower/co-borrower is created, they should be 
+able to return to the previous steps of their application process
+Borrower Replace co-borrower The Borrower shall be able to replace the invited co-borrower if the 
+invitation expires, is not accepted within five days, or the co-borrower does 
+not satisfy the underwriting requirements. The system shall send a new 
+invitation to the replacement co-borrower. IF the co-borrower fails to meet 
+underwriting requirements, system will be able to reset borrower 
+application and allow new co-borrower to receive an inviation to apply. 
+The system should notify the borrower that there are issues with co-
+borrowers (covered in Notifications epic)
+===== PAGE 6 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Loan DecisioningSystem Verify borrower identity The system shall verify the borrower's identity using the configured identity 
+verification service (Instant ID).
+If identity verification fails, the loan decisioning should be stopped and the 
+borrower should either update their data or leave.
+Identity verification happens on the first step, before the account is created 
+AND when personal data is updated.
+System Perform NO LEND look up They system shall verifiy that the applicant does not have an open 
+application or loan, and it needs to check name and email against a legacy 
+no lend list and internal system list of recent (6 months) denied application 
+or default status. 
+System Perform OFAC screening The system shall verify that the borrower is not listed on the OFAC 
+sanctions list. 
+If identity verification fails, the loan decisioning should be paused and 
+moved to manual review process.NO, user is unable to proceed, they 
+receive a message to call customer service (the notification will be 
+implemented as a separate user story).
+===== PAGE 7 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+System Perform credit check The system shall retrieve the borrower's credit report and credit score.
+If credit check fails, the loan decisioning should be paused and moved to 
+manual review process. Autmation rules to come. But if a credit score is 
+lower than XXX then no manual review - application is denied and Adverse 
+Action letter is sent. IF credit score is between XXX and XXX, then email is 
+sent about requiring a co-borrower and co-borrower invite is sent. If credit 
+score is above XXX then application can proceed automatically without 
+human review. 
+The application categorization and decisioning is done in story 'Determine 
+loan eligibility' (line 52)
+System Verify borrower / co-borrower 
+income
+The system shall verify if the borrower / co-borrower provided their income 
+documents. 
+System Determine loan eligibility The system shall evaluate the application against the configured business 
+rules and determine the eligibility outcome:
+- The system shall automatically approve applications meeting all 
+configured approval criteria. The borrower should be notified about the 
+decision via SMS/Email
+- The sytem should push the application to require a co-borrower
+- The system should reject the application if the borrower does not match 
+the conditions
+System Determine co-borrower 
+requirement
+The system shall determine whether a co-borrower is required for the 
+application.
+If a co-borrower is required, the system shall send co-borrower an 
+invitation to the system
+===== PAGE 8 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+System Evaluate co-borrower eligibilityThe system shall perform the same checks for a co-borrower as for a 
+borrower if they are required: identity verification, credit check and income 
+check
+System Route application for manual 
+review
+The system shall route applications requiring manual review to the 
+underwriting queue.
+Underwriter / OPA 
+Staff
+View application details The Underwriter and OPA Staff shall be able to view the complete loan 
+application, including borrower and co-borrower information, application 
+status, selected USCIS service, submitted documents, verification results, 
+decision status and other application-related information.
+Any underwriter can review any application
+Underwriter Request additional informationUnderwriter shall be able to request additional documents or information 
+from the borrower.
+Assuming the underwriter should provide a text note with the required 
+details 
+Borrower Submit additional informationBorrower shall be able to provide the requested documents or information 
+and resubmit the application for review.
+Assumed that borrower should have an option to upload documents via the 
+customer portal and add a text note.
+Underwriter Approve application Underwriter shall be able to manually approve an application.
+The borrower should be notified about the decision via SMS/Email
+Underwriter Decline application Underwriter shall be able to manually decline an application.
+The borrower should be notified about the decision via SMS/Email
+Underwriter Override automated decisionAuthorized Underwriters shall be able to override an automated approval 
+or decline decision.
+===== PAGE 9 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Underwriter Update the requested amount for 
+the loan
+The Underwriter shall be able to update the requested loan amount during 
+the underwriting process to reflect the amount approved based on the 
+applicant's creditworthiness, income verification, and internal lending 
+policies. The system shall validate the updated amount, recalculate loan 
+terms if applicable, record the change in the audit trail, and use the revised 
+amount in subsequent loan approval and agreement generation 
+processes.
+Manage Loan System Generate loan agreement packageThe system shall generate the complete loan document package after loan 
+approval and send it for the electronic signature process.
+Borrower / Co-
+borrower
+Review and sign loan agreementThe Borrower and Co-borrower shall be able to review and electronically 
+sign all loan documents required after loan approval, including the Loan 
+Agreement and other applicable disclosures before loan funding.
+Borrower/Co-
+borrower
+View application status and detailsThe borrower shall be able to view the current application status (e.g. 
+Submitted, Under Review, Pending action, Approved, declined) and  view 
+the application details.
+Borrower / Co-
+borrower
+View application documentsBorrower shall be able to access all loan-related documents (download 
+only, no in-app preview is assumed)
+Borrower Withdraw application The borrower shall be able to withdraw an application before the final loan 
+decision is made.
+===== PAGE 10 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+System Issue virtual payment card The system shall request issuance of a prepaid virtual card for the 
+approved borrower.
+Borrower View virtual card details Borrower shall be able to securely access the issued virtual payment card 
+information.
+Only the Borrower can access the virtual payment card. Co-borrower has 
+no access to card information.
+Borrower / Co-
+borrower
+View loan details Borrower shall be able to review loan amount, remaining unused balance, 
+APR, repayment terms and schedule.
+Borrower Cancel loan before funding Borrower shall be able to cancel an approved loan before the virtual 
+payment card has been used.
+Admin / 
+Underwriter / OPA 
+Staff
+View loan details Internal users shall be able to review all loan information, funding status 
+and related documents.
+Admin / 
+Underwriter
+Update loan details Authorized users shall be able to manually update loan details (add 
+documents, comments).
+Manage PaymentsSystem Generate payment schedule for 
+approved loan
+Repayment Schedule is automatically generated when the loan is funded.
+Loan repayment begins within 45 days after the loan is approved, with 
+payments due on the 1st of each month.   
+Borrower / Co-
+borrower
+View repayment schedule Borrower/co-borrower shall be able to view the repayment schedule 
+including:
+- due dates
+- amount to pay
+- if a payment was completed 
+- if a payment is overdue 
+Borrower / Co-
+borrower
+View outstanding balance Borrower/co-borrower shall be able to review the current outstanding loan 
+balance.
+Borrower / Co-
+borrower
+View payment history Borrower/co-borrower shall be able to review all completed, pending, 
+failed, refunded and reversed payment transactions.
+===== PAGE 11 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Borrower / Co-
+borrower
+Make a scheduled payment via 
+card
+Borrower/co-borrower shall be able to make a scheduled loan payment.
+Borrower / Co-
+borrower
+Make an additional payment via 
+card
+Borrower/co-borrower shall be able to make an additional (catch-up or 
+extra) payment at any time.
+Borrower/co-borrower shall be able to repay the outstanding loan balance 
+before the scheduled maturity date.
+Borrower / Co-
+borrower
+View a card saved to make a re-
+payment
+The Borrower/Co-borrower shall be able to view their debit card saved as a 
+repayment method, including masked card details, card brand, expiration 
+date, and whether the card is currently used as the active repayment 
+method.They cannot see each others card information. Borrower/Co-
+borrower should see only the cards that the current user added
+Borrower / Co-
+borrower
+Update payment method (card)Borrower/co-borrower shall be able to update the payment method (card) 
+used for loan repayment. Changes to debit card would need to be verfied 
+by Repay (old card should be removed and the new card should to pass 
+the same flow of as when adding a card for the first time)
+System Apply late payment fees The system should calculate and apply late payment fees.
+- If a monthly payment is not received within 15 calendar days after the 
+due date, a late fee will be charged on the 16th day. The late fee will be 
+$5.00 or 5% of the unpaid installment amount, whichever is less. Only one 
+late fee will be charged for each missed payment.
+- If an account is more than 90 days past due, it will be considered in 
+default. When this happens, the full past due balance must be paid within 
+30 days to avoid loan acceleration.
+- If an account is more than 120 days past due, the loan will be 
+accelerated. When this happens, the full remaining loan balance including 
+interest and outstanding fees must be paid within 30 days of receiving a 
+notice of default. The APR remains at 1%. 
+Borrower / Co-
+borrower
+View late payment fees Borrower/co-borrower shall be able to review applied late fees and 
+overdue payment information.
+System Track payment status The system shall update the status of payment (succedeed, failed, 
+reversed) based on the status received from Repay
+Borrower / Co-
+borrower
+View payment result The Borrower/Co-borrower shall be able to view the status of each 
+payment transaction, including successful, pending, failed, refunded and 
+reversed payments.
+Borrower / Co-
+borrower
+Make another attempt to pay if 
+payment fails
+If a payment failed or was reversed, borrower should be able to make 
+another attempt to make a payment 
+===== PAGE 12 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Admin / 
+Underwriter / OPA 
+Staff
+View repayment schedule Underwriter shall be able to view the repayment schedule including:
+- due dates
+- amount to pay
+- if a payment was completed 
+- if a payment is overdue 
+- any fees applied
+Admin / 
+Underwriter / OPA 
+Staff
+View payment history Underwriter shall be able to review all completed, pending, failed, refunded 
+and reversed payment transactions.
+System Process reversed or refunded 
+payments
+The system shall process reversed or refunded payment transactions and 
+automatically update the loan balance, payment history and outstanding 
+amount accordingly.
+Notifications & 
+Communications
+Borrower / Co-
+borrower
+Receive Application approved 
+notification
+Borrower / Co-
+borrower
+Receive Application declined 
+notification
+Borrower / Co-
+borrower
+Receive request for additional 
+information
+Borrower shall receive a notification when additional information or 
+documents are requested.
+Borrower / Co-
+borrower
+Receive document signing requestThe system shall notify users when documents are ready for electronic 
+signature.
+===== PAGE 13 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Borrower Receive notification that the co-
+borrower invitation has expired
+The Borrower shall be notified when the invited Co-borrower's invitation 
+expires without being accepted within the configured validity period. The 
+notification shall inform the Borrower that a replacement Co-borrower can 
+be invited to continue the loan application process.
+Borrower Receive notification that the co-
+borrower did not pass underwriting
+The Borrower shall be notified when the invited Co-borrower does not 
+satisfy the underwriting requirements. The notification shall inform the 
+Borrower that another Co-borrower may be invited to continue the 
+application process.
+Borrower Receive loan funding notificationBorrower shall receive confirmation when the loan has been funded and 
+the Virtual Payment Card is available.
+Borrower Receive payment remindersBorrower shall receive payment reminders before upcoming payment due 
+dates.
+Borrower Receive payment confirmationBorrower shall receive confirmation after successful payment processing.
+Borrower Receive payment failed notificationBorrower shall receive confirmation after  failed payment processing.
+Borrower Receive delinquency notificationsBorrower shall receive notifications about overdue payments, late fees, 
+default status and loan acceleration.
+Admin / 
+Underwriter
+Receive system task notificationsInternal users shall receive notifications about applications assigned for 
+manual review or additional processing.
+User Manage notification preferencesUsers shall be able to manage their preferred communication channels.
+System Notify OPA Staff about application 
+processing failures
+The system shall notify OPA Staff when a technical failure prevents an 
+application from progressing after the borrower account has been created.
+System Receive unable-to-proceed 
+notification
+The Borrower / Co-borrower shall receive a notification when they are 
+unable to proceed with the loan application due to an unsuccessful identity 
+verification or sanctions screening. The notification shall instruct the user 
+to contact Customer Service and shall not disclose sensitive verification or 
+screening details.
+Reporting & AuditAdmin / 
+Underwriter / OPA 
+Staff
+Export credit report Export report in xlsx/csv format
+===== PAGE 14 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Admin / 
+Underwriter / OPA 
+Staff
+Export Monthly consumer credit 
+reporting
+Export report in xlsx/csv format
+Admin / OPA StaffExport application data Export list of applications in xlsx/csv
+System Send credit report to Equifax
+System Send consumer credit reporting 
+(Metro II) to Equifax
+Integrations System Integrate with Instant ID to Verify 
+borrower identity / LexisNexis
+The system shall integrate with LexisNexis InstantID to perform borrower 
+identity verification and OFAC screening.
+System Integratewe with Equifx to retrieve 
+credit report 
+The system shall integrate with Equifax to retrieve borrower credit reports 
+and credit scores.
+System Integrate with DocuSign The system shall integrate with DocuSign to electronically sign application 
+and loan documents.
+System Integrate with Communication 
+Provider (Twilio / SendGrid)
+The system shall integrate with the configured communication provider to 
+deliver email and SMS notifications.
+System Integrate with Repay Payment 
+Gateway
+The system shall integrate with Repay to collect and tokenize borrower / 
+co-borrower debit card information during the loan application process and 
+to support subsequent loan repayment transactions.
+The integration shall support payment processing, payment status 
+updates, refunds, reversals and synchronization of transaction results.
+System Integrate with USIO Virtual Card 
+Service
+The system shall integrate with USIO to issue Virtual Payment Cards for 
+approved borrowers.
+System Integrate with Equifax Payment 
+Reporting Service
+The system shall report borrower payment activity to Equifax according to 
+the required reporting schedule.
+System Authenticate internal users The system shall integrate with Microsoft Entra ID to authenticate internal 
+users.
+System Exchange data with Microsoft 
+Fabric
+The system shall exchange operational data with Microsoft Fabric for 
+reporting and analytics purposes.
+===== PAGE 15 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+Acquisition 
+Channels, Referrals 
+& Campaign 
+Management
+Admin Manage Acquisition SourcesThe Admin shall be able to create, view, update, and maintain acquisition 
+sources used to classify and track loan acquisition.
+Admin Manage Referral Partners and 
+Partner Groups
+The Admin shall be able to create, view, update, and maintain referral 
+partners and partner groups used for loan acquisition management.
+Admin Manage Marketing CampaignsThe Admin shall be able to create, view, update, and maintain marketing 
+campaigns associated with loan acquisition activities.
+System Associate Loans with Acquisition 
+Information
+The system shall associate each loan with the corresponding acquisition 
+source, referral partner, partner group, and marketing campaign to support 
+tracking and reporting.
+Admin/UnderwriterView Acquisition Information for 
+Loans
+Authorized internal users shall be able to view acquisition information 
+associated with a loan.
+Admin/UnderwriterSearch Loans by Acquisition 
+Attributes
+Authorized internal users shall be able to search and filter loans using 
+acquisition-related information.
+Admin/UnderwriterAnalyze Lending Performance by 
+Acquisition Channel
+Authorized internal users shall be able to analyze lending performance by 
+campaign, partner group, referral partner, and acquisition source via 
+creating credit report / consumer credit report for a specific campaign / 
+partner/ aquisition channel.
+===== PAGE 16 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+General activities (Initiation, Regression, UAT , Infrastructure)
+[BA] BA processes set-up
+[BA] Vision&Scope
+[BA] Non-functional requirements elicitation and documentation
+[UX/UI] Wireframes Creation
+[UX/UI] UI Framework Alignment
+[BE] Infrastructure preparation
+[FE] Infrastructure preparation
+[DevOps] Infrastructure preparation and deployment
+[DevOps] Implementation of CI/CD and other automation
+[DevOps] Configuration, troubleshooting, monitoring installation and additional activities
+[QA] Preparation phase (test management system setup, testing tools preparation, test strategy creation)
+[QA] Test documentation creation (test cases + checklists) 
+[QA] Cross-browser testing
+[QA] Localization testing
+[QA] Regression testing before go-Live + Smoke testing on Prod env
+etc.
+Total (Prio 1 + Prio 2)
+Total Prio 1
+Total Prio 2
+===== PAGE 17 =====
+Epic User User Story ("As a User I want to 
+... ") Description
+===== PAGE 18 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+Email address/ phone number validation is 
+not in scope of this story.
+Phone number field - US number with a 
+mask
+States selection - select from a limited list of 
+supported US states
+Country selection - select from the list of 
+countries. Some countries are not allowed 
+(should be excluded from the list)
+If identity verification cannot be completed 
+due to a technical failure before the user 
+account is created, the user shall be 
+informed that a technical error has occurred 
+and advised to try again later or contact OPA 
+Staff. No account or application is created.
+1 3 4 2 4 6 8 7 8 4 6
+Twillio/Sendgrid is used to send emails
+BE: service integration 1 1 1.5 1 2 2 4 7 8 2 3
+Twillio is used to send SMS
+BE: service integration 1 1 1.5 0 1 2 4 7 8 2 3
+Required before account creation.
+BE: no versioning for MVP 1 0 0 1 1 1 1 7 8 1 1
+Secure persistent authentication token is 
+assumed. 1 1 1.5 1 2 4 6 5 6 3 4
+Includes session timout. The system shall 
+automatically terminate an inactive user 
+session after a configurable period of 
+inactivity.
+1 0.5 0.5 0 0 1 1 1 2 1 1
+1 1 1.5 1 2 4 6 5 6 3 4
+1 1 1 2 4 2 4 3 4 2 3
+===== PAGE 19 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+Only approved Borrowers and Co-borrowers 
+are allowed to update their contact 
+information. Personal information used for 
+identity verification, underwriting or regulatory 
+compliance (e.g., name, date of birth, SSN) 
+cannot be updated through self-service. Any 
+changes to borrower identity information 
+require OPA Staff intervention and are 
+handled outside the self-service portal.
+2 6 8 3 5 4 6 5 6 4 6
+2 1 1.5 1 2 2 4 4 5 2 3
+UX/UI: assuming the borrower profile layout 
+will be reused 1 0.5 0.5 1 2 4 6 5 6 1 1
+BE: dynamic data should be translated too1 0.5 0.5 0 1 2 4 17 18 4 6
+Total Min for Epic, hours Total Max for Epic, hours
+165.5 228
+Secured using client’s Microsoft Entra ID
+1 3 4 4 6 6 8 8 9 4 6
+UX/UI: Assuming email design is needed + 
+the UI 1 1 1.5 4 6 4 6 5 6 2 3
+1 1 1 1 2 4 4 4 5 2 3
+1 2 3 1 2 4 4 4 5 3 4
+Read-only access. Editing is covered by 
+Manage borrower accounts. 1 2 3 1 2 2 4 4 5 3 4
+2 1 2 0 0 2 4 3 4 2 3
+It is assumed that email and phone number 
+are updated as simple inputs (without 
+initialling email/phone number validation)
+1 2 3 2 4 4 6 8 10 4 5
+===== PAGE 20 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+1 1 1.5 1 1 1 1 3 4 2 3
+1 1 2 1 1 1 1 2 2 2 3
+UX/UI: assuming such marker will appear as 
+visible ui element + there will be an ability to 
+filter the list based on this marker
+1 0.5 1 2 2 2 4 4 5 3 4
+Total Min for Epic, hours Total Max for Epic, hours
+133.5 183
+State-specific disclosure rules and document 
+templates are pre-configured in the code (no 
+option/UI to update this configuration 
+dynamically).
+Only documents required for underwriting are 
+signed during the application process. Loan 
+documents are signed after the loan is 
+approved.
+No option to modify the content of the 
+documents in DocuSign, assuming that the 
+only thing the borrower/co-borrower should 
+be able to provide in DocuSign is their 
+electronic signature, the date of signing is set 
+automaticaly as the current date.
+1 6 8 1 2 2 4 12 14 8 10
+The system should validate that there is no 
+other borrower/co-borrower with the same 
+personal info.
+Adding borrower to DO NOT lean list will be 
+done as a separate story
+1 2 4 1 1 2 2 4 5 3 4
+===== PAGE 21 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+The system accepts income verification 
+documents in supported file formats. 
+Uploaded documents are available for 
+manual review by Underwriters or OCR.
+1 1 2 2 2 4 6 5 6 3 4
+Assumed that supported values for USCIS 
+application and application type are saved in 
+data base, are predefined and not 
+configurable. User cannot configure but 
+Admins should be able to change amount 
+(when USCIS fees change). Updating an 
+amount will be done as a separate story
+1 1 1.5 2 2 4 6 7 8 2 3
+The system should validate that there is no 
+other borrower with the same personal info.
+Co-borrowers can sponsor up to 3 borrowers.
+ 1 2 3 1 2 2 4 4 5 2 3
+It is assumed that DEBIT only card details 
+are collected using secure embedded form 
+from Repay that works as a 'black box' for 
+OPA application. 
+No card information is stored in the OPA 
+application, only card token.
+Only U.S. debit cards are supported.
+1 2 3 2 2 4 6 7 8 3 4
+Submission initiates the Loan Decisioning 
+process.
+Applications requiring a co-borrower cannot 
+proceed to underwriting until a qualified co-
+borrower has accepted the invitation and 
+completed all required application steps.
+1 1 1.5 1 2 4 6 8 9 3 4
+===== PAGE 22 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+??? - The confirmation page with the contact 
+details of OPA should be displayed to a 
+borrower as soon as they finish their 
+application 
+1 0.5 0.5 1 2 1 2 3 4 1 1
+A co-borrower invitation expires 5 calendar 
+days after it is sent. The system shall track 
+the invitation status (Pending, Accepted, 
+Expired).
+1 1.5 2.5 2 2 4 6 5 6 4 6
+The co-borrower has access only to the 
+assigned application. 1 2 3 4 6 6 8 9 10 6 8
+1 2 3 1 1 2 4 9 10 3 4
+Uses the same document management 
+functionality as the borrower.
+The system accepts income verification 
+documents in supported file formats. 
+Uploaded documents are available for 
+manual review by Underwriters or OCR.
+Only U.S. debit cards are supported.
+1 2 3 1 2 2 4 6 8 2 3
+1 1 2 1 2 1 2 0 0 1 2
+The Borrower may replace the co-borrower 
+multiple times until a qualified co-borrower 
+successfully completes the application 
+process. Previous invitations become 
+inactive once a replacement co-borrower is 
+invited. 2 3 4 1 2 1 2 13 14 4 5
+Total Min for Epic, hours Total Max for Epic, hours
+224 301
+===== PAGE 23 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+Identity verification is performed before 
+initiating a credit inquiry to minimize external 
+credit bureau costs. LexisNexis InstantID is 
+assumed as the identity verification provider.
+If a technical failure occurs after the borrower 
+account has been created, the application 
+shall remain in its current state, OPA Staff 
+shall be notified, and the borrower shall be 
+able to resume the application from the point 
+where the failure occurred once the issue is 
+resolved. Applicant would need to create an 
+account to be able to resume. What is 
+solution?  - The description was updated. 
+The account should be created before the 
+Identity verification is passed. 
+1 3 4 1 2 1 2 8 10 6 8
+1 1 2 0 0 0 0 12 14 3 4
+OFAC screening is performed as part of the 
+identity verification process through the 
+LexisNexis InstantID integration.
+If the user fails to pass the check - the flow 
+assumed to be finished. The user receives a 
+notification to contact customer service (the 
+notification will be implemented as a 
+separate user story)
+1 1 2 0 0 1 2 5 6 6 8
+===== PAGE 24 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+Credit report is requested only after 
+successful identity verification. Equifax is 
+assumed as the credit bureau provider. Hard 
+credit inquiry is performed.
+Technical failures during credit check shall 
+not cause the application to be rejected. The 
+application shall be resumed after the issue 
+is resolved.
+1 4 6 1 1 1 1 8 9 6 8
+Manual or automated document analysis via 
+OCR is an mandatory capability. The 
+objective is to verify the existence of an 
+income source rather than calculate or 
+validate income amount.
+Technical failures during income verification 
+shall suspend the verification process without 
+losing application data. The application shall 
+resume from the point of interruption after the 
+issue is resolved.
+1 6 8 0 0 1 1 14 16 4 6
+Eligibility rules are preconfigured in the code 
+and not configurable.
+Assuming that there are no 5-6 criteria that 
+are evaluated for decisioning and all the rules 
+are already defined. 1 6 8 0 0 0 0 18 20 8 12
+Co-borrower requirement is determined 
+automatically based on configured in the 
+code business rules.
+UX/UI: Assuming email template might be 
+needed
+1 3 4 1 1 2 3 5 6 3 4
+===== PAGE 25 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+1 2 3 0 2 1 2 5 6 6 8
+Applications may be routed to manual review 
+from any automated verification step (Identity 
+Verification, Income Verification, Credit 
+Check or Business Rule Evaluation).
+1 2 4 1 2 1 2 0 0 3 4
+OPA Staff has read-only access to 
+application information and cannot modify 
+application data or perform business actions. 
+The information displayed depends on the 
+user's role and access permissions.
+Decision recommendations are read-only. 
+Supporting evidence is available within the 
+application.
+Assuming that there is no process of 
+assigning underwriter to the application in 
+this phase
+1 2 4 4 6 4 6 7 8 4 6
+Borrower is notified through the email/SMS 
+notification service. 2 1 2 1 2 2 4 10 12 3 4
+The application returns to the underwriting 
+workflow. 2 1 2 2 4 4 6 8 9 4 6
+Approval reason and timestamp are 
+recorded. 1 2 4 1 1 1 2 2 3 2 3
+Decline reason is mandatory. 1 2 4 1 1 1 2 2 3 2 3
+Override reason is mandatory and recorded 
+for audit purposes. 2 2 4 1 1 1 2 2 3 2 3
+===== PAGE 26 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+The Underwriter may reduce or adjust the 
+requested loan amount before the final 
+approval decision. All changes shall be 
+logged with the previous value, updated 
+value, user, date, and reason for the 
+modification. Updating the loan amount may 
+trigger recalculation of loan terms and 
+generation of updated loan documents.
+1 0.5 1 1 1 2 4 6 7 2 3
+Total Min for Epic, hours Total Max for Epic, hours
+252.5 347
+Documents are generated dynamically based 
+on borrower role (Borrower/Co-borrower), 
+state-specific disclosure requirements and 
+loan product configuration. Document 
+templates are configurable.
+The document package includes the Loan 
+Agreement and other state-specific 
+disclosures required before funding.
+1 4 6 0 0 0 0 24 26 8 12
+Loan documents become available for 
+signature only after the application has been 
+approved. The document package is 
+generated dynamically based on the 
+borrower's state of residence, applicant role 
+and applicable business rules. DocuSign is 
+used for electronic signatures.
+1 1 2 1 2 2 4 12 14 6 8
+Only customer-facing decision details are 
+displayed. Internal scoring, business rules 
+and decision logic are not exposed to the 
+borrower.
+1 2 3 4 6 4 6 5 6 2 3
+Documents remain available throughout the 
+loan lifecycle and are read-only after 
+execution.
+1 1 2 1 1 2 2 9 10 2 3
+Availability depends on the current 
+application status. 2 2 3 1 2 2 4 3 4 3 4
+===== PAGE 27 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+USIO is used for virtual card issuance. The 
+platform requests card creation.
+Card details are NOT stored in OPA system, 
+only card token.
+1 4 6 0 0 0 0 24 26 8 12
+Card details are NOT stored, processed or 
+transmitted by OPA application and are 
+accessible only via a secure embedded 
+view/directly on USIO and is working as a 
+'black box' for OPA application.
+1 2 3 2 2 2 2 9 10 3 4
+Loan information is read-only. 1 2 3 2 4 4 6 9 10 3 4
+Loan cancellation is allowed only before the 
+Virtual Payment Card has been used, in 
+accordance with OPA business rules.
+2 3 4 1 1 1 2 2 3 2 3
+Includes access to borrower information, 
+funding status and generated documents.
+UX/UI: Assuming existing view will be reused
+OPA Staff - read only.
+1 2 3 0 0 1 2 2 3 2 3
+2 2 3 4 6 4 6 7 8 3 4
+Total Min for Epic, hours Total Max for Epic, hours
+211 276
+Assuming the same rules for all loans, rules 
+are defined in the code 1 3 4 0 0 0 0 12 14 6 8
+Repayment schedule is automatically 
+generated when the loan is funded.
+1 2 3 2 4 4 6 5 6 3 4
+Balance is updated after each successful 
+payment. 1 1 2 1 1 2 2 2 3 2 3
+Payment history is read-only. 1 1 2 2 2 2 4 5 6 3 4
+===== PAGE 28 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+Payments are processed through the Repay 
+payment gateway. Only U.S. debit cards are 
+supported.
+1 4 6 2 2 2 4 17 18 6 8
+Additional and partial payments are 
+supported according to business rules.1 2 3 2 2 4 6 11 12 4 6
+Full card details are not stored or displayed 
+in the OPA application. Only masked card 
+information and the payment token/reference 
+received from Repay are stored and shown.
+1 0.5 0.5 2 2 2 4 7 8 3 4
+Only U.S. debit cards are supported.
+Should work in replace mode: old card is 
+deleted and the new is saved 1 3 4 1 2 2 4 12 14 3 4
+ Assumed the same rules for all loans, the 
+rules are defined in the code and are not 
+configurable
+2 4 6 0 0 0 0 16 18 8 12
+Late fee calculation rules are configurable.2 1 1.5 2 2 2 4 6 7 3 4
+1 3 4 1 1 2 2 4 5 2 3
+The story covers only the confirmation 
+displayed within the LMS. 1 2 3 1 1 2 4 3 4 3 4
+1 2 4 1 1 1 2 3 4 3 4
+===== PAGE 29 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+OPA Staff - read only.
+1 1 2 1 1 2 4 7 8 3 4
+OPA Staff - read only.
+1 1 2 2 4 2 4 7 8 3 4
+Reversed and refunded payment notifications 
+are received from the integrated payment 
+provider (Repay). Loan balances are 
+recalculated automatically after the 
+transaction is processed.
+Reversed or refunded payments don't trigger 
+any additional business actions, such as 
+borrower notifications, delinquency 
+recalculation, repayment schedule updates, 
+or manual review by OPA Staff.
+2 4 6 0 0 0 0 15 16 4 6
+Total Min for Epic, hours Total Max for Epic, hours
+274.5 361
+Notification is send within the notification 
+channel selected in user's profile 
+(SMS/Email)
+UX/UI: Assuming generic email templates will 
+be created for all notifications
+1 0.5 0.5 4 6 2 4 5 6 1 2
+Notification is send within the notification 
+channel selected in user's profile 
+(SMS/Email)
+1 0.5 0.5 0 0 0 0 5 6 1 2
+Includes a link to continue the application.1 0.5 0.5 0 0 0 0 5 6 1 2
+Notification is triggered by the DocuSign 
+signing workflow. 1 0.5 0.5 0 0 0 0 5 6 1 2
+===== PAGE 30 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+A co-borrower invitation expires 5 calendar 
+days after it is sent. 1 0.5 0.5 0 0 0 0 5 6 2 3
+The notification does not disclose confidential 
+underwriting details or specific reasons for 
+the Co-borrower's ineligibility. The Borrower 
+is only informed that a replacement Co-
+borrower is required.
+1 0.5 0.5 0 0 0 0 5 6 2 3
+Notification contains link to open OPA app to 
+access the loan and card details. 1 0.5 0.5 0 0 0 0 5 6 1 2
+Reminder schedule rules are predefined and 
+not configurable 1 1 2 0 0 0 0 5 6 1 2
+Triggered after payment processing is 
+completed. 1 0.5 0.5 0 0 0 0 5 6 1 2
+1 0.5 0.5 0 0 0 0 5 6 1 2
+Notification timing follows OPA business 
+rules. Not configurable 1 0.5 0.5 0 0 0 0 5 6 1 2
+Notification through email. 1 1 2 0 0 0 0 5 6 1 2
+Users may select if they want SMS or email 
+notifications to be sent 1 0.5 0.5 0 0 0 0 5 6 1 2
+Notifications are triggered only for technical 
+failures occurring after account creation. 
+OPA Staff uses the notification to proactively 
+contact the borrower and assist with 
+completing the application.
+1 1 2 0 0 0 0 5 6 2 3
+1 0.5 0.5 0 0 0 0 5 6 2 3
+Total Min for Epic, hours Total Max for Epic, hours
+109 146
+1 6 8 0 0 2 4 12 13 4 6
+===== PAGE 31 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+Equifax – Credit reports, and monthly 
+consumer credit reporting (Metro II) 1 6 8 0 0 2 4 12 13 4 6
+CSV and Excel export formats are supported.2 3 4 0 0 2 4 12 13 4 6
+1 4 6 0 0 0 0 15 16 6 8
+1 4 6 0 0 0 0 15 16 4 6
+Total Min for Epic, hours Total Max for Epic, hours
+117 147
+LexisNexis InstantID APIs and credentials 
+are available. 1 0 0 0 0 0 0 23 24 0 0
+Hard credit inquiry is performed after 
+successful identity verification. 1 0 0 0 0 0 0 23 24 0 0
+Executed documents are returned to the 
+LMS after signing. 1 0 0 0 0 0 2 23 24 0 0
+Twilio is used for SMS. Twilio and/or 
+SendGrid are used for email delivery. 1 0 0 0 0 0 0 15 16 0 0
+Only U.S. debit cards are supported.
+1 0 0 0 0 0 4 23 24 0 0
+Card information is returned to the LMS after 
+successful issuance. 1 0 0 0 0 0 0 23 24 0 0
+Payment reporting complies with OPA 
+business and regulatory requirements.1 0 0 0 0 0 0 23 24 0 0
+Borrowers authenticate using LMS accounts; 
+Entra ID is used only for internal users.1 3 4 0 0 0 4 23 24 0 0
+Integration requirements are limited to data 
+exchange. Analytics implementation is out of 
+scope.
+1 0 0 0 0 0 0 34 35 0 0
+Total Min for Epic, hours Total Max for Epic, hours
+213 233
+===== PAGE 32 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+The acquisition source list, simple available 
+attributes (name, partner, code, status), 
+lifecycle (active/inactive) 2 4 6 2 4 4 6 13 14 6 8
+The CRUD partner groups, simple list of 
+supported attributes is expected (up to 5 
+fttributes)
+2 4 6 2 2 6 8 21 22 6 8
+Campaign attributes (up to 10 simple 
+attributes), statuses (active/inactive), validity 
+periods
+2 4 6 2 4 4 6 11 12 6 8
+The method of assigning acquisition 
+information to a loan and validation rules is 
+expected by URL parameters / referral code
+2 6 8 1 2 4 6 8 9 12 16
+The acquisition attributes available for 
+display : campaign, partner, acquisition 
+source. Visible for admin/underwriter
+2 1 2 1 2 2 4 9 10 2 3
+Supported search criteria, filters: acquisition 
+source, partner,campaign 2 1 2 1 2 4 6 9 10 2 3
+Expected that filters should be added for the 
+data appearing in the report 2 6 8 2 4 4 6 12 13 12 16
+Total Min for Epic, hours Total Max for Epic, hours
+194 252
+Total Min for Epic, hours Total Max for Epic, hours
+0 0
+Total Min for ALL Epics, hours Total Max for ALL Epics, hours
+1728.5 2246
+===== PAGE 33 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+General activities (Initiation, Regression, UAT , Infrastructure)
+[BA] BA processes set-up 1 2 3
+[BA] Vision&Scope 1 2 3
+[BA] Non-functional requirements elicitation and documentation 1 2 3
+[UX/UI] Wireframes Creation 1 8 12
+[UX/UI] UI Framework Alignment 1 1 16
+[BE] Infrastructure preparation 1 34 36
+[FE] Infrastructure preparation 1 28 32
+[DevOps] Infrastructure preparation and deployment 1
+[DevOps] Implementation of CI/CD and other automation 1
+[DevOps] Configuration, troubleshooting, monitoring installation and additional activities 1
+[QA] Preparation phase (test management system setup, testing tools preparation, test strategy creation) 1 8 10
+[QA] Test documentation creation (test cases + checklists) 1 30 40
+The web application must be fully functional 
+on the latest versions of the following 
+browsers:
+- Chrome
+- Firefox
+- Safari
+Additionally, the happy path flow will be 
+verified on:
+- Chrome for Android
+- Safari for iOS
+1
+16 24
+ES locale
+1
+12 16
+[QA] Regression testing before go-Live + Smoke testing on Prod env 1 32 40
+etc.
+Total (Prio 1 + Prio 2) 223 333 126 209 241 381 1028 1156 451 630
+Total Prio 1 163 244 98 162 186 291 839 944 357 499
+Total Prio 2 60 89 28 47 55 90 189 212 94 131
+===== PAGE 34 =====
+Comments and assumptionsPriority
+BA UI/UX Front-end Back-end QA
+hours hours hours hours hours
+Min Max Min Max Min Max Min Max Min Max
+===== PAGE 35 =====
+DevOps
+hours
+Min Max
+===== PAGE 36 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+228
+===== PAGE 37 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+183
+===== PAGE 38 =====
+DevOps
+hours
+Min Max
+===== PAGE 39 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+301
+===== PAGE 40 =====
+DevOps
+hours
+Min Max
+===== PAGE 41 =====
+DevOps
+hours
+Min Max
+===== PAGE 42 =====
+DevOps
+hours
+Min Max
+===== PAGE 43 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+347
+===== PAGE 44 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+276
+===== PAGE 45 =====
+DevOps
+hours
+Min Max
+===== PAGE 46 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+361
+===== PAGE 47 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+146
+===== PAGE 48 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+147
+Total Max for Epic, hours
+233
+===== PAGE 49 =====
+DevOps
+hours
+Min Max
+Total Max for Epic, hours
+252
+Total Max for Epic, hours
+0
+Total Max for ALL Epics, hours
+2246
+===== PAGE 50 =====
+DevOps
+hours
+Min Max
+30 36
+30 36
+34 41
+94 113
+94 113
+0 0
+===== PAGE 51 =====
+DevOps
+hours
+Min Max
