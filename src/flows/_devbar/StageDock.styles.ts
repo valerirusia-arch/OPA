@@ -38,6 +38,15 @@ export const getStyles = (token: GlobalToken) =>
     },
     /** Square, quiet, and the same size as the DevBar's own buttons. */
     arrow: { width: 28, height: 28, color: token.colorTextSecondary },
+    /** Between the stage walker and the tracker switch: they are two
+     *  different controls sharing one pill, and without a rule the second
+     *  one reads as part of the first. */
+    split: {
+      width: 1,
+      alignSelf: "stretch",
+      marginInline: 2,
+      background: token.colorSplit,
+    },
     counter: {
       fontSize: 10,
       letterSpacing: "0.06em",

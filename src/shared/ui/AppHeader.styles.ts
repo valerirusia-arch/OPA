@@ -61,10 +61,26 @@ export const navTheme: ThemeConfig = {
 export const badgeOffset: [number, number] = [-14, 14];
 
 /**
- * The notification panel supplies its own padding, row by row, because a row
- * has to run to the panel's edges to be pressable across its whole width.
+ * THE PANEL RUNS TO ITS OWN EDGES.
+ *
+ * The notification panel supplies its own padding row by row, because a row
+ * has to reach the panel's edges to be pressable across its whole width — and
+ * the shaded preferences foot has to reach them to read as a foot rather than
+ * as a grey block floating inside a white one. *"ეს ნაცრისფერი ქვემოთ რომ
+ * არის, ფერი ბოლომდე გაწიე გვერდებზე; არ მომწონს ესე სფეისი რომ არის."*
+ *
+ * It was already `padding: 0` and it was going to the WRONG NODE. antd 6
+ * renamed the popover's panel from `.ant-popover-inner` to
+ * `.ant-popover-container`, and `styles.content` lands on
+ * `.ant-popover-content`, which had no padding to remove. Measured: the
+ * container carried 12px on all four sides, so the head sat 28 from the left
+ * and the grey foot stopped 12 short of the bottom and both sides.
+ *
+ * `overflow: hidden` is the other half of it. With the foot finally reaching
+ * the edges, its square corners would otherwise sit outside the panel's 14px
+ * radius — the grey would poke past the curve instead of being cut by it.
  */
-export const popoverBody: CSSProperties = { padding: 0 };
+export const popoverPanel: CSSProperties = { padding: 0, overflow: "hidden" };
 
 export const userButton: CSSProperties = { height: 40, paddingInline: 8 };
 

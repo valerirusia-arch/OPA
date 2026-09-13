@@ -31,20 +31,32 @@ the content removed by the label-over-figure pairing and the 24px band rhythm.
 STORY: the reader sees where their application or loan stands, what it costs
 them, and a dated list of what is coming — then leaves for the page that acts.
 
-FIRST VIEWPORT: greeting and one status line, then three bands. (1) Four
+FIRST VIEWPORT: greeting and one status line, then two bands. (1) The wide
+band, which is one of two things depending on the phase and never both. Before
+funding it is the APPLICATION TRACK: a five-step rail across the full width —
+Submitted, Reviewed, Signed, Funded, Repaid — then a hairline, then the live
+step with what is happening and why on the left and its one action on the
+right. After funding it is the money: the 46px answer with the account's state
+as a pill on its label line, and four small figures under a rule. (2) Four
 light cards in a row — label, figure, hint, a mark at the label's size and a
-chevron; they were the same four with 40px grey icon chips on a 148px floor,
-which the designer called visually heavy. (2) The money across the page: the
-36px answer with the account's state as a pill on its label line, the primary
-action, and four small figures under a rule. (3) Half and half: the journey
-tracker left, the dated "What happens next" right.
+chevron.
 
-THE TRACKER IS A VERTICAL TIMELINE, not a horizontal stepper. antd's `Steps`
-across a 1216 column is four small labels adrift on three enormous connectors;
-the designer rejected both the width and the pattern. Down the page it is
-indifferent to width, it has room beside each step for the line saying what
-that step is waiting on, and reading order is time order. A tick behind you, a
-ring with a dot where you are, an empty ring ahead.
+THE TRACKER IS A FULL-WIDTH HORIZONTAL RAIL. This brief said the opposite —
+"a vertical timeline, not a horizontal stepper" — and the designer reversed it
+in their own words: *"ზემოთ ჩასვავ ტრეკერს აპლიკაციის სტეპებზე, მთლიანად
+სიგრძეზე გაუშვებ ლამაზად, ქვემოთ იქნება იმ კონკრეტულ სტეპზე ინფორმაცია."*
+What had failed before was not the direction but the width it was given: four
+steps across a half-column is four labels adrift on three connectors, while
+five across 1216 is a step every 243px. Two variants are in the tree and are
+being COMPARED, not kept — `nodes` (numbered discs on a continuous rail, tick
+behind, caret over the live one) and `bars` (five capsules with their label and
+date above, the live one half filled). The dev dock carries the switch; one of
+the two is deleted when the designer picks.
+
+THE BAND'S OLD PREMISE IS GONE. It stated APPLIED FOR, the amount, the
+reference and the USCIS service — *"დაივიწყე ამ კონტენერის ეს არსი"*. The
+amount is on the tile directly below it, the other two are on /application,
+and none of the four answers what a borrower opens this page to find out.
 
 NO BANNER. The delinquency notice was a full-width alert above the money
 carrying three sentences of policy. The STATE is now a pill on the balance's

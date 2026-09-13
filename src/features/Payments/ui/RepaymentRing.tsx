@@ -59,14 +59,21 @@ export function RepaymentRing({ paid, overdue, total }: RepaymentRingProps) {
         percent={share(paid + overdue)}
         strokeColor={token.colorError}
         success={{ percent: share(paid), strokeColor: token.colorSuccess }}
-        strokeWidth={9}
+        /* A FAT RING. At 9 it was a hoop with a number inside it; the
+           reference the designer brought is nearly twice that, and it is
+           right: the ring IS the picture, and a thin one makes the hole the
+           subject. */
+        strokeWidth={14}
         trailColor={token.colorFillSecondary}
+        /* LABEL ABOVE, VALUE BELOW. It was the other way round, which reads
+           as a number with a caption stuck under it; named first, the number
+           arrives already knowing what it is. */
         format={() => (
           <Flex vertical align="center" gap={2}>
-            <Typography.Text style={s.centre}>{share(paid)}%</Typography.Text>
             <Typography.Text style={s.centreLabel}>
               {t("dashboard.ringCentre")}
             </Typography.Text>
+            <Typography.Text style={s.centre}>{share(paid)}%</Typography.Text>
           </Flex>
         )}
       />
@@ -80,40 +87,39 @@ export function RepaymentRing({ paid, overdue, total }: RepaymentRingProps) {
         line is simply absent when nothing is overdue, because a row reading
         "Overdue 0" is the product raising a subject nobody asked about.
       */}
-      <Flex vertical gap={10} style={styles.legend}>
-        <Flex align="center" justify="space-between" gap={16}>
-          <Flex align="center" gap={9}>
-            <span style={s.dotPaid} />
-            <Typography.Text style={styles.legendLabel}>
-              {t("dashboard.ringPaid")}
-            </Typography.Text>
-          </Flex>
-          <Typography.Text style={s.legendValue}>
-            {t("dashboard.ringCount", { count: String(paid), total: String(total) })}
-          </Typography.Text>
-        </Flex>
+      <Flex vertical gap={12} style={styles.legend}>
+        {[
+          { key: "paid", dot: s.dotPaid, label: t("dashboard.ringPaid"),
+            value: t("dashboard.ringCount", { count: String(paid), total: String(total) }),
+            alarm: false },
+          ...(overdue > 0
+            ? [{ key: "overdue", dot: s.dotOverdue, label: t("dashboard.ringOverdue"),
+                 value: String(overdue), alarm: true }]
+            : []),
+          { key: "left", dot: s.dotLeft, label: t("dashboard.ringLeft"),
+            value: String(left), alarm: false },
+        ].map((row) => (
+          /*
+            A LEADER LINE BETWEEN THE LABEL AND ITS VALUE.
 
-        {overdue > 0 ? (
-          <Flex align="center" justify="space-between" gap={16}>
-            <Flex align="center" gap={9}>
-              <span style={s.dotOverdue} />
-              <Typography.Text style={styles.legendLabel}>
-                {t("dashboard.ringOverdue")}
-              </Typography.Text>
+            Three labels of three different lengths and three values at the
+            right edge leave the eye to cross a gap and guess which value it
+            landed on. A dotted rule does what it has always done on a
+            contents page: it carries the eye across without becoming
+            something to read. It is `flex: 1`, so it is exactly as long as
+            the gap happens to be.
+          */
+          <Flex key={row.key} align="baseline" gap={10}>
+            <Flex align="center" gap={9} style={styles.legendName}>
+              <span style={row.dot} />
+              <Typography.Text style={styles.legendLabel}>{row.label}</Typography.Text>
             </Flex>
-            <Typography.Text style={s.legendValueAlarm}>{overdue}</Typography.Text>
-          </Flex>
-        ) : null}
-
-        <Flex align="center" justify="space-between" gap={16}>
-          <Flex align="center" gap={9}>
-            <span style={s.dotLeft} />
-            <Typography.Text style={styles.legendLabel}>
-              {t("dashboard.ringLeft")}
+            <span style={s.leader} />
+            <Typography.Text style={row.alarm ? s.legendValueAlarm : s.legendValue}>
+              {row.value}
             </Typography.Text>
           </Flex>
-          <Typography.Text style={s.legendValue}>{left}</Typography.Text>
-        </Flex>
+        ))}
       </Flex>
     </Flex>
   );

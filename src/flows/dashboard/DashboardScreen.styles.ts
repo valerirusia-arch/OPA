@@ -16,16 +16,15 @@ export const styles = {
   /** One rhythm between bands: the page is four of them and an uneven gap
    *  between two would read as a grouping that is not there. */
   band: { marginBottom: 24 },
-  /** Matches the panel beside it. One of the two framed and the other bare
-   *  reads as an oversight, not as a decision. */
-  journeyCard: { height: "100%" },
-  /** A table fills its card to the edges: the rows have their own inset and a
-   *  second one around them reads as a table inside a box. */
-  tableBody: { padding: 0 },
-  empty: { paddingBlock: 48, textAlign: "center" },
-  /** An empty panel inside the two-up row: shorter, because it shares its
-   *  height with the panel beside it. */
-  panelEmpty: { paddingBlock: 24, textAlign: "center" },
-  emptyNarrow: { paddingBlock: 32, textAlign: "center" },
+  /**
+   * The band with nothing in it yet.
+   *
+   * The inset used to come from `Grid.useBreakpoint()` — 48 wide, 32 narrow —
+   * which is JS deciding a number CSS can interpolate, and this environment's
+   * breakpoint hook has already been caught reporting the wrong column count.
+   * `clamp` crosses the same range continuously and needs no render to know
+   * the width.
+   */
+  empty: { paddingBlock: "clamp(32px, 5vw, 48px)", textAlign: "center" },
   emptyCopy: { maxWidth: 420 },
 } satisfies Record<string, CSSProperties>;

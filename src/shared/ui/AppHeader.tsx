@@ -32,7 +32,7 @@ import {
   getStyles,
   navMenu,
   navTheme,
-  popoverBody,
+  popoverPanel,
   userButton,
 } from "./AppHeader.styles";
 
@@ -130,7 +130,7 @@ export function AppHeader({
           trigger="click"
           placement="bottomRight"
           arrow={false}
-          styles={{ content: popoverBody }}
+          styles={{ container: popoverPanel }}
           /* Nothing to open on the staff side; the bell then behaves as it
              always has, which is as a count. */
           open={notifications ? undefined : false}

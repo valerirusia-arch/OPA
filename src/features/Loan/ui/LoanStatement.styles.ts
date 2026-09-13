@@ -3,20 +3,24 @@
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 import { getFigureStyles } from "../../../shared/ui/figures.styles";
+import { LEAD_PANEL_INSET, leadPanelBody } from "../../../shared/ui/panel.styles";
 
 export const styles = {
   /**
-   * The panel's own inset — 32 against the 24 every other card on the page
-   * gets.
+   * The lead card's inset — 32 against the 24 every ordinary card gets.
    *
-   * THIS IS NOW THE WHOLE OF ITS EMPHASIS. The panel was built on the brand
+   * THIS IS THE WHOLE OF THE PANEL'S EMPHASIS. It was built on the brand
    * gradient and the designer's verdict was that a blue shape that size looks
    * bad on the page, so the surface went back to white. What is left to make
    * it lead is what a white card can do: it comes first, it is the only thing
    * on the page set at the large figure size, its bar is the only saturated
    * colour, and it has more air inside it than anything below it.
+   *
+   * The value moved to shared/ui/panel.styles.ts, because the rule was
+   * written here and obeyed only here — the balance card is the lead of two
+   * other pages and was sitting at 24.
    */
-  body: { padding: 32 },
+  body: leadPanelBody,
   /** Narrow, the action rejoins the flow under the figure. */
   actionBelow: { marginTop: 20 },
   /** Right-aligned text needs the alignment on the text as well as the box. */
@@ -50,7 +54,12 @@ export const getStyles = (token: GlobalToken) => {
      * its label in from that edge; the negative margin takes it back out so
      * the words line up with the figures under them.
      */
-    actionSlot: { position: "absolute", top: 32, right: 32 - 16, zIndex: 1 },
+    actionSlot: {
+      position: "absolute",
+      top: LEAD_PANEL_INSET,
+      right: LEAD_PANEL_INSET - 16,
+      zIndex: 1,
+    },
     /** The product's label treatment, unchanged — the same one the record
      *  grids and the payments page use. */
     label: { ...figures.microLabel, display: "block", marginBottom: 8 },

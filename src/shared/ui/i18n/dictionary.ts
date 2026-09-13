@@ -275,6 +275,46 @@ export const en = {
   "dashboard.recentTitle": "Recent transactions",
   "dashboard.recentAll": "All payments",
 
+  // THE ONE STAGE THE LOAN IS IN. Four titles, and for each of them the line
+  // that says what it is waiting on. Every one is a WBS rule.
+  "dashboard.stageStep": "Step {index} of {total}",
+  "dashboard.stageYou": "Your move",
+  "dashboard.stageOpa": "With OPA",
+  "dashboard.stageReview": "Under review",
+  "dashboard.stageNeedsInfo": "More information needed",
+  "dashboard.stageCoBorrower": "Waiting on your co-borrower",
+  "dashboard.stageReviewBody":
+    "OPA is checking your application. You do not need to do anything while it is with underwriting.",
+  "dashboard.stageReviewInfo":
+    "An underwriter has asked for something more. Nothing moves until it arrives.",
+  "dashboard.stageReviewCoBorrower":
+    "Underwriting cannot start until your co-borrower accepts the invitation and finishes their part.",
+  "dashboard.stageDeclined": "Not approved",
+  "dashboard.stageDeclinedBody": "OPA could not approve this application.",
+  "dashboard.stageOpenApplication": "Open the application",
+  "dashboard.stageSign": "Sign the loan documents",
+  "dashboard.stageOpenDocuments": "Open the documents",
+  "dashboard.stageFunding": "OPA is paying out",
+  "dashboard.stageCancelledBody":
+    "This loan was cancelled before the card was used. Nothing is owed.",
+  "dashboard.stageRepaying": "Repaying",
+  "dashboard.stageRepayingBody": "{amount} is taken on {due}, and on the 1st of each month after.",
+  "dashboard.stageSettled": "Repaid in full",
+  "dashboard.stageSettledBody": "Every instalment on the schedule is paid. The loan is closed.",
+  "dashboard.stageOpenPayments": "Open payments",
+  "dashboard.stageFundedBody":
+    "OPA has paid the filing fee and your card is issued. Repayment starts on the 1st, within 45 days of approval.",
+
+  /* THE FIVE STEPS ON THE RAIL. One or two words each: five of them share a
+     line across the band, and a step whose name wraps is a step that reads
+     as two. "Reviewed" rather than "Approved" because the step is the review
+     ENDING, and it ends two ways. */
+  "dashboard.trackSubmitted": "Submitted",
+  "dashboard.trackReviewed": "Reviewed",
+  "dashboard.trackSigned": "Signed",
+  "dashboard.trackFunded": "Funded",
+  "dashboard.trackRepaid": "Repaid",
+
   "dashboard.appliedFor": "Applied for",
   "dashboard.submittedOn": "Submitted {date}",
   "dashboard.viewApplication": "View application",
@@ -1635,6 +1675,40 @@ const es: Record<TranslationKey, string> = {
   "dashboard.ringNone": "El anillo se llena cuando OPA financia el préstamo y empieza el calendario.",
   "dashboard.recentTitle": "Transacciones recientes",
   "dashboard.recentAll": "Todos los pagos",
+
+  "dashboard.stageStep": "Paso {index} de {total}",
+  "dashboard.stageYou": "Te toca",
+  "dashboard.stageOpa": "Con OPA",
+  "dashboard.stageReview": "En revisión",
+  "dashboard.stageNeedsInfo": "Falta información",
+  "dashboard.stageCoBorrower": "Esperando a tu codeudor",
+  "dashboard.stageReviewBody":
+    "OPA está revisando tu solicitud. No tienes que hacer nada mientras está en análisis.",
+  "dashboard.stageReviewInfo":
+    "Un analista ha pedido algo más. Nada avanza hasta que llegue.",
+  "dashboard.stageReviewCoBorrower":
+    "El análisis no puede empezar hasta que tu codeudor acepte la invitación y complete su parte.",
+  "dashboard.stageDeclined": "No aprobada",
+  "dashboard.stageDeclinedBody": "OPA no ha podido aprobar esta solicitud.",
+  "dashboard.stageOpenApplication": "Abrir la solicitud",
+  "dashboard.stageSign": "Firma los documentos del préstamo",
+  "dashboard.stageOpenDocuments": "Abrir los documentos",
+  "dashboard.stageFunding": "OPA está desembolsando",
+  "dashboard.stageCancelledBody":
+    "Este préstamo se canceló antes de usar la tarjeta. No debes nada.",
+  "dashboard.stageRepaying": "Amortizando",
+  "dashboard.stageRepayingBody": "Se cobran {amount} el {due}, y el día 1 de cada mes después.",
+  "dashboard.stageSettled": "Pagado por completo",
+  "dashboard.stageSettledBody": "Todas las cuotas del calendario están pagadas. El préstamo está cerrado.",
+  "dashboard.stageOpenPayments": "Abrir pagos",
+  "dashboard.stageFundedBody":
+    "OPA ha pagado la tasa de presentación y tu tarjeta ya está emitida. La amortización empieza el día 1, dentro de los 45 días siguientes a la aprobación.",
+
+  "dashboard.trackSubmitted": "Enviada",
+  "dashboard.trackReviewed": "Revisada",
+  "dashboard.trackSigned": "Firmado",
+  "dashboard.trackFunded": "Desembolsado",
+  "dashboard.trackRepaid": "Pagado",
 
   "dashboard.appliedFor": "Solicitado",
   "dashboard.submittedOn": "Enviada el {date}",

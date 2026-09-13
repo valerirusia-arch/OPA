@@ -20,10 +20,19 @@
 // Borrower and co-borrower only. The back office reads its own lists and none
 // of these stages would change them.
 
-import { Button, Flex, Tag, Tooltip, Typography, theme } from "antd";
+import { Button, Flex, Segmented, Tag, Tooltip, Typography, theme } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import type { TrackVariant } from "../../features/Dashboard/ui/StageTrack";
 import { setStage, stageLabel, stagesForPath, useBorrowerStage } from "../loan/loanRecord";
+import { setTrackerVariant, useTrackerVariant } from "../dashboard/trackerVariant";
 import { getStyles, styles } from "./StageDock.styles";
+
+/** Dev-tool copy, so it is not translated — same rule as the DevBar's own
+ *  "view as" switch. */
+const TRACKERS: { label: string; value: TrackVariant }[] = [
+  { label: "Nodes", value: "nodes" },
+  { label: "Bars", value: "bars" },
+];
 
 export type StageDockProps = {
   /** Which page is under the dock: it only offers that page's own states. */
@@ -34,6 +43,11 @@ export function StageDock({ pathname }: StageDockProps) {
   const { token } = theme.useToken();
   const s = getStyles(token);
   const stage = useBorrowerStage();
+  const tracker = useTrackerVariant();
+  /* Only the dashboard draws a tracker, so only the dashboard offers the
+     switch. A control that changes nothing on the page under it is worse
+     than a missing one. */
+  const onDashboard = pathname.startsWith("/dashboard");
 
   const order = stagesForPath(pathname);
   const index = order.indexOf(stage);
@@ -86,6 +100,22 @@ export function StageDock({ pathname }: StageDockProps) {
             onClick={() => step(1)}
           />
         </Tooltip>
+
+        {/* THE TWO TRACKERS, SIDE BY SIDE IN TIME RATHER THAN IN SPACE.
+            Walking the stages with this switch is how you find out that one
+            of them holds up when a step has failed and a date is missing,
+            which is not a thing two screenshots can tell you. */}
+        {onDashboard ? (
+          <>
+            <span style={s.split} />
+            <Segmented<TrackVariant>
+              size="small"
+              value={tracker}
+              onChange={setTrackerVariant}
+              options={TRACKERS}
+            />
+          </>
+        ) : null}
       </Flex>
     </div>
   );

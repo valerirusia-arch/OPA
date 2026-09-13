@@ -70,6 +70,18 @@ export type BalanceSummaryProps = {
    * count IS the proportion, and it needs no currency parsed to be true.
    */
   progress?: { paid: number; total: number };
+  /**
+   * The small print under the rule.
+   *
+   * OFF WHEN THE LOAN IS CLOSED. "Pay off today $0.00" and a final payment
+   * due next September are both false the moment the last instalment lands,
+   * and a card that answers "$0.00 — nothing left to pay" and then bills you
+   * for September is the page arguing with itself.
+   */
+  showDetails?: boolean;
+  /** True only where this card is the first thing on its page, which is the
+   *  dashboard and nowhere else. It sets the figure one rank up. */
+  hero?: boolean;
   /** The next thing owed, taken from the schedule by the screen. */
   next?: Installment;
   /**
@@ -87,6 +99,8 @@ export function BalanceSummary({
   status,
   pastDue,
   progress,
+  showDetails = true,
+  hero = false,
   next,
   fill = false,
   onPay,
@@ -113,7 +127,11 @@ export function BalanceSummary({
   const stacked = screens.md === false;
 
   /* Named so the two arrangements below differ only in arrangement. */
-  const figure = <Typography.Text style={s.figure}>{balance.outstanding}</Typography.Text>;
+  const figure = (
+    <Typography.Text style={hero ? s.figureHero : s.figure}>
+      {balance.outstanding}
+    </Typography.Text>
+  );
 
   /*
     THE SMALL PRINT, AND THE ONE FIGURE THAT IS NOT SMALL PRINT.
@@ -141,8 +159,13 @@ export function BalanceSummary({
   );
 
   /* Story 5 and story 6 start from the same button. Which amount it is for is
-     the dialog's question, not this card's. */
-  const action = (
+     the dialog's question, not this card's.
+
+     NO BUTTON WITH NOTHING TO PAY. The screen withholds `onPay` once the
+     schedule is behind the borrower; a primary action over a zero balance is
+     the loudest thing on the page inviting somebody to do something that
+     cannot be done. */
+  const action = !onPay ? null : (
     <Button
       type="primary"
       size="large"
@@ -171,7 +194,7 @@ export function BalanceSummary({
           The loan page's statement solved this the same way and the designer
           asked for the same here. On a phone it stays in the flow, under the
           figure, where a primary action belongs. */}
-      {stacked ? null : <div style={styles.actionSlot}>{action}</div>}
+      {stacked || !action ? null : <div style={styles.actionSlot}>{action}</div>}
       {/*
         The balance and the three figures under it are two groups, and the only
         thing separating them is space. There was a rule here; it was one line
@@ -210,7 +233,7 @@ export function BalanceSummary({
           ) : null}
         </Flex>
 
-        {stacked ? (
+        {stacked && action ? (
           <Flex vertical gap={16}>
             <Flex vertical>
               {figure}
@@ -264,6 +287,7 @@ export function BalanceSummary({
           spreads them over the width they have, which is also exactly what
           the loan page's statement does with its four. Two money pages, one
           way of setting out the small print. */}
+      {showDetails ? (
       <Flex vertical>
         <Divider style={styles.rule} />
         <Row gutter={[24, 20]}>
@@ -283,6 +307,7 @@ export function BalanceSummary({
           ))}
         </Row>
       </Flex>
+      ) : null}
     </Flex>
   );
 }

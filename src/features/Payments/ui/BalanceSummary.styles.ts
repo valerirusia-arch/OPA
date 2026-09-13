@@ -21,7 +21,15 @@ export const styles = {
   /** Top right of the panel, level with the label — the loan statement's own
    *  arrangement. */
   actionSlot: { position: "absolute", top: 0, right: 0, zIndex: 1 },
-  next: { marginTop: 8, fontSize: 13 },
+  /**
+   * The line under the figure — 14, the size the loan page's statement sets
+   * the same line at.
+   *
+   * It was 13, which put "Next payment $120.65 due Jan 01, 2027" a step below
+   * "Due Jan 01, 2027" on the other page. Same sentence, same job, same
+   * position under the same figure, two sizes.
+   */
+  next: { marginTop: 8, fontSize: 14 },
   /**
    * Side by side with the figure, the button is its own width — never stretched
    * by the row and never squashed by a long balance. Stacked it goes `block`
@@ -81,6 +89,27 @@ export const getStyles = (token: GlobalToken) => {
      * metric cards — three sizes for one idea. Now there are two, and which
      * one a figure gets is a question about the page, not about the component.
      */
+    /**
+     * The figure, at the product's own `figureLg`.
+     *
+     * This is the size /loan sets its next payment at, and the two pages sit
+     * one click apart — a balance at one size on /payments and at another on
+     * /loan is the kind of difference nobody names and everybody feels.
+     */
     figure: { ...figures.figureLg, display: "block" },
+    /**
+     * The same figure where the card LEADS a page rather than sitting in it.
+     *
+     * Only the dashboard's, where the balance is the first thing on the
+     * screen and the only thing at its rank. It was applied to the component
+     * itself at first, which quietly grew /payments' balance too and broke
+     * the very consistency it was meant to serve. Clamped because 46 of
+     * tabular digits wraps on a phone.
+     */
+    figureHero: {
+      ...figures.figureLg,
+      display: "block",
+      fontSize: "clamp(36px, 4.2vw, 46px)",
+    },
   }) satisfies Record<string, CSSProperties>;
 };

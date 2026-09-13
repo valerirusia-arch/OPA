@@ -37,13 +37,14 @@
 //
 // Dumb: reads the same records every other screen reads, and navigates.
 
-import { Button, Card, Col, Flex, Grid, Row, Typography } from "antd";
+import { Button, Card, Flex, Typography } from "antd";
 import {
   BankOutlined,
   CreditCardOutlined,
   FileTextOutlined,
   HistoryOutlined,
 } from "@ant-design/icons";
+
 import { useNavigate } from "@tanstack/react-router";
 import { AppHeader } from "../../shared/ui/AppHeader";
 import { HeroBackdrop } from "../../shared/ui/HeroBackdrop";
@@ -52,19 +53,17 @@ import { useT } from "../../shared/ui/i18n/useT";
 import { useCustomerViewer } from "../../shared/ui/viewerRole";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
+import { ApplicationProgress } from "../../features/Dashboard/ui/ApplicationProgress";
 import { ShortcutTiles } from "../../features/Dashboard/ui/ShortcutTiles";
-import { PaymentHistory } from "../../features/Payments/ui/PaymentHistory";
-import { RepaymentRing } from "../../features/Payments/ui/RepaymentRing";
-import { LoanJourney } from "../../features/Loan/ui/LoanJourney";
-import { LoanStatement } from "../../features/Loan/ui/LoanStatement";
+import { NoLoanMark } from "../../features/Loan/ui/NoLoanMark";
 import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
 import { stageCopy } from "../../features/Payments/ui/delinquency";
-import { NoScheduleMark } from "../../features/Payments/ui/NoScheduleMark";
-import { NoLoanMark } from "../../features/Loan/ui/NoLoanMark";
-import { ApplicationMark } from "../../features/LoanApplication/ui/ApplicationMark";
 import { hasOpenApplication, useLoanRecord, usePaymentsRecord } from "../loan/loanRecord";
 import { BorrowerInbox } from "../notifications/BorrowerInbox";
 import { useUnreadCount } from "../notifications/notifications";
+import { applicationTrack } from "./applicationTrack";
+import { useTrackerVariant } from "./trackerVariant";
+import { leadPanelBody } from "../../shared/ui/panel.styles";
 import { styles } from "./DashboardScreen.styles";
 
 export type DashboardScreenProps = {
@@ -82,7 +81,6 @@ export default function DashboardScreen({
   const t = useT();
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
   const unreadCount = useUnreadCount(viewer.role);
-  const screens = Grid.useBreakpoint();
 
   const record = useLoanRecord();
   const payments = usePaymentsRecord();
@@ -94,6 +92,18 @@ export default function DashboardScreen({
   const firstName = person.split(" ")[0] ?? person;
 
   const notice = payments ? stageCopy[payments.balance.stage] : undefined;
+
+  /* WHERE THE APPLICATION HAS GOT TO, for the band that used to state the
+     amount. See applicationTrack.ts; the variant is the dev dock's switch
+     and one of the two goes when the designer has chosen. */
+  const trackerVariant = useTrackerVariant();
+  const track = live && record ? applicationTrack(t, record) : undefined;
+  /* Bound here rather than inline, so the closure captures the destination
+     rather than re-reading an optional through the object it came from. */
+  const trackStep = track?.action;
+  const trackAction = trackStep
+    ? { label: trackStep.label, onClick: () => navigate({ to: trackStep.to }) }
+    : undefined;
 
   const paidCount = payments?.schedule.filter((row) => row.status === "paid").length ?? 0;
   const nextDue = payments?.schedule.find((row) => row.status !== "paid");
@@ -108,6 +118,7 @@ export default function DashboardScreen({
     co-borrower's is the card they pay from. Neither is shown the other's.
   */
   const ownCard = payments?.cards.find((card) => card.owner === viewer.role && card.active);
+
   const tiles = [
     {
       key: "loan",
@@ -207,17 +218,6 @@ export default function DashboardScreen({
               </Typography.Text>
             </Flex>
 
-            {/* ALWAYS THE FOUR. The page keeps its shape whatever state the
-                account is in — a dashboard that grows and shrinks is a
-                dashboard nobody learns. What an empty tile does NOT do is
-                print a dash: it shows its label and waits. */}
-            <div style={styles.band}>
-              <ShortcutTiles
-                items={tiles}
-                emptyValue={t("dashboard.tileNothing")}
-                onOpen={(to) => navigate({ to })}
-              />
-            </div>
 
             {/*
               THE MONEY, ACROSS THE PAGE.
@@ -236,9 +236,12 @@ export default function DashboardScreen({
                 sentence the greeting has already said is three half-answers
                 where the page has one. */}
             {payments ? (
-              <Card style={styles.band}>
+              <Card style={styles.band} styles={{ body: leadPanelBody }}>
                 <BalanceSummary
                   balance={payments.balance}
+                  /* The first thing on this page, and the only thing at its
+                     rank. /payments and /loan keep the ordinary size. */
+                  hero
                   /* THE NOTICE IS NOT A BAND ANY MORE. It was a full-width
                      yellow slab above this card carrying three sentences of
                      policy, which made a rule about the account look like the
@@ -262,68 +265,65 @@ export default function DashboardScreen({
                       : undefined
                   }
                   pastDue={payments.balance.pastDue}
-                  progress={{ paid: paidCount, total: payments.schedule.length }}
+                  /* NOTHING LEFT TO PAY IS A DIFFERENT CARD. With the
+                     schedule behind them the bar is a full green line saying
+                     nothing, the small print bills a payoff of $0.00 and a
+                     final payment next September, and a primary action offers
+                     to pay a zero balance. All three were on screen at once.
+                     Settled, the card is the figure and the sentence under
+                     it — which is the whole truth at that point. */
+                  progress={nextDue ? { paid: paidCount, total: payments.schedule.length } : undefined}
+                  showDetails={nextDue !== undefined}
                   next={nextDue}
-                  onPay={() => navigate({ to: "/payments" })}
+                  onPay={nextDue ? () => navigate({ to: "/payments" }) : undefined}
                 />
               </Card>
-            ) : live && record ? (
+            ) : track ? (
+              /* THE ROAD, AND THE PLACE ON IT. This band used to state the
+                 amount applied for, the reference and the USCIS service, and
+                 the designer threw out the premise rather than the styling:
+                 *"დაივიწყე ამ კონტენერის ეს არსი."* The amount is on the tile
+                 directly below this card and the other two are on
+                 /application; none of the three answers what a borrower opens
+                 this page to find out. */
               <div style={styles.band}>
-                <LoanStatement
-                  label={t("dashboard.appliedFor")}
-                  value={record.amount}
-                  caption={
-                    /* A DECLINED APPLICATION IS NOT "under review". The record
-                       carries the customer-facing decision note for exactly
-                       this, and printing the submission date instead reads as
-                       though it were still in the queue. */
-                    record.status === "declined" && record.decisionNote
-                      ? record.decisionNote
-                      : t("dashboard.submittedOn", { date: record.submittedOn })
-                  }
-                  action={{
-                    label: t("dashboard.viewApplication"),
-                    onClick: () => navigate({ to: "/loan" }),
-                  }}
-                  facts={[
-                    { key: "ref", label: t("dashboard.reference"), value: record.id, span: 8 },
-                    {
-                      key: "uscis",
-                      label: t("dashboard.uscis"),
-                      value: record.uscisType,
-                      span: 16,
-                    },
-                  ]}
+                <ApplicationProgress
+                  steps={track.steps}
+                  current={track.current}
+                  failed={track.failed}
+                  title={track.title}
+                  body={track.body}
+                  owner={track.owner}
+                  variant={trackerVariant}
+                  action={trackAction}
                 />
               </div>
             ) : (
-              /* THE FRAME STAYS, EMPTY. The page keeps its four bands in every
-                 state so its shape is learnable; what changes is what is in
-                 them. Here: the drawing, the sentence and the way in.
+              /* THE FRAME STAYS, EMPTY — and it was wrong to take it out with
+                 the rest. *"ეს მჭირდება ემთი სფეისზეც რომ იყოს."*
+
+                 Stripped, the page's first state was a greeting sitting
+                 directly on four tiles with no values in them: nothing to
+                 read, and no way to start the thing that fills them. The
+                 band is where the money goes, so before there is any it
+                 carries the drawing, the sentence, and the way in.
 
                  AND IT IS TITLED, unlike the same band when it is full. A
                  figure names itself — "OUTSTANDING BALANCE" and "APPLIED FOR"
                  sit above their own numbers — but an empty frame has nothing
-                 to do that, and the two panels below it are both titled. A
-                 band with no name between two named ones reads as a gap. */
+                 to do that with. */
               <Card title={t("dashboard.loanBand")} style={styles.band}>
-                <Flex
-                  vertical
-                  align="center"
-                  gap={16}
-                  style={screens.md === false ? styles.emptyNarrow : styles.empty}
-                >
+                <Flex vertical align="center" gap={16} style={styles.empty}>
                   <NoLoanMark size={140} muted />
                   <Typography.Text type="secondary" style={styles.emptyCopy}>
                     {t("dashboard.emptyBody")}
                   </Typography.Text>
                   {/* NOT FILLED. On /loan and /payments the same offer is the
                       whole point of the page and carries the accent; here it
-                      sits inside one frame of four, beside a mark that was
-                      deliberately taken down to neutral. A saturated button
-                      is then the only loud thing in a quiet panel, which is
-                      what the designer saw. Outlined it is still the only
-                      control in the frame, so it is still unmissable. */}
+                      sits beside a mark that was deliberately taken down to
+                      neutral. A saturated button is then the only loud thing
+                      in a quiet panel. Outlined it is still the only control
+                      in the frame, so it is still unmissable. */}
                   <Button size="large" onClick={() => navigate({ to: "/application" })}>
                     {t("loanPage.startApplication")}
                   </Button>
@@ -331,122 +331,22 @@ export default function DashboardScreen({
               </Card>
             )}
 
-            {/*
-              WHERE IT HAS GOT TO, AND WHAT THE SCHEDULE LOOKS LIKE.
+            {/* THE FOUR FACTS, UNDER THE ANSWER.
+                They led the page and they should not: they are four ways in,
+                and a way in is not what a borrower opens this page for. The
+                figure above is. */}
+            {/* ALWAYS THE FOUR. The page keeps its shape whatever state the
+                account is in — a dashboard that grows and shrinks is a
+                dashboard nobody learns. What an empty tile does NOT do is
+                print a dash: it shows its label and waits. */}
+            <div style={styles.band}>
+              <ShortcutTiles
+                items={tiles}
+                emptyValue={t("dashboard.tileNothing")}
+                onOpen={(to) => navigate({ to })}
+              />
+            </div>
 
-              Half and half, as the designer asked for the tracker back —
-              *"ჯობია ისევ ნახევარ ეკრანზე იყო"*.
-
-              Two progress pictures side by side, and they are not the same
-              picture: the rail on the left is the LOAN's four stages, the
-              ring on the right is the SCHEDULE's twelve instalments. The rail
-              ends the day the money moves; the ring only starts then.
-            */}
-            <Row gutter={[24, 24]} style={styles.band}>
-              <Col xs={24} lg={12}>
-                <Card title={t("dashboard.journeyTitle")} style={styles.journeyCard}>
-                  {live && record ? (
-                    <LoanJourney
-                      status={record.status}
-                      stage={loan?.stage}
-                      paid={
-                        payments ? { count: paidCount, total: payments.schedule.length } : undefined
-                      }
-                      /* EVERY STEP THE RECORD CAN DATE. The signature date is
-                         the loan agreement's own execution date, which is the
-                         same fact the Documents tab lists; approval and
-                         funding come from the loan.
-
-                         NO DATE ON "REPAID". The schedule's maturity is when
-                         the loan WILL close, not when it did, and the card
-                         above already states it as FINAL PAYMENT DUE. The
-                         tracker only ever dates what has happened. */
-                      /* WHAT EACH STAGE IS WAITING ON, in the WBS's own
-                         words, and only on the stage the loan is actually in.
-                         These are the sentences the dated list used to carry;
-                         the list is gone and the facts are not, so they moved
-                         onto the step they were always about. */
-                      notes={{
-                        signed:
-                          loan?.stage === "awaitingSignature"
-                            ? t(
-                                record.coBorrower
-                                  ? "dashboard.stepSignBodyBoth"
-                                  : "dashboard.stepSignBody"
-                              )
-                            : undefined,
-                        funded:
-                          loan?.stage === "funding"
-                            ? t("dashboard.stepFundingBody")
-                            : undefined,
-                      }}
-                      dates={{
-                        approved: loan?.approvedOn,
-                        signed: record.documents.find(
-                          (document) => document.type === "loan_agreement" && document.executed
-                        )?.on,
-                        funded: loan?.fundedOn,
-                      }}
-                    />
-                  ) : (
-                    <Flex vertical align="center" gap={12} style={styles.panelEmpty}>
-                      <ApplicationMark badge="add" size={100} muted />
-                      <Typography.Text type="secondary" style={styles.emptyCopy}>
-                        {t("dashboard.journeyNone")}
-                      </Typography.Text>
-                    </Flex>
-                  )}
-                </Card>
-              </Col>
-              <Col xs={24} lg={12}>
-                <Card title={t("dashboard.ringTitle")} style={styles.journeyCard}>
-                  {payments && payments.schedule.length > 0 ? (
-                    <RepaymentRing
-                      paid={paidCount}
-                      overdue={
-                        payments.schedule.filter((row) => row.status === "overdue").length
-                      }
-                      total={payments.schedule.length}
-                    />
-                  ) : (
-                    <Flex vertical align="center" gap={12} style={styles.panelEmpty}>
-                      <NoScheduleMark size={100} muted />
-                      <Typography.Text type="secondary" style={styles.emptyCopy}>
-                        {t("dashboard.ringNone")}
-                      </Typography.Text>
-                    </Flex>
-                  )}
-                </Card>
-              </Col>
-            </Row>
-
-            {/*
-              WHAT HAS ACTUALLY HAPPENED TO THE MONEY.
-
-              This band held "What happens next" — a dated list of what the
-              WBS would ask of the borrower. The designer took it out for the
-              record of what has already been attempted, which is the thing a
-              borrower checks between statements: *"what happens next არ
-              გვინდა, მოდი იყოს recent transactions"*.
-
-              It is /payments' own table, handed the four most recent rows and
-              no retry: acting on a failed payment belongs to the page that
-              owns paying, and the way there is one click above.
-            */}
-            {payments && payments.history.length > 0 ? (
-              <Card
-                title={t("dashboard.recentTitle")}
-                style={styles.band}
-                extra={
-                  <Button type="link" onClick={() => navigate({ to: "/payments" })}>
-                    {t("dashboard.recentAll")}
-                  </Button>
-                }
-                styles={{ body: styles.tableBody }}
-              >
-                <PaymentHistory transactions={payments.history.slice(0, 4)} reader={viewer.role} />
-              </Card>
-            ) : null}
           </div>
         </div>
       </HeroBackdrop>

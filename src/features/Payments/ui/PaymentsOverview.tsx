@@ -44,6 +44,7 @@ import {
 import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
 import { useT } from "../../../shared/ui/i18n/useT";
+import { leadPanelBody } from "../../../shared/ui/panel.styles";
 import type { CardToken } from "../../LoanApplication/ui/types";
 import { BalanceSummary } from "./BalanceSummary";
 import { PaymentHistory } from "./PaymentHistory";
@@ -190,7 +191,12 @@ export function PaymentsOverview({
               loan page's statement states its own — see BalanceSummary. */}
           <Card
             style={sideBySide ? styles.stretchCard : undefined}
-            styles={{ body: sideBySide ? styles.fillBody : undefined }}
+            /* THE PAGE'S LEAD, at the lead inset. It was antd's own 24, which
+               made the same figure under the same label sit 8px closer to its
+               card edge here than on /loan. See shared/ui/panel.styles.ts. */
+            styles={{
+              body: sideBySide ? { ...leadPanelBody, ...styles.fillBody } : leadPanelBody,
+            }}
           >
             <BalanceSummary
               balance={record.balance}

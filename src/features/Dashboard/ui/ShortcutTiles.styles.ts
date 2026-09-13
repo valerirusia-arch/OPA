@@ -17,7 +17,7 @@ export const styles = {
    * 12, and it is the one place in the product set below 13.
    *
    * 13 is right for a footnote that stands on its own line, which this was
-   * when it was one. It is NOT a footnote any more: it rides beside a 20px
+   * when it was one. It is NOT a footnote any more: it rides beside an 18px
    * figure on the same baseline, and at 13 it read as a second fact competing
    * with the first rather than as the qualifier it is — *"გრძელია
    * ზედმეტად"*. One step down puts it where a qualifier belongs.
@@ -123,15 +123,15 @@ export const getStyles = (token: GlobalToken) => {
     /**
      * The tile's figure.
      *
-     * `rowValue`'s treatment at the figure scale's own 20.
+     * `rowValue`'s treatment at 18.
      *
-     * It has been 20, then 15, then 16, and the designer settled it at 20: in
-     * a card of its own the value IS the content, not a footnote under
-     * somebody else's headline, and the tile is the only place on this page a
-     * borrower reads these four facts. The band can carry it now that the
-     * containers around it stopped shouting — no chip, no 148px floor, and
-     * the qualifier beside the figure rather than under it.
+     * 20 was set when this band was the only thing under the greeting. It
+     * isn't now: the money card above it opens at 46, and the gap from 46 to
+     * 20 is not wide enough to say which of the two a reader is meant to look
+     * at first. 18 keeps the tiles legible as figures — they are still a step
+     * above the 15 the rest of the product uses for a value under a label —
+     * while leaving the page one headline.
      */
-    value: { ...figures.rowValue, fontSize: 20, display: "block" },
+    value: { ...figures.rowValue, fontSize: 18, display: "block" },
   } satisfies Record<string, CSSProperties>;
 };
