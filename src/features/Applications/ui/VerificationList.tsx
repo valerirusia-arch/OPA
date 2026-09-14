@@ -20,7 +20,7 @@
 //
 // Dumb: it renders results it is given.
 
-import { Divider, Flex, Typography, theme } from "antd";
+import { Divider, Flex, Grid, Typography, theme } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { CheckOutcomeTag } from "./CheckTags";
 import { checkLabelKeys, checkProviderKeys } from "./checks";
@@ -35,13 +35,24 @@ export function VerificationList({ results }: VerificationListProps) {
   const t = useT();
   const { token } = theme.useToken();
   const s = getStyles(token);
+  // On a phone the check name and a full sentence of evidence cannot share one
+  // line without one of them breaking mid-word; below `sm` (576px) the row
+  // stacks — name over evidence, each on its own full-width line.
+  const screens = Grid.useBreakpoint();
+  const stack = screens.sm === false;
 
   return (
     <Flex vertical>
       {results.map((result, index) => (
         <Flex vertical key={result.key}>
           {index > 0 ? <Divider style={styles.rule} /> : null}
-          <Flex align="flex-start" justify="space-between" gap={16} style={styles.row}>
+          <Flex
+            vertical={stack}
+            align={stack ? "flex-start" : "flex-start"}
+            justify="space-between"
+            gap={stack ? 8 : 16}
+            style={styles.row}
+          >
             <Flex vertical style={styles.name}>
               <Typography.Text>{t(checkLabelKeys[result.key])}</Typography.Text>
               <Typography.Text type="secondary" style={styles.detail}>
@@ -49,11 +60,23 @@ export function VerificationList({ results }: VerificationListProps) {
               </Typography.Text>
             </Flex>
 
-            <Flex align="center" gap={12} style={styles.result}>
+            <Flex
+              align="center"
+              gap={12}
+              style={stack ? styles.resultStacked : styles.result}
+            >
               {/* The evidence, in the provider's own words. A bare score gets
                   the figure treatment; a sentence stays a sentence. */}
               {result.detail ? (
-                <Typography.Text style={/^\d+$/.test(result.detail) ? s.score : styles.evidence}>
+                <Typography.Text
+                  style={
+                    /^\d+$/.test(result.detail)
+                      ? s.score
+                      : stack
+                        ? styles.evidenceStacked
+                        : styles.evidence
+                  }
+                >
                   {result.detail}
                 </Typography.Text>
               ) : null}

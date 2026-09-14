@@ -257,7 +257,9 @@ export default function ApplicationDetailsScreen({
       }
       titleAfter={
         <Flex align="center" gap={12}>
-          <Typography.Text type="secondary">{record.id}</Typography.Text>
+          <Typography.Text type="secondary" style={{ whiteSpace: "nowrap" }}>
+            {record.id}
+          </Typography.Text>
           <ApplicationStatusTag status={record.status} />
         </Flex>
       }

@@ -47,7 +47,10 @@ export function AdminPage({
         wrap
         style={styles.titleRow}
       >
-        <Flex align="center" gap={12}>
+        {/* Wraps so a long applicant name plus the id and status tag beside it
+            fall onto a second line on a phone, rather than squeezing the id
+            column down to one character per line. */}
+        <Flex align="center" gap={12} wrap>
           {titleBefore}
           <Typography.Title level={2} style={styles.title}>
             {title}
