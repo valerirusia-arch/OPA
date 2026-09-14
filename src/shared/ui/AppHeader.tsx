@@ -89,7 +89,7 @@ export function AppHeader({
     <Flex component="header" style={styles.header} align="center">
       <div style={styles.inner}>
       <Link to="/" aria-label={t("header.home")}>
-        <Logo height={26} />
+        <Logo height={22} />
       </Link>
 
       <ConfigProvider theme={navTheme}>

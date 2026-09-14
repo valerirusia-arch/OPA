@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
+import { brand } from "../../theme/tokens";
 
 export const styles = {
   /**
@@ -21,8 +22,11 @@ export const styles = {
   mark: { isolation: "isolate", display: "block" },
 } satisfies Record<string, CSSProperties>;
 
-export const getStyles = (token: GlobalToken) =>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getStyles = (_token: GlobalToken) =>
   ({
-    /** One colour for all three; the intersections make their own. */
-    letter: { fill: token.colorPrimary, mixBlendMode: "multiply" },
+    /** The mark's own blue (brand.logo), a shade softer than the product's
+     *  primary — one colour for all three letters; the intersections make
+     *  their own by multiplying. */
+    letter: { fill: brand.logo, mixBlendMode: "multiply" },
   }) satisfies Record<string, CSSProperties>;

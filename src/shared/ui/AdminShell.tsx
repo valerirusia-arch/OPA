@@ -107,7 +107,7 @@ export function AdminShell({
         style={styles.sider}
       >
         <Flex align="center" style={styles.brand}>
-          <Logo height={22} />
+          <Logo height={18} />
         </Flex>
 
         <Menu

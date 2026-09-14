@@ -21,6 +21,30 @@ export const brand = {
   /** Primary: filled actions, links, focus rings, selection. */
   primary: "#2456E6",
   primaryHover: "#1B45C4",
+  /**
+   * THE LOGO'S OWN BLUE, and deliberately NOT the primary.
+   *
+   * The designer asked the mark to sit a shade softer than the product's
+   * working blue — *"ოდნავ მსუბუქად იჯდეს"* — so the wordmark reads as a brand
+   * mark rather than one more primary-coloured control in the chrome. A
+   * periwinkle, lighter and less saturated than `primary`; the letters darken
+   * where they overlap by multiplying, so this is the FLAT colour and the
+   * intersections derive from it.
+   */
+  logo: "#5468E8",
+  /**
+   * THE STATUS DONUT'S OWN PALETTE.
+   *
+   * The semantic success/error/warning read as clashing at arc size — a hard
+   * green next to a hard red next to a gold — and the fill grey came out too
+   * dark. This is a softer, more even set: the same meanings (approved,
+   * declined, in review, pending) at a gentler, more harmonious saturation,
+   * and a genuinely light grey for the rest.
+   */
+  donutApproved: "#4FAE86",
+  donutDeclined: "#E2796E",
+  donutReview: "#E4AC55",
+  donutPending: "#E6E9EF",
   /** The primary at ~45% over white — a blue outline that hints, not shouts. */
   primarySoft: "#9CB3F4",
   primaryActive: "#1739A6",
@@ -400,9 +424,17 @@ export const tokens: ThemeConfig = {
       controlHeight: 48,
       controlHeightLG: 48,
       trackPadding: 3,
-      // Flat thumb, no drop shadow: a white pill on the light track reads on
-      // its own, and a shadow would add back the weight this change removed.
-      boxShadowTertiary: brand.shadowNone,
+      // CONCENTRIC CORNERS. The track rounds at 14 (borderRadiusLG) and the
+      // thumb inside it has to round at 14 − the 3px padding = 11, or the inner
+      // corner reads tighter than the outer and the two do not nest. *"გარე
+      // უფრო მომრგვალებულია ... რომ თანაბრად იჯდნენ."*
+      borderRadiusLG: 14,
+      borderRadius: 11,
+      // A VERY LIGHT STROKE on the white thumb — an inset hairline in the
+      // product's own border grey, so the pill has an edge of its own against
+      // the pale track without a drop shadow's weight. *"ამ თეთრს ძალიან
+      // მსუბუქი სტროუკიც გაუკეთე."*
+      boxShadowTertiary: `inset 0 0 0 1px ${brand.border}`,
     },
     // colorErrorText is what antd paints the typed value with in an error
     // state. Red text on a red border is shouting; the message already says it.

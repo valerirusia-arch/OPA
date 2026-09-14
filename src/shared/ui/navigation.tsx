@@ -71,7 +71,7 @@ export const staffNav: NavSection[] = [
     key: "operations",
     labelKey: "nav.groupOperations",
     items: [
-      { key: "dashboard", labelKey: "nav.dashboard", icon: <DashboardOutlined /> },
+      { key: "dashboard", labelKey: "nav.dashboard", icon: <DashboardOutlined />, to: "/staff/dashboard" },
       { key: "borrowers", labelKey: "nav.borrowers", icon: <TeamOutlined />, to: "/staff/borrowers" },
       {
         key: "review-queue",
@@ -93,10 +93,10 @@ export const staffNav: NavSection[] = [
         labelKey: "nav.acquisition",
         icon: <NodeIndexOutlined />,
         children: [
-          { key: "source", labelKey: "nav.source" },
-          { key: "partners", labelKey: "nav.partners" },
-          { key: "campaigns", labelKey: "nav.campaigns" },
-          { key: "performance", labelKey: "nav.performance" },
+          { key: "source", labelKey: "nav.source", to: "/staff/acquisition/sources" },
+          { key: "partners", labelKey: "nav.partners", to: "/staff/acquisition/partners" },
+          { key: "campaigns", labelKey: "nav.campaigns", to: "/staff/acquisition/campaigns" },
+          { key: "performance", labelKey: "nav.performance", to: "/staff/acquisition/performance" },
         ],
       },
     ],

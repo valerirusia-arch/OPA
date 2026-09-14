@@ -31,6 +31,11 @@ import StaffLoansScreen from "./staff-loans/StaffLoansScreen";
 import LoanRecordScreen from "./staff-loans/loan-details/LoanRecordScreen";
 import ApplicationDetailsScreen from "./staff-applications/application-details/ApplicationDetailsScreen";
 import StaffReportingScreen from "./staff-reporting/StaffReportingScreen";
+import AcquisitionSourcesScreen from "./staff-acquisition/AcquisitionSourcesScreen";
+import AcquisitionPartnersScreen from "./staff-acquisition/AcquisitionPartnersScreen";
+import AcquisitionCampaignsScreen from "./staff-acquisition/AcquisitionCampaignsScreen";
+import AcquisitionPerformanceScreen from "./staff-acquisition/AcquisitionPerformanceScreen";
+import StaffDashboardScreen from "./staff-dashboard/StaffDashboardScreen";
 import BorrowerDetailsScreen from "./staff-borrowers/borrower-details/BorrowerDetailsScreen";
 import SetPasswordScreen from "./set-password/SetPasswordScreen";
 import ApplicationStartScreen from "./application/ApplicationStartScreen";
@@ -187,6 +192,11 @@ export const routes: FlowRoute[] = [
         meta: { role: "staff", flow: "Profile", label: "OPA staff profile" },
       },
       {
+        path: "dashboard",
+        component: StaffDashboardScreen,
+        meta: { role: "staff", flow: "Admin dashboard", label: "Dashboard" },
+      },
+      {
         path: "users",
         component: StaffUsersScreen,
         meta: { role: "admin", flow: "Users management", label: "Users" },
@@ -195,6 +205,32 @@ export const routes: FlowRoute[] = [
         path: "reporting",
         component: StaffReportingScreen,
         meta: { role: "staff", flow: "Reporting audit", label: "Reporting" },
+      },
+      {
+        path: "acquisition",
+        meta: { role: "admin", flow: "Acquisition Channels" },
+        children: [
+          {
+            path: "sources",
+            component: AcquisitionSourcesScreen,
+            meta: { role: "admin", flow: "Acquisition Channels", label: "Acquisition sources" },
+          },
+          {
+            path: "partners",
+            component: AcquisitionPartnersScreen,
+            meta: { role: "admin", flow: "Acquisition Channels", label: "Referral partners" },
+          },
+          {
+            path: "campaigns",
+            component: AcquisitionCampaignsScreen,
+            meta: { role: "admin", flow: "Acquisition Channels", label: "Marketing campaigns" },
+          },
+          {
+            path: "performance",
+            component: AcquisitionPerformanceScreen,
+            meta: { role: "staff", flow: "Acquisition Channels", label: "Lending performance" },
+          },
+        ],
       },
       {
         path: "applications",

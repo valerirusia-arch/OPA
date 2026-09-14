@@ -28,7 +28,7 @@
 //
 // Dumb: a role, a list of report descriptors, and a simulated download.
 
-import { App, Button, Card, Divider, Dropdown, Flex, Typography, theme } from "antd";
+import { App, Button, Card, Divider, Dropdown, Flex, Typography } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
@@ -37,31 +37,14 @@ import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer, type StaffRole } from "../../shared/ui/viewerRole";
 import { useT } from "../../shared/ui/i18n/useT";
 import type { TranslationKey } from "../../shared/ui/i18n/dictionary";
-import { getFigureStyles } from "../../shared/ui/figures.styles";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
 import { styles } from "./StaffReportingScreen.styles";
 
-/**
- * THE SUMMARY BAND, from the wireframe.
- *
- * The WBS's Reporting & Audit epic has no story for these — summary metrics
- * are a Dashboard concept, and the WBS keeps a separate "Admin dashboard" epic
- * for them (unbuilt). They were flagged to the designer as out-of-epic and the
- * designer asked for them here anyway, with the counts kept honest.
- *
- * So the labels ARE the WBS's own: Approved / Declined / In review are the
- * application statuses from "View application status" (story 3), and
- * Applications and Borrowers are counts the system already keeps. Mock figures
- * for the prototype; Dev reads the real counts.
- */
-const SUMMARY: { key: string; labelKey: TranslationKey; value: number }[] = [
-  { key: "applications", labelKey: "reporting.statApplications", value: 10 },
-  { key: "approved", labelKey: "reporting.statApproved", value: 2 },
-  { key: "declined", labelKey: "reporting.statDeclined", value: 2 },
-  { key: "review", labelKey: "reporting.statInReview", value: 1 },
-  { key: "borrowers", labelKey: "reporting.statBorrowers", value: 11 },
-];
+// The summary band that briefly sat here moved to the back-office Dashboard,
+// where it belongs — it is a Dashboard concept, not a Reporting story, and the
+// designer took it off this page once the Dashboard existed. The stat labels
+// (reporting.stat*) stay in the dictionary; SummaryStats reads them there.
 
 type Report = {
   key: string;
@@ -106,8 +89,6 @@ export default function StaffReportingScreen({
   const name = viewerName ?? viewer.name;
   const navigate = useNavigate();
   const t = useT();
-  const { token } = theme.useToken();
-  const fig = getFigureStyles(token);
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
 
   const available = REPORTS.filter((report) => report.roles.includes(viewer.role));
@@ -127,19 +108,6 @@ export default function StaffReportingScreen({
         <Typography.Text type="secondary" style={styles.lead}>
           {t("reporting.lead")}
         </Typography.Text>
-
-        {/* The summary band — see SUMMARY. Wireframe's, not the WBS's, and
-            designer-approved on this page; the labels stay WBS status words. */}
-        <Flex gap={12} wrap style={styles.statRow}>
-          {SUMMARY.map((stat) => (
-            <Card key={stat.key} style={styles.statCard} styles={{ body: styles.statBody }}>
-              <Flex vertical gap={4}>
-                <Typography.Text style={fig.microLabel}>{t(stat.labelKey)}</Typography.Text>
-                <Typography.Text style={fig.figure}>{stat.value}</Typography.Text>
-              </Flex>
-            </Card>
-          ))}
-        </Flex>
 
         <Card>
           {available.map((report, index) => (
