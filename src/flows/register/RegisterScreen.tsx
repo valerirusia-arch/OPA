@@ -277,8 +277,10 @@ export default function RegisterScreen() {
           Not on the last step, where the account has just been created and the
           button beside it goes to that account.
         */}
+        {/* wrap + nowrap link so the sign-in link drops to a second line
+            whole on a phone rather than breaking mid-word. */}
         {step !== STEP.done ? (
-          <Flex justify="center" gap={4} style={footer}>
+          <Flex justify="center" gap={4} wrap style={footer}>
             <Typography.Text type="secondary">
               {t("register.haveAccount")}
             </Typography.Text>
@@ -286,6 +288,7 @@ export default function RegisterScreen() {
                 inside another, so navigation goes through the callback. */}
             <Typography.Link
               onClick={() => navigate({ to: "/", search: { [NEXT_PARAM]: next } })}
+              style={{ whiteSpace: "nowrap" }}
             >
               {t("login.submit")}
             </Typography.Link>

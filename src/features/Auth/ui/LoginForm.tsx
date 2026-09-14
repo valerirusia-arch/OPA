@@ -86,7 +86,7 @@ export function LoginForm({
         <Form.Item name="remember" valuePropName="checked" noStyle>
           <Checkbox>{t("login.rememberMe")}</Checkbox>
         </Form.Item>
-        <Typography.Link onClick={onForgotPassword}>
+        <Typography.Link onClick={onForgotPassword} style={{ whiteSpace: "nowrap" }}>
           {t("login.forgotPassword")}
         </Typography.Link>
       </Flex>
@@ -116,9 +116,9 @@ export function LoginForm({
         </Button>
       </Form.Item>
 
-      <Flex justify="center" gap={4} style={styles.footer}>
+      <Flex justify="center" gap={4} wrap style={styles.footer}>
         <Typography.Text type="secondary">{t("login.noAccount")}</Typography.Text>
-        <Typography.Link onClick={onCreateAccount}>
+        <Typography.Link onClick={onCreateAccount} style={{ whiteSpace: "nowrap" }}>
           {t("login.createAccount")}
         </Typography.Link>
       </Flex>

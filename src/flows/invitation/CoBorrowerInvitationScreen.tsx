@@ -99,13 +99,19 @@ export default function CoBorrowerInvitationScreen({
             {/* The second door, quieter than the first: most people arriving
                 on an invitation are new, so registering stays the primary
                 action and signing in sits under it. */}
-            <Flex justify="center" gap={4} style={styles.signIn}>
+            {/* wrap + nowrap link: on a narrow phone the question and the link
+                fall onto two lines instead of the link's word breaking apart
+                ("Sig / n in"). */}
+            <Flex justify="center" gap={4} wrap style={styles.signIn}>
               <Typography.Text type="secondary">
                 {t("register.haveAccount")}
               </Typography.Text>
               {/* A Typography.Link inside a router Link would nest one <a>
                   inside another, so navigation goes through the callback. */}
-              <Typography.Link onClick={() => navigate({ to: "/", ...withReturn })}>
+              <Typography.Link
+                onClick={() => navigate({ to: "/", ...withReturn })}
+                style={{ whiteSpace: "nowrap" }}
+              >
                 {t("login.submit")}
               </Typography.Link>
             </Flex>
