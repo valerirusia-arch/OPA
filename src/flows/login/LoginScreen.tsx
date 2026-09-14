@@ -56,7 +56,12 @@ export default function LoginScreen() {
           value={audience}
           onChange={setAudience}
           options={[
-            { value: "borrower", label: t("login.tabBorrower"), icon: <UserOutlined /> },
+            {
+              value: "borrower",
+              label: t("login.tabBorrower"),
+              shortLabel: t("login.tabBorrowerShort"),
+              icon: <UserOutlined />,
+            },
             { value: "staff", label: t("login.tabStaff"), icon: <TeamOutlined /> },
           ]}
         />

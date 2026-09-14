@@ -26,7 +26,9 @@ export type AuthLayoutProps = {
 export function AuthLayout({ children, language, onLanguageChange }: AuthLayoutProps) {
   const { token } = theme.useToken();
   const screens = Grid.useBreakpoint();
-  const styles = getStyles(token, Boolean(screens.lg));
+  // Below sm the fixed desktop gutter squeezes the form to a sliver, so the
+  // layout switches to a slim edge margin.
+  const styles = getStyles(token, Boolean(screens.lg), screens.sm === false);
 
   return (
     <Flex style={styles.page}>

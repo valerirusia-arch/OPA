@@ -27,7 +27,7 @@ export const content: CSSProperties = { width: "100%", maxWidth: CONTENT_WIDTH }
  */
 export const contentBlock: CSSProperties = { width: "100%", minHeight: 530 };
 
-export const getStyles = (token: GlobalToken, hasAside: boolean) =>
+export const getStyles = (token: GlobalToken, hasAside: boolean, compact = false) =>
   ({
     page: {
       minHeight: "100vh",
@@ -43,9 +43,11 @@ export const getStyles = (token: GlobalToken, hasAside: boolean) =>
         }
       : {
           // No panel to balance against — the column just keeps its gutters.
+          // On a phone the desktop gutter (104px each side) would crush the form
+          // to a sliver, so it collapses to a slim edge margin below sm.
           flex: 1,
           minWidth: 0,
-          padding: `40px ${PAGE_GUTTER}px`,
+          padding: compact ? "32px 24px" : `40px ${PAGE_GUTTER}px`,
         },
     /** Reserved for the hero image — the glyph marks the slot until artwork exists. */
     aside: {

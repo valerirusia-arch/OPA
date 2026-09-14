@@ -15,12 +15,15 @@
 // Dumb: value in, choice out, no state of its own.
 
 import type { ReactNode } from "react";
-import { Segmented } from "antd";
+import { Grid, Segmented } from "antd";
 import { styles as s } from "./AudienceToggle.styles";
 
 export type AudienceOption<V extends string> = {
   value: V;
   label: string;
+  /** A shorter label used below sm, where the full one would truncate in a
+   *  half-width segment. Falls back to `label` when omitted. */
+  shortLabel?: string;
   icon: ReactNode;
 };
 
@@ -35,6 +38,11 @@ export function AudienceToggle<V extends string>({
   onChange,
   options,
 }: AudienceToggleProps<V>) {
+  // Below sm a half-width segment cannot hold "Borrower & Co-borrower", so a
+  // shorter label is used there when one is supplied.
+  const screens = Grid.useBreakpoint();
+  const compact = screens.sm === false;
+
   return (
     <Segmented<V>
       block
@@ -47,7 +55,7 @@ export function AudienceToggle<V extends string>({
         value: option.value,
         label: (
           <span style={value === option.value ? s.pillActive : undefined}>
-            {option.label}
+            {compact && option.shortLabel ? option.shortLabel : option.label}
           </span>
         ),
         icon: value === option.value ? <span style={s.pillIcon}>{option.icon}</span> : undefined,
