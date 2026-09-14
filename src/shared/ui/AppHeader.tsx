@@ -129,7 +129,10 @@ export function AppHeader({
         <Popover
           content={notifications}
           trigger="click"
-          placement="bottomRight"
+          /* Right-anchored to the bell on a wide screen. On a phone the bell
+             sits near the right edge, so a right-anchored panel spills off the
+             left; centring it keeps the whole panel on screen. */
+          placement={compact ? "bottom" : "bottomRight"}
           arrow={false}
           styles={{ container: popoverPanel }}
           /* Nothing to open on the staff side; the bell then behaves as it

@@ -5,8 +5,10 @@ import type { GlobalToken } from "antd";
 
 export const styles = {
   /** The wireframe's own measure. A dropdown wider than this stops reading as
-   *  a panel hanging off the bell and starts reading as a page. */
-  panel: { width: 360 },
+   *  a panel hanging off the bell and starts reading as a page. Capped to the
+   *  viewport so it doesn't overflow the screen edge on a phone (a fixed 360
+   *  is wider than a 375px screen once the bell's offset is counted). */
+  panel: { width: "min(360px, calc(100vw - 24px))" },
   head: { paddingInline: 16, paddingBlock: 12 },
   /** No end padding, so the link's words line up with the panel's edge. */
   markAll: { paddingInline: 0 },
