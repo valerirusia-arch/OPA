@@ -212,6 +212,7 @@ export default function AcquisitionPerformanceScreen({
             >
               <Table<PerfRow>
                 rowKey="key"
+                scroll={{ x: 640 }}
                 columns={perfColumns}
                 dataSource={PERF_ROWS}
                 pagination={false}

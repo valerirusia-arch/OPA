@@ -224,6 +224,7 @@ export default function AcquisitionSourcesScreen({
             <Table<AcquisitionSource>
               rowKey="id"
               tableLayout="fixed"
+              scroll={{ x: 860 }}
               columns={decorateColumns(columns)}
               dataSource={rows}
               locale={{

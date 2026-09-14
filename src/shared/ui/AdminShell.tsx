@@ -18,19 +18,26 @@
 //
 // Dumb: navigation, the user's name and every action arrive through props.
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Badge,
   Button,
+  Drawer,
   Dropdown,
   Flex,
+  Grid,
   Layout,
   Menu,
   Space,
   Typography,
   theme,
 } from "antd";
-import { DownOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
@@ -38,7 +45,6 @@ import { Logo } from "./Logo";
 import { useT } from "./i18n/useT";
 import type { NavItem, NavSection } from "./navigation";
 import {
-  SIDER_COLLAPSED_WIDTH,
   SIDER_WIDTH,
   getStyles,
   layout,
@@ -70,6 +76,13 @@ export function AdminShell({
   const { token } = theme.useToken();
   const styles = getStyles(token);
   const t = useT();
+  const screens = Grid.useBreakpoint();
+  // Below antd's `lg` (992px) the standing rail becomes a burger + drawer: a
+  // permanent sider on a phone leaves a customer-list column two words wide.
+  // Default to the rail until a breakpoint is actually measured, so the desktop
+  // layout never flashes a burger on first paint.
+  const compact = screens.lg === false;
+  const [navOpen, setNavOpen] = useState(false);
 
   /** A count sits at the end of the row, where a rail's eye already scans. */
   const label = (item: NavItem) => {
@@ -97,39 +110,61 @@ export function AdminShell({
     })),
   });
 
+  const navMenu_ = (
+    <Menu
+      mode="inline"
+      // antd writes the row's left padding as an inline style derived from
+      // this, which beats any token — 12 here plus the row's own 8px margin
+      // puts every icon 20px from the rail's edge, level with the section
+      // titles. Nested entries still step in by one unit.
+      inlineIndent={12}
+      selectedKeys={activeKey ? [activeKey] : []}
+      style={navMenu}
+      // In the drawer, choosing a destination should also dismiss it.
+      onClick={() => setNavOpen(false)}
+      items={sections.map((section) => ({
+        key: section.key,
+        type: "group" as const,
+        label: <span style={styles.groupLabel}>{t(section.labelKey)}</span>,
+        children: section.items.map(toMenuItem),
+      }))}
+    />
+  );
+
   return (
     <Layout style={layout}>
-      <Layout.Sider
-        theme="light"
-        width={SIDER_WIDTH}
-        collapsedWidth={SIDER_COLLAPSED_WIDTH}
-        breakpoint="lg"
-        style={styles.sider}
-      >
-        <Flex align="center" style={styles.brand}>
-          <Logo height={18} />
-        </Flex>
-
-        <Menu
-          mode="inline"
-          // antd writes the row's left padding as an inline style derived from
-          // this, which beats any token — 12 here plus the row's own 8px margin
-          // puts every icon 20px from the rail's edge, level with the section
-          // titles. Nested entries still step in by one unit.
-          inlineIndent={12}
-          selectedKeys={activeKey ? [activeKey] : []}
-          style={navMenu}
-          items={sections.map((section) => ({
-            key: section.key,
-            type: "group" as const,
-            label: <span style={styles.groupLabel}>{t(section.labelKey)}</span>,
-            children: section.items.map(toMenuItem),
-          }))}
-        />
-      </Layout.Sider>
+      {compact ? (
+        <Drawer
+          placement="left"
+          open={navOpen}
+          onClose={() => setNavOpen(false)}
+          width={SIDER_WIDTH}
+          title={<Logo height={18} />}
+          styles={{ body: styles.drawerBody }}
+        >
+          {navMenu_}
+        </Drawer>
+      ) : (
+        <Layout.Sider theme="light" width={SIDER_WIDTH} style={styles.sider}>
+          <Flex align="center" style={styles.brand}>
+            <Logo height={18} />
+          </Flex>
+          {navMenu_}
+        </Layout.Sider>
+      )}
 
       <Layout style={styles.body}>
         <Layout.Header style={styles.header}>
+          {compact ? (
+            <Button
+              type="text"
+              icon={<MenuOutlined />}
+              onClick={() => setNavOpen(true)}
+              aria-label={t("nav.openMenu")}
+              style={styles.burger}
+            />
+          ) : null}
+
           <LanguageSwitcher value={language} onChange={onLanguageChange} size="small" />
 
           <Dropdown

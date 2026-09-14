@@ -463,6 +463,10 @@ export default function StaffUsersScreen({
               // default auto layout a truncated cell lets its column collapse
               // and the neighbours take the room.
               tableLayout="fixed"
+              // Name/role/status/password/actions are fixed at 842px plus a
+              // flexible email column; scroll horizontally on a narrow screen
+              // rather than crushing email to nothing.
+              scroll={{ x: 1060 }}
               columns={decorateColumns(columns)}
               dataSource={visible}
               locale={{

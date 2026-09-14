@@ -112,27 +112,29 @@ export const staffNav: NavSection[] = [
 ];
 
 /**
- * The rail for one role.
- *
- * Two entries are role-specific, and both come from the WBS's own role column
- * rather than from a judgement about seniority:
+ * The rail for one role — each entry from the WBS's own role column, not from a
+ * judgement about seniority. Hidden keys cover both top-level items and the
+ * acquisition group's children:
  *
  *   users        — Epic 2 story 3 gives "view admin/underwriter" to the Admin
  *                  and OPA Staff only, so an Underwriter is not offered it.
- *   review-queue — Loan Decisioning names "Underwriter / OPA Staff" on "View
- *                  application details" and Underwriter alone on every action.
- *                  ADMIN IS NOT NAMED ON A SINGLE STORY IN THAT EPIC, so the
- *                  entry is not offered to them either. Being the superuser of
- *                  Epic 2 does not carry over; the WBS grants access story by
- *                  story, and this is the same reading that keeps an
- *                  Underwriter off the Users page.
+ *   review-queue — Loan Decisioning names "Underwriter / OPA Staff" and never
+ *                  the Admin, so the Admin is not offered it. Being Epic 2's
+ *                  superuser does not carry over; access is granted story by
+ *                  story.
+ *   acquisition  — Epic 10. Manage Sources / Partners / Campaigns are Admin
+ *                  ALONE; "Analyse performance" (and View/Search) add the
+ *                  Underwriter; OPA Staff is on NO acquisition story. So the
+ *                  Underwriter keeps only `performance` and OPA Staff loses the
+ *                  whole group, which drops out when all its children are gone.
  *
- * This is navigation, not enforcement: the real restriction is a route guard,
- * and that is Dev's, in /app.
+ * Navigation, not enforcement: the real restriction is a route guard, Dev's in
+ * /app, and each screen already draws its own 403 for a role that arrives by URL.
  */
 const HIDDEN_FOR: Partial<Record<StaffRole, string[]>> = {
-  underwriter: ["users"],
+  underwriter: ["users", "source", "partners", "campaigns"],
   admin: ["review-queue"],
+  staff: ["acquisition"],
 };
 
 export const staffNavFor = (role: StaffRole): NavSection[] => {
@@ -140,6 +142,16 @@ export const staffNavFor = (role: StaffRole): NavSection[] => {
   if (!hidden) return staffNav;
   return staffNav.map((section) => ({
     ...section,
-    items: section.items.filter((item) => !hidden.includes(item.key)),
+    items: section.items
+      // Drop hidden top-level items…
+      .filter((item) => !hidden.includes(item.key))
+      // …thin a group's children…
+      .map((item) =>
+        item.children
+          ? { ...item, children: item.children.filter((child) => !hidden.includes(child.key)) }
+          : item
+      )
+      // …and drop a group left with no children.
+      .filter((item) => !item.children || item.children.length > 0),
   }));
 };

@@ -122,6 +122,7 @@ export default function StaffDashboardScreen({
             >
               <Table<ApplicationRecord>
                 rowKey="id"
+                scroll={{ x: 520 }}
                 columns={recentColumns}
                 dataSource={recent}
                 pagination={false}

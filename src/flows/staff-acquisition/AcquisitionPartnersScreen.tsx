@@ -252,6 +252,7 @@ export default function AcquisitionPartnersScreen({
               <Table<ReferralPartner>
                 rowKey="id"
                 tableLayout="fixed"
+                scroll={{ x: 720 }}
                 columns={decorateColumns(partnerColumns)}
                 dataSource={partners}
                 pagination={false}
@@ -265,6 +266,7 @@ export default function AcquisitionPartnersScreen({
               <Table<PartnerGroup>
                 rowKey="id"
                 tableLayout="fixed"
+                scroll={{ x: 720 }}
                 columns={decorateColumns(groupColumns)}
                 dataSource={groups}
                 pagination={false}

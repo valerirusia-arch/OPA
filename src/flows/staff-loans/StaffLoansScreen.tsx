@@ -265,6 +265,10 @@ export default function StaffLoansScreen({
           <Table<LoanRow>
             rowKey={(row) => row.loan.loanId}
             tableLayout="fixed"
+            // Six columns (borrower + five fixed at 730px) crush on a narrow
+            // screen: without this the width-less borrower column collapses and
+            // its header stacks. Scroll horizontally below ~960px instead.
+            scroll={{ x: 960 }}
             columns={decorateColumns(columns)}
             dataSource={visible}
             onRow={(row) => ({

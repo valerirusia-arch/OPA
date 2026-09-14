@@ -205,6 +205,7 @@ export default function AcquisitionCampaignsScreen({
             <Table<Campaign>
               rowKey="id"
               tableLayout="fixed"
+              scroll={{ x: 940 }}
               columns={decorateColumns(columns)}
               dataSource={rows}
               locale={{

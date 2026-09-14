@@ -504,6 +504,7 @@ export const en = {
   "header.language": "Interface language",
 
   // Navigation
+  "nav.openMenu": "Open menu",
   "nav.groupOperations": "Operations",
   "nav.groupAdmin": "Administration",
   "nav.dashboard": "Dashboard",
@@ -549,8 +550,12 @@ export const en = {
   // WBS story 3 gives this page to the Admin and OPA Staff. An Underwriter
   // who reaches it anyway is told so, rather than shown an empty screen.
   "access.deniedTitle": "You don't have access to this page",
+  // Generic on purpose: this line is shown on every role-gated back-office
+  // screen (the queue, users, acquisition…), so it must not name one screen's
+  // subject or roles. It named "the list of internal users" and "Admin or OPA
+  // staff", which was wrong everywhere except the Users page.
   "access.deniedDescription":
-    "Only an Admin or OPA staff can view the list of internal users.",
+    "Your role doesn't have access to this page. Head back to the borrowers list.",
   "access.goToBorrowers": "Go to borrowers",
   "users.searchPlaceholder": "Search by name or email",
   "users.new": "New user",
@@ -2039,6 +2044,7 @@ const es: Record<TranslationKey, string> = {
   "header.logOut": "Cerrar sesión",
   "header.language": "Idioma de la interfaz",
 
+  "nav.openMenu": "Abrir menú",
   "nav.groupOperations": "Operaciones",
   "nav.groupAdmin": "Administración",
   "nav.dashboard": "Panel",
@@ -2079,7 +2085,7 @@ const es: Record<TranslationKey, string> = {
   "users.title": "Usuarios",
   "access.deniedTitle": "No tienes acceso a esta página",
   "access.deniedDescription":
-    "Solo un admin o el personal de OPA puede ver la lista de usuarios internos.",
+    "Tu rol no tiene acceso a esta página. Vuelve a la lista de prestatarios.",
   "access.goToBorrowers": "Ir a prestatarios",
   "users.searchPlaceholder": "Busca por nombre o correo",
   "users.new": "Nuevo usuario",

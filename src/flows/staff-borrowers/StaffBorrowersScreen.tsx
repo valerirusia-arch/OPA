@@ -239,6 +239,12 @@ export default function StaffBorrowersScreen({
             // default auto layout a truncated cell lets its column collapse
             // and the neighbours take the room.
             tableLayout="fixed"
+            // SEVEN WBS COLUMNS DO NOT FIT A NARROW SCREEN. Without this the
+            // width-less Address column collapsed to nothing on a tablet and
+            // its header stacked one letter per line. A horizontal scroll below
+            // ~1120px keeps every column at its real width instead of crushing
+            // one — antd scrolls the table inside the card.
+            scroll={{ x: 1120 }}
             columns={decorateColumns(columns)}
             dataSource={visible}
             // The whole row opens the record — a 1000px-wide row with one

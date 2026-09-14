@@ -258,6 +258,10 @@ export default function StaffApplicationsScreen({
           <Table<ApplicationRecord>
             rowKey="id"
             tableLayout="fixed"
+            // Applicant column is flexible + five fixed columns at 800px; on a
+            // narrow screen the applicant column would collapse to nothing.
+            // Scroll horizontally below ~1040px so every column keeps its width.
+            scroll={{ x: 1040 }}
             columns={decorateColumns(columns)}
             dataSource={visible}
             // The whole row opens the application; the id stays a real link so

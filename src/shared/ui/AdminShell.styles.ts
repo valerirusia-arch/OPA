@@ -59,6 +59,12 @@ export const getStyles = (token: GlobalToken) => {
       borderBottom: `1px solid ${token.colorBorderSecondary}`,
     },
     userButton: { height: 40, paddingInline: 8 },
+    /** Mobile nav trigger. The auto end-margin pushes the header's language and
+     *  account controls to the far right, leaving the burger on the left. */
+    burger: { marginInlineEnd: "auto", fontSize: token.fontSizeLG },
+    /** The drawer supplies its own header (logo + close), so the menu starts at
+     *  the top of the body with no extra inset. */
+    drawerBody: { padding: 0 },
     /** The work area. Screens bring their own padding where they need it. */
     content: { padding: 0 },
     /** The back office reads as a workspace, not a landing page. */
