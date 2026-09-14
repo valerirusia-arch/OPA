@@ -25,21 +25,30 @@ export const brand = {
   primarySoft: "#9CB3F4",
   primaryActive: "#1739A6",
 
+
   /**
-   * The success green — DARKENED FOR CONTRAST, not for taste.
+   * THE SUCCESS GREEN, from the designer's own swatch: #008000.
    *
-   * It was `#12A150`, and `Tag color="success"` paints that on `successSoft`:
-   * measured at **3.01:1**, against the 4.5:1 AA asks of 12px text. Every
-   * "Approved", "Signed", "Paid" and "Active" pill in the product was failing
-   * on the same pair. `#0E7C3E` is the same hue at 4.73:1 on the soft fill and
-   * 5.29:1 on white, so the tags pass and the check icons only look less
-   * kelly.
+   * It has been #12A150 and then #0E7C3E, both of them antd-derived greens
+   * darkened by hand until the pale tags passed AA. This one is given, and it
+   * happens to pass without help: measured 5.14:1 on white and 4.55:1 on the
+   * soft fill below, against the 4.5:1 that 12px text asks for.
+   *
+   * It is a pure green — no blue in it at all — which is why `successSoft`
+   * was re-derived with it rather than kept. The old tint leaned cyan, and a
+   * cyan-leaning ground under a pure-green word is the one place a hue
+   * mismatch shows.
    */
-  success: "#0E7C3E",
-  /** The success green at ~10% over white. antd's own derivation from a green
-   *  this saturated comes out sage and heavy. */
-  successSoft: "#E7F6EC",
-  danger: "#D92D20",
+  success: "#008000",
+  /**
+   * The success green at ~10% over white, computed from THIS green.
+   *
+   * #EAF4EA rather than a flat 10% mix: the exact 10% tint measured 4.46:1
+   * for the word on it, four hundredths under AA, and two steps lighter
+   * clears it at 4.55:1 without being visibly paler.
+   */
+  successSoft: "#EAF4EA",
+  danger: "#D6353F",
   warning: "#D97706",
 
   /**
@@ -76,6 +85,20 @@ export const brand = {
    */
   surfaceSubtle: "rgba(20, 26, 37, 0.04)",
   border: "#E4E8EF",
+  /**
+   * THE QUIETEST RECESS IN THE PRODUCT.
+   *
+   * For a panel inside a card that has to separate without becoming a second
+   * card. It was the page ground (#F4F5FA) and the designer wanted it lighter
+   * and less blue — *"უფრო მონაცრისფროსკენ წაიყვანე, ძაან ღიასკენ."*
+   *
+   * Neutral ink at 2.5% rather than a mixed hex, so it is the same grey
+   * whatever surface it lands on and it stays honest in dark mode. On white
+   * that resolves to about #F9F9FA: a shade lighter than the page ground and
+   * with the blue taken out of it, which is what stops a tinted block inside
+   * a white card from reading as a coloured panel.
+   */
+  panelSubtle: "rgba(20, 26, 37, 0.025)",
   /**
    * The same edge, one step firmer — for a card that is under the pointer.
    *
@@ -368,13 +391,17 @@ export const tokens: ThemeConfig = {
       itemSelectedBg: brand.white,
       itemHoverBg: "transparent",
       itemActiveBg: "transparent",
-      // Taller than the 48px fields on purpose: this is the choice that
-      // decides which form you are looking at, not a field inside one.
-      controlHeight: 56,
-      controlHeightLG: 56,
-      trackPadding: 4,
-      // The thumb is already a white shape on a grey track; a drop shadow on
-      // top of that only adds weight to a control that is 48px tall.
+      // THE HEIGHT OF THE FIELDS, not one storey above them. It used to stand
+      // at 56 — taller than the 48px inputs on the theory that "which form am
+      // I looking at" outranks a field inside one — and that is exactly what
+      // made it read as a heavy grey slab over the form. At 48 it sits in the
+      // same rhythm as the controls under it: quieter, and still unmistakably
+      // the switch. *"ცოტა უფრო ლამაზად ... ახლა თითქოს ამძიმებს ui-ის."*
+      controlHeight: 48,
+      controlHeightLG: 48,
+      trackPadding: 3,
+      // Flat thumb, no drop shadow: a white pill on the light track reads on
+      // its own, and a shadow would add back the weight this change removed.
       boxShadowTertiary: brand.shadowNone,
     },
     // colorErrorText is what antd paints the typed value with in an error
@@ -419,7 +446,14 @@ export const tokens: ThemeConfig = {
     // The tab bar is the header of the card it sits in, so it gets a header's
     // air. Padding on the ITEM rather than the bar, so the active underline
     // moves down with the label instead of drifting away from it.
-    Tabs: { horizontalItemPadding: "18px 0" },
+    //
+    // 14, NOT 18. Measured on /payments: the label's box ran 640→698 for two
+    // words, which put the active underline 16px below the text it belongs to
+    // — the indicator reading as a line near the tab rather than as the tab's
+    // own. *"ზემოთ დიდი სფეისია, ის ლურჯი სტროუკზე უნდა იჯდეს."* At 14 the
+    // bar is 50px tall, still a header's air, and the underline is close
+    // enough to the word to be read as part of it.
+    Tabs: { horizontalItemPadding: "14px 0" },
     // The header band fills the card's corner instead of rounding inside it:
     // the card already clips to its own radius, so a second radius on the
     // header only leaves a pale sliver in the corner.
@@ -456,6 +490,15 @@ export const tokens: ThemeConfig = {
 /**
  * Same tokens, light or dark algorithm. The DevBar's theme switch flips this so
  * a designer can verify tokens in both modes without touching this file.
+ *
+ * A SECOND PRIMARY WAS THREADED THROUGH HERE FOR A WHILE — a deeper royal
+ * blue on trial against the committed one, switchable from the dev bar. The
+ * designer has seen it on the real screens and said no, so the candidate, its
+ * derived hover/active/soft shades and the switch are all gone. The reason it
+ * was worth building is worth keeping: `colorPrimary` is never only the
+ * button — antd derives every hover fill, selected row, focus ring, Segmented
+ * thumb and filled Tag from it — so the next candidate should be judged the
+ * same way rather than from a swatch.
  */
 export const getTheme = (isDark: boolean): ThemeConfig => ({
   ...tokens,

@@ -66,7 +66,8 @@
 // Dumb: it renders what it is given and reports which control was pressed.
 
 import type { ReactNode } from "react";
-import { Alert, Button, Card, Col, Flex, Grid, Result, Row, Typography, theme } from "antd";
+import { Button, Card, Col, Flex, Grid, Result, Row, Typography, theme } from "antd";
+import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { DocumentList } from "./DocumentList";
 import { NoLoanMark } from "./NoLoanMark";
@@ -246,12 +247,9 @@ export function LoanOverview({
   const decision =
     application.decisionNote &&
     !(signedByReader && loan?.stage === "awaitingSignature") ? (
-    <Alert
-      style={styles.banner}
-      type={application.status === "declined" ? "error" : "success"}
-      showIcon
-      title={application.decisionNote}
-    />
+    <PageNotice tone={application.status === "declined" ? "error" : "success"}>
+      {application.decisionNote}
+    </PageNotice>
   ) : null;
 
   /* No loan yet: the application's own state, per story 3, and story 5's
@@ -336,7 +334,6 @@ export function LoanOverview({
   const paidCount = loan.schedule.filter((row) => row.status === "paid").length;
   const totalCount = loan.schedule.length;
   const finalDue = loan.schedule[totalCount - 1]?.due;
-  const paidPercent = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
 
   /* WBS story 8: "loan amount, remaining unused balance, APR, repayment
      terms". Four facts — along the foot of the panel rather than in a strip
@@ -398,7 +395,8 @@ export function LoanOverview({
               : t("loanPage.dueOn", { due: loan.nextPaymentOn }),
           action: { label: t("loanPage.viewSchedule"), onClick: onViewSchedule },
           progress: {
-            percent: paidPercent,
+            paid: paidCount,
+            total: totalCount,
             /* Two facts, one sentence: how far through, and when it ends. */
             caption: t("loanPage.progressLine", {
               paid: String(paidCount),
@@ -472,21 +470,21 @@ export function LoanOverview({
         that WILL be asked of them.
       */}
       {loan.stage === "funding" ? (
-        <Alert
-          style={styles.banner}
-          type="info"
-          showIcon
-          title={t("loanPage.fundingTitle")}
-          /* NOT THE SAME SENTENCE FOR BOTH. The borrower's names the virtual
-             card, because it is the thing that appears here when the money
-             moves. The co-borrower has no card and never will — "Co-borrower
-             has no access to card information" — so promising them one is the
-             page telling them something that cannot happen. */
-          description={t(
+        <PageNotice tone="info">
+          {/* ONE MESSAGE. The heading and the paragraph under it were a title
+              for two sentences; joined, they are the two sentences.
+
+              NOT THE SAME SECOND SENTENCE FOR BOTH. The borrower's names the
+              virtual card, because it is the thing that appears here when the
+              money moves. The co-borrower has no card and never will —
+              "Co-borrower has no access to card information" — so promising
+              them one is the page telling them something that cannot
+              happen. */}
+          {`${t("loanPage.fundingTitle")} ${t(
             role === "borrower" ? "loanPage.fundingBody" : "loanPage.fundingBodyCoBorrower",
             { date: loan.firstPaymentOn }
-          )}
-        />
+          )}`}
+        </PageNotice>
       ) : null}
 
       {/*

@@ -37,7 +37,8 @@
 //
 // Dumb: it renders a balance and reports that the button was pressed.
 
-import { Button, Col, Divider, Flex, Grid, Progress, Row, Typography, theme } from "antd";
+import { Button, Col, Divider, Flex, Grid, Row, Typography, theme } from "antd";
+import { InstalmentTrack } from "../../../shared/ui/InstalmentTrack";
 import { StatusPill } from "../../../shared/ui/StatusPill";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { getStyles, styles } from "./BalanceSummary.styles";
@@ -150,6 +151,20 @@ export function BalanceSummary({
   ];
   const span = 24 / details.length;
 
+  /* One definition, two arrangements — see the note at the figure row. */
+  const detailItem = (detail: (typeof details)[number]) => (
+    <Flex vertical gap={2} key={detail.key}>
+      <Typography.Text style={s.label}>{detail.label}</Typography.Text>
+      <Typography.Text style={detail.alarm ? s.detailAlarm : s.detail}>
+        {detail.value}
+      </Typography.Text>
+    </Flex>
+  );
+
+  /* Beside the figure the small print now has that space — see the figure
+     row. So this caption is only ever drawn UNDER the figure, and takes the
+     margin that needs. */
+  const inline = hero && !stacked;
   const caption = (
     <Typography.Text type="secondary" style={styles.next}>
       {next
@@ -194,7 +209,9 @@ export function BalanceSummary({
           The loan page's statement solved this the same way and the designer
           asked for the same here. On a phone it stays in the flow, under the
           figure, where a primary action belongs. */}
-      {stacked || !action ? null : <div style={styles.actionSlot}>{action}</div>}
+      {stacked || inline || !action ? null : (
+        <div style={styles.actionSlot}>{action}</div>
+      )}
       {/*
         The balance and the three figures under it are two groups, and the only
         thing separating them is space. There was a rule here; it was one line
@@ -227,24 +244,94 @@ export function BalanceSummary({
         <Flex align="center" gap={10} wrap style={styles.labelRow}>
           <Typography.Text style={s.labelInline}>{t("payments.outstanding")}</Typography.Text>
           {status ? (
-            <StatusPill color={status.tone === "error" ? "error" : "warning"}>
+            /* BARE HERE, and only here. The state is a qualifier of the
+               figure below it, not an item in a list of statuses — see the
+               note on `bare` in StatusPill.styles.ts. */
+            <StatusPill bare color={status.tone === "error" ? "error" : "warning"}>
               {status.label}
             </StatusPill>
           ) : null}
         </Flex>
 
-        {stacked && action ? (
-          <Flex vertical gap={16}>
+        {/*
+          BESIDE THE FIGURE ON THE DASHBOARD, UNDER IT EVERYWHERE ELSE.
+
+          Beside it is right where the figure is at hero size and the schedule
+          follows directly under it: the line sits on the digits' feet and the
+          space to the right of a 46px number is spoken for. On /payments the
+          figure is the ordinary 36 and nothing follows it in that block, so
+          the same line crowded a smaller number and left the card empty below
+          — *"ამ შემთხვევაში თარიღი ქვემოთ."*
+
+          `align="baseline"` and not `center` where it does sit beside: the
+          caption has to rest on the digits, and centring a 14px line against
+          a 46px one floats it in the middle of the number.
+
+          A PHONE ALWAYS STACKS. Beside a 36px figure there is no room for the
+          pair in a 295px body.
+        */}
+        {inline ? (
+          /*
+            THE SMALL PRINT MOVES UP HERE, AND THE CAPTION GOES.
+
+            It was a full-width row of three under its own rule at the foot of
+            the card, which put the card's quietest facts on their own storey
+            and left the whole right-hand side of a 46px figure empty. Both
+            problems have the same fix: *"ესენი გვერდით მარჯვნივ ხომ არ
+            მივუწეროთ კოხტად?"* — the figure keeps the left, the three facts
+            about it take the space beside it, and the rule and the storey
+            both disappear.
+
+            That space was the next-payment caption's, and the caption is what
+            paid for it: *"ეს გვერდითა ტექსტი მოაშორე."* Nothing is lost from
+            the page — the next date is on the PAYMENTS tile directly below
+            this card and at the top of the schedule on /payments.
+
+            `flex-end` and not `baseline`: a two-line pair cannot share a
+            baseline with a single 46px numeral without one of them floating.
+            Sitting them on a common bottom edge is what makes the row read as
+            one band rather than as two blocks that happen to be adjacent.
+          */
+          <Flex
+            align="flex-end"
+            justify="space-between"
+            gap={32}
+            wrap
+            style={styles.figureRow}
+          >
+            {figure}
+            {/*
+              AND THE BUTTON COMES BACK INTO THE FLOW, here only.
+
+              It is pinned to the card's corner everywhere else, for a good
+              reason: laid in the label's row it made an 11px row 48px tall
+              and pushed the figure a button's-worth down the card. But a
+              pinned button knows nothing about what is under it, and measured
+              once the small print moved up beside the figure, it sat exactly
+              on top of it — "FINAL PAYMENT DUE" ran 1205→1325 inside a button
+              occupying 1185→1325, covered completely.
+
+              The reason it was pinned does not apply to THIS row: the figure
+              row is already 46px, so a 48px button adds two. So here it joins
+              the row it would otherwise obscure, on a shared bottom edge with
+              the small print beside it.
+            */}
+            <Flex align="flex-end" gap={32} wrap style={styles.aside}>
+              {showDetails ? (
+                <Flex gap={44} wrap>
+                  {details.map(detailItem)}
+                </Flex>
+              ) : null}
+              {action}
+            </Flex>
+          </Flex>
+        ) : (
+          <Flex vertical gap={stacked && action ? 16 : 0}>
             <Flex vertical>
               {figure}
               {caption}
             </Flex>
-            {action}
-          </Flex>
-        ) : (
-          <Flex vertical>
-            {figure}
-            {caption}
+            {stacked ? action : null}
           </Flex>
         )}
       </Flex>
@@ -261,17 +348,19 @@ export function BalanceSummary({
         describes.
       */}
       {progress && progress.total > 0 ? (
-        <Flex vertical gap={6} style={styles.progress}>
-          <Progress
-            percent={Math.round((progress.paid / progress.total) * 100)}
-            showInfo={false}
-            strokeColor={token.colorSuccess}
-            trailColor={token.colorFillSecondary}
-            size={["100%", 8]}
+        <Flex vertical gap={8} style={styles.progress}>
+          <InstalmentTrack
+            paid={progress.paid}
+            total={progress.total}
+            ariaLabel={t("payments.progressCount", {
+              paid: String(progress.paid),
+              total: String(progress.total),
+            })}
           />
           <Typography.Text style={s.progressLabel}>
-            {t("payments.progressLine", {
-              percent: String(Math.round((progress.paid / progress.total) * 100)),
+            {t("payments.progressCount", {
+              paid: String(progress.paid),
+              total: String(progress.total),
             })}
           </Typography.Text>
         </Flex>
@@ -287,7 +376,7 @@ export function BalanceSummary({
           spreads them over the width they have, which is also exactly what
           the loan page's statement does with its four. Two money pages, one
           way of setting out the small print. */}
-      {showDetails ? (
+      {showDetails && !inline ? (
       <Flex vertical>
         <Divider style={styles.rule} />
         <Row gutter={[24, 20]}>
@@ -297,12 +386,7 @@ export function BalanceSummary({
                figure joins, so the strip fills the card in both states rather
                than leaving a column of air where a fourth fact will land. */
             <Col key={detail.key} xs={24} sm={details.length > 3 ? 12 : 8} lg={span}>
-              <Flex vertical gap={2}>
-                <Typography.Text style={s.label}>{detail.label}</Typography.Text>
-                <Typography.Text style={detail.alarm ? s.detailAlarm : s.detail}>
-                  {detail.value}
-                </Typography.Text>
-              </Flex>
+              {detailItem(detail)}
             </Col>
           ))}
         </Row>

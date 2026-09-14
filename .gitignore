@@ -31,3 +31,10 @@ storybook-static
 # it was built for.
 **/skills/impeccable/scripts/bin/
 .impeccable/config.local.json
+
+# Higgsfield: image/video generation tooling, nothing to do with the OPA app.
+# The MCP connector is per-machine and authenticates interactively; the skills
+# are a 1.2MB third-party bundle. Neither belongs in this repo's history.
+.mcp.json
+.agents/
+.claude/skills/higgsfield-*

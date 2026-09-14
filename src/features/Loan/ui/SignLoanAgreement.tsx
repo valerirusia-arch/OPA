@@ -32,13 +32,14 @@
 //
 // Dumb: signing flips a prop-driven state after a console.log.
 
-import { Alert, Button, Card, Divider, Flex, Progress, Tag, Typography, theme } from "antd";
+import { Button, Card, Divider, Flex, Progress, Tag, Typography, theme } from "antd";
 import {
   CheckCircleFilled,
   CheckOutlined,
   FileTextOutlined,
   LockOutlined,
 } from "@ant-design/icons";
+import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { pill } from "../../../shared/ui/tag.styles";
 import { getStyles, styles } from "./SignLoanAgreement.styles";
@@ -70,13 +71,9 @@ export function SignLoanAgreement({
 
   return (
     <Flex vertical>
-      <Alert
-        style={styles.banner}
-        type={done ? "success" : "info"}
-        showIcon
-        title={t(done ? "sign.loanDoneTitle" : "sign.loanApprovedTitle")}
-        description={t(done ? "sign.loanDoneBody" : "sign.loanApprovedBody")}
-      />
+      <PageNotice tone={done ? "success" : "info"}>
+        {t(done ? "sign.loanDone" : "sign.loanApproved")}
+      </PageNotice>
 
       <Card
         title={t("sign.loanPackage")}
@@ -108,11 +105,16 @@ export function SignLoanAgreement({
           </Typography.Text>
         </Flex>
 
-        {documents.map((document) => {
+        {documents.map((document, index) => {
           const isSigned = signed.includes(document.id);
           return (
             <Flex vertical key={document.id}>
-              <Divider style={styles.rule} />
+              {/* A rule ABOVE each row separates one row from the next — but
+                  the first row has no row above it, only the progress bar,
+                  and the line landed 8px under a 6px bar as a second rule
+                  nearly touching the first. *"წაშალე პროგრეს ბარის ქვემოთ
+                  პირველივე სტროუკი, ზედმეტია."* */}
+              {index === 0 ? null : <Divider style={styles.rule} />}
               <Flex
                 align="center"
                 justify="space-between"
@@ -163,8 +165,14 @@ export function SignLoanAgreement({
           DocuSign, the signature is the only thing provided there, and the
           date is applied automatically. The panel that used to carry this is
           gone; the sentence is not.
+
+          AND NO RULE ABOVE IT. The rules in this card separate one document
+          from the next; this line is not a document, and a rule between the
+          list and its footnote only boxed the list in twice — the card's own
+          edge is already doing that. *"არც ბოლო სტროუკი უნდა."* The space
+          above the sentence is what tells a reader it belongs to the whole
+          list rather than to the row it follows.
         */}
-        <Divider style={styles.rule} />
         <Flex align="center" gap={8} style={styles.handoff}>
           <LockOutlined style={s.handoffIcon} />
           <Typography.Text type="secondary" style={styles.meta}>

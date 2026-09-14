@@ -24,7 +24,7 @@
 // Dumb: mock rows, filtering in local state, no fetching.
 
 import { useMemo, useState } from "react";
-import { Card, Flex, Input, Select, Table, Typography, theme } from "antd";
+import { Card, Input, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "@tanstack/react-router";
@@ -36,7 +36,12 @@ import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
 import { decorateColumns } from "../../shared/ui/tableColumns";
-import { ALL } from "../../shared/ui/FacetFilters";
+import {
+  ALL,
+  FacetFilterChips,
+  FacetFilters,
+  type Facet,
+} from "../../shared/ui/FacetFilters";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
@@ -53,6 +58,25 @@ export type StaffLoansScreenProps = {
 
 const STATUSES: LoanStatus[] = ["funded", "repaying", "closed"];
 
+/**
+ * What this list can be filtered by. A plain record of strings, because that
+ * is the contract `FacetFilters` is generic over — the same one the borrower
+ * list and the application queue satisfy.
+ */
+type LoanFilterValues = {
+  status: string;
+  source: string;
+  partner: string;
+  campaign: string;
+};
+
+const emptyLoanFilters: LoanFilterValues = {
+  status: ALL,
+  source: ALL,
+  partner: ALL,
+  campaign: ALL,
+};
+
 export default function StaffLoansScreen({
   loans = allLoans,
   viewerName,
@@ -67,10 +91,10 @@ export default function StaffLoansScreen({
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
 
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<string>(ALL);
-  const [source, setSource] = useState<string>(ALL);
-  const [partner, setPartner] = useState<string>(ALL);
-  const [campaign, setCampaign] = useState<string>(ALL);
+  /* ONE OBJECT, not four states: the facet control hands back the whole set,
+     and four separate setters was the shape the row of Selects needed. */
+  const [filters, setFilters] = useState<LoanFilterValues>(emptyLoanFilters);
+  const { status, source, partner, campaign } = filters;
 
   /** Admin and Underwriter. No acquisition story names OPA Staff. */
   const canSeeAcquisition = viewer.role === "admin" || viewer.role === "underwriter";
@@ -106,6 +130,63 @@ export default function StaffLoansScreen({
       );
     });
   }, [loans, query, status, source, partner, campaign]);
+
+  /*
+    THE FACETS, described once so the panel and the chips cannot disagree.
+
+    It was a row of four Selects sitting inside the table's own card, above
+    the header — *"აქ ესე რატომ გვაქვს ფილტრები? როგორც გვაქვს, მაღლა მარჯვნივ
+    სერჩის გვერდზე, დროპდაუნზე, ეგრე გააკეთე."* The borrower list and the
+    application queue have done it that way since they were built, and
+    shared/ui/FacetFilters exists for exactly this reason: search is the
+    control people reach for on every list, so it keeps the same place in the
+    toolbar, and facets — which differ in number from list to list — go behind
+    one button that carries a count. Four selects on this screen and none on
+    the next is what makes two tables stop looking alike.
+
+    Nothing is hidden by folding them: what is set shows as a chip under the
+    toolbar, removable in one click.
+  */
+  const facets = useMemo<Facet<LoanFilterValues>[]>(() => {
+    const own: Facet<LoanFilterValues>[] = [
+      {
+        key: "status",
+        label: t("loans.col.status"),
+        options: [
+          { value: ALL, label: t("loans.allStatuses") },
+          ...STATUSES.map((value) => ({ value, label: t(`loan.${value}`) })),
+        ],
+      },
+    ];
+    /* Every acquisition story is Admin/Underwriter with no OPA Staff, so an
+       OPA Staff member gets the loan's own state and nothing else. */
+    if (!canSeeAcquisition) return own;
+    return [
+      ...own,
+      {
+        key: "source",
+        label: t("acquisition.source"),
+        options: optionsFor((row) => row.loan.acquisition?.source, t("acquisition.allSources")),
+      },
+      {
+        key: "partner",
+        label: t("acquisition.partner"),
+        options: optionsFor(
+          (row) => row.loan.acquisition?.referralPartner,
+          t("acquisition.allPartners")
+        ),
+      },
+      {
+        key: "campaign",
+        label: t("acquisition.campaign"),
+        options: optionsFor(
+          (row) => row.loan.acquisition?.campaign,
+          t("acquisition.allCampaigns")
+        ),
+      },
+    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loans, canSeeAcquisition, t]);
 
   const columns: ColumnsType<LoanRow> = [
     {
@@ -164,63 +245,23 @@ export default function StaffLoansScreen({
       <AdminPage
         title={t("loans.title")}
         extra={
-          <Input
-            allowClear
-            prefix={<SearchOutlined />}
-            placeholder={t("loans.searchPlaceholder")}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            style={styles.search}
-          />
+          <>
+            <Input
+              allowClear
+              prefix={<SearchOutlined />}
+              placeholder={t("loans.searchPlaceholder")}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              style={styles.search}
+            />
+            <FacetFilters facets={facets} value={filters} onChange={setFilters} empty={emptyLoanFilters} />
+          </>
+        }
+        toolbarBelow={
+          <FacetFilterChips facets={facets} value={filters} onChange={setFilters} />
         }
       >
         <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
-          {/* The wireframe's filter row: the loan's own state, then the three
-              acquisition ones. */}
-          <Flex wrap gap={12} style={page.cardBlock}>
-            <Select
-              value={status}
-              onChange={setStatus}
-              style={styles.filter}
-              options={[
-                { value: ALL, label: t("loans.allStatuses") },
-                ...STATUSES.map((value) => ({ value, label: t(`loan.${value}`) })),
-              ]}
-            />
-
-            {canSeeAcquisition ? (
-              <>
-                <Select
-                  value={source}
-                  onChange={setSource}
-                  style={styles.filter}
-                  options={optionsFor(
-                    (row) => row.loan.acquisition?.source,
-                    t("acquisition.allSources")
-                  )}
-                />
-                <Select
-                  value={partner}
-                  onChange={setPartner}
-                  style={styles.filter}
-                  options={optionsFor(
-                    (row) => row.loan.acquisition?.referralPartner,
-                    t("acquisition.allPartners")
-                  )}
-                />
-                <Select
-                  value={campaign}
-                  onChange={setCampaign}
-                  style={styles.filter}
-                  options={optionsFor(
-                    (row) => row.loan.acquisition?.campaign,
-                    t("acquisition.allCampaigns")
-                  )}
-                />
-              </>
-            ) : null}
-          </Flex>
-
           <Table<LoanRow>
             rowKey={(row) => row.loan.loanId}
             tableLayout="fixed"

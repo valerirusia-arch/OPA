@@ -261,6 +261,30 @@ export default function ApplicationDetailsScreen({
           <ApplicationStatusTag status={record.status} />
         </Flex>
       }
+      /* THE DECISION, AT THE FAR RIGHT OF THE PAGE HEADER — level with the
+         applicant's name, where the primary actions belong. Decline / Approve,
+         or Override once the rules have settled it. Shown only to the role that
+         may decide; the reasons each action captures are asked in their dialogs
+         (setAction opens them). *"სულ მარჯვნივ, თაითლის რიგში."* */
+      extra={
+        canDecide
+          ? record.decision
+            ? (
+              <Button onClick={() => setAction("override")}>
+                {t("appAction.override")}
+              </Button>
+            ) : (
+              <Flex gap={8}>
+                <Button danger onClick={() => setAction("decline")}>
+                  {t("appAction.decline")}
+                </Button>
+                <Button type="primary" onClick={() => setAction("approve")}>
+                  {t("appAction.approve")}
+                </Button>
+              </Flex>
+            )
+          : undefined
+      }
     >
       {decisionBanner}
 
@@ -446,6 +470,10 @@ export default function ApplicationDetailsScreen({
             column is absent for them, not disabled. */}
         {canDecide ? (
           <Col xs={24} xl={9}>
+            {/* The decision (Decline / Approve, or Override) sits in the PAGE
+                header, far right of the applicant's name — see the AdminPage
+                `extra` above. What stays in this card is the composing work:
+                requesting information and changing the amount. */}
             <Card title={t("appDetail.actions")} style={styles.card}>
               <UnderwritingActions
                 requestedAmount={record.requestedAmount}
@@ -459,9 +487,6 @@ export default function ApplicationDetailsScreen({
                   console.log("request information", record.id, note);
                   message.success(t("requestModal.send"));
                 }}
-                onApprove={() => setAction("approve")}
-                onDecline={() => setAction("decline")}
-                onOverride={() => setAction("override")}
                 onChangeAmount={({ amount, reason }) => {
                   console.log("update approved amount", record.id, amount, reason);
                   message.success(t("amountModal.save"));

@@ -10,11 +10,12 @@
 // Dumb: it renders whatever children it is given.
 
 import type { ReactNode } from "react";
-import { Flex, Grid, Typography, theme } from "antd";
+import { Flex, Grid, theme } from "antd";
 import { PictureOutlined } from "@ant-design/icons";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "../../../shared/ui/LanguageSwitcher";
-import { brandTitle, content, contentBlock, getStyles } from "./AuthLayout.styles";
+import { Logo } from "../../../shared/ui/Logo";
+import { content, contentBlock, getStyles } from "./AuthLayout.styles";
 
 export type AuthLayoutProps = {
   children: ReactNode;
@@ -32,12 +33,7 @@ export function AuthLayout({ children, language, onLanguageChange }: AuthLayoutP
       <Flex vertical align="flex-start" style={styles.pane}>
         <Flex align="center" justify="space-between" style={content}>
           <Link to="/">
-            <Flex align="center" gap={8}>
-              <div style={styles.logoPlaceholder} />
-              <Typography.Title level={4} style={brandTitle}>
-                Logo
-              </Typography.Title>
-            </Flex>
+            <Logo height={28} />
           </Link>
           <LanguageSwitcher value={language} onChange={onLanguageChange} size="small" />
         </Flex>

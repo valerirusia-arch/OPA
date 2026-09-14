@@ -17,15 +17,9 @@ export const styles = {
     animation: "opa-wave 3s ease-in-out infinite",
   },
   subheading: { display: "block", marginBottom: 24, textWrap: "balance" },
-  segmented: { marginBottom: 24, width: "100%" },
-  /**
-   * antd has no weight token for the selected segment, so the label carries
-   * it. The extra weight is what makes the choice read as made, rather than
-   * relying on the white thumb alone.
-   */
-  segmentActive: { fontWeight: 600 },
-  /** antd icons are filled paths, so weight is carried by size, not stroke. */
-  segmentActiveIcon: { fontSize: 16 },
+  /** The switcher's own design lives in AudienceToggle; this only owns the gap
+   *  to the form beneath it, the same 24px every variant needs. */
+  toggleWrap: { marginBottom: 24 },
   /**
    * The borrower form is much taller than the staff hand-off. Reserving one
    * height for both keeps the heading and the tabs still when you switch.

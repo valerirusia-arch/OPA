@@ -18,11 +18,9 @@ const ASIDE_TRIM = 24;
  */
 const PANE_WIDTH = PAGE_GUTTER + CONTENT_WIDTH + PAGE_GUTTER - ASIDE_MARGIN + ASIDE_TRIM;
 
-export const logoMark: CSSProperties = { width: 28, height: 28, borderRadius: "50%" };
 /** The form column. The header row shares it, so the logo lines up with the
  *  fields' left edge and the language switcher with their right. */
 export const content: CSSProperties = { width: "100%", maxWidth: CONTENT_WIDTH };
-export const brandTitle: CSSProperties = { margin: 0 };
 /**
  * Every auth screen reserves the same block, top-aligned inside it, so the
  * heading lands at the same height whichever page (or page state) you are on.
@@ -49,10 +47,6 @@ export const getStyles = (token: GlobalToken, hasAside: boolean) =>
           minWidth: 0,
           padding: `40px ${PAGE_GUTTER}px`,
         },
-    logoPlaceholder: {
-      ...logoMark,
-      background: token.colorFillSecondary,
-    },
     /** Reserved for the hero image — the glyph marks the slot until artwork exists. */
     aside: {
       flex: 1,

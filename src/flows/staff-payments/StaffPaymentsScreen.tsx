@@ -111,7 +111,7 @@ export default function StaffPaymentsScreen({
         <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
           <Tabs
             defaultActiveKey="schedule"
-            tabBarStyle={page.cardBlock}
+            tabBarStyle={styles.tabBar}
             items={[
               {
                 key: "schedule",

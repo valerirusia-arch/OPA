@@ -30,6 +30,7 @@ import StaffPaymentsScreen from "./staff-payments/StaffPaymentsScreen";
 import StaffLoansScreen from "./staff-loans/StaffLoansScreen";
 import LoanRecordScreen from "./staff-loans/loan-details/LoanRecordScreen";
 import ApplicationDetailsScreen from "./staff-applications/application-details/ApplicationDetailsScreen";
+import StaffReportingScreen from "./staff-reporting/StaffReportingScreen";
 import BorrowerDetailsScreen from "./staff-borrowers/borrower-details/BorrowerDetailsScreen";
 import SetPasswordScreen from "./set-password/SetPasswordScreen";
 import ApplicationStartScreen from "./application/ApplicationStartScreen";
@@ -189,6 +190,11 @@ export const routes: FlowRoute[] = [
         path: "users",
         component: StaffUsersScreen,
         meta: { role: "admin", flow: "Users management", label: "Users" },
+      },
+      {
+        path: "reporting",
+        component: StaffReportingScreen,
+        meta: { role: "staff", flow: "Reporting audit", label: "Reporting" },
       },
       {
         path: "applications",

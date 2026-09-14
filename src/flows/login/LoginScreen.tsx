@@ -7,12 +7,13 @@
 // submit). No fetching, no auth, no guards — Dev wires those in /app.
 
 import { useState } from "react";
-import { Flex, Segmented, Typography } from "antd";
+import { Flex, Typography } from "antd";
 import { TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useT } from "../../shared/ui/i18n/useT";
 import { NEXT_PARAM, useNextDestination } from "../../shared/ui/nextDestination";
 import { AuthLayout } from "../../features/Auth/ui/AuthLayout";
+import { AudienceToggle } from "../../features/Auth/ui/AudienceToggle";
 import { LoginForm, type LoginValues } from "../../features/Auth/ui/LoginForm";
 import { StaffSignIn } from "../../features/Auth/ui/StaffSignIn";
 import { styles } from "./LoginScreen.styles";
@@ -23,9 +24,13 @@ export default function LoginScreen() {
   const navigate = useNavigate();
   const t = useT();
   const [audience, setAudience] = useState<Audience>("borrower");
-  /** A co-borrower signing in from an invitation goes back to it, not to
-   *  their profile. Everyone else lands where they always did. */
-  const next = useNextDestination("/profile");
+  /** A co-borrower signing in from an invitation goes back to it. Everyone
+   *  else lands on the DASHBOARD — *"დეფაულტად დეშბორდზე უნდა ვიყო და არა
+   *  პროფილზე."* It was /profile, which is a form for editing details the
+   *  borrower did not sign in to edit; the dashboard is the page that says
+   *  where the money and the application are, and it has a designed empty
+   *  state for the borrower who has neither yet. */
+  const next = useNextDestination("/dashboard");
 
   const handleSubmit = (values: LoginValues) => {
     // Stub: Dev replaces this with the real sign-in mutation.
@@ -46,38 +51,16 @@ export default function LoginScreen() {
         {t("login.subtitle")}
       </Typography.Text>
 
-      <Segmented<Audience>
-        block
-        size="large"
-        style={styles.segmented}
-        value={audience}
-        onChange={setAudience}
-        // Only the active segment carries its icon — the inactive one drops it,
-        // so the icon reads as "you are here" rather than decoration.
-        // title="" suppresses the native tooltip antd derives from the label.
-        options={[
-          {
-            value: "borrower",
-            label: (
-              <span style={audience === "borrower" ? styles.segmentActive : undefined}>
-                {t("login.tabBorrower")}
-              </span>
-            ),
-            icon: audience === "borrower" ? <UserOutlined style={styles.segmentActiveIcon} /> : undefined,
-            title: "",
-          },
-          {
-            value: "staff",
-            label: (
-              <span style={audience === "staff" ? styles.segmentActive : undefined}>
-                {t("login.tabStaff")}
-              </span>
-            ),
-            icon: audience === "staff" ? <TeamOutlined style={styles.segmentActiveIcon} /> : undefined,
-            title: "",
-          },
-        ]}
-      />
+      <div style={styles.toggleWrap}>
+        <AudienceToggle<Audience>
+          value={audience}
+          onChange={setAudience}
+          options={[
+            { value: "borrower", label: t("login.tabBorrower"), icon: <UserOutlined /> },
+            { value: "staff", label: t("login.tabStaff"), icon: <TeamOutlined /> },
+          ]}
+        />
+      </div>
 
       <Flex vertical style={styles.panel}>
         {audience === "borrower" ? (

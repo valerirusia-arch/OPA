@@ -54,9 +54,6 @@ export type UnderwritingActionsProps = {
   /** WBS: the loan amount may be changed "before the final approval decision". */
   canChangeAmount?: boolean;
   onRequestInfo?: (note: string) => void;
-  onApprove?: () => void;
-  onDecline?: () => void;
-  onOverride?: () => void;
   onChangeAmount?: (change: AmountChange) => void;
 };
 
@@ -70,9 +67,6 @@ export function UnderwritingActions({
   audit,
   canChangeAmount = true,
   onRequestInfo,
-  onApprove,
-  onDecline,
-  onOverride,
   onChangeAmount,
 }: UnderwritingActionsProps) {
   const t = useT();
@@ -85,12 +79,49 @@ export function UnderwritingActions({
   const current = approvedAmount ?? requestedAmount;
 
   return (
-    <Flex vertical gap={20}>
+    /*
+      NO FRAMES INSIDE THE FRAME, and the decision first.
+
+      Each action used to sit in a bordered block of its own, inside the card
+      that is already titled "Underwriting actions" — a box in a box, three
+      times over, with the two buttons that end the application at the very
+      bottom of the stack. *"ამ ჩარჩოში ეს კიდევ ჩარჩო არ მომწონს; ჩარჩო
+      მოხსენი და მაქსიმალურად გაშალე, რომ ელემენტებმა შიგნით ისუნთქონ."*
+
+      So the borders come off and the space does the separating: 32 between
+      sections against 12 inside them, which is a wider gap than any frame was
+      drawing. Each section still has its own title, which is what actually
+      said "this is a thing on its own" — the outline was only repeating it.
+
+      AND THE DECISION LEADS. Approve and Decline are what this column exists
+      for; they were under a note field and a collapsed amount panel, which is
+      the order the wireframe happened to list them in, not the order an
+      underwriter works in. *"აფრუვი და დექლაინი შეგვიძლია მაღლა ავიტანოთ."*
+    */
+    <Flex vertical gap={32}>
+      {/* THE DECISION LIVES IN THE CARD HEADER NOW — Decline / Approve, or
+          Override once the rules have settled it — pinned to the right of the
+          "Underwriting actions" title where the screen renders the Card
+          (ApplicationDetailsScreen). *"ეს ღილაკები მაღლა ავიტანოთ, თაითლისგან
+          უკიდურეს მარჯვნივ."* What stays here is the one line that EXPLAINS an
+          automated decision, because it is context the Override button in the
+          header refers to, and it is a sentence, not a control. */}
+      {decision ? (
+        <Typography.Text style={styles.autoLine}>
+          {t(
+            decision.source === "automated"
+              ? "appAction.autoDecided"
+              : "appAction.alreadyDecided",
+            { outcome: t(`appAction.outcome.${decision.outcome}`) }
+          )}
+        </Typography.Text>
+      ) : null}
+
       {/* WBS: "Underwriter shall be able to request additional documents or
           information from the borrower." Its note: "Assuming the underwriter
           should provide a text note with the required details" — so the note
           is the story, and it is required. */}
-      <div style={s.block}>
+      <div>
         <Typography.Text style={s.blockTitle}>{t("appAction.requestInfo")}</Typography.Text>
         <Form
           form={requestForm}
@@ -111,39 +142,12 @@ export function UnderwritingActions({
         </Form>
       </div>
 
-      {/* The decision. An application the rules have already settled is
-          OVERRIDDEN, not decided again: the WBS keeps them as separate stories
-          and only the override demands a reason for audit. */}
-      {decision ? (
-        <div style={s.block}>
-          <Typography.Text style={styles.autoLine}>
-            {t(
-              decision.source === "automated"
-                ? "appAction.autoDecided"
-                : "appAction.alreadyDecided",
-              { outcome: t(`appAction.outcome.${decision.outcome}`) }
-            )}
-          </Typography.Text>
-          <Button block onClick={onOverride} style={styles.overrideButton}>
-            {t("appAction.override")}
-          </Button>
-        </div>
-      ) : (
-        <Flex gap={12}>
-          <Button danger size="large" style={styles.half} onClick={onDecline}>
-            {t("appAction.decline")}
-          </Button>
-          <Button type="primary" size="large" style={styles.half} onClick={onApprove}>
-            {t("appAction.approve")}
-          </Button>
-        </Flex>
-      )}
-
       {/* WBS: "The Underwriter may reduce or adjust the requested loan amount
           BEFORE THE FINAL APPROVAL DECISION", so it closes once decided. */}
       {canChangeAmount ? (
         <Collapse
-          style={s.panel}
+          ghost
+          style={styles.panel}
           items={[
             {
               key: "amount",
@@ -161,27 +165,31 @@ export function UnderwritingActions({
                   onFinish={(values) => onChangeAmount?.(values)}
                   style={styles.form}
                 >
-                  <Flex gap={12} wrap>
-                    <Flex vertical gap={4} style={styles.half}>
-                      <Typography.Text type="secondary" style={styles.label}>
-                        {t("amountPanel.current")}
-                      </Typography.Text>
-                      {/* Read-only, and not an input: a disabled field beside
-                          an enabled one invites a try at the wrong box. */}
-                      <Typography.Text style={styles.currentValue}>
-                        {money(current)}
-                      </Typography.Text>
-                    </Flex>
-                    <Form.Item
-                      label={t("amountPanel.newAmount")}
-                      name="amount"
-                      rules={[rules.amount()]}
-                      required
-                      style={styles.half}
-                    >
-                      <RangeField compact min={0} max={requestedAmount} step={10} prefix="$" />
-                    </Form.Item>
-                  </Flex>
+                  {/*
+                    CURRENT AND NEW IN ONE CONTAINER.
+
+                    They used to be two figures stacked — a read-out, then the
+                    RangeField's own big number below it — which read as scattered:
+                    you could not tell the fact from the control. *"ქურენთ მაღლა
+                    ამ კონტენერშივე რომ ჩავსვა."* Now the current value is a quiet
+                    line INSIDE the field's box, above the editable figure, so the
+                    box holds the whole before/after: currently X, change it to Y.
+                  */}
+                  <Form.Item
+                    label={t("amountPanel.newAmount")}
+                    name="amount"
+                    rules={[rules.amount()]}
+                    required
+                  >
+                    <RangeField
+                      compact
+                      min={0}
+                      max={requestedAmount}
+                      step={10}
+                      prefix="$"
+                      caption={t("amountPanel.currentIs", { amount: money(current) })}
+                    />
+                  </Form.Item>
 
                   <Form.Item
                     label={t("amountModal.reason")}

@@ -18,7 +18,16 @@ export const styles = {
   preference: { marginTop: 8 },
   /** A single select, not a full-width field: it holds two words. */
   /** The two switches: a little room under the sentence that explains them. */
-  channels: { marginTop: 8, maxWidth: 360 },
+  /**
+   * FULL WIDTH, so the switches land on the section's own right edge.
+   *
+   * It was capped at 360, which stopped the rows two thirds of the way across
+   * the card and left the two switches floating in the middle of it with
+   * nothing under them — *"ეს თოგლები უკიდურეს მარჯვენა კუთხეში გაწიე, რომ
+   * დაელაინდეს თანაბრად ყველაფერი."* A `space-between` row only aligns
+   * anything if it is as wide as the thing it is meant to align with.
+   */
+  channels: { marginTop: 8 },
   preferenceField: { maxWidth: 240 },
 } satisfies Record<string, CSSProperties>;
 

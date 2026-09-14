@@ -15,30 +15,41 @@ export const getStyles = (token: GlobalToken) => {
   };
 
   /**
-   * THE EDGE THAT MAKES A PALE PILL READ.
+   * THE PILL, AS IT IS EVERYWHERE EXCEPT ONE CARD.
    *
-   * antd's filled Tag is a tint of the status colour with no border, and the
-   * tints are faint by design — "Approved" in green on green, on a page whose
-   * own ground is a light grey, comes out as a soft smudge with a dot in it.
-   * *"ნარინჯისფერი და მწვანე კარგად არ ჩანს."*
-   *
-   * ONE NEUTRAL HAIRLINE, NOT THE HUE'S OWN. Two passes of this used antd's
-   * derived `colorSuccessBorder` and then `…BgHover`, and both came out as a
-   * hard green ring: the brand's success is a DARKENED green (see tokens.ts),
-   * so every step antd derives from it is heavier than the step number
-   * suggests, and the pill started reading as a button. *"ძაან მძიმე
-   * სტროუკებია."*
-   *
-   * So the edge carries no hue at all. The product's own split colour gives
-   * the shape a boundary against both the grey ground and a white card; the
-   * fill, the dot and the word carry the meaning, which is what they were
-   * already doing. One line for every tone, which is also one fewer decision
-   * per status.
+   * A tint in the state's own hue with the product's lightest line around it.
+   * The line is `colorSplit` — 6% neutral ink, the same rule that separates
+   * two rows of a table — and it carries no hue on purpose: antd's derived
+   * `colorSuccessBorder` and `…BgHover` were both tried and both came out as
+   * a hard ring, because this product's success green is a darkened one and
+   * every step antd derives from it lands heavier than the number suggests.
    */
   const edge: CSSProperties = {
     border: `1px solid ${token.colorSplit}`,
     fontWeight: 500,
     paddingBlock: 1,
+  };
+
+  /**
+   * THE SAME STATE WITH NOTHING AROUND IT — for the balance card alone.
+   *
+   * "22 days overdue" does not sit in a row of statuses there; it sits on the
+   * label line of the one figure the page exists to answer, as a qualifier of
+   * that number. A lozenge with a fill and an edge makes a qualifier look
+   * like an object, and on a card whose whole job is one number that is the
+   * second loudest thing on it. *"დეშბორდზე ვამბობდი, არ უნდა-თქო."*
+   *
+   * Everywhere else the fill stays: in the loan page's header, in a table
+   * cell, in a list, a status IS one item among several and needs a shape to
+   * be one. The horizontal padding goes with the fill here, because antd
+   * insets its text 8px for a lozenge that is no longer drawn.
+   */
+  const bare: CSSProperties = {
+    background: "transparent",
+    border: "none",
+    paddingInline: 0,
+    marginInlineEnd: 0,
+    fontWeight: 500,
   };
 
   return {
@@ -50,6 +61,7 @@ export const getStyles = (token: GlobalToken) => {
      */
     tag: { fontWeight: 500, paddingBlock: 2 },
     edge,
+    bare,
     /** The dot and the word are one line, whatever the line-height does. */
     inner: { display: "inline-flex" },
     dotSuccess: { ...dot, background: token.colorSuccess },

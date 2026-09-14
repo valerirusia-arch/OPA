@@ -16,7 +16,6 @@ export const HEADER_INSET_COMPACT = 16;
  */
 export const HEADER_HEIGHT = 64;
 
-export const logoMark: CSSProperties = { width: 32, height: 32, borderRadius: 8 };
 /** Transparent, or the nav paints an opaque strip over the bar's own blur. */
 export const navMenu: CSSProperties = {
   flex: 1,
@@ -88,10 +87,6 @@ export const getStyles = (token: GlobalToken, compact = false) =>
   ({
     /** Fixed: the menu beside it is the one that gives way. */
     account: { flex: "none" },
-    logoPlaceholder: {
-      ...logoMark,
-      background: token.colorFillSecondary,
-    },
     /** Full-bleed bar: the background and rule run edge to edge... */
     header: {
       position: "sticky",

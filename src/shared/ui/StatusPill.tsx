@@ -35,10 +35,17 @@ export type StatusPillProps = {
   color?: string;
   /** Shown instead of the dot: a stop sign, a tick. */
   icon?: ReactNode;
+  /**
+   * No fill and no edge — the dot and the word, and nothing else.
+   *
+   * For the one place a status is not an item in a list of them but a
+   * qualifier hanging off a figure's own label. See `bare` in the styles.
+   */
+  bare?: boolean;
   children: ReactNode;
 };
 
-export function StatusPill({ color, icon, children }: StatusPillProps) {
+export function StatusPill({ color, icon, bare = false, children }: StatusPillProps) {
   const { token } = theme.useToken();
   const s = getStyles(token);
 
@@ -59,7 +66,7 @@ export function StatusPill({ color, icon, children }: StatusPillProps) {
      the colour stays the fill's job. See the note in the styles. */
 
   return (
-    <Tag color={color} variant="filled" style={{ ...pill, ...s.tag, ...s.edge }}>
+    <Tag color={color} variant="filled" style={{ ...pill, ...s.tag, ...(bare ? s.bare : s.edge) }}>
       <Flex align="center" gap={7} style={s.inner}>
         {icon ?? <span style={dot} />}
         {children}

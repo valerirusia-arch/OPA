@@ -105,7 +105,7 @@ export const staffNav: NavSection[] = [
     key: "admin",
     labelKey: "nav.groupAdmin",
     items: [
-      { key: "reporting", labelKey: "nav.reporting", icon: <BarChartOutlined /> },
+      { key: "reporting", labelKey: "nav.reporting", icon: <BarChartOutlined />, to: "/staff/reporting" },
       { key: "users", labelKey: "nav.users", icon: <UserOutlined />, to: "/staff/users" },
     ],
   },

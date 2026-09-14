@@ -9,21 +9,28 @@
 // — and what was said about it. Both are columns here, and neither belongs on
 // the borrower's own page.
 //
-// Above the table, the package as a row of chips: the wireframe summarises
+// Above the table, the package as THREE BOXES — the wireframe summarises
 // "Loan agreement / State-specific disclosures / Underwriting documents" with
 // their signature state, which answers "is this loan executed" without reading
 // every row.
 //
+// They were drawn as a loose run of name-then-pill across one line, and at
+// that size the three ran together into a sentence: *"ეს უაზროდ გდია; ჩემს
+// ვაიერფრეიმებში კონტეინერებში ზის, ეგრე ჩასვი, რომ კარგად გამოიყოს."* Three
+// named boxes is also the arrangement the rest of this product uses for a
+// small set of labelled facts — the dashboard's four tiles, the balance
+// card's strip — so the summary reads as a summary rather than as a caption
+// for the table under it.
+//
 // Dumb: it renders documents and reports a download.
 
-import { Flex, Table, Tag, Typography } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
+import { Col, Flex, Row, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { pill } from "../../../shared/ui/tag.styles";
+import { StatusPill } from "../../../shared/ui/StatusPill";
 import { decorateColumns } from "../../../shared/ui/tableColumns";
 import { EmptyState } from "../../../shared/ui/EmptyState";
-import { styles } from "./LoanDocumentsTable.styles";
+import { getStyles, styles } from "./LoanDocumentsTable.styles";
 import type { LoanDocument } from "./types";
 
 export type LoanDocumentsTableProps = {
@@ -39,6 +46,8 @@ export function LoanDocumentsTable({
   onDownload,
 }: LoanDocumentsTableProps) {
   const t = useT();
+  const { token } = theme.useToken();
+  const s = getStyles(token);
 
   const columns: ColumnsType<LoanDocument> = [
     {
@@ -95,21 +104,23 @@ export function LoanDocumentsTable({
   return (
     <Flex vertical>
       {packageParts?.length ? (
-        <Flex wrap gap={12} style={styles.chips}>
+        <Row gutter={[16, 16]} style={styles.chips}>
           {packageParts.map((part) => (
-            <Flex key={part.key} align="center" gap={8} style={styles.chip}>
-              <Typography.Text>{part.name}</Typography.Text>
-              <Tag
-                color={part.signed ? "success" : "warning"}
-                variant="filled"
-                icon={part.signed ? <CheckOutlined /> : undefined}
-                style={pill}
-              >
-                {t(part.signed ? "loanPage.executed" : "loanAdmin.unsigned")}
-              </Tag>
-            </Flex>
+            <Col key={part.key} xs={24} sm={8}>
+              {/* The product's own label-over-value pairing, boxed: the part's
+                  name in the 11px label treatment, its state underneath as
+                  the same status pill every other screen uses. */}
+              <Flex vertical gap={10} style={s.part}>
+                <Typography.Text style={s.partName}>{part.name}</Typography.Text>
+                <Flex>
+                  <StatusPill color={part.signed ? "success" : "warning"}>
+                    {t(part.signed ? "loanPage.executed" : "loanAdmin.unsigned")}
+                  </StatusPill>
+                </Flex>
+              </Flex>
+            </Col>
           ))}
-        </Flex>
+        </Row>
       ) : null}
 
       {documents.length === 0 ? (

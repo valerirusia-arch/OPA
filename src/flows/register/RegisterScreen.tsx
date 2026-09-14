@@ -32,8 +32,8 @@ import { IdentityStep, type IdentityStatus } from "../../features/Auth/ui/Identi
 import { RegistrationDone } from "../../features/Auth/ui/RegistrationDone";
 import { TermsStep } from "../../features/Auth/ui/TermsStep";
 import { VerifyCodeStep } from "../../features/Auth/ui/VerifyCodeStep";
+import { Logo } from "../../shared/ui/Logo";
 import {
-  brandTitle,
   footer,
   getStyles,
   page,
@@ -67,7 +67,11 @@ export default function RegisterScreen() {
   const navigate = useNavigate();
   /** A co-borrower registering from an invitation goes back to it, not to
    *  their profile. Everyone else lands where they always did. */
-  const next = useNextDestination("/profile");
+  /* Same landing as sign-in, and for the same reason: a brand-new account
+     opening on a details form is the page answering a question nobody asked.
+     The dashboard's empty state is written for exactly this reader — nothing
+     here yet, and here is how you start. */
+  const next = useNextDestination("/dashboard");
   const { message } = App.useApp();
   const t = useT();
 
@@ -105,12 +109,7 @@ export default function RegisterScreen() {
       <Flex style={styles.header}>
         <div style={styles.headerInner}>
           <Link to="/">
-            <Flex align="center" gap={8}>
-              <div style={styles.logoPlaceholder} />
-              <Typography.Title level={4} style={brandTitle}>
-                Logo
-              </Typography.Title>
-            </Flex>
+            <Logo height={28} />
           </Link>
 
 

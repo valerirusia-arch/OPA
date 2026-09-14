@@ -34,6 +34,7 @@ import { DownOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
+import { Logo } from "./Logo";
 import { useT } from "./i18n/useT";
 import type { NavItem, NavSection } from "./navigation";
 import {
@@ -105,9 +106,8 @@ export function AdminShell({
         breakpoint="lg"
         style={styles.sider}
       >
-        <Flex align="center" gap={8} style={styles.brand}>
-          <div style={styles.logoPlaceholder} />
-          <Typography.Text style={styles.brandTitle}>OPA</Typography.Text>
+        <Flex align="center" style={styles.brand}>
+          <Logo height={22} />
         </Flex>
 
         <Menu

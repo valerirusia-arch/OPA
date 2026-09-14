@@ -46,6 +46,10 @@ export const styles = {
   sliderCompact: { marginTop: 2, marginInline: 0, marginBottom: 4 },
   scale: { fontSize: 12, fontVariantNumeric: "tabular-nums" },
   scaleCompact: { fontSize: 11, fontVariantNumeric: "tabular-nums" },
+  /** The quiet context line at the top of the box — see `caption` in the
+   *  component. Sits on the input's own left edge (the input has no inline
+   *  padding), so the reference value and the new one line up. */
+  caption: { fontSize: 13, marginBottom: 4 },
 } satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) =>

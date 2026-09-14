@@ -218,13 +218,25 @@ export default function BorrowerDetailsScreen({
       ]
     : [];
 
+  /*
+    THE LOAN TAB'S FIELDS — SIX OF THEM, AND THE STATE IS NOT ONE.
+
+    There were seven in a three-column grid, so the last one sat alone on a
+    row of its own with two empty cells beside it: *"ვერ მივხდი თუ აქაც
+    საჭირო ესენი, კარგად მოსვი, ეხლა ალეწილია."*
+
+    The one that came out is the STATUS, and not because it was the seventh.
+    It is the only item here that is not a field: a tag in a cell labelled
+    "Status" is the state of the whole loan pretending to be one of its
+    properties, and it is drawn in a different shape from the six values
+    around it. Above the grid it names what the reader is looking at, and the
+    six that remain — amount, rate, agreement, the two cards, the funding date
+    — fill two even rows.
+
+    Nothing was dropped. Every field the WBS names for story 10 is still here.
+  */
   const loanItems: DetailItem[] = loan
     ? [
-        {
-          key: "status",
-          label: t("detail.status"),
-          value: <LoanStatusTag status={loan.status} />,
-        },
         { key: "amount", label: t("detail.amount"), value: loan.amount },
         { key: "rate", label: t("detail.rate"), value: loan.rate },
         {
@@ -236,8 +248,14 @@ export default function BorrowerDetailsScreen({
         { key: "debit", label: t("detail.debitCard"), value: loan.debitCard },
         // WBS story 10: "all loan information, FUNDING STATUS and related
         // documents". The documents are below; this is the funding.
+        //
+        // AND IT IS LABELLED "Funded", NOT "Funding status". The value is a
+        // DATE, and a date under a label promising a status is the field
+        // answering a question nobody asked — the status is the tag above the
+        // grid. "Funded · 14 Aug 2026" is also exactly how the loans table
+        // words the same fact one screen away.
         ...(loan.fundedOn
-          ? [{ key: "funded", label: t("loanAdmin.funding"), value: loan.fundedOn }]
+          ? [{ key: "funded", label: t("loans.col.funded"), value: loan.fundedOn }]
           : []),
       ]
     : [];
@@ -409,19 +427,35 @@ export default function BorrowerDetailsScreen({
                   <Flex vertical style={styles.tabBody}>
                     {loan ? (
                       <>
-                        <DetailGrid items={loanItems} />
-                        {/* WBS stories 10 and 11: the loan's documents, its
-                            comments, and the two things an Admin or an
-                            Underwriter may add. OPA Staff reads them. */}
-                        <LoanAdminPanel comments={loan.comments} />
+                        {/*
+                          THE STATE ON THE LEFT, THE WAY THROUGH ON THE RIGHT.
 
-                        {/* Epic 2's own words: "Read-only access. Editing is
-                            covered by Manage borrower accounts." So story
-                            11's Add document / comment is NOT offered here —
-                            it lives on the loan record, which is also where
-                            the documents table with its uploader and comment
-                            columns lives. This is the way through. */}
-                        <Flex style={styles.loanLink}>
+                          The link to the full record used to sit at the very
+                          bottom, under the comment list — 24px below the last
+                          comment and 1px above the card's edge, measured. So
+                          it read as an action ON the comments, and it was
+                          jammed against the frame.
+
+                          It is neither: it is how you leave this summary for
+                          the record itself, which is the same job the status
+                          beside it does for reading. On the tab's first line
+                          they are a pair — what this loan is, and where the
+                          whole of it lives.
+                        */}
+                        <Flex
+                          align="center"
+                          justify="space-between"
+                          gap={16}
+                          wrap
+                          style={styles.loanState}
+                        >
+                          <LoanStatusTag status={loan.status} />
+                          {/* Epic 2's own words: "Read-only access. Editing is
+                              covered by Manage borrower accounts." So story
+                              11's Add document / comment is NOT offered here —
+                              it lives on the loan record, which is also where
+                              the documents table with its uploader and comment
+                              columns lives. This is the way through. */}
                           <Button
                             icon={<ArrowRightOutlined />}
                             iconPlacement="end"
@@ -432,6 +466,11 @@ export default function BorrowerDetailsScreen({
                             {t("loanAdmin.openRecord")}
                           </Button>
                         </Flex>
+                        <DetailGrid items={loanItems} />
+                        {/* WBS stories 10 and 11: the loan's documents, its
+                            comments, and the two things an Admin or an
+                            Underwriter may add. OPA Staff reads them. */}
+                        <LoanAdminPanel comments={loan.comments} />
                       </>
                     ) : (
                       <EmptyState

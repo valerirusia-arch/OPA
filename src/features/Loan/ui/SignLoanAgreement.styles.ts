@@ -4,7 +4,6 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 
 export const styles = {
-  banner: { marginBottom: 24 },
   /** The rows draw their own rules and inset; the card's 24 would be a second
    *  frame around them. */
   listBody: { padding: "16px 24px" },
@@ -29,8 +28,10 @@ export const styles = {
   nameText: { minWidth: 0 },
   meta: { fontSize: 13 },
   action: { flex: "none" },
-  /** The hand-off line, at the foot of the documents it applies to. */
-  handoff: { paddingTop: 16 },
+  /** The hand-off line, at the foot of the documents it applies to. 24 rather
+   *  than 16 now that no rule separates it from the last row: with a line
+   *  there, 16 was enough; without one, the gap IS the separation. */
+  handoff: { paddingTop: 24 },
 } satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) =>

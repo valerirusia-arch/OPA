@@ -8,7 +8,6 @@ const CARD_INSET = 24;
 
 export const styles = {
   /** The account's notice, above everything it is about. */
-  banner: { marginBottom: 24 },
   card: { marginBottom: 24 },
   row: { marginBottom: 24 },
   /**

@@ -27,14 +27,6 @@ export const getStyles = (token: GlobalToken) => {
       paddingInline: token.padding,
       borderBottom: `1px solid ${token.colorBorderSecondary}`,
     },
-    logoPlaceholder: {
-      width: 32,
-      height: 32,
-      borderRadius: 8,
-      background: token.colorFillSecondary,
-      flex: "none",
-    },
-    brandTitle: { fontWeight: 600, whiteSpace: "nowrap" },
     /**
      * Section titles are signposts, not entries: smaller, spaced, upper case.
      *

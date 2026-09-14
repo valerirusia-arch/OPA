@@ -17,7 +17,18 @@ export const styles = {
   cardBody: { padding: 0 },
   tabBar: { paddingInline: CARD_INSET, marginBottom: 0 },
   /** The last row of the grid already carries its own 24px underneath. */
-  tabBody: { padding: `${CARD_INSET}px ${CARD_INSET}px 0` },
+  /**
+   * THE BOTTOM INSET IS NOT ZERO ANY MORE.
+   *
+   * It was `24px 24px 0`, which left whatever ended the tab sitting on the
+   * card's own edge — measured at 1px between the last control and the frame.
+   * The other three tabs end in a form whose own margin covered for it; the
+   * loan tab ends in a comment, and it showed.
+   */
+  tabBody: { padding: CARD_INSET },
   /** The way through to the loan's own record, under its summary. */
-  loanLink: { marginTop: 24 },
+  /** The loan's state and the way to its full record, on one line above the
+   *  fields. A state is not a field and a way out is not a comment — see the
+   *  note in the tab. */
+  loanState: { marginBottom: 20, width: "100%" },
 } satisfies Record<string, CSSProperties>;

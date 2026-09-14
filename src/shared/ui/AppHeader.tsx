@@ -25,6 +25,7 @@ import { BellOutlined, DownOutlined, LogoutOutlined, UserOutlined } from "@ant-d
 import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
+import { Logo } from "./Logo";
 import { useT } from "./i18n/useT";
 import type { NavItem } from "./navigation";
 import {
@@ -88,7 +89,7 @@ export function AppHeader({
     <Flex component="header" style={styles.header} align="center">
       <div style={styles.inner}>
       <Link to="/" aria-label={t("header.home")}>
-        <div style={styles.logoPlaceholder} />
+        <Logo height={26} />
       </Link>
 
       <ConfigProvider theme={navTheme}>

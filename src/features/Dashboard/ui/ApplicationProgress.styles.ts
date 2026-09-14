@@ -11,48 +11,84 @@ export const styles = {
    * after funding, and the two must not sit at different distances from their
    * own edges.
    *
-   * The extra two at the top are the caret's business: the marker over the
-   * live node hangs above the rail, and at a flat 32 it sat closer to the
-   * card's edge than the rail sat to the rule below it — the band read as
-   * top-heavy by exactly the height of one glyph.
+   * The bottom is short by 8 on purpose: the recess below the rail carries
+   * its own 24, and in the `history` variant antd's Collapse adds a row after
+   * it. Both are measured from the card's floor, so the card keeps the same
+   * visual foot whichever is on screen.
    */
   body: {
-    paddingTop: LEAD_PANEL_INSET + 2,
+    paddingTop: LEAD_PANEL_INSET,
     paddingInline: LEAD_PANEL_INSET,
-    paddingBottom: LEAD_PANEL_INSET,
+    paddingBottom: LEAD_PANEL_INSET - 8,
   },
-  /** The row under the rule: words on the left, the move on the right. */
+  /** The row inside the recess: words on the left, the move on the right. */
   detail: { width: "100%" },
   /** `minWidth: 0` so the sentence wraps inside its own column instead of
    *  widening the row and pushing the button off the card. */
   copyBlock: { minWidth: 0 },
   title: { marginTop: 0, marginBottom: 0 },
   /**
-   * A reading measure, not the band's full width.
+   * NO MEASURE CAP. The sentence takes the column it is in.
    *
-   * These sentences run past 120 characters and the card is wide enough to
-   * set every one of them as a single line — which is the width at which an
-   * eye loses the start of the next.
+   * This went 460 → 560 → off, one designer note at a time, and the last one
+   * settled it: *"მთლიანად გაშალე მაგის ტექსტიც ბარემ."* The reason the
+   * textbook 65–75 characters does not apply here is that these are not
+   * paragraphs — every one of them is a single sentence or two, and the cost
+   * of a long line is only paid on the RETURN to the next one. A capped
+   * two-line notice with three words on the second line and 300px of empty
+   * panel beside it looked like a mistake, and it was.
    *
-   * 460px, MEASURED, because `ch` lies about this face: `64ch` computed to
-   * 564px and the average character in the real copy is 6.5px, so that line
-   * was carrying 87 characters, not 64. The `ch` unit is the advance of "0",
-   * which in this font is a third wider than the letters around it. 460 / 6.5
-   * is 71 characters, inside the 65–75 the eye tracks comfortably.
+   * The column still has a limit, and it is the right one: `copyBlock` shares
+   * the row with the step's action, so where there is an action the sentence
+   * stops well short of the panel's edge on its own.
    */
-  copy: { fontSize: 14, maxWidth: 460, display: "block" },
-  /** Never squeezed: the row's `space-between` gives the words the slack and
-   *  the label keeps its own width, so "Open the documents" does not become
-   *  two lines because the sentence beside it grew. */
-  action: { flex: "none" },
+  copy: { fontSize: 14, display: "block" },
+  /**
+   * THE LINK, ON THE HEADING'S LINE.
+   *
+   * It read as floating — *"ვერ გავიგე, არც შუაშია, არც დაბლა, არც მაღლა."*
+   * And it was: this theme pins `controlHeight` to 48 so that fields and
+   * buttons stay roomy, and antd sizes a link Button from the same token, so
+   * a 21px line of text was being centred inside a 48px box while the heading
+   * beside it is a 24px one. It sat 12px below where it looked like it should.
+   *
+   * `height: auto` gives the link its own text's height and nothing more, and
+   * the row's `flex-start` then puts it level with the heading. The padding
+   * goes too, so the words end flush with the panel's inset rather than one
+   * button's worth inside it.
+   *
+   * `flex: none` so the row's `space-between` gives the sentence the slack
+   * and the label keeps its own width.
+   *
+   * The INK is in `getStyles` — see `action` there.
+   */
+  actionBox: {
+    flex: "none",
+    height: "auto",
+    padding: 0,
+    /* The heading's line box is 24 and the link's is 21; 2 lands their
+       cap-heights on one another rather than their boxes. */
+    marginTop: 2,
+  },
 } satisfies Record<string, CSSProperties>;
 
-export const getStyles = (token: GlobalToken) =>
-  ({
+export const getStyles = (token: GlobalToken) => {
+  return {
     /**
-     * The rule between the road and the place you are standing.
+     * THE RULE BETWEEN THE ROAD AND THE PLACE YOU ARE STANDING.
      *
-     * Equal air on both sides: a divider is a joint, and unequal margins
+     * A tinted recess was tried in its place — the live step on its own soft
+     * ground, so it would read as a thing sitting inside the band. It went
+     * back: *"ნაცრისფერი ჩარჩო არ მომწონს, ესე უფრო მომწონს ჩარჩოს გარეშე."*
+     * And the reason it is right is that the band has one surface and one
+     * subject; a panel inside it made the card look like two cards, which is
+     * the thing this dashboard has been taken apart twice to avoid.
+     *
+     * The failed state loses its pink ground with it. Nothing is lost there
+     * either: the rail already draws the step in red and names it in red, and
+     * a second red surface under the same sentence was the news told twice.
+     *
+     * Equal air on both sides. A divider is a joint, and unequal margins
      * would attach it to one of the two things it separates. The heading
      * below it then has 24 above and 8 below its own sentence, which is the
      * order that reading wants.
@@ -62,4 +98,44 @@ export const getStyles = (token: GlobalToken) =>
       background: token.colorSplit,
       marginBlock: 24,
     },
-  }) satisfies Record<string, CSSProperties>;
+
+    /**
+     * WHOSE MOVE IT IS. The plain filled tag, and nothing added to it.
+     *
+     * It was given a hairline while the live step sat on a tinted recess: a
+     * pale tag on a pale ground had no boundary of its own. The recess is
+     * gone and the tag is back on the card's white, where the tint alone is
+     * enough — *"ჩარჩო თუ არ გვექნება, უკან ეს სტროუკი აღარ დაგვჭირდება."*
+     * An edge that was compensating for a background is furniture once the
+     * background goes.
+     */
+    ownerTag: { fontWeight: 500, paddingBlock: 1 },
+
+    /**
+     * THE STEP'S WAY OUT, IN THE PAGE'S OWN INK.
+     *
+     * antd paints a link Button in the accent, and in this panel that put a
+     * blue phrase opposite a blue heading with a blue-tinted rail above both
+     * — *"ჯობია ისევ შავი იყოს ეგ cta."* The accent on this band is spent on
+     * the one thing it is for, which is saying which step is live. A way
+     * somewhere is text and an arrow; it does not need a colour to be found,
+     * because it is the only thing on its side of the row.
+     */
+    action: { ...styles.actionBox, color: token.colorText },
+    /** Under the pointer it takes the accent — the one moment a link in this
+     *  panel is allowed to be blue, because then it is answering a gesture
+     *  rather than competing for attention. */
+    actionHover: { ...styles.actionBox, color: token.colorPrimary },
+
+    /**
+     * The drawer's own line — the product's ink at 500, which is exactly what
+     * the other collapsible in this product uses for its own line ("How late
+     * fees and overdue accounts work" on /payments). *"შეგიძლია გააშავო
+     * ტექსტი ჩამოსადროპის, როგორც აქ გაქვს."*
+     *
+     * It was 13 in the quiet token, which made the one thing on this card a
+     * reader can open the quietest text on it.
+     */
+    historyLabel: { fontWeight: 500, color: token.colorText },
+  } satisfies Record<string, CSSProperties>;
+};

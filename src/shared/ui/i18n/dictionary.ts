@@ -241,7 +241,26 @@ export const en = {
     in the "what happens next" list are the WBS's own rules quoted back.
   */
   "dashboard.title": "Dashboard",
-  "dashboard.greeting": "Welcome back, {name}",
+  /*
+    THE PAGE NAMES WHAT IT IS ABOUT, and the reference is the naming.
+
+    It was "Welcome back, {name}" — the page's largest type spent on a
+    greeting, which tells a reader nothing they did not know before they
+    opened it. *"ეს თაითლი არ გვინდა, რამე უფრო ინფორმაციული."*
+
+    The reference is the one fact the dashboard LOST when the statement card
+    came off it, and it is the fact a borrower is asked for the moment they
+    call OPA or write in about their case. It also says, in two words, which
+    half of the product they are looking at: an application is a thing under
+    review, a loan is a thing being repaid, and they are not the same object.
+  */
+  "dashboard.titleApplication": "Application {ref}",
+  "dashboard.titleLoan": "Loan {ref}",
+  /* Nothing open. There is no reference to name, and "Welcome back" is what
+     was wrong with the old title, so the page says what its state is. The
+     sentence under it — the only place that sentence still survives — then
+     explains what to do about it. */
+  "dashboard.titleNone": "No application yet",
   "dashboard.leadNone": "Nothing is open yet. Start an application and it all appears here.",
   "dashboard.leadApplication": "Your application is with OPA. Here is where it stands.",
   "dashboard.leadApplicationCoBorrower":
@@ -272,8 +291,12 @@ export const en = {
   "dashboard.ringLeft": "Left to pay",
   "dashboard.ringCount": "{count} of {total}",
   "dashboard.ringNone": "The ring fills once OPA has funded the loan and the schedule starts.",
-  "dashboard.recentTitle": "Recent transactions",
+  /* The table at the foot of the dashboard. "Recent payments" rather than
+     "Recent transactions": a transaction is what the system calls it, a
+     payment is what the borrower made. */
+  "dashboard.recentTitle": "Recent payments",
   "dashboard.recentAll": "All payments",
+  "dashboard.recentNone": "Your payments appear here once the first one is taken.",
 
   // THE ONE STAGE THE LOAN IS IN. Four titles, and for each of them the line
   // that says what it is waiting on. Every one is a WBS rule.
@@ -302,6 +325,10 @@ export const en = {
   "dashboard.stageSettled": "Repaid in full",
   "dashboard.stageSettledBody": "Every instalment on the schedule is paid. The loan is closed.",
   "dashboard.stageOpenPayments": "Open payments",
+  /* To /loan, where an application under review has its status, its
+     documents and its decision. It used to read "Open the application" and
+     send the reader back to the form they had already finished. */
+  "dashboard.stageSeeStatus": "See the status",
   "dashboard.stageFundedBody":
     "OPA has paid the filing fee and your card is issued. Repayment starts on the 1st, within 45 days of approval.",
 
@@ -310,10 +337,49 @@ export const en = {
      as two. "Reviewed" rather than "Approved" because the step is the review
      ENDING, and it ends two ways. */
   "dashboard.trackSubmitted": "Submitted",
-  "dashboard.trackReviewed": "Reviewed",
-  "dashboard.trackSigned": "Signed",
-  "dashboard.trackFunded": "Funded",
-  "dashboard.trackRepaid": "Repaid",
+  "dashboard.trackReviewed": "Review",
+  "dashboard.trackSigned": "Signing",
+  "dashboard.trackFunded": "Funding",
+  "dashboard.trackRepaid": "Repayment",
+  /* The drawer along the band's foot, and the one thing it says when it is
+     shut. "Steps so far" rather than "Recent steps": nothing here is recent
+     or not, it is simply everything already behind the reader. */
+  "dashboard.stepsBehind": "Steps so far",
+  /* THE TENSE PROGRESSION, across three moments of one phrase:
+       · before funding — the goal marker names the destination ahead:
+         "Repayment begins" (trackGoal, future).
+       · funded and repaying — the heading here: "Repayment started" (it is
+         under way, the schedule is live).
+       · paid off — loanPaidOff: "Repayment completed" (done).
+
+     Earlier tries were cut. "Application complete" read as false finality with
+     twelve payments still ahead, and the WBS has no "complete" status anyway.
+     "Loan funded" echoed the "Funding" step in the drawer below it. Naming the
+     repayment phase and moving its tense with the loan's state is what reads
+     honestly at every stage. No owner pill: the rail has nothing left to
+     report. */
+  "dashboard.applicationDone": "Repayment started",
+  /* PAID OFF — the one moment "complete" is literally true: every instalment
+     paid, outstanding balance $0.00. This is the whole application-and-loan
+     journey finished, so it is named for the journey, not the last phase:
+     "Application completed", the frame this whole component reads in
+     (ApplicationProgress / applicationTrack). It carried false finality on the
+     funded state, where payments remained; here nothing remains, so it is
+     simply true. Reached only in the four-step model, where Repayment now joins
+     the drawer as a finished step with the final payment's date on it. */
+  "dashboard.loanPaidOff": "Application completed",
+  /* THE DESTINATION, NOT A STEP. It is a verb phrase and not the bare noun
+     "Repayment" on purpose: the four words above it are stages, and a fifth
+     noun in the same row would read as a fifth stage however it is drawn. */
+  "dashboard.trackGoal": "Repayment begins",
+  /* WHAT EACH FINISHED STEP WAS, in the past tense, one line each. A row of
+     a name and a date says that a step happened and not what it was. Only
+     steps BEHIND the reader are given one — see applicationTrack.ts. */
+  "dashboard.pastSubmitted": "Your application reached OPA and went into the queue.",
+  "dashboard.pastReviewed": "Underwriting finished and OPA reached a decision.",
+  "dashboard.pastSigned": "The loan agreement came back signed through DocuSign.",
+  "dashboard.pastFunded": "OPA paid the USCIS filing fee and issued your card.",
+  "dashboard.pastRepaid": "Every scheduled payment was made and the loan is paid off.",
 
   "dashboard.appliedFor": "Applied for",
   "dashboard.submittedOn": "Submitted {date}",
@@ -347,9 +413,24 @@ export const en = {
   "dashboard.stepMoreInfoBody":
     "Your application goes back into the review queue as soon as it arrives.",
   "dashboard.stepSign": "Sign the loan documents",
-  "dashboard.stepSignBody": "Signing happens in DocuSign. Nothing is paid out until it is done.",
+  /*
+    WHAT SIGNING COMMITS YOU TO, said before you sign it.
+
+    Both lines used to end at the disbursement — "nothing is paid out until it
+    is done" — which describes the good half of the bargain and stops there.
+    The rail carried the other half in a fifth grey capsule marked
+    "Repayment", and the four-step models take that capsule away. Rather than
+    keep a shape whose whole job was to hint, the sentence says it: the date
+    the schedule starts and the day of the month it falls on, which is more
+    than a capsule ever told anybody.
+
+    It is not a disclosure — the agreement is — but the last screen before a
+    signature should not draw a road that ends with money arriving.
+  */
+  "dashboard.stepSignBody":
+    "Signing happens in DocuSign. Nothing is paid out until it is done, and repayment begins within 45 days of approval, on the 1st of the month.",
   "dashboard.stepSignBodyBoth":
-    "Signing happens in DocuSign, and both of you sign before OPA pays anything out.",
+    "Signing happens in DocuSign, and both of you sign before OPA pays anything out. Repayment begins within 45 days of approval, on the 1st of the month.",
   "dashboard.stepFunding": "OPA pays out the loan",
   "dashboard.stepFundingBody":
     "Your virtual payment card is issued at the same time. Repayment begins within 45 days of approval, on the 1st of the month.",
@@ -911,10 +992,13 @@ export const en = {
   "sign.loanTitle": "Sign your loan agreement",
   "sign.signedOne": "{name} signed",
   "sign.signedAll": "All documents signed",
-  "sign.loanApprovedTitle": "Your application has been approved",
-  "sign.loanApprovedBody": "Your loan documents are now available for review and electronic signature. Nothing is paid out until they are signed.",
-  "sign.loanDoneTitle": "Everything is signed",
-  "sign.loanDoneBody": "OPA is paying the filing fee. Your virtual card appears on the loan page once the money has moved.",
+  /* ONE MESSAGE, NOT A HEADING OVER A PARAGRAPH. The notices lost their
+     panel and their bold title with it — a heading for two sentences was
+     furniture even when there was a box to hang it in. */
+  "sign.loanApproved":
+    "Your application was approved. Your loan documents are ready for review and electronic signature, and nothing is paid out until they are signed.",
+  "sign.loanDone":
+    "Everything is signed. OPA is paying the filing fee, and your virtual card appears on the loan page once the money has moved.",
   "sign.loanPackage": "Documents to review and sign",
   "sign.progress": "{signed} of {count} signed",
   "sign.reviewAndSign": "Review and sign",
@@ -1021,10 +1105,15 @@ export const en = {
      say what is happening and who is doing it. WBS: the system requests the
      card from USIO, and Notifications sends the confirmation "when the loan
      has been funded and the Virtual Payment Card is available". */
-  "loanPage.fundingTitle": "OPA is paying out your loan",
-  "loanPage.fundingBody": "There is nothing for you to do. Your virtual payment card appears on this page once the money has moved, and we email you when it does. Repayment starts {date}.",
+  "loanPage.fundingTitle": "OPA is paying out your loan.",
+  /* SHORT. It ran to four clauses — "nothing for you to do", the card, the
+     email, the date — over two lines of a notice that has no box round it any
+     more. Two facts survive, and they are the two that are about to happen to
+     the reader; "nothing for you to do" is what the title and the With-OPA
+     pill already say. */
+  "loanPage.fundingBody": "Your virtual card appears here once the money has moved. Repayment starts {date}.",
   /* The co-borrower's: no card is issued to them, so none is promised. */
-  "loanPage.fundingBodyCoBorrower": "There is nothing for you to do. We email you once the money has moved. Repayment starts {date}.",
+  "loanPage.fundingBodyCoBorrower": "We email you once the money has moved. Repayment starts {date}.",
   "loanPage.stageFunded": "Funded",
   "loanPage.stageCancelled": "Cancelled",
 
@@ -1166,6 +1255,21 @@ export const en = {
   "queue.exportXlsx": "Export as XLSX",
   "queue.exportCsv": "Export as CSV",
   "queue.exported": "Exporting {count} applications",
+
+  "reporting.title": "Reporting",
+  "reporting.lead": "Export reports and application data for your records. Files download as XLSX or CSV.",
+  "reporting.statApplications": "Applications",
+  "reporting.statApproved": "Approved",
+  "reporting.statDeclined": "Declined",
+  "reporting.statInReview": "In review",
+  "reporting.statBorrowers": "Borrowers",
+  "reporting.creditTitle": "Credit report",
+  "reporting.creditDesc": "Borrower credit reports and scores retrieved from Equifax.",
+  "reporting.metroTitle": "Consumer credit reporting (Metro II)",
+  "reporting.metroDesc": "The monthly Metro II reporting OPA submits to Equifax.",
+  "reporting.appDataTitle": "Application data",
+  "reporting.appDataDesc": "The full list of loan applications and their status.",
+  "reporting.exported": "Preparing your {report} export",
   "queue.title": "Underwriting queue",
   "queue.col.uscis": "USCIS service",
   "queue.col.amount": "Amount",
@@ -1211,7 +1315,7 @@ export const en = {
   "appAction.alreadyDecided": "This application has already been decided: {outcome}.",
   "appAction.outcome.approved": "approved",
   "appAction.outcome.declined": "declined",
-  "amountPanel.current": "Current",
+  "amountPanel.currentIs": "Currently {amount}",
   "amountPanel.newAmount": "New amount (USD)",
   "amountPanel.history": "Change history",
   "amountPanel.noChanges": "The amount has not been changed.",
@@ -1310,7 +1414,12 @@ export const en = {
   "payments.number": "#",
   "payments.dueDate": "Due date",
   "payments.payNow": "Pay now",
-  "payments.nextPaymentLine": "Next payment {amount} due {due}",
+  /* SHORT, because it shares a baseline with the balance rather than a line
+     of its own — and short here means DROPPING THE AMOUNT, not the words. A
+     second sum beside the one figure the card exists to state is what made
+     the pair read as crowded; the date is the part that is not already
+     answered above it. */
+  "payments.nextPaymentLine": "Next on {due}",
   "payments.savedCard": "Saved payment card",
   "payments.filterByBorrower": "Filter by borrower",
 
@@ -1357,6 +1466,15 @@ export const en = {
      and the instalment count is the Payments tile's own sentence. A bar needs
      its number, not a caption. */
   "payments.progressLine": "{percent}%",
+  /* Under the row of instalment capsules. Counts, not a percentage: nobody
+     repays 25% of anything, they repay twelve payments.
+
+     IT SAYS BOTH NUMBERS. "9 to go" was tried and the designer sent it back
+     as harder to read, which it is: a remainder makes you do the subtraction
+     backwards to find out where you are. "3 of 12 paid" states the position
+     and the length of the road in one phrase, and it is how the payments tile
+     and the loan page's statement already say it. */
+  "payments.progressCount": "{paid} of {total} paid",
 
   // WBS story 2, shared with the internal view in story 14.
 
@@ -1643,7 +1761,9 @@ const es: Record<TranslationKey, string> = {
   "header.notifications": "Notificaciones",
   "profile.navNotifications": "Notificaciones",
   "dashboard.title": "Panel",
-  "dashboard.greeting": "Hola de nuevo, {name}",
+  "dashboard.titleApplication": "Solicitud {ref}",
+  "dashboard.titleLoan": "Préstamo {ref}",
+  "dashboard.titleNone": "Aún no hay solicitud",
   "dashboard.leadNone": "Todavía no hay nada abierto. Inicia una solicitud y aparecerá todo aquí.",
   "dashboard.leadApplication": "Tu solicitud está en OPA. Aquí ves en qué punto está.",
   "dashboard.leadApplicationCoBorrower":
@@ -1673,8 +1793,9 @@ const es: Record<TranslationKey, string> = {
   "dashboard.ringLeft": "Por pagar",
   "dashboard.ringCount": "{count} de {total}",
   "dashboard.ringNone": "El anillo se llena cuando OPA financia el préstamo y empieza el calendario.",
-  "dashboard.recentTitle": "Transacciones recientes",
+  "dashboard.recentTitle": "Pagos recientes",
   "dashboard.recentAll": "Todos los pagos",
+  "dashboard.recentNone": "Tus pagos aparecerán aquí en cuanto se cobre el primero.",
 
   "dashboard.stageStep": "Paso {index} de {total}",
   "dashboard.stageYou": "Te toca",
@@ -1701,14 +1822,24 @@ const es: Record<TranslationKey, string> = {
   "dashboard.stageSettled": "Pagado por completo",
   "dashboard.stageSettledBody": "Todas las cuotas del calendario están pagadas. El préstamo está cerrado.",
   "dashboard.stageOpenPayments": "Abrir pagos",
+  "dashboard.stageSeeStatus": "Ver el estado",
   "dashboard.stageFundedBody":
     "OPA ha pagado la tasa de presentación y tu tarjeta ya está emitida. La amortización empieza el día 1, dentro de los 45 días siguientes a la aprobación.",
 
   "dashboard.trackSubmitted": "Enviada",
-  "dashboard.trackReviewed": "Revisada",
-  "dashboard.trackSigned": "Firmado",
-  "dashboard.trackFunded": "Desembolsado",
-  "dashboard.trackRepaid": "Pagado",
+  "dashboard.trackReviewed": "Revisión",
+  "dashboard.trackSigned": "Firma",
+  "dashboard.trackFunded": "Desembolso",
+  "dashboard.trackRepaid": "Amortización",
+  "dashboard.stepsBehind": "Pasos completados",
+  "dashboard.applicationDone": "Amortización iniciada",
+  "dashboard.loanPaidOff": "Solicitud completada",
+  "dashboard.trackGoal": "Comienza la amortización",
+  "dashboard.pastSubmitted": "Tu solicitud llegó a OPA y entró en la cola.",
+  "dashboard.pastReviewed": "El análisis terminó y OPA tomó una decisión.",
+  "dashboard.pastSigned": "El contrato del préstamo volvió firmado por DocuSign.",
+  "dashboard.pastFunded": "OPA pagó la tasa de USCIS y emitió tu tarjeta.",
+  "dashboard.pastRepaid": "Se realizaron todos los pagos programados y el préstamo quedó saldado.",
 
   "dashboard.appliedFor": "Solicitado",
   "dashboard.submittedOn": "Enviada el {date}",
@@ -1739,9 +1870,10 @@ const es: Record<TranslationKey, string> = {
   "dashboard.stepMoreInfoBody":
     "Tu solicitud vuelve a la cola de revisión en cuanto llegue.",
   "dashboard.stepSign": "Firma los documentos del préstamo",
-  "dashboard.stepSignBody": "La firma se realiza en DocuSign. No se desembolsa nada hasta que esté hecha.",
+  "dashboard.stepSignBody":
+    "La firma se realiza en DocuSign. No se desembolsa nada hasta que esté hecha, y la amortización comienza en un plazo de 45 días desde la aprobación, el día 1 de cada mes.",
   "dashboard.stepSignBodyBoth":
-    "La firma se realiza en DocuSign, y los dos firmáis antes de que OPA desembolse nada.",
+    "La firma se realiza en DocuSign, y los dos firmáis antes de que OPA desembolse nada. La amortización comienza en un plazo de 45 días desde la aprobación, el día 1 de cada mes.",
   "dashboard.stepFunding": "OPA desembolsa el préstamo",
   "dashboard.stepFundingBody":
     "Tu tarjeta virtual de pago se emite a la vez. Los pagos empiezan dentro de los 45 días desde la aprobación, el día 1 del mes.",
@@ -2232,10 +2364,10 @@ const es: Record<TranslationKey, string> = {
   "sign.loanTitle": "Firma el contrato de tu préstamo",
   "sign.signedOne": "{name} firmado",
   "sign.signedAll": "Todos los documentos están firmados",
-  "sign.loanApprovedTitle": "Tu solicitud ha sido aprobada",
-  "sign.loanApprovedBody": "Ya puedes revisar y firmar electrónicamente los documentos del préstamo. No se desembolsa nada hasta que estén firmados.",
-  "sign.loanDoneTitle": "Todo está firmado",
-  "sign.loanDoneBody": "OPA está pagando la tasa de solicitud. Tu tarjeta virtual aparecerá en la página del préstamo cuando se haya hecho el pago.",
+  "sign.loanApproved":
+    "Tu solicitud fue aprobada. Ya puedes revisar y firmar electrónicamente los documentos del préstamo, y no se desembolsa nada hasta que estén firmados.",
+  "sign.loanDone":
+    "Todo está firmado. OPA está pagando la tasa de solicitud, y tu tarjeta virtual aparecerá en la página del préstamo cuando se haya hecho el pago.",
   "sign.loanPackage": "Documentos para revisar y firmar",
   "sign.progress": "{signed} de {count} firmados",
   "sign.reviewAndSign": "Revisar y firmar",
@@ -2314,9 +2446,9 @@ const es: Record<TranslationKey, string> = {
   "loanPage.stageAwaitingSignature": "Esperando tu firma",
   "loanPage.stageAwaitingOther": "Esperando a {name}",
   "loanPage.stageFunding": "En desembolso",
-  "loanPage.fundingTitle": "OPA está desembolsando tu préstamo",
-  "loanPage.fundingBody": "No tienes que hacer nada. Tu tarjeta virtual de pago aparecerá en esta página en cuanto se mueva el dinero, y te avisaremos por correo. Los pagos empiezan el {date}.",
-  "loanPage.fundingBodyCoBorrower": "No tienes que hacer nada. Te avisaremos por correo en cuanto se mueva el dinero. Los pagos empiezan el {date}.",
+  "loanPage.fundingTitle": "OPA está desembolsando tu préstamo.",
+  "loanPage.fundingBody": "Tu tarjeta virtual aparecerá aquí en cuanto se mueva el dinero. Los pagos empiezan el {date}.",
+  "loanPage.fundingBodyCoBorrower": "Te avisaremos por correo en cuanto se mueva el dinero. Los pagos empiezan el {date}.",
   "loanPage.stageFunded": "Desembolsado",
   "loanPage.stageCancelled": "Cancelado",
 
@@ -2433,6 +2565,21 @@ const es: Record<TranslationKey, string> = {
   "queue.exportXlsx": "Exportar en XLSX",
   "queue.exportCsv": "Exportar en CSV",
   "queue.exported": "Exportando {count} solicitudes",
+
+  "reporting.title": "Informes",
+  "reporting.lead": "Exporta informes y datos de solicitudes para tus registros. Los archivos se descargan en XLSX o CSV.",
+  "reporting.statApplications": "Solicitudes",
+  "reporting.statApproved": "Aprobadas",
+  "reporting.statDeclined": "Rechazadas",
+  "reporting.statInReview": "En revisión",
+  "reporting.statBorrowers": "Prestatarios",
+  "reporting.creditTitle": "Informe de crédito",
+  "reporting.creditDesc": "Informes y puntuaciones de crédito del prestatario obtenidos de Equifax.",
+  "reporting.metroTitle": "Informe de crédito al consumidor (Metro II)",
+  "reporting.metroDesc": "El informe mensual Metro II que OPA envía a Equifax.",
+  "reporting.appDataTitle": "Datos de solicitudes",
+  "reporting.appDataDesc": "La lista completa de solicitudes de préstamo y su estado.",
+  "reporting.exported": "Preparando tu exportación de {report}",
   "queue.title": "Cola de suscripción",
   "queue.col.uscis": "Servicio USCIS",
   "queue.col.amount": "Importe",
@@ -2476,7 +2623,7 @@ const es: Record<TranslationKey, string> = {
   "appAction.alreadyDecided": "Esta solicitud ya está decidida: {outcome}.",
   "appAction.outcome.approved": "aprobada",
   "appAction.outcome.declined": "rechazada",
-  "amountPanel.current": "Actual",
+  "amountPanel.currentIs": "Actualmente {amount}",
   "amountPanel.newAmount": "Nuevo importe (USD)",
   "amountPanel.history": "Historial de cambios",
   "amountPanel.noChanges": "El importe no se ha modificado.",
@@ -2571,7 +2718,7 @@ const es: Record<TranslationKey, string> = {
   "payments.number": "N.º",
   "payments.dueDate": "Fecha de vencimiento",
   "payments.payNow": "Pagar ahora",
-  "payments.nextPaymentLine": "Próximo pago de {amount} el {due}",
+  "payments.nextPaymentLine": "Próximo el {due}",
   "payments.savedCard": "Tarjeta guardada",
   "payments.filterByBorrower": "Filtrar por titular",
 
@@ -2602,6 +2749,7 @@ const es: Record<TranslationKey, string> = {
   "payments.stateAccelerated": "Acelerado · {days} días",
   "payments.pastDueLabel": "Vencido",
   "payments.progressLine": "{percent}%",
+  "payments.progressCount": "{paid} de {total} pagadas",
 
 
   "payments.rulesTitle": "Cómo funcionan los recargos y las cuentas vencidas",

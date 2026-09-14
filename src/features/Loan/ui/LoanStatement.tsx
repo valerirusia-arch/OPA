@@ -14,9 +14,10 @@
 // designer's verdict was that a blue shape this size looks bad on the page, so
 // the colour came out and everything else stayed. The lead is now carried by
 // order, air and type: it comes first, it is inset 32 where the cards below get
-// 24, it holds the only `figureLg` on the page, and its progress bar is the one
-// saturated colour. The structure — one answer, the track, the contract's facts
-// along the foot — is what fixed the reading order, not the blue.
+// 24, it holds the only `figureLg` on the page, and its instalment track is
+// the one saturated colour. The structure — one answer, the track, the
+// contract's facts along the foot — is what fixed the reading order, not the
+// blue.
 //
 // WHAT IT SAYS DEPENDS ON THE STAGE, and the screen decides that, not this
 // component: before funding the answer is the loan's amount and the signature
@@ -25,9 +26,9 @@
 //
 // Dumb: it renders what it is handed, and reports the one press.
 
-import { useEffect, useState } from "react";
-import { Button, Card, Col, Divider, Flex, Grid, Progress, Row, Typography, theme } from "antd";
+import { Button, Card, Col, Divider, Flex, Grid, Row, Typography, theme } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { InstalmentTrack } from "../../../shared/ui/InstalmentTrack";
 import { getStyles, styles } from "./LoanStatement.styles";
 
 /** A label over a value, along the panel's foot. */
@@ -65,7 +66,13 @@ export type LoanStatementProps = {
    * on a panel whose job is one number. *"ზედმეტად ამძიმებს დიზაინს."* The
    * bar is thinner, the labels are gone, and the two facts are a sentence.
    */
-  progress?: { percent: number; caption: string; ariaLabel: string };
+  /**
+   * COUNTS, NOT A PERCENTAGE. It was `percent`, drawn as an antd bar; it is
+   * the same schedule the balance card shows, so it is now drawn the same way
+   * — one capsule per instalment. *"ამაში არსებული პროგრეს ბარიც იგივენაირად
+   * შევცვალოთ, როგორც იქ არის, დეშბორდზე."*
+   */
+  progress?: { paid: number; total: number; caption: string; ariaLabel: string };
   /** The contract's own facts, along the foot under a hairline. */
   facts?: StatementFact[];
   /**
@@ -96,23 +103,6 @@ export function LoanStatement({
   /* Wide enough for the action to sit in the panel's corner without reaching
      the figure. Narrow, it goes back into the flow, full width. */
   const floats = screens.md === true;
-
-  /*
-    THE PAGE'S ONE PIECE OF MOTION.
-
-    The track fills from nothing to where the borrower actually is, once, on
-    arrival — antd transitions the bar's width itself, so this is a state
-    change and not an animation library. It earns its place because the bar is
-    the only element here whose MEANING is a movement: you are three payments
-    into twelve and heading one way. Nothing else on the page moves.
-  */
-  const target = progress?.percent ?? 0;
-  const [filled, setFilled] = useState(0);
-
-  useEffect(() => {
-    const id = window.setTimeout(() => setFilled(target), 90);
-    return () => window.clearTimeout(id);
-  }, [target]);
 
   /* An equal share of the row unless a fact asks for more: a USCIS service
      reads "I-485 · Adjust Status / Register Permanent Residence" and a
@@ -176,14 +166,10 @@ export function LoanStatement({
 
         {progress ? (
           <Flex vertical gap={10}>
-            {/* The theme's own primary on its own rail. 6px: enough to be a
-                bar rather than a hairline, not so much that it competes with
-                the figure above it. */}
-            <Progress
-              percent={filled}
-              showInfo={false}
-              size={{ height: 6 }}
-              aria-label={progress.ariaLabel}
+            <InstalmentTrack
+              paid={progress.paid}
+              total={progress.total}
+              ariaLabel={progress.ariaLabel}
             />
             <Typography.Text style={s.progressCaption}>
               {progress.caption}

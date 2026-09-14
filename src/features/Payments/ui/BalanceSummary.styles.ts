@@ -22,14 +22,32 @@ export const styles = {
    *  arrangement. */
   actionSlot: { position: "absolute", top: 0, right: 0, zIndex: 1 },
   /**
-   * The line under the figure — 14, the size the loan page's statement sets
+   * The line beside the figure — 14, the size the loan page's statement sets
    * the same line at.
    *
    * It was 13, which put "Next payment $120.65 due Jan 01, 2027" a step below
-   * "Due Jan 01, 2027" on the other page. Same sentence, same job, same
-   * position under the same figure, two sizes.
+   * "Due Jan 01, 2027" on the other page. Same sentence, same job, two sizes.
+   *
+   * TWO OF THEM, because the caption sits in two places. Under the figure it
+   * needs its own gap — `figureLg` is set at 1.15 leading, so the number's
+   * box stops almost at the digits and without a margin the line is against
+   * their feet. Beside the figure the gap is the row's, and a margin there
+   * would drop the caption off the baseline it is meant to share.
    */
-  next: { marginTop: 8, fontSize: 14 },
+  next: { marginTop: 10, fontSize: 14 },
+  /** The figure and its caption, side by side. `wrap` is the safety net for a
+   *  very long balance in a narrow card: the caption drops under rather than
+   *  pushing the number out of the card. */
+  figureRow: { width: "100%" },
+  /**
+   * The small print beside the figure.
+   *
+   * `flex: none` so the group is only as wide as its three facts: left to
+   * grow it would stretch to the card's edge and reopen the gaps this change
+   * closed. It wraps under the figure rather than squeezing when the card is
+   * narrow — three labels at 11px do not survive being crushed.
+   */
+  aside: { flex: "none" },
   /**
    * Side by side with the figure, the button is its own width — never stretched
    * by the row and never squashed by a long balance. Stacked it goes `block`
@@ -54,9 +72,16 @@ export const styles = {
   /** The gap under the label row, moved off the label itself — see
    *  `labelInline`. */
   labelRow: { marginBottom: 8 },
-  /** The bar sits apart from the caption above it and the rule below: it is
-   *  its own statement, not a decoration on either. */
-  progress: { marginTop: 20 },
+  /**
+   * 28 above the schedule.
+   *
+   * It was 20, measured from the figure's own line box — and `figureLg` is
+   * set at 1.15 leading, so a 46px number's box stops almost at the digits
+   * and the real gap a reader sees was closer to 14. The row of capsules is
+   * its own statement about the loan, not a rule under the balance, and it
+   * has to be clear of the number to read as one.
+   */
+  progress: { marginTop: 28 },
 } satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) => {
@@ -71,10 +96,14 @@ export const getStyles = (token: GlobalToken) => {
      * against a box 8px taller than the letters and sits visibly high.
      */
     labelInline: { ...figures.microLabel, display: "block" },
-    /** The line under the bar. Green, because it reports the green part —
-     *  a grey caption under a coloured bar reads as a caption for the bar's
-     *  container rather than for its fill. */
-    progressLabel: { fontSize: 13, fontWeight: 500, color: token.colorSuccess },
+    /**
+     * The line under the segments.
+     *
+     * QUIET, not green. It was green while it read "25%", which described the
+     * filled part; it counts segments now, and a caption for a whole row is
+     * not a caption for the coloured half of it.
+     */
+    progressLabel: { fontSize: 13, fontWeight: 500, color: token.colorTextTertiary },
     /** The three (or four) figures under the rule. `figures.rowValue` — the
      *  same step the loan statement's fact row and the dashboard's tiles
      *  take, because all three are a value under a micro-label in a row. */

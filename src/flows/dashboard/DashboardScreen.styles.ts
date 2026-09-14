@@ -27,4 +27,10 @@ export const styles = {
    */
   empty: { paddingBlock: "clamp(32px, 5vw, 48px)", textAlign: "center" },
   emptyCopy: { maxWidth: 420 },
+  /** A table fills its card to the edges: the rows have their own inset and a
+   *  second one around them reads as a table inside a box. */
+  tableBody: { padding: 0 },
+  /** …and the card clips it, so the last row takes the frame's own corners
+   *  instead of squaring them off inside it. */
+  tableCard: { marginBottom: 24, overflow: "hidden" },
 } satisfies Record<string, CSSProperties>;

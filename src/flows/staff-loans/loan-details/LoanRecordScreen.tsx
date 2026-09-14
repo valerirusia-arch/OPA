@@ -24,14 +24,13 @@
 // adding is local state plus a console.log.
 
 import { useState } from "react";
-import { App, Button, Card, Flex, Result, Tag, Typography } from "antd";
+import { App, Button, Card, Flex, Result, Typography } from "antd";
 import { ArrowLeftOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
 import { AdminPage } from "../../../shared/ui/AdminPage";
 import { staffNavFor } from "../../../shared/ui/navigation";
 import { useStaffViewer } from "../../../shared/ui/viewerRole";
-import { pill } from "../../../shared/ui/tag.styles";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../../features/Auth/ui/useIdleTimer";
@@ -160,9 +159,13 @@ export default function LoanRecordScreen({
             <Typography.Text type="secondary">
               {t("loanAdmin.loanId", { id: loan.loanId })}
             </Typography.Text>
-            <Tag variant="filled" style={pill}>
-              {t(`loan.${loan.status}`)}
-            </Tag>
+            {/* THE PRODUCT'S OWN STATUS COMPONENT, not a bare Tag.
+                It was `<Tag variant="filled">` with no colour — which antd
+                draws as the neutral grey lozenge, so "Funded" arrived here
+                with no fill worth seeing and no dot, while the same word two
+                screens away is a green pill. A status has one appearance in
+                this product and `LoanStatusTag` is where it lives. */}
+            <LoanStatusTag status={loan.status} />
           </Flex>
         }
         extra={

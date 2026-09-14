@@ -19,7 +19,7 @@
 //
 // Dumb: it takes a value and reports a value. antd's Form supplies both.
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Flex, InputNumber, Slider, Typography, theme } from "antd";
 import { fontSizeFor, getStyles, styles } from "./RangeField.styles";
 
@@ -41,6 +41,11 @@ export type RangeFieldProps = {
   placeholder?: string;
   /** Sized down for a field that shares its row with another. */
   compact?: boolean;
+  /** A quiet line INSIDE the box, above the figure — context the field is
+   *  changing, e.g. "Currently $1,440.00" on the underwriter's amount panel.
+   *  Kept inside so the current value and the new one read as one container
+   *  rather than two things stacked on the page. */
+  caption?: ReactNode;
   disabled?: boolean;
 };
 
@@ -61,6 +66,7 @@ export function RangeField({
   openEnded = true,
   placeholder = "0",
   compact = false,
+  caption,
   disabled,
 }: RangeFieldProps) {
   const { token } = theme.useToken();
@@ -91,6 +97,13 @@ export function RangeField({
 
   return (
     <Flex vertical style={surface}>
+      {/* Context INSIDE the box: the value being changed, above the new one, so
+          the two read as one container. See `caption`. */}
+      {caption ? (
+        <Typography.Text type="secondary" style={styles.caption}>
+          {caption}
+        </Typography.Text>
+      ) : null}
       <InputNumber<number>
         variant="borderless"
         controls={false}

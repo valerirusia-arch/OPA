@@ -4,8 +4,6 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 import { contentRow } from "../../shared/ui/grid";
 
-export const logoMark: CSSProperties = { width: 28, height: 28, borderRadius: "50%" };
-export const brandTitle: CSSProperties = { margin: 0 };
 export const page: CSSProperties = { minHeight: "100vh" };
 /**
  * The step rail, at the top of the card and the full width of it.
@@ -25,7 +23,6 @@ export const footer: CSSProperties = { marginTop: 24 };
 
 export const getStyles = (token: GlobalToken) =>
   ({
-    logoPlaceholder: { ...logoMark, background: token.colorFillSecondary },
     /** One bar, not two: logo, progress and language on a single rule. */
     header: {
       display: "flex",

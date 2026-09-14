@@ -54,7 +54,9 @@ import { useCustomerViewer } from "../../shared/ui/viewerRole";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
 import { ApplicationProgress } from "../../features/Dashboard/ui/ApplicationProgress";
+import { StageFoot } from "../../features/Dashboard/ui/StageFoot";
 import { ShortcutTiles } from "../../features/Dashboard/ui/ShortcutTiles";
+import { PaymentHistory } from "../../features/Payments/ui/PaymentHistory";
 import { NoLoanMark } from "../../features/Loan/ui/NoLoanMark";
 import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
 import { stageCopy } from "../../features/Payments/ui/delinquency";
@@ -62,7 +64,6 @@ import { hasOpenApplication, useLoanRecord, usePaymentsRecord } from "../loan/lo
 import { BorrowerInbox } from "../notifications/BorrowerInbox";
 import { useUnreadCount } from "../notifications/notifications";
 import { applicationTrack } from "./applicationTrack";
-import { useTrackerVariant } from "./trackerVariant";
 import { leadPanelBody } from "../../shared/ui/panel.styles";
 import { styles } from "./DashboardScreen.styles";
 
@@ -87,16 +88,11 @@ export default function DashboardScreen({
   const live = hasOpenApplication(record);
   const loan = live ? record?.loan : undefined;
 
-  /* The first name only. "Welcome back, Levi Ackerman" is a letter from a
-     bank; "Welcome back, Levi" is the product talking to the person using it. */
-  const firstName = person.split(" ")[0] ?? person;
-
   const notice = payments ? stageCopy[payments.balance.stage] : undefined;
 
   /* WHERE THE APPLICATION HAS GOT TO, for the band that used to state the
-     amount. See applicationTrack.ts; the variant is the dev dock's switch
-     and one of the two goes when the designer has chosen. */
-  const trackerVariant = useTrackerVariant();
+     amount. See applicationTrack.ts — four steps ending at Funding, with
+     Repayment as a destination beside the rail. */
   const track = live && record ? applicationTrack(t, record) : undefined;
   /* Bound here rather than inline, so the closure captures the destination
      rather than re-reading an optional through the object it came from. */
@@ -197,25 +193,32 @@ export default function DashboardScreen({
           <div style={styles.column}>
             <Flex vertical gap={4} style={styles.greeting}>
               <Typography.Title level={3} style={styles.title}>
-                {t("dashboard.greeting", { name: firstName })}
+                {/* WHAT THIS PAGE IS ABOUT, by name — see the dictionary. The
+                    greeting that used to be here was the largest type on the
+                    screen saying the one thing the reader already knew. */}
+                {!live || !record
+                  ? t("dashboard.titleNone")
+                  : t(record.loan ? "dashboard.titleLoan" : "dashboard.titleApplication", {
+                      ref: record.id,
+                    })}
               </Typography.Title>
-              <Typography.Text type="secondary">
-                {/* WHOSE APPLICATION IT IS. A co-borrower joined somebody
-                    else's, and telling them "your application is with OPA"
-                    over that person's amount, reference and USCIS service
-                    claims something that is not theirs. The record names the
-                    applicant for exactly this. */}
-                {t(
-                  !live
-                    ? "dashboard.leadNone"
-                    : loan
-                      ? "dashboard.leadLoan"
-                      : viewer.role === "coBorrower"
-                        ? "dashboard.leadApplicationCoBorrower"
-                        : "dashboard.leadApplication",
-                  { name: record?.applicant ?? "" }
-                )}
-              </Typography.Text>
+              {/*
+                ONE SENTENCE, AND ONLY WHERE THERE IS NOTHING ELSE TO READ.
+
+                It used to run in every state — "Your application is with OPA.
+                Here is where it stands." over a band that says exactly that
+                in more detail, and "Here is your loan, what it costs and what
+                is coming" over the loan, the cost and what is coming. A line
+                that introduces what is already on screen is furniture.
+                *"ეს ტექსტი აღარ უნდა, მხოლოდ empty space-ზე იყოს."*
+
+                Before there is an application there IS nothing else to read,
+                and the sentence is then the only thing telling somebody why
+                the page is empty. So it stays exactly there.
+              */}
+              {live ? null : (
+                <Typography.Text type="secondary">{t("dashboard.leadNone")}</Typography.Text>
+              )}
             </Flex>
 
 
@@ -229,6 +232,7 @@ export default function DashboardScreen({
               half of a wide card with the right half empty, which is the
               layout the designer sent back.
             */}
+
             {/* THE MONEY. `BalanceSummary` is content and takes the frame the
                 payments page gives it; `LoanStatement` IS a card already and
                 wrapping it would nest one inside another. Neither is drawn
@@ -277,6 +281,19 @@ export default function DashboardScreen({
                   next={nextDue}
                   onPay={nextDue ? () => navigate({ to: "/payments" }) : undefined}
                 />
+                {/* THE JOURNEY DOES NOT END WITH THE PICTURE OF IT. The band
+                    above swapped to this card at funding and took the rail
+                    with it, which read as a step being skipped. The name of
+                    the step and the record behind it stay. See StageFoot. */}
+                {track ? (
+                  <StageFoot
+                    steps={track.steps}
+                    current={track.current}
+                    title={track.title}
+                    owner={track.owner}
+                    complete={track.complete}
+                  />
+                ) : null}
               </Card>
             ) : track ? (
               /* THE ROAD, AND THE PLACE ON IT. This band used to state the
@@ -294,7 +311,8 @@ export default function DashboardScreen({
                   title={track.title}
                   body={track.body}
                   owner={track.owner}
-                  variant={trackerVariant}
+                  complete={track.complete}
+                  goal={track.goal}
                   action={trackAction}
                 />
               </div>
@@ -346,6 +364,50 @@ export default function DashboardScreen({
                 onOpen={(to) => navigate({ to })}
               />
             </div>
+
+            {/*
+              THE LAST FEW PAYMENTS, AT THE VERY FOOT.
+
+              Under the tiles, not above them. The tiles are four ways OUT of
+              this page and belong with the rest of its navigation; a table is
+              something you read, and reading comes before leaving.
+
+              WBS story 4 — "review payment history" — and the one thing this
+              page could not answer until now: whether the money actually left
+              the account. The balance says what is owed and the schedule says
+              when; neither says that October's payment went through and
+              November's failed.
+
+              FIVE ROWS, NOT TWELVE. The whole record is one click away and
+              this is a dashboard: what a borrower checks here is the last
+              thing that happened, not the year. The head carries the way to
+              the rest.
+
+              Drawn only once the schedule exists — before funding there is
+              nothing to have paid.
+            */}
+            {payments ? (
+              <Card
+                title={t("dashboard.recentTitle")}
+                /* `overflow: hidden` so the table's own square corners are
+                   cut by the card's radius. With the body's padding at 0 the
+                   last row runs to the frame, and without the clip it ran
+                   past it. */
+                style={styles.tableCard}
+                styles={{ body: styles.tableBody }}
+                extra={
+                  <Button type="link" onClick={() => navigate({ to: "/payments" })}>
+                    {t("dashboard.recentAll")}
+                  </Button>
+                }
+              >
+                <PaymentHistory
+                  transactions={payments.history.slice(0, 5)}
+                  reader={viewer.role === "coBorrower" ? "coBorrower" : "borrower"}
+                />
+              </Card>
+            ) : null}
+
 
           </div>
         </div>

@@ -39,10 +39,11 @@
 // Dumb: everything arrives as props and leaves as a callback.
 
 import {
-  Alert, Button, Card, Col, Collapse, Flex, Grid, Result, Row, Tabs, Typography, theme,
+  Button, Card, Col, Collapse, Flex, Grid, Result, Row, Tabs, Typography, theme,
 } from "antd";
 import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
+import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { leadPanelBody } from "../../../shared/ui/panel.styles";
 import type { CardToken } from "../../LoanApplication/ui/types";
@@ -169,19 +170,20 @@ export function PaymentsOverview({
         banners do: full width, under the title, before anything it is about.
       */}
       {notice ? (
-        <Alert
-          style={styles.banner}
-          type={notice.type}
-          showIcon
-          title={t(notice.title, {
+        <PageNotice tone={notice.type}>
+          {/* The state and the rule as one message. The state alone is
+              already on the balance's own label line as a pill; what this
+              notice is for is the RULE that follows from it, and a bold
+              repetition of the pill above three sentences of policy was a
+              heading saying what the page had said. */}
+          {`${t(notice.title, {
             days: String(record.balance.daysPastDue ?? 0),
-          })}
-          description={t(notice.body, {
+          })}. ${t(notice.body, {
             pastDue: record.balance.pastDue ?? record.balance.outstanding,
             outstanding: record.balance.outstanding,
             apr: record.balance.apr,
-          })}
-        />
+          })}`}
+        </PageNotice>
       ) : null}
 
       <Row gutter={[24, 24]} style={styles.row}>

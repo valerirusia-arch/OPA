@@ -4,7 +4,6 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 
 export const styles = {
-  banner: { marginBottom: 24 },
   /**
    * A table draws its own frame; the card's inset would be a second one.
    *
