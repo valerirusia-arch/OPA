@@ -181,7 +181,13 @@ export function BalanceSummary({
      the loudest thing on the page inviting somebody to do something that
      cannot be done. */
   const action = !onPay ? null : (
-    <Button type="link" size="large" onClick={onPay} style={styles.payLink}>
+    <Button
+      type="primary"
+      size="large"
+      block={stacked}
+      onClick={onPay}
+      style={stacked ? undefined : styles.action}
+    >
       {t("payments.makePayment")}
     </Button>
   );

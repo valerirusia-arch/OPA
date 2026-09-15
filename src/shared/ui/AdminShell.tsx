@@ -42,7 +42,6 @@ import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
-import { NavTreeBranch } from "./NavTreeBranch";
 import { useT } from "./i18n/useT";
 import type { NavItem, NavSection } from "./navigation";
 import {
@@ -104,16 +103,10 @@ export function AdminShell({
     // either — it reads disabled like the rest, instead of looking selected.
     disabled: !item.to && !item.children?.some((child) => child.to),
     label: label(item),
-    children: item.children?.map((child, index, siblings) => ({
+    children: item.children?.map((child) => ({
       key: child.key,
       disabled: !child.to,
-      // A tree connector runs down the left of the children — a continuous rail
-      // with a rounded elbow branching to each label, the last one closing it.
-      label: (
-        <NavTreeBranch isLast={index === siblings.length - 1} color={token.colorTextQuaternary}>
-          {label(child)}
-        </NavTreeBranch>
-      ),
+      label: label(child),
     })),
   });
 

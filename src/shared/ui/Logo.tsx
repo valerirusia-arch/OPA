@@ -1,17 +1,14 @@
 // src/shared/ui/Logo.tsx
 //
-// THE OPA WORDMARK — a monoline lowercase "opa".
+// THE OPA WORDMARK.
 //
-// A single, even stroke draws three rounded letters in one colour, the mark's
-// own periwinkle (brand.logo). It replaces the earlier overlapping-capitals
-// mark at the designer's request, after a reference in that flowing monoline
-// style. Hand-built from geometry rather than lifted from a vector — an exact
-// copy of a specific logotype needs its own SVG — so it is an interpretation of
-// that style, not a trace of one particular drawing.
-//
-// One stroke, one colour: no blend modes, no overlaps to darken.
+// The designer's own artwork: a flowing, infinity-style lowercase "opa" in the
+// brand periwinkle. It is a raster (PNG) placed inside an <svg> via <image>, so
+// it stays within the antd-only rule's SVG exception and scales cleanly to any
+// height. The viewBox frames just the artwork inside the square source file, so
+// the mark fills its box instead of floating in the file's whitespace.
 
-import { brand } from "../../theme/tokens";
+import logoSrc from "./opa-logo.png";
 import { styles } from "./Logo.styles";
 
 export type LogoProps = {
@@ -19,37 +16,21 @@ export type LogoProps = {
   height?: number;
 };
 
-const VIEW_W = 316;
-const VIEW_H = 180;
-const STROKE = 26;
+// The source PNG is 1254×1254 with the wordmark centred in whitespace; this box
+// crops to the ink.
+const SRC = 1254;
+const BOX = { x: 150, y: 455, w: 952, h: 408 };
 
 export function Logo({ height = 28 }: LogoProps) {
-  const stroke = {
-    fill: "none",
-    stroke: brand.logo,
-    strokeWidth: STROKE,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
   return (
     <svg
       height={height}
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+      viewBox={`${BOX.x} ${BOX.y} ${BOX.w} ${BOX.h}`}
       role="img"
       aria-label="opa"
       style={styles.mark}
     >
-      {/* o */}
-      <circle cx={49} cy={84} r={36} {...stroke} />
-
-      {/* p — a full bowl with a stem that descends below the baseline */}
-      <path d="M120 48 V156" {...stroke} />
-      <circle cx={156} cy={84} r={36} {...stroke} />
-
-      {/* a — a bowl with an upright on its right, closed to the baseline */}
-      <circle cx={252} cy={84} r={36} {...stroke} />
-      <path d="M288 48 V120" {...stroke} />
+      <image href={logoSrc} x={0} y={0} width={SRC} height={SRC} />
     </svg>
   );
 }
