@@ -8,6 +8,7 @@
 
 import { useState } from "react";
 import { Flex, Typography } from "antd";
+import { TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useT } from "../../shared/ui/i18n/useT";
 import { NEXT_PARAM, useNextDestination } from "../../shared/ui/nextDestination";
@@ -59,8 +60,9 @@ export default function LoginScreen() {
               value: "borrower",
               label: t("login.tabBorrower"),
               shortLabel: t("login.tabBorrowerShort"),
+              icon: <UserOutlined />,
             },
-            { value: "staff", label: t("login.tabStaff") },
+            { value: "staff", label: t("login.tabStaff"), icon: <TeamOutlined /> },
           ]}
         />
       </div>
