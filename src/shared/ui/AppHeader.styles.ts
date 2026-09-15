@@ -85,8 +85,12 @@ export const userButton: CSSProperties = { height: 40, paddingInline: 8 };
 
 export const getStyles = (token: GlobalToken, compact = false) =>
   ({
-    /** Fixed: the menu beside it is the one that gives way. */
-    account: { flex: "none" },
+    /** Fixed: the menu beside it is the one that gives way. On a phone the nav
+     *  is a drawer (out of the flow), so an auto start-margin does the pushing
+     *  the horizontal menu's flex:1 does on a wide screen. */
+    account: { flex: "none", marginInlineStart: "auto" },
+    /** Mobile nav trigger, sat before the logo. */
+    burger: { flex: "none", fontSize: token.fontSizeLG },
     /** Full-bleed bar: the background and rule run edge to edge... */
     header: {
       position: "sticky",

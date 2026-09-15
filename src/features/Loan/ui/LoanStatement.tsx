@@ -154,8 +154,23 @@ export function LoanStatement({
                 block={!floats}
                 type={action.emphasis === "primary" ? "primary" : "text"}
                 onClick={action.onClick}
+                /* A primary call-to-action stays centred across its full-width
+                   button; a quiet text action (e.g. "View full schedule") lines
+                   up on the left with the label and figure above it rather than
+                   floating in the middle of the card. */
+                style={
+                  !floats && action.emphasis !== "primary"
+                    ? styles.actionBelowText
+                    : undefined
+                }
               >
-                <Flex align="center" justify="center" gap={8}>
+                <Flex
+                  align="center"
+                  justify={
+                    !floats && action.emphasis !== "primary" ? "flex-start" : "center"
+                  }
+                  gap={8}
+                >
                   {action.label}
                   <ArrowRightOutlined />
                 </Flex>

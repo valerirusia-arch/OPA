@@ -11,6 +11,7 @@ import {
   Badge,
   Button,
   ConfigProvider,
+  Drawer,
   Dropdown,
   Popover,
   Flex,
@@ -20,8 +21,14 @@ import {
   Typography,
   theme,
 } from "antd";
-import type { ReactNode } from "react";
-import { BellOutlined, DownOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { useState, type ReactNode } from "react";
+import {
+  BellOutlined,
+  DownOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
@@ -84,30 +91,63 @@ export function AppHeader({
   const screens = Grid.useBreakpoint();
   const compact = screens.md === false;
   const styles = getStyles(token, compact);
+  const [navOpen, setNavOpen] = useState(false);
+
+  const navMenuItems = navItems.map((item) => ({
+    key: item.key,
+    disabled: !item.to,
+    label: item.to ? (
+      <Link to={item.to}>{t(item.labelKey)}</Link>
+    ) : (
+      t(item.labelKey)
+    ),
+  }));
 
   return (
     <Flex component="header" style={styles.header} align="center">
       <div style={styles.inner}>
+      {/* On a phone the horizontal menu collapsed into an easily-missed "…"
+          overflow; a burger that opens a drawer is the clearer target. */}
+      {compact ? (
+        <Button
+          type="text"
+          icon={<MenuOutlined />}
+          aria-label={t("nav.openMenu")}
+          style={styles.burger}
+          onClick={() => setNavOpen(true)}
+        />
+      ) : null}
+
       <Link to="/" aria-label={t("header.home")}>
         <Logo height={22} />
       </Link>
 
-      <ConfigProvider theme={navTheme}>
-        <Menu
-          mode="horizontal"
-          selectedKeys={activeKey ? [activeKey] : []}
-          style={navMenu}
-          items={navItems.map((item) => ({
-            key: item.key,
-            disabled: !item.to,
-            label: item.to ? (
-              <Link to={item.to}>{t(item.labelKey)}</Link>
-            ) : (
-              t(item.labelKey)
-            ),
-          }))}
-        />
-      </ConfigProvider>
+      {compact ? (
+        <Drawer
+          placement="left"
+          open={navOpen}
+          onClose={() => setNavOpen(false)}
+          width={260}
+          title={<Logo height={20} />}
+          styles={{ body: { padding: 0 } }}
+        >
+          <Menu
+            mode="inline"
+            selectedKeys={activeKey ? [activeKey] : []}
+            onClick={() => setNavOpen(false)}
+            items={navMenuItems}
+          />
+        </Drawer>
+      ) : (
+        <ConfigProvider theme={navTheme}>
+          <Menu
+            mode="horizontal"
+            selectedKeys={activeKey ? [activeKey] : []}
+            style={navMenu}
+            items={navMenuItems}
+          />
+        </ConfigProvider>
+      )}
 
       {/*
         Never shrinks.

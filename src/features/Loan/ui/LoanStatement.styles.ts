@@ -23,6 +23,10 @@ export const styles = {
   body: leadPanelBody,
   /** Narrow, the action rejoins the flow under the figure. */
   actionBelow: { marginTop: 20 },
+  /** A left-aligned text action: no inner padding and its content pinned to the
+   *  start, so the label sits flush with the figure and label above it instead
+   *  of centred (antd centres a block button's content by default). */
+  actionBelowText: { paddingInline: 0, textAlign: "start", justifyContent: "flex-start" },
   /** Right-aligned text needs the alignment on the text as well as the box. */
   trailing: { textAlign: "end" },
   /** The rule above the contract's facts, at the card's own split colour. */
