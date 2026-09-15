@@ -5,7 +5,9 @@ import type { CSSProperties } from "react";
 export const styles = {
   /** A reading measure for the one intro line — a full-width sentence over a
    *  card of short rows is a line the eye has to travel twice. */
-  lead: { display: "block", marginBottom: 16, maxWidth: 640 },
+  /* Subtitle of the page title: pulled up under it so the gap reads as ~8px,
+     not the full block the title row keeps below itself. */
+  lead: { display: "block", marginTop: -16, marginBottom: 20, maxWidth: 640 },
   /** Equal air on both sides of the hairline between report rows. */
   divider: { marginBlock: 16 },
   row: { width: "100%" },
