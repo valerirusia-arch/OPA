@@ -101,8 +101,11 @@ export function LoanStatement({
   const s = getStyles(token);
   const screens = Grid.useBreakpoint();
   /* Wide enough for the action to sit in the panel's corner without reaching
-     the figure. Narrow, it goes back into the flow, full width. */
-  const floats = screens.md === true;
+     the figure. Narrow, it goes back into the flow, full width. Defaults to
+     the corner until the breakpoint is measured — desktop-first, like the rest
+     of the app — so the action does not jump from the flow to the corner on
+     first paint when arriving from another page. */
+  const floats = screens.md !== false;
 
   /* An equal share of the row unless a fact asks for more: a USCIS service
      reads "I-485 · Adjust Status / Register Permanent Residence" and a

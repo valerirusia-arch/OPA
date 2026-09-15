@@ -54,6 +54,9 @@ export const styles = {
    * instead, so this is not applied there.
    */
   action: { flex: "none" },
+  /** "Make a payment" as a quiet blue text link, flush with the figure above
+   *  it — not a filled button competing with the balance for attention. */
+  payLink: { flex: "none", alignSelf: "flex-start", paddingInline: 0, height: "auto" },
   /** The rule above the three details, at the card's own split colour. */
   /**
    * THE RULE BETWEEN THE ANSWER AND ITS SMALL PRINT.
