@@ -1356,6 +1356,7 @@ export const en = {
   "acq.perf.colApproval": "Approval rate",
 
   "staffDash.jumpTo": "Jump to",
+  "staffDash.quickActions": "Quick actions",
   "staffDash.donutTitle": "Application status",
   "staffDash.donutCenter": "Total",
   "staffDash.statPending": "Pending",
@@ -2762,6 +2763,7 @@ const es: Record<TranslationKey, string> = {
   "acq.perf.colApproval": "Tasa de aprobación",
 
   "staffDash.jumpTo": "Ir a",
+  "staffDash.quickActions": "Acciones rápidas",
   "staffDash.donutTitle": "Estado de solicitudes",
   "staffDash.donutCenter": "Total",
   "staffDash.statPending": "Pendientes",

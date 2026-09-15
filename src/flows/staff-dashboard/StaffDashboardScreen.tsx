@@ -2,16 +2,16 @@
 //
 // The back-office landing page. NOT A WBS EPIC — like the borrower's dashboard,
 // "Dashboard" appears nowhere in the WBS. It invents no capability: it is a
-// summary of numbers the system already keeps, arranged two ways —
+// summary of numbers the system already keeps, plus quick ways into the work —
 //
 //   · the stat band (SummaryStats) — application counts by their WBS statuses;
-//   · a donut of that same split beside a recent-applications table, so the
-//     numbers have a shape and a few names behind them.
+//   · a row of shortcut tiles into the sections the role can open;
+//   · a recent-applications table, a few of the names behind the numbers.
 //
 // Every figure is mock and every row is existing data. Dumb: reads the role
 // and shows counts.
 
-import { Card, Col, Row, Table, Typography, theme } from "antd";
+import { Button, Card, Flex, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
@@ -21,12 +21,10 @@ import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SummaryStats, type SummaryStat } from "../../shared/ui/SummaryStats";
-import { StatusDonut, type DonutSegment } from "../../shared/ui/StatusDonut";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
 import { ApplicationStatusTag } from "../../features/Borrowers/ui/StatusTags";
 import type { ApplicationRecord } from "../../features/Applications/ui/types";
-import { brand } from "../../theme/tokens";
 import { mockApplications } from "../staff-applications/mockApplications";
 import { styles } from "./StaffDashboardScreen.styles";
 
@@ -57,14 +55,17 @@ export default function StaffDashboardScreen({
   const page = getPageStyles(token);
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
 
-  // The same split as the stat band, given a shape. The donut's own softer
-  // palette, not the semantic success/error/warning — see brand.donut*.
-  const donutSegments: DonutSegment[] = [
-    { key: "approved", labelKey: "reporting.statApproved", value: 2, color: brand.donutApproved },
-    { key: "declined", labelKey: "reporting.statDeclined", value: 2, color: brand.donutDeclined },
-    { key: "review", labelKey: "reporting.statInReview", value: 1, color: brand.donutReview },
-    { key: "pending", labelKey: "staffDash.statPending", value: 5, color: brand.donutPending },
-  ];
+  // Quick ways into the work, drawn from THIS role's own nav so a shortcut can
+  // never point somewhere the role's rail (and route guard) would refuse. The
+  // dashboard itself is dropped, and a group with no page of its own (Acquisition)
+  // links to its first child.
+  const shortcuts = staffNavFor(viewer.role)
+    .flatMap((section) => section.items)
+    .filter((item) => item.key !== "dashboard")
+    .flatMap((item) => {
+      const to = item.to ?? item.children?.find((child) => child.to)?.to;
+      return to ? [{ key: item.key, labelKey: item.labelKey, icon: item.icon, to }] : [];
+    });
 
   const recent = mockApplications.slice(0, 5);
 
@@ -103,33 +104,41 @@ export default function StaffDashboardScreen({
       }}
     >
       <AdminPage title={t("nav.dashboard")}>
-        <div style={styles.stats}>
+        <div style={styles.section}>
           <SummaryStats items={APPLICATIONS} />
         </div>
 
-        {/* The split as a shape, beside a few of the rows behind it. */}
-        <Row gutter={[16, 16]} style={styles.stats}>
-          <Col xs={24} lg={8}>
-            <Card title={t("staffDash.donutTitle")} style={styles.fill}>
-              <StatusDonut segments={donutSegments} centerLabelKey="staffDash.donutCenter" />
-            </Card>
-          </Col>
-          <Col xs={24} lg={16}>
-            <Card
-              title={t("staffDash.recentApps")}
-              style={{ ...styles.fill, ...page.tableCard }}
-              styles={{ body: page.tableCardBody }}
-            >
-              <Table<ApplicationRecord>
-                rowKey="id"
-                scroll={{ x: 520 }}
-                columns={recentColumns}
-                dataSource={recent}
-                pagination={false}
-              />
-            </Card>
-          </Col>
-        </Row>
+        {/* Quick ways in — the sections this role can open, one tap away. */}
+        <Card title={t("staffDash.quickActions")} style={styles.section}>
+          <Flex wrap gap={12}>
+            {shortcuts.map((item) => (
+              <Button
+                key={item.key}
+                size="large"
+                icon={item.icon}
+                style={styles.shortcut}
+                onClick={() => navigate({ to: item.to })}
+              >
+                {t(item.labelKey)}
+              </Button>
+            ))}
+          </Flex>
+        </Card>
+
+        {/* A few of the names behind the numbers, full width. */}
+        <Card
+          title={t("staffDash.recentApps")}
+          style={page.tableCard}
+          styles={{ body: page.tableCardBody }}
+        >
+          <Table<ApplicationRecord>
+            rowKey="id"
+            scroll={{ x: 520 }}
+            columns={recentColumns}
+            dataSource={recent}
+            pagination={false}
+          />
+        </Card>
       </AdminPage>
 
       <SessionTimeoutModal
