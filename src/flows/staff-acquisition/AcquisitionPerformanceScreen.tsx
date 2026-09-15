@@ -23,6 +23,7 @@ import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
+import { decorateColumns } from "../../shared/ui/tableColumns";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
 import { useT } from "../../shared/ui/i18n/useT";
 import type { TranslationKey } from "../../shared/ui/i18n/dictionary";
@@ -212,7 +213,7 @@ export default function AcquisitionPerformanceScreen({
               <Table<PerfRow>
                 rowKey="key"
                 scroll={{ x: 640 }}
-                columns={perfColumns}
+                columns={decorateColumns(perfColumns)}
                 dataSource={PERF_ROWS}
                 pagination={false}
               />

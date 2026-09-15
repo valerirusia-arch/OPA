@@ -19,6 +19,7 @@ import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
+import { decorateColumns } from "../../shared/ui/tableColumns";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SummaryStats, type SummaryStat } from "../../shared/ui/SummaryStats";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
@@ -142,7 +143,7 @@ export default function StaffDashboardScreen({
                   <Table<ApplicationRecord>
                     rowKey="id"
                     scroll={{ x: 520 }}
-                    columns={recentColumns}
+                    columns={decorateColumns(recentColumns)}
                     dataSource={recent}
                     pagination={false}
                     onRow={(row) => ({
@@ -162,7 +163,7 @@ export default function StaffDashboardScreen({
                   <Table<LoanRow>
                     rowKey={(row) => row.loan.loanId}
                     scroll={{ x: 520 }}
-                    columns={recentLoanColumns}
+                    columns={decorateColumns(recentLoanColumns)}
                     dataSource={recentLoans}
                     pagination={false}
                     onRow={(row) => ({
