@@ -8,13 +8,13 @@
 // if the comparison is ever wanted again.
 //
 // antd Segmented, drawn from the global Segmented tokens (see tokens.ts): only
-// the active label's weight and the icon size are the control's own. The active
-// segment alone carries its icon, so it reads as "you are here" rather than
-// decoration.
+// the active label's weight is the control's own. Selecting a segment only
+// weights its label — it adds no icon and changes no size, so the control does
+// not jump as you switch; the white pill behind the label is what says "you
+// are here".
 //
 // Dumb: value in, choice out, no state of its own.
 
-import type { ReactNode } from "react";
 import { Grid, Segmented } from "antd";
 import { styles as s } from "./AudienceToggle.styles";
 
@@ -24,7 +24,6 @@ export type AudienceOption<V extends string> = {
   /** A shorter label used below sm, where the full one would truncate in a
    *  half-width segment. Falls back to `label` when omitted. */
   shortLabel?: string;
-  icon: ReactNode;
 };
 
 export type AudienceToggleProps<V extends string> = {
@@ -58,7 +57,6 @@ export function AudienceToggle<V extends string>({
             {compact && option.shortLabel ? option.shortLabel : option.label}
           </span>
         ),
-        icon: value === option.value ? <span style={s.pillIcon}>{option.icon}</span> : undefined,
         title: "",
       }))}
     />

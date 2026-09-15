@@ -8,7 +8,6 @@
 
 import { useState } from "react";
 import { Flex, Typography } from "antd";
-import { TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useT } from "../../shared/ui/i18n/useT";
 import { NEXT_PARAM, useNextDestination } from "../../shared/ui/nextDestination";
@@ -60,9 +59,8 @@ export default function LoginScreen() {
               value: "borrower",
               label: t("login.tabBorrower"),
               shortLabel: t("login.tabBorrowerShort"),
-              icon: <UserOutlined />,
             },
-            { value: "staff", label: t("login.tabStaff"), icon: <TeamOutlined /> },
+            { value: "staff", label: t("login.tabStaff") },
           ]}
         />
       </div>
@@ -80,7 +78,9 @@ export default function LoginScreen() {
           <StaffSignIn
             onSignIn={() => {
               console.log("redirect to Microsoft Entra ID");
-              navigate({ to: "/staff/profile" });
+              // Staff land on the dashboard, not their profile — the same rule
+              // the borrower side follows.
+              navigate({ to: "/staff/dashboard" });
             }}
           />
         )}

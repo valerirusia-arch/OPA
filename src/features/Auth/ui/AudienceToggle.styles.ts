@@ -8,6 +8,7 @@ import type { CSSProperties } from "react";
 
 export const styles = {
   segmented: { width: "100%" },
+  /** The selected label's only change: a slightly heavier weight. It adds no
+   *  icon and no size, so the control does not shift as you switch. */
   pillActive: { fontWeight: 600 },
-  pillIcon: { fontSize: 16 },
 } satisfies Record<string, CSSProperties>;

@@ -24,16 +24,17 @@ export const styles = {
 
 export const getStyles = (token: GlobalToken) =>
   ({
+    /** The caption under the number — plain case, quiet, like "visitors". */
     centerLabel: {
-      fontSize: 11,
-      letterSpacing: "0.04em",
-      textTransform: "uppercase",
-      color: token.colorTextTertiary,
+      fontSize: 13,
+      color: token.colorTextSecondary,
+      lineHeight: 1.2,
     },
+    /** The headline: the whole set, as big as the ring's hole allows. */
     centerValue: {
-      fontSize: 28,
-      fontWeight: 600,
-      lineHeight: 1.1,
+      fontSize: 34,
+      fontWeight: 700,
+      lineHeight: 1.05,
       color: token.colorText,
       fontVariantNumeric: "tabular-nums",
     },

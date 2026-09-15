@@ -35,16 +35,15 @@ export const brand = {
   /**
    * THE STATUS DONUT'S OWN PALETTE.
    *
-   * The semantic success/error/warning read as clashing at arc size — a hard
-   * green next to a hard red next to a gold — and the fill grey came out too
-   * dark. This is a softer, more even set: the same meanings (approved,
-   * declined, in review, pending) at a gentler, more harmonious saturation,
-   * and a genuinely light grey for the rest.
+   * Not the semantic success/error/warning: multi-colour arcs read as clashing
+   * at this size, so the donut uses ONE hue — the brand blue — stepped from
+   * strong to pale across its four segments. The legend, not colour, says which
+   * arc is which; the ring stays calm and on-brand. Ordered darkest → lightest.
    */
-  donutApproved: "#4FAE86",
-  donutDeclined: "#E2796E",
-  donutReview: "#E4AC55",
-  donutPending: "#E6E9EF",
+  donutApproved: "#2D55E4",
+  donutDeclined: "#6E8BF0",
+  donutReview: "#A6B8F6",
+  donutPending: "#D9E1FC",
   /** The primary at ~45% over white — a blue outline that hints, not shouts. */
   primarySoft: "#9CB3F4",
   primaryActive: "#1739A6",

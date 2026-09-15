@@ -79,9 +79,11 @@ export function StatusDonut({
                 })
               : null}
           </svg>
+          {/* The whole, big in the middle, with what it counts beneath it —
+              the number is the headline, the label its caption. */}
           <div style={styles.center}>
-            <Typography.Text style={s.centerLabel}>{t(centerLabelKey)}</Typography.Text>
             <Typography.Text style={s.centerValue}>{total}</Typography.Text>
+            <Typography.Text style={s.centerLabel}>{t(centerLabelKey)}</Typography.Text>
           </div>
         </div>
       </Flex>
