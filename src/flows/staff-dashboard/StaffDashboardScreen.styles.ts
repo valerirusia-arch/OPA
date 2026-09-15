@@ -3,15 +3,12 @@
 import type { CSSProperties } from "react";
 
 export const styles = {
-  /** The gap between the page's stacked bands (stats, shortcuts, table). */
+  /** The gap between the page's stacked bands (stats, then the table). */
   section: { marginBottom: 32 },
-  /** A responsive grid of shortcut tiles: each grows to fill the row but never
-   *  narrower than ~200px, so they reflow from a single row on a wide screen to
-   *  a stack on a phone. */
-  shortcut: {
-    flex: "1 1 200px",
-    height: 52,
-    justifyContent: "flex-start",
-  },
+  /** The tab bar sits atop the flush table card — the payments page's pattern:
+   *  24px inset to line up with the rows, no gap before the table below. */
+  tabBar: { paddingInline: 24, marginBottom: 0 },
+  /** Rows open their record, like every other back-office list. */
+  row: { cursor: "pointer" },
   amount: { fontVariantNumeric: "tabular-nums" },
 } satisfies Record<string, CSSProperties>;
