@@ -15,4 +15,8 @@ export const styles = {
   /** The results band's air above and below — between the filters and the
    *  by-channel table. */
   results: { marginTop: 24, marginBottom: 24 },
+  /** The table's heading sits above the flush card — not in a card-head bar
+   *  stacked on the table's own header — so the table reads like the app's
+   *  other lists. */
+  byChannelHeading: { display: "block", marginBottom: 12 },
 } satisfies Record<string, CSSProperties>;

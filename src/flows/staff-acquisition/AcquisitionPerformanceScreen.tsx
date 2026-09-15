@@ -205,11 +205,10 @@ export default function AcquisitionPerformanceScreen({
             <div style={styles.results}>
               <SummaryStats items={PERF_STATS} />
             </div>
-            <Card
-              title={t("acq.perf.byChannel")}
-              style={page.tableCard}
-              styles={{ body: page.tableCardBody }}
-            >
+            <Typography.Title level={5} style={styles.byChannelHeading}>
+              {t("acq.perf.byChannel")}
+            </Typography.Title>
+            <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
               <Table<PerfRow>
                 rowKey="key"
                 scroll={{ x: 640 }}
