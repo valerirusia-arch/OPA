@@ -63,6 +63,60 @@ export type AdminShellProps = {
   children: ReactNode;
 };
 
+/**
+ * The tree connector for a nested nav item.
+ *
+ * Each child carries a rounded elbow that branches off a vertical rail to its
+ * label; a non-last child continues the rail down to the next elbow, and the
+ * last child's elbow closes it. The rail is drawn INSIDE the label (shifted
+ * left with a negative margin the padding gives back), because antd owns the
+ * submenu's own DOM. Geometry is tuned to the inline item: 40px tall on a 42px
+ * pitch, so each 21px half-segment meets the next exactly and the rail reads as
+ * one continuous line.
+ */
+function TreeBranch({
+  isLast,
+  color,
+  children,
+}: {
+  isLast: boolean;
+  color: string;
+  children: ReactNode;
+}) {
+  const W = 1.5;
+  const HALF = 21;
+  const RAIL = 14;
+  const TICK = 11;
+  const X = 1;
+  const line = `${W}px solid ${color}`;
+  return (
+    <span style={{ position: "relative", display: "inline-flex", alignItems: "center", marginInlineStart: -RAIL, paddingInlineStart: RAIL }}>
+      {/* Rounded elbow: the rail's top half plus the branch to the label. */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          left: X,
+          top: `calc(50% - ${HALF}px)`,
+          width: TICK,
+          height: HALF,
+          borderLeft: line,
+          borderBottom: line,
+          borderBottomLeftRadius: 8,
+        }}
+      />
+      {/* The rail's bottom half, carrying it on to the next child. */}
+      {!isLast ? (
+        <span
+          aria-hidden
+          style={{ position: "absolute", left: X, top: "50%", height: HALF, borderLeft: line }}
+        />
+      ) : null}
+      {children}
+    </span>
+  );
+}
+
 export function AdminShell({
   sections,
   activeKey,
@@ -103,10 +157,16 @@ export function AdminShell({
     // either — it reads disabled like the rest, instead of looking selected.
     disabled: !item.to && !item.children?.some((child) => child.to),
     label: label(item),
-    children: item.children?.map((child) => ({
+    children: item.children?.map((child, index, siblings) => ({
       key: child.key,
       disabled: !child.to,
-      label: label(child),
+      // A tree connector runs down the left of the children — a continuous rail
+      // with a rounded elbow branching to each label, the last one closing it.
+      label: (
+        <TreeBranch isLast={index === siblings.length - 1} color={token.colorBorder}>
+          {label(child)}
+        </TreeBranch>
+      ),
     })),
   });
 
