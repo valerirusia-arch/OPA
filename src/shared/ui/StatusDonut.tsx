@@ -27,9 +27,9 @@ export type DonutSegment = {
 
 const R = 50;
 const C = 2 * Math.PI * R;
-/** A sliver of circumference left blank between segments, so the ring reads as
- *  separate arcs rather than one solid band — lighter, more designed. */
-const GAP = 9;
+/** A thin sliver between segments — just enough that the arcs read as separate,
+ *  not the deep notches a wider gap cut into the ring. */
+const GAP = 4;
 const STROKE = 12;
 
 export function StatusDonut({
