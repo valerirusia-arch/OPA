@@ -57,6 +57,7 @@ import { UnderwritingActions } from "../../../features/Applications/ui/Underwrit
 import type {
   ApplicationPerson,
   ApplicationRecord,
+  AuditEntry,
 } from "../../../features/Applications/ui/types";
 import { mockApplications } from "../mockApplications";
 import { getStyles, styles } from "./ApplicationDetailsScreen.styles";
@@ -95,6 +96,19 @@ export default function ApplicationDetailsScreen({
    */
   const [action, setAction] = useState<"approve" | "decline" | "override">();
   const close = () => setAction(undefined);
+
+  /**
+   * The audit trail and the approved amount are held in local state so the
+   * prototype reflects a change the moment it is made: saving a new amount
+   * appends to the trail below (and to the amount panel's change history) and
+   * moves the "Currently" figure, instead of logging to the console and
+   * leaving the page saying nothing changed. Seeded from the record; a real
+   * build persists these through the mutation Dev wires in.
+   */
+  const [audit, setAudit] = useState<AuditEntry[]>(record?.audit ?? []);
+  const [approvedAmount, setApprovedAmount] = useState<number | undefined>(
+    record?.approvedAmount,
+  );
 
   /** WBS: only an Underwriter performs business actions on an application. */
   const canDecide = viewer.role === "underwriter";
@@ -434,11 +448,11 @@ export default function ApplicationDetailsScreen({
           separate stories, so the record of what happened is part of the
           screen and not a developer's afterthought. */}
       <Card title={t("appDetail.audit")} style={styles.card}>
-        {record.audit.length === 0 ? (
+        {audit.length === 0 ? (
           <EmptyState title={t("appDetail.noRequests")} />
         ) : (
           <Flex vertical>
-            {record.audit.map((entry, index) => (
+            {audit.map((entry, index) => (
               <Flex vertical key={entry.id}>
                 {index > 0 ? <Divider style={styles.rule} /> : null}
                 <Flex vertical style={styles.request}>
@@ -479,9 +493,9 @@ export default function ApplicationDetailsScreen({
             <Card title={t("appDetail.actions")} style={styles.card}>
               <UnderwritingActions
                 requestedAmount={record.requestedAmount}
-                approvedAmount={record.approvedAmount}
+                approvedAmount={approvedAmount}
                 decision={record.decision}
-                audit={record.audit}
+                audit={audit}
                 /* WBS: the amount may be adjusted "before the final approval
                    decision", so the panel closes once there is one. */
                 canChangeAmount={record.decision === undefined}
@@ -491,6 +505,28 @@ export default function ApplicationDetailsScreen({
                 }}
                 onChangeAmount={({ amount, reason }) => {
                   console.log("update approved amount", record.id, amount, reason);
+                  const previous = approvedAmount ?? record.requestedAmount;
+                  const now = new Date();
+                  const on = `${now.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "2-digit",
+                    year: "numeric",
+                  })} ${now.toLocaleTimeString("en-US", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })}`;
+                  const entry: AuditEntry = {
+                    id: `amount-${now.getTime()}`,
+                    on,
+                    by: name,
+                    action: "audit.amountChanged",
+                    from: money(previous),
+                    to: money(amount),
+                    reason,
+                  };
+                  setAudit((prev) => [...prev, entry]);
+                  setApprovedAmount(amount);
                   message.success(t("amountModal.save"));
                 }}
               />
