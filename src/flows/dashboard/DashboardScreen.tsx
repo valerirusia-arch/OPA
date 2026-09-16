@@ -332,16 +332,14 @@ export default function DashboardScreen({
                  to do that with. */
               <Card title={t("dashboard.loanBand")} style={styles.band}>
                 <Flex vertical align="center" gap={16} style={styles.empty}>
-                  <NoLoanMark size={140} muted />
+                  <NoLoanMark size={140} />
                   <Typography.Text type="secondary" style={styles.emptyCopy}>
                     {t("dashboard.emptyBody")}
                   </Typography.Text>
-                  {/* NOT FILLED. On /loan and /payments the same offer is the
-                      whole point of the page and carries the accent; here it
-                      sits beside a mark that was deliberately taken down to
-                      neutral. A saturated button is then the only loud thing
-                      in a quiet panel. Outlined it is still the only control
-                      in the frame, so it is still unmissable. */}
+                  {/* Outlined, not filled: it is the only control in the frame,
+                      so it is unmissable without a saturated fill — and the
+                      accent now lives in the illustration above it, matching the
+                      /loan and /payments empty states. */}
                   <Button size="large" onClick={() => navigate({ to: "/application" })}>
                     {t("loanPage.startApplication")}
                   </Button>
