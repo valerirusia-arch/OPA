@@ -121,23 +121,26 @@ export function ManageBorrowerModal({
 
         <Row gutter={16}>
           <Col xs={24} md={12}>
-            <Form.Item
-              label={t("field.email")}
-              name="email"
-              rules={[rules.required()]}
-              required
-            >
+            {/* Email carries the format check, not just "required": this data
+                drives borrower communication and servicing, so a mistyped
+                address here is the same mistake it would be at registration. */}
+            <Form.Item label={t("field.email")} name="email" rules={rules.email} required>
               <Input />
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
-            <Form.Item label={t("field.phone")} name="phone">
+            <Form.Item label={t("field.phone")} name="phone" rules={rules.phone} required>
               <Input />
             </Form.Item>
           </Col>
 
           <Col xs={24}>
-            <Form.Item label={t("field.street")} name="street">
+            <Form.Item
+              label={t("field.street")}
+              name="street"
+              rules={[rules.required()]}
+              required
+            >
               <Input />
             </Form.Item>
           </Col>
@@ -147,17 +150,17 @@ export function ManageBorrowerModal({
 
         <Row gutter={16}>
           <Col xs={24} md={10}>
-            <Form.Item label={t("field.city")} name="city">
+            <Form.Item label={t("field.city")} name="city" rules={[rules.required()]} required>
               <Input />
             </Form.Item>
           </Col>
           <Col xs={24} md={8}>
-            <Form.Item label={t("field.state")} name="state">
+            <Form.Item label={t("field.state")} name="state" rules={[rules.required()]} required>
               <Select options={stateOptions} />
             </Form.Item>
           </Col>
           <Col xs={24} md={6}>
-            <Form.Item label={t("field.zip")} name="zip">
+            <Form.Item label={t("field.zip")} name="zip" rules={rules.zip} required>
               <Input />
             </Form.Item>
           </Col>
