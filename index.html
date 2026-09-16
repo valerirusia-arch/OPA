@@ -22,6 +22,40 @@
         -moz-osx-font-smoothing: grayscale;
       }
       /*
+        The greeting hand's wave. Referenced by name from LoginScreen.styles.ts
+        (`animation: opa-wave 3s ...`); @keyframes has no CSSProperties form, so
+        it lives here. The hand waves through the first third of the cycle, then
+        rests — so it gives one friendly wave roughly every three seconds rather
+        than swinging non-stop.
+      */
+      @keyframes opa-wave {
+        0%,
+        30%,
+        100% {
+          transform: rotate(0deg);
+        }
+        5% {
+          transform: rotate(14deg);
+        }
+        10% {
+          transform: rotate(-8deg);
+        }
+        15% {
+          transform: rotate(14deg);
+        }
+        20% {
+          transform: rotate(-8deg);
+        }
+        25% {
+          transform: rotate(12deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        [style*="opa-wave"] {
+          animation: none !important;
+        }
+      }
+      /*
         Chrome paints its own pale-blue background inside autofilled fields,
         which sits on top of the antd fill and makes those fields look unstyled
         next to the ones the user typed into. The background itself cannot be
