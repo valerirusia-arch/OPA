@@ -28,7 +28,7 @@ import {
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
 import { gateFor, useLoanRecord } from "../loan/loanRecord";
-import { FRAME_MAX_WIDTH, styles } from "./ApplicationStartScreen.styles";
+import { styles } from "./ApplicationStartScreen.styles";
 
 /** Kept as the screen's own name for the prop Dev will feed. */
 export type ApplicationGateProp = ApplicationGateState;
@@ -104,13 +104,8 @@ export default function ApplicationStartScreen({
       />
 
       {/* One card on an otherwise empty page — the same ground the contact
-          page stands on, and centred rather than dropped at the top.
-
-          ON A FROSTED PANE, because a white card on the wash had nothing
-          between it and the colour and simply floated. The pane is the column
-          plus its own inset on each side, so it reads as something the card
-          stands on rather than a second card around it. */}
-      <HeroBackdrop center paddingBlock={64} frame={FRAME_MAX_WIDTH}>
+          page stands on, and centred rather than dropped at the top. */}
+      <HeroBackdrop center paddingBlock={64}>
         <div style={{ ...styles.column, ...styles.lift }}>
           <ApplicationGate
             state={state}

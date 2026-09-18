@@ -155,16 +155,6 @@ export const brand = {
     "#FAF8F6",
   ].join(", "),
 
-  /**
-   * THE FROSTED FRAME a standalone page's card sits on.
-   *
-   * White at not-quite-half, so the wash behind it still comes through as
-   * colour while everything it carries reads on a light ground; the edge is
-   * white at 70%, which is what makes a pane of glass look like an object
-   * rather than a lighter patch.
-   */
-  glassFill: "rgba(255, 255, 255, 0.45)",
-  glassEdge: "rgba(255, 255, 255, 0.70)",
 
   /**
    * THE CARDS, in their finishes.

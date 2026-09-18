@@ -35,14 +35,6 @@ export type HeroBackdropProps = {
   center?: boolean;
   /** Padding above and below the content. */
   paddingBlock?: number;
-  /**
-   * Stands the content on a frosted pane of the given max width.
-   *
-   * A number rather than a flag because only the screen knows how wide its own
-   * content column is, and a pane that is not a little wider than the card is
-   * not a pane. Omitted, the content sits straight on the wash.
-   */
-  frame?: number;
   children: ReactNode;
 };
 
@@ -50,7 +42,6 @@ export function HeroBackdrop({
   tone = "wash",
   center = false,
   paddingBlock = 88,
-  frame,
   children,
 }: HeroBackdropProps) {
   const { token } = theme.useToken();
@@ -110,13 +101,7 @@ export function HeroBackdrop({
       }}
     >
       {washed ? <div style={{ ...styles.wash, ...s.wash }} /> : null}
-      <div style={styles.content}>
-        {frame === undefined ? (
-          children
-        ) : (
-          <div style={{ ...s.frame, maxWidth: frame }}>{children}</div>
-        )}
-      </div>
+      <div style={styles.content}>{children}</div>
 
     </div>
   );

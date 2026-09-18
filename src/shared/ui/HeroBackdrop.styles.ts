@@ -78,32 +78,4 @@ export const getStyles = (token: GlobalToken) =>
         brand.cover,
       ].join(", "),
     },
-    /**
-     * THE FROSTED PANE THE CARD STANDS ON.
-     *
-     * A white card on the wash had nothing between it and the colour: it
-     * floated. A pane of glass slightly larger than the card gives it
-     * something to sit on, and because the pane is translucent the wash still
-     * reads through it — *"რაიმე ფრეიმი დაადო და იმას ბექგრაუნდ ბლარი
-     * გააკეთო, და ზევიდან ეს კონტეინერი დაადო."*
-     *
-     * `backdropFilter` rather than a fill: it blurs what is BEHIND the pane,
-     * so the colour under it stays colour instead of becoming a flat tint,
-     * and the pane reads as glass rather than as a second card.
-     *
-     * The width is the caller's, because only the screen knows how wide its
-     * own content column is.
-     */
-    frame: {
-      position: "relative",
-      width: "100%",
-      marginInline: "auto",
-      boxSizing: "border-box",
-      padding: token.paddingLG,
-      borderRadius: token.borderRadiusLG * 2,
-      background: brand.glassFill,
-      border: `1px solid ${brand.glassEdge}`,
-      backdropFilter: `blur(${token.paddingLG}px)`,
-      WebkitBackdropFilter: `blur(${token.paddingLG}px)`,
-    },
   }) satisfies Record<string, CSSProperties>;
