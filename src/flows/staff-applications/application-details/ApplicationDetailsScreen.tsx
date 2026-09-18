@@ -46,6 +46,7 @@ import { useT } from "../../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../../features/Auth/ui/useIdleTimer";
 import { DetailGrid } from "../../../features/Borrowers/ui/DetailGrid";
+import { PageNotice } from "../../../shared/ui/PageNotice";
 import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { ApplicationStatusTag } from "../../../features/Borrowers/ui/StatusTags";
 import { VerificationList } from "../../../features/Applications/ui/VerificationList";
@@ -417,13 +418,16 @@ export default function ApplicationDetailsScreen({
             { key: "submitted", label: t("appDetail.submitted"), value: record.submittedOn },
           ]}
         />
+        {/* THE PRODUCT'S OWN NOTICE, not a bare antd Alert. This one was
+            drawing itself: antd's default stacks the icon above the sentence,
+            so the glyph sat on its own line with the words underneath —
+            *"მრგვალი რაცაა, ტექსტს გვერდზე მიუსვი და არა ესე."* PageNotice
+            already puts it inline and on the copy's first line, and carries
+            the panel every other notice in the product wears. */}
         {record.coBorrowerRequired ? (
-          <Alert
-            style={styles.note}
-            type="warning"
-            showIcon
-            title={t("appDetail.coBorrowerRequired")}
-          />
+          <PageNotice tone="warning" style={styles.note}>
+            {t("appDetail.coBorrowerRequired")}
+          </PageNotice>
         ) : null}
       </Card>
 

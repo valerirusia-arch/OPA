@@ -19,7 +19,9 @@ export const styles = {
   amountWas: { textDecoration: "line-through", fontVariantNumeric: "tabular-nums" },
   request: { paddingBlock: 12 },
   rule: { marginBlock: 0 },
-  note: { display: "block", marginTop: 4 },
+  /** It follows the record grid rather than opening the card, so it keeps the
+   *  grid's own row gap above it and nothing below. */
+  note: { marginTop: 24, marginBottom: 0 },
   meta: { fontSize: 13 },
   documents: { paddingBlock: 4 },
 } satisfies Record<string, CSSProperties>;
