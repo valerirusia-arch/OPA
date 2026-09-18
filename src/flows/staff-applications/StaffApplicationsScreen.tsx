@@ -139,6 +139,15 @@ export default function StaffApplicationsScreen({
          underwriter picks a row by. */
       title: t("queue.col.name"),
       key: "name",
+      /* CAPPED, and it was the flexible column.
+         With `tableLayout="fixed"` the one column without a width absorbs
+         every spare pixel, so on a wide screen the name sat in a 600px cell
+         and an empty half-column opened between the applicant and the step
+         that flagged them — the row stopped reading as a row. 260 fits the
+         longest name over its id; the slack moves to the USCIS service, which
+         was the column actually short of room. *"როუები ცოტა მარცხნივ
+         გამოიწიე."* */
+      width: 260,
       render: (_value, row) => (
         <Flex vertical style={styles.applicant}>
           <Typography.Text ellipsis>
@@ -193,7 +202,9 @@ export default function StaffApplicationsScreen({
     {
       title: t("queue.col.uscis"),
       key: "uscis",
-      width: 220,
+      /* THE FLEXIBLE COLUMN NOW. "I-485 · Adjust Status / Register Permanent
+         Residence" is the longest value in the table and it was the one being
+         truncated, while the name column held the air. */
       render: (_value, row) => (
         <Typography.Text ellipsis={{ tooltip: row.uscisType }}>
           {row.uscisType}
@@ -205,9 +216,26 @@ export default function StaffApplicationsScreen({
       key: "actions",
       width: 130,
       align: "end",
+      /* MORE AIR AT THE CARD'S EDGE than the table's standard inset. The
+         button was the one thing in the row with a hard edge of its own, and
+         it sat as close to the card's border as a line of text does — which
+         reads as pressed against it. decorateColumns merges a column's own
+         style over its defaults, so this is the only cell that moves. */
+      onCell: () => ({ style: { paddingInlineEnd: 32 } }),
+      onHeaderCell: () => ({ style: { paddingInlineEnd: 32 } }),
       render: (_value, row) => (
         <Flex justify="flex-end">
-          <Button onClick={() => navigate({ to: `/staff/applications/${row.id}` })}>
+          {/* SMALL. The whole row already opens the application — this button
+              repeats that for the keyboard and for anyone who wants a target
+              to aim at, so it is a second way in, not the way in. At the
+              product's full 48px it was the heaviest object on a row of plain
+              text and seven of them ran down the page like a column of
+              buttons with a table behind it. *"არაა საჭირო ამხელა ღილაკი,
+              უფრო კომპაქტურად, რომ მეტად clean იყოს."* */}
+          <Button
+            size="small"
+            onClick={() => navigate({ to: `/staff/applications/${row.id}` })}
+          >
             {t("queue.review")}
           </Button>
         </Flex>

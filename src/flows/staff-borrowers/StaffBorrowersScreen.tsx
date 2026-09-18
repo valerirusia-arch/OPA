@@ -119,11 +119,14 @@ export default function StaffBorrowersScreen({
       // when the text is actually truncated, so short names get no stray hover.
       render: (_value, row) => (
         <Typography.Text ellipsis={{ tooltip: fullName(row.profile) }}>
-          {/* Ink, not the link teal — the whole row navigates, so the name
-              reads as ordinary text rather than a coloured link. */}
-          <Link to={`/staff/borrowers/${row.id}`} style={{ color: "inherit" }}>
-            {fullName(row.profile)}
-          </Link>
+          {/* THE LINK COLOUR, like every other name in the back office.
+              It was pinned to ink on the argument that the whole row navigates
+              anyway — but the loans list and the underwriting queue both draw
+              the same object, a person's name that opens their record, in the
+              brand teal, and one of three tables disagreeing is not a
+              decision, it is a drift. The colour is also what tells a reader
+              the name is the thing to aim at. *"სახელები გააკეთე ლურჯად."* */}
+          <Link to={`/staff/borrowers/${row.id}`}>{fullName(row.profile)}</Link>
         </Typography.Text>
       ),
     },
