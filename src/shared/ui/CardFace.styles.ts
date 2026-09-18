@@ -142,17 +142,21 @@ export const getStyles = (
 };
 
 /**
- * THE BLANK FACE — the mark, and nothing else.
+ * THE FRONT OF OPA'S OWN CARD — the mark, the state, the masked number.
  *
- * OPA's card carries no number, no expiry and no status on its front. That is
- * not a styling choice: the WBS is explicit that card details "are NOT stored,
- * processed or transmitted by OPA application and are accessible only via a
- * secure embedded view", so a front printed with them was OPA claiming to hold
- * what it does not. The details live behind View, which is where the borrower
- * asks USIO for them — *"ოპას ლოგო და არაფერი არ ეწეროს; ვიუს როცა დავაწვები,
- * მანდ შემეძლო ინფორმაციის ნახვა."*
+ * It started blank, on the reading that a front printed with card details was
+ * OPA claiming to hold what the WBS says it does not. That reading was too
+ * wide: the last four and whether the card has been spent ARE OPA's, and the
+ * designer put both back on the face — the mark top left, the state top right,
+ * the number along the foot: *"ეს მარჯვნივ კუთხეში მაღლა ჩაუსვი და ქვემოთ
+ * ანგარიშის ნომერი."*
+ *
+ * What stays off it is what OPA genuinely does not hold. The full number, the
+ * expiry and the security code "are NOT stored, processed or transmitted by
+ * OPA application and are accessible only via a secure embedded view", so they
+ * appear on the revealed face and nowhere else.
  */
-export const blankStyles = {
+export const frontStyles = {
   /**
    * The mark sits where an issuer's does: top left, at the face's own inset.
    *

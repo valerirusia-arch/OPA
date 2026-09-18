@@ -27,7 +27,6 @@
 
 import { Button, Card, Flex, Typography } from "antd";
 import { CardFace } from "../../../shared/ui/CardFace";
-import { StatusPill } from "../../../shared/ui/StatusPill";
 import type { CardSkin } from "../../../shared/ui/CardFace.styles";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { styles } from "./VirtualCardPanel.styles";
@@ -71,20 +70,9 @@ export function VirtualCardPanel({
          hold the card. In the head, as a link, exactly like "Update" on the
          saved card — a hand-off is not a primary action. */
       extra={
-        <Flex align="center" gap={12}>
-          {/* WHETHER IT HAS BEEN SPENT, which came off the blank front and
-              still has to be somewhere: WBS story 9 closes the cancellation
-              window the moment the card is used, so this is the fact that
-              tells a borrower whether cancelling is still open to them. In the
-              head, beside the way in, rather than printed on a card that does
-              not carry it. */}
-          <StatusPill color={used ? "processing" : undefined}>
-            {t(used ? "loanPage.cardUsed" : "loanPage.cardUnused")}
-          </StatusPill>
-          <Button type="link" style={styles.headAction} onClick={onOpen}>
-            {t("loanPage.cardOpen")}
-          </Button>
-        </Flex>
+        <Button type="link" style={styles.headAction} onClick={onOpen}>
+          {t("loanPage.cardOpen")}
+        </Button>
       }
     >
       {/* Face at its own height with the note under it — the same two-part
@@ -96,18 +84,18 @@ export function VirtualCardPanel({
           and there is no "card ending" label above the digits: a masked
           number does not need to be introduced as one. */}
       <Flex vertical justify={fill ? "center" : "flex-start"} style={styles.body}>
-        {/* BLANK, AND THAT IS THE HONEST FRONT. It printed the last four, the
-            expiry and a status pill — facts OPA is allowed to hold, but not
-            what is printed on the card, and a front covered in them reads as
-            the card itself rather than a picture of one. The WBS puts the real
-            article behind USIO's secure embedded view, so this is the mark on
-            an empty field and the details are one press away. */}
+        {/* OPA'S OWN FRONT: the mark, whether the card has been spent, and the
+            masked number. The expiry and the rest are USIO's and appear only
+            on the revealed face inside the dialog. */}
         <CardFace
           tone="opa"
           skin={skin}
-          blank
+          front
           brand={brand}
           label={t("loanPage.cardIssuer")}
+          status={{
+            label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused"),
+          }}
           number={t("payments.cardEnding", { last4 })}
           facts={[
             { key: "expires", label: t("loanPage.cardExpires"), value: expiry },

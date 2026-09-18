@@ -17,14 +17,15 @@ function Faces() {
     <Flex gap={32} wrap style={{ padding: 24 }}>
       <Flex vertical gap={12} style={{ width: SLOT }}>
         <Typography.Text type="secondary">
-          OPA's card — blue, and blank
+          OPA's card — blue, the front OPA prints
         </Typography.Text>
         <Card title="Virtual payment card">
           <CardFace
             tone="opa"
             skin="blue"
-            blank
+            front
             label="OPA virtual"
+            status={{ label: "Not used yet" }}
             number="•••• 3094"
             facts={[{ key: "e", label: "Expires", value: "11/29" }]}
           />
@@ -39,8 +40,9 @@ function Faces() {
           <CardFace
             tone="opa"
             skin="graphite"
-            blank
+            front
             label="OPA virtual"
+            status={{ label: "Not used yet" }}
             number="•••• 3094"
             facts={[{ key: "e", label: "Expires", value: "11/29" }]}
           />

@@ -62,7 +62,7 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { blankStyles, getStyles, styles, type CardSkin, type CardTone } from "./CardFace.styles";
+import { frontStyles, getStyles, styles, type CardSkin, type CardTone } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
@@ -115,15 +115,18 @@ export type CardFaceProps = {
    */
   skin?: CardSkin;
   /**
-   * THE FRONT OF THE CARD: the mark, and nothing else.
+   * THE FRONT OF OPA'S OWN CARD, as OPA prints it.
    *
-   * OPA's virtual card is printed blank because OPA does not hold what would
-   * go on it — the WBS puts the number, the expiry and the security code
-   * behind USIO's secure embedded view. `number` and `facts` are still
-   * required props because the same component draws the revealed face; this
-   * one simply does not print them.
+   * Three things and no more: the mark top left, the card's state top right,
+   * and the masked number along the foot. Those are facts OPA is allowed to
+   * hold — a token's last four and whether it has been spent — so the front
+   * may carry them. What it may not carry is the rest: the WBS puts the full
+   * number, the expiry and the security code behind USIO's secure embedded
+   * view, and they arrive on the revealed face instead.
+   *
+   * `facts` is still accepted and simply not printed here.
    */
-  blank?: boolean;
+  front?: boolean;
 };
 
 export function CardFace({
@@ -136,7 +139,7 @@ export function CardFace({
   facts = [],
   copyable = false,
   skin = "blue",
-  blank = false,
+  front = false,
 }: CardFaceProps) {
   /* Both of the product's real finishes are dark: they take white ink, and
      they print their own status pill rather than wearing antd's chip. Only
@@ -146,16 +149,32 @@ export function CardFace({
   const s = getStyles(token, tone, skin);
   const figures = getFigureStyles(token);
 
-  /* THE BLANK FRONT. One mark on an empty field — see `blankStyles`. It
-     returns early rather than threading `blank` through six branches below,
-     because it genuinely is a different drawing: not this face with things
-     switched off, but the front of a card that has nothing printed on it. */
-  if (blank) {
+  /* OPA'S OWN FRONT. It returns early rather than threading `front` through
+     six branches below, because it genuinely is a different drawing: not this
+     face with things switched off, but the front of the card OPA issues —
+     see `frontStyles`. */
+  if (front) {
     return (
-      <Flex vertical justify="flex-start" style={s.face}>
-        <div style={blankStyles.mark}>
-          <Logo height={36} />
-        </div>
+      <Flex vertical justify="space-between" gap={20} style={s.face}>
+        <Flex align="flex-start" justify="space-between" gap={12}>
+          <div style={frontStyles.mark}>
+            <Logo height={36} />
+          </div>
+          {/* Top right, printed on the card rather than stuck to it — the same
+              pill cut from the face's own material that the revealed card
+              wears. It was in the panel's head; the designer put it back on
+              the card, where a card's own state belongs. */}
+          {status ? (
+            <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
+              {status.label}
+            </Tag>
+          ) : null}
+        </Flex>
+
+        {/* THE MASKED NUMBER ALONG THE FOOT, where a card's number is. It is
+            the token's last four, which is OPA's to print; the full number
+            never reaches OPA and arrives only on the revealed face. */}
+        <Typography.Text style={s.number}>{number}</Typography.Text>
       </Flex>
     );
   }

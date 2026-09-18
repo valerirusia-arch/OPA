@@ -176,9 +176,12 @@ export function VirtualCardModal({
           <CardFace
             tone="opa"
             skin={skin}
-            blank
+            front
             brand={brand}
             label={t("loanPage.cardIssuer")}
+            status={{
+              label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused"),
+            }}
             number={t("payments.cardEnding", { last4 })}
             facts={[
               { key: "expires", label: t("loanPage.cardExpires"), value: expiry },
@@ -213,11 +216,8 @@ export function VirtualCardModal({
             colon={false}
             items={[
               { key: "holder", label: t("loanPage.cardholder"), children: cardholder },
-              {
-                key: "number",
-                label: t("loanPage.cardIssuer"),
-                children: t("payments.cardEnding", { last4 }),
-              },
+              /* Not the number: the face above prints it now. This list is
+                 what the front does not carry. */
               { key: "expires", label: t("loanPage.cardExpires"), children: expiry },
             ]}
           />
