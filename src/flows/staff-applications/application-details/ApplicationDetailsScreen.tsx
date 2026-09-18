@@ -33,7 +33,7 @@
 // every action is local state plus a console.log for Dev to wire.
 
 import { useState } from "react";
-import { App, Alert, Button, Card, Col, Divider, Flex, Result, Row, Tag, Typography, theme } from "antd";
+import { App, Alert, Button, Card, Col, Divider, Flex, Result, Row, Tabs, Tag, Typography, theme } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
@@ -225,27 +225,63 @@ export default function ApplicationDetailsScreen({
   );
 
   /**
-   * The checks, in their own card at the top of the column.
+   * The checks, at the top of the column, and TABBED WHERE THERE ARE TWO.
    *
    * The wireframe leads with them and tags the card `System`, and both are
    * right: this is the only card on the page nobody at OPA wrote, and it is
-   * what an underwriter opens the application to read. Each applicant is
-   * checked separately — WBS "Evaluate co-borrower eligibility" runs "the same
-   * checks for a co-borrower as for a borrower" — so a co-borrower gets their
-   * own card rather than sharing a list.
+   * what an underwriter opens the application to read.
+   *
+   * Each applicant is checked separately — WBS "Evaluate co-borrower
+   * eligibility" runs "the same checks for a co-borrower as for a borrower" —
+   * so both results exist and both have to be reachable. They were two
+   * identical cards stacked, six rows and a gauge each, which put the second
+   * applicant a screen and a half below the first and made the page read as
+   * two applications. One card with two tabs holds the same evidence at half
+   * the height, and it puts the two side by side where the comparison is: the
+   * whole reason a co-borrower is on this application is that the borrower's
+   * score did not carry it alone.
+   *
+   * WITH ONE APPLICANT THERE ARE NO TABS. A single tab labelled "Borrower" is
+   * a control that does nothing.
    */
-  const checks = (who: ApplicationPerson, heading: string) => (
+  const checksCard = (
     <Card
-      key={heading}
-      title={heading}
+      title={record.coBorrower ? undefined : t("appDetail.checks")}
       style={styles.card}
+      styles={record.coBorrower ? { body: styles.tabbedBody } : undefined}
       extra={
-        <Tag variant="filled" style={pill}>
-          {t("appDetail.bySystem")}
-        </Tag>
+        record.coBorrower ? undefined : (
+          <Tag variant="filled" style={pill}>
+            {t("appDetail.bySystem")}
+          </Tag>
+        )
       }
     >
-      <VerificationList results={who.checks} />
+      {record.coBorrower ? (
+        <Tabs
+          /* The `System` tag rides with the tabs rather than the card head,
+             which the tab bar has replaced. */
+          tabBarExtraContent={
+            <Tag variant="filled" style={pill}>
+              {t("appDetail.bySystem")}
+            </Tag>
+          }
+          items={[
+            {
+              key: "borrower",
+              label: t("appDetail.borrower"),
+              children: <VerificationList results={record.borrower.checks} />,
+            },
+            {
+              key: "coBorrower",
+              label: t("appDetail.coBorrower"),
+              children: <VerificationList results={record.coBorrower.checks} />,
+            },
+          ]}
+        />
+      ) : (
+        <VerificationList results={record.borrower.checks} />
+      )}
     </Card>
   );
 
@@ -344,10 +380,7 @@ export default function ApplicationDetailsScreen({
       <Row gutter={[24, 24]}>
         <Col xs={24} xl={canDecide ? 15 : 24}>
 
-      {checks(record.borrower, t("appDetail.checks"))}
-      {record.coBorrower
-        ? checks(record.coBorrower, t("appDetail.coBorrowerChecks"))
-        : null}
+      {checksCard}
 
       <Card title={t("appDetail.application")} style={styles.card}>
         <DetailGrid

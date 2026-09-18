@@ -4,6 +4,12 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 
 export const styles = {
+  /**
+   * A tabbed card carries no body padding: the tab bar takes the card's inset
+   * and the panel under it starts where the bar's own line ends, the same
+   * pattern the payments page and the back-office dashboard use.
+   */
+  tabbedBody: { paddingTop: 0 },
   /** The cards down the page, all on one rhythm. */
   card: { marginBottom: 24 },
   /** The decision banner sits above everything, before the record itself. */
