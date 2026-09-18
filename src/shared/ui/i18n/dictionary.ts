@@ -1268,7 +1268,15 @@ export const en = {
   "verify.bandGood": "Good",
   "check.pending": "Not run yet",
   "check.passed": "Passed",
-  "check.review": "Needs review",
+  /* NOT "Needs review". This tag is read BY the underwriter, on the queue they
+     are already working — telling them to review it names their own job and
+     says nothing about the application. The state it actually reports is that
+     the automated pipeline could not clear this and stopped: a problem, and the
+     lender's own word for it. *"ვარნინგ ან რაიმე უკეთესი ვორდინგი, რომ პრობლემა
+     გვაქვა."* It stays distinct from "Failed", which is an answer about the
+     applicant, and from "Service unavailable", which is an answer about an
+     integration. */
+  "check.review": "Flagged",
   "check.failed": "Failed",
   // A technical failure is an answer about the integration, never about the
   // applicant. WBS: it "shall not cause the application to be rejected".
@@ -2696,7 +2704,7 @@ const es: Record<TranslationKey, string> = {
   "verify.bandGood": "Bueno",
   "check.pending": "Aún no ejecutada",
   "check.passed": "Superada",
-  "check.review": "Requiere revisión",
+  "check.review": "Marcada",
   "check.failed": "No superada",
   "check.unavailable": "Servicio no disponible",
   "check.ranOn": "Ejecutada el {date}",

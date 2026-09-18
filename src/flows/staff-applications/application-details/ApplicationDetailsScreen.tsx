@@ -271,13 +271,22 @@ export default function ApplicationDetailsScreen({
             ) : (
               <Flex gap={8} align="center">
                 {/* Hierarchy: Approve is the filled primary, Decline steps back
-                    to a SECONDARY button — a light neutral frame with red text,
-                    not the heavy red-outlined danger it was. Framed, so it reads
-                    as a real button, but clearly the lesser of the two. The
-                    gravity of the action is in its confirmation dialog.
-                    *"ჩარჩო მეორეხარისხოვანი."* */}
+                    to a SECONDARY button — a light neutral frame, not the heavy
+                    red-outlined danger it was. Framed, so it reads as a real
+                    button, but clearly the lesser of the two. The gravity of the
+                    action is in its confirmation dialog. *"ჩარჩო
+                    მეორეხარისხოვანი."*
+
+                    AND THE LABEL IS THE PRODUCT'S QUIET GREY, not red. Red on a
+                    button is a promise that pressing it does the damage; this
+                    one opens a dialog that asks for a mandatory reason, and
+                    nothing is declined until that is answered. A red word beside
+                    the filled Approve also made the pair read as two loud
+                    buttons competing, which is the opposite of the hierarchy the
+                    frame was chosen for. *"მეორადი ფერის იყოს, ოდნავ
+                    მონაცრისფრო."* */}
                 <Button
-                  style={{ color: token.colorError }}
+                  style={{ color: token.colorTextTertiary }}
                   onClick={() => setAction("decline")}
                 >
                   {t("appAction.decline")}
