@@ -187,6 +187,8 @@ export default function ApplicationDetailsScreen({
   const person = (heading: string, who: ApplicationPerson) => (
     <Card key={heading} title={heading} style={styles.card}>
       <DetailGrid
+        /* This card lives in the evidence column, not across the page. */
+        columns={2}
         items={[
           { key: "name", label: t("users.col.name"), value: who.name },
           { key: "email", label: t("field.email"), value: who.email },
@@ -328,6 +330,7 @@ export default function ApplicationDetailsScreen({
 
       <Card title={t("appDetail.application")} style={styles.card}>
         <DetailGrid
+          columns={2}
           items={[
             { key: "uscis", label: t("appDetail.uscis"), value: record.uscisType },
             {

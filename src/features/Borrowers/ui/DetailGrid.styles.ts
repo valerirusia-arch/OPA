@@ -4,10 +4,6 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 import { getFigureStyles } from "../../../shared/ui/figures.styles";
 
-export const styles = {
-  /** One row of the grid; the gutter comes from the Row itself. */
-  item: { marginBottom: 24 },
-} satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) => {
   const figures = getFigureStyles(token);

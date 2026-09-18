@@ -20,7 +20,17 @@ export const styles = {
    *  It takes the row and may shrink so the outcome on the right keeps its
    *  place. */
   name: { minWidth: 0, flex: "1 1 auto" },
-  nameText: { minWidth: 0 },
+  /**
+   * The check's name, a half-step firmer than the line under it.
+   *
+   * It was 400, the same weight as its own caption, so the two lines of a row
+   * read as one block of grey and the four names stopped being the thing you
+   * scan. 500 is the step this product uses everywhere something is a value
+   * rather than a description — enough to separate the name from its caption,
+   * not enough to make four of them shout. *"ძალიან ოდნავ მოუმატე თაითლეს
+   * სისქე."*
+   */
+  nameText: { minWidth: 0, fontWeight: 500 },
   /** The outcome group, pinned to the top of the row so it sits on the check's
    *  name rather than halfway down the sentence under it. */
   end: { flex: "none", paddingTop: 1 },
