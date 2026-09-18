@@ -18,29 +18,20 @@ export const styles = {
 export type CardTone = "light" | "opa" | "borrower";
 
 /**
- * THE ORANGE BAND ALONG THE FOOT OF OPA'S CARD.
+ * THE TWO SKINS OPA'S OWN CARD COMES IN.
  *
- * The brand runs on two colours and the card was wearing one of them. A band
- * of the CTA orange at the foot puts both on the one object that should read
- * as OPA on sight, the way the brand does everywhere else: teal holds the
- * field, orange takes the smaller share.
- *
- * STILL TWO FLAT FILLS. The `linear-gradient` has both stops at the same
- * position, so nothing blends — it is a hard edge between two solid colours,
- * drawn without a second element. The ban on gradients is a ban on a card
- * pretending to catch light, and this does not.
- *
- * IT IS A PIXEL HEIGHT, NOT A PERCENTAGE, and that is the whole reason it
- * works. At 72% the seam cut straight through the masked number: the face is
- * an aspect ratio, so it is a different height in the loan page's column and
- * in the 520px dialog, and a percentage put the edge in a different place on
- * each of them. A fixed band sits the same distance off the bottom wherever
- * the card is drawn, and the face pads itself clear of it, so nothing ever
- * straddles the seam.
+ * `blue` and `graphite` are the same object in two materials — one hue walked
+ * down into the same near-black — and the borrower chooses between them in the
+ * card's own dialog. Nothing else in the product changes with it: this is the
+ * skin of one card, not a theme.
  */
-const OPA_BAND = 40;
+export type CardSkin = "blue" | "graphite";
 
-export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
+export const getStyles = (
+  token: GlobalToken,
+  tone: CardTone = "light",
+  skin: CardSkin = "blue",
+) => {
   /* Both of the product's real finishes are dark enough to invert, so one
      flag covers the ink and a second picks the material. */
   const inverted = tone !== "light";
@@ -48,7 +39,7 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
     tone === "borrower"
       ? brand.cardBorrower
       : tone === "opa"
-        ? `linear-gradient(to top, ${brand.orange} 0 ${OPA_BAND}px, ${brand.cardOpa} ${OPA_BAND}px)`
+        ? (skin === "graphite" ? brand.cardSkinGraphite : brand.cardSkinBlue)
         : brand.cardLight;
   const ink = inverted ? brand.cardDarkInk : token.colorText;
   const quiet = inverted ? brand.cardDarkQuiet : token.colorTextTertiary;
@@ -78,9 +69,6 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
       minHeight: 180,
       boxSizing: "border-box",
       padding: token.paddingLG,
-      /* Clear of the band, keeping the face's own inset between the last line
-         and the orange — so the band stays empty, as it was drawn. */
-      ...(tone === "opa" ? { paddingBottom: token.paddingLG + OPA_BAND } : null),
       borderRadius: token.borderRadiusLG,
       background: ground,
       border: `1px solid ${inverted ? brand.cardDarkEdge : brand.cardLightEdge}`,
@@ -152,3 +140,32 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
     },
   }) satisfies Record<string, CSSProperties>;
 };
+
+/**
+ * THE BLANK FACE — the mark, and nothing else.
+ *
+ * OPA's card carries no number, no expiry and no status on its front. That is
+ * not a styling choice: the WBS is explicit that card details "are NOT stored,
+ * processed or transmitted by OPA application and are accessible only via a
+ * secure embedded view", so a front printed with them was OPA claiming to hold
+ * what it does not. The details live behind View, which is where the borrower
+ * asks USIO for them — *"ოპას ლოგო და არაფერი არ ეწეროს; ვიუს როცა დავაწვები,
+ * მანდ შემეძლო ინფორმაციის ნახვა."*
+ */
+export const blankStyles = {
+  /**
+   * The mark sits where an issuer's does: top left, at the face's own inset.
+   *
+   * LIFTED, AND THAT IS A STAND-IN. The brand symbol is a teal disc with a
+   * white flame knocked out of it, drawn for a light page — on a card that
+   * runs from deep blue into near-black the disc all but disappears, and it is
+   * the only thing printed on this face, so it has to read. The filter raises
+   * the disc's luminance without touching the flame, which is already white.
+   *
+   * What this actually wants is a KNOCKOUT version of the mark from OPA — the
+   * same gap the card networks' artwork has, and the same answer: the file
+   * belongs in `src/assets/brand/`. A filter is a way to keep the card
+   * reviewable until it lands, not the finish.
+   */
+  mark: { flex: "none", filter: "brightness(1.85) saturate(1.15)" },
+} satisfies Record<string, CSSProperties>;

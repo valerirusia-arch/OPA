@@ -39,6 +39,7 @@ import { stageLabelKeys } from "../../features/Loan/ui/stages";
 import { ApplicationStatusTag } from "../../features/Borrowers/ui/StatusTags";
 import { StatusPill } from "../../shared/ui/StatusPill";
 import { VirtualCardModal } from "../../features/Loan/ui/VirtualCardModal";
+import type { CardSkin } from "../../shared/ui/CardFace.styles";
 import type { ApplicationSummary } from "../../features/Loan/ui/types";
 import {
   hasOpenApplication,
@@ -87,6 +88,13 @@ export default function LoanScreen({
   const close = () => setConfirm(undefined);
   /** WBS story 7's modal: OPA's frame around USIO's card. */
   const [cardOpen, setCardOpen] = useState(false);
+  /**
+   * WHICH FINISH THE CARD WEARS. A local preference, held by the screen so the
+   * panel and the dialog agree — pick graphite in the dialog and the card on
+   * the page behind it is graphite when you close it. Dev decides whether it
+   * is ever persisted; nothing here needs it to be.
+   */
+  const [cardSkin, setCardSkin] = useState<CardSkin>("blue");
 
   /** WBS story 7: the card belongs to the borrower, never the co-borrower. */
   const role = viewer.role;
@@ -164,6 +172,7 @@ export default function LoanScreen({
               onCancelLoan={() => setConfirm("cancel")}
               onSign={() => navigate({ to: "/loan/sign" })}
               onOpenCard={() => setCardOpen(true)}
+              cardSkin={cardSkin}
               onViewSchedule={() => navigate({ to: "/payments" })}
               onDownload={(document) => console.log("download document", document.name)}
             />
@@ -221,6 +230,8 @@ export default function LoanScreen({
           cardholder={person}
           expiry={record.loan.card.expiry}
           used={record.loan.card.used}
+          skin={cardSkin}
+          onSkinChange={setCardSkin}
           onOpenAtIssuer={() => console.log("open the USIO card view")}
           onCancel={() => setCardOpen(false)}
         />

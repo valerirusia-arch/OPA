@@ -177,6 +177,30 @@ export const brand = {
    * Both are FLAT SOLID FILLS. A gradient is a drawing of a card in light, and
    * two of them become two versions of one drawing.
    */
+  /**
+   * OPA'S VIRTUAL CARD, IN THE TWO SKINS THE BORROWER CAN PICK BETWEEN.
+   *
+   * A REVERSAL, RECORDED. Every card face in this product was a single flat
+   * fill, on the rule that a gradient is a drawing of a card in light and two
+   * of them become two versions of one drawing. The designer has taken that
+   * back for OPA's own card with a reference in hand — a deep colour at the
+   * top falling away into near-black at the foot, the way an issued card is
+   * actually printed. It applies to THIS card only: the borrower's own stays
+   * the flat graphite, so the two are still opposite objects.
+   *
+   * Each skin is one hue walked down into the same near-black, so the two are
+   * the same object in two materials rather than two designs. The sheen is a
+   * single soft highlight, not a second hue — it is what stops a long ramp
+   * reading as a printing error.
+   */
+  cardSkinBlue: [
+    "radial-gradient(85% 65% at 76% 24%, rgba(255,255,255,0.16), transparent 62%)",
+    "linear-gradient(158deg, #3B82B8 0%, #24689E 22%, #14507F 42%, #0C3355 60%, #14181D 82%, #0E1114 100%)",
+  ].join(", "),
+  cardSkinGraphite: [
+    "radial-gradient(85% 65% at 76% 24%, rgba(255,255,255,0.14), transparent 62%)",
+    "linear-gradient(158deg, #8A9199 0%, #656C74 22%, #474D54 42%, #2E3338 60%, #191C1F 82%, #0E1114 100%)",
+  ].join(", "),
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
   cardLight: "#E7F1F4",

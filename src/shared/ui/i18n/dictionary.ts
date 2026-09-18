@@ -1050,6 +1050,11 @@ export const en = {
   "loanPage.cardOwner": "Issued by OPA",
   "loanPage.cardholder": "Cardholder",
   "loanPage.cardExpires": "Expires",
+  /* The two finishes OPA's card comes in. A preference, not a state: it
+     changes the skin of this one card and nothing else in the product. */
+  "loanPage.cardSkin": "Card finish",
+  "loanPage.cardSkinBlue": "Blue",
+  "loanPage.cardSkinGraphite": "Graphite",
   "loanPage.cardShowDetails": "Show card details",
   "loanPage.cardHideDetails": "Hide details",
   /* The hand-off, named on its own border. */
@@ -2536,6 +2541,9 @@ const es: Record<TranslationKey, string> = {
   "loanPage.cardOwner": "Emitida por OPA",
   "loanPage.cardholder": "Titular",
   "loanPage.cardExpires": "Caduca",
+  "loanPage.cardSkin": "Acabado de la tarjeta",
+  "loanPage.cardSkinBlue": "Azul",
+  "loanPage.cardSkinGraphite": "Grafito",
   "loanPage.cardShowDetails": "Ver los datos de la tarjeta",
   "loanPage.cardHideDetails": "Ocultar los datos",
   "loanPage.cardIssuerView": "Vista segura de USIO",

@@ -61,7 +61,8 @@ import { Flex, Tag, Typography, theme } from "antd";
 import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
-import { getStyles, styles, type CardTone } from "./CardFace.styles";
+import { Logo } from "./Logo";
+import { blankStyles, getStyles, styles, type CardSkin, type CardTone } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
@@ -108,6 +109,21 @@ export type CardFaceProps = {
   facts?: { key: string; label: string; value: string }[];
   /** The number can be copied. Only where it IS a number — a mask cannot. */
   copyable?: boolean;
+  /**
+   * Which finish OPA's own card is wearing. Ignored on the other tones — the
+   * borrower's card is not OPA's to skin.
+   */
+  skin?: CardSkin;
+  /**
+   * THE FRONT OF THE CARD: the mark, and nothing else.
+   *
+   * OPA's virtual card is printed blank because OPA does not hold what would
+   * go on it — the WBS puts the number, the expiry and the security code
+   * behind USIO's secure embedded view. `number` and `facts` are still
+   * required props because the same component draws the revealed face; this
+   * one simply does not print them.
+   */
+  blank?: boolean;
 };
 
 export function CardFace({
@@ -119,14 +135,30 @@ export function CardFace({
   number,
   facts = [],
   copyable = false,
+  skin = "blue",
+  blank = false,
 }: CardFaceProps) {
   /* Both of the product's real finishes are dark: they take white ink, and
      they print their own status pill rather than wearing antd's chip. Only
      the unused pale-blue one does neither. */
   const inverted = tone !== "light";
   const { token } = theme.useToken();
-  const s = getStyles(token, tone);
+  const s = getStyles(token, tone, skin);
   const figures = getFigureStyles(token);
+
+  /* THE BLANK FRONT. One mark on an empty field — see `blankStyles`. It
+     returns early rather than threading `blank` through six branches below,
+     because it genuinely is a different drawing: not this face with things
+     switched off, but the front of a card that has nothing printed on it. */
+  if (blank) {
+    return (
+      <Flex vertical justify="flex-start" style={s.face}>
+        <div style={blankStyles.mark}>
+          <Logo height={36} />
+        </div>
+      </Flex>
+    );
+  }
 
   return (
     <Flex vertical justify="space-between" gap={20} style={s.face}>

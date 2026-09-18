@@ -73,6 +73,7 @@ import { DocumentList } from "./DocumentList";
 import { NoLoanMark } from "./NoLoanMark";
 import { LoanStatement, type LoanStatementProps, type StatementFact } from "./LoanStatement";
 import { VirtualCardPanel } from "./VirtualCardPanel";
+import type { CardSkin } from "../../../shared/ui/CardFace.styles";
 import { getStyles, styles } from "./LoanOverview.styles";
 import type { ApplicationSummary, LoanDocument } from "./types";
 
@@ -93,6 +94,8 @@ export type LoanOverviewProps = {
   onWithdraw?: () => void;
   onSign?: () => void;
   onOpenCard?: () => void;
+  /** Which finish the borrower picked for OPA's card, in its own dialog. */
+  cardSkin?: CardSkin;
   onCancelLoan?: () => void;
   onViewSchedule?: () => void;
   onDownload?: (document: LoanDocument) => void;
@@ -106,6 +109,7 @@ export function LoanOverview({
   onWithdraw,
   onSign,
   onOpenCard,
+  cardSkin,
   onCancelLoan,
   onViewSchedule,
   onDownload,
@@ -516,6 +520,7 @@ export function LoanOverview({
               last4={loan.card.last4}
               expiry={loan.card.expiry}
               used={loan.card.used}
+              skin={cardSkin}
               fill={sideBySide}
               onOpen={onOpenCard}
             />
