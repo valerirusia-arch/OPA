@@ -31,6 +31,22 @@ export const getStyles = (token: GlobalToken) => {
   };
 
   /**
+   * THE NEUTRAL PILL'S GROUND — WHITE, not antd's default lozenge.
+   *
+   * A `Tag` with no colour takes `defaultBg`, which antd composites from
+   * `colorFillTertiary`: on this warm palette that lands as a cream slab. On a
+   * white card it is a faint warm smudge; on a TINTED one — the invitation
+   * card, the next row of the schedule — it reads as a dirty patch laid over
+   * the tint, which is where the designer caught it: *"აქ მაგალითად თეთრი
+   * ფერის მინდა იყოს ეს ბექგრაუნდი."*
+   *
+   * White is the honest answer for the state that has no colour to spend: the
+   * dot says it is a status and `edge`'s hairline gives it its shape, so the
+   * fill has no work left to do. It reads the same on every ground.
+   */
+  const neutral: CSSProperties = { background: token.colorBgContainer };
+
+  /**
    * THE SAME STATE WITH NOTHING AROUND IT — for the balance card alone.
    *
    * "22 days overdue" does not sit in a row of statuses there; it sits on the
@@ -61,6 +77,7 @@ export const getStyles = (token: GlobalToken) => {
      */
     tag: { fontWeight: 500, paddingBlock: 2 },
     edge,
+    neutral,
     bare,
     /** The dot and the word are one line, whatever the line-height does. */
     inner: { display: "inline-flex" },

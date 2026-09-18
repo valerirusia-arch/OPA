@@ -66,7 +66,18 @@ export function StatusPill({ color, icon, bare = false, children }: StatusPillPr
      the colour stays the fill's job. See the note in the styles. */
 
   return (
-    <Tag color={color} variant="filled" style={{ ...pill, ...s.tag, ...(bare ? s.bare : s.edge) }}>
+    <Tag
+      color={color}
+      variant="filled"
+      style={{
+        ...pill,
+        ...s.tag,
+        /* The coloured states keep antd's tint; the neutral one takes white
+           instead of the warm default lozenge. See `neutral` in the styles. */
+        ...(color ? null : s.neutral),
+        ...(bare ? s.bare : s.edge),
+      }}
+    >
       <Flex align="center" gap={7} style={s.inner}>
         {icon ?? <span style={dot} />}
         {children}

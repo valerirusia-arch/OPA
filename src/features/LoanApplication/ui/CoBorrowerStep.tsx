@@ -27,13 +27,12 @@ import {
   Form,
   Input,
   Row,
-  Tag,
   Typography,
   theme,
 } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { pill } from "../../../shared/ui/tag.styles";
+import { StatusPill } from "../../../shared/ui/StatusPill";
 import { useAuthRules } from "../../Auth/ui/validation";
 import { StepActions, type StepActionLabels } from "./StepActions";
 import { getStyles as getSharedStyles, styles as shared } from "./StepShared.styles";
@@ -195,9 +194,14 @@ export function CoBorrowerStep({
                   )}
                 </Typography.Text>
               </Flex>
-              <Tag color={status?.color} variant="filled" style={pill}>
+              {/* THE PRODUCT'S OWN STATUS COMPONENT, not a bare Tag. Pending /
+                  Accepted / Expired is a state, and a state in this product is
+                  a dotted pill — it was the one status drawn as a plain
+                  lozenge, which on this tinted card read as a cream patch
+                  rather than a status. */}
+              <StatusPill color={status?.color}>
                 {t(status?.key ?? "invitation.pending")}
-              </Tag>
+              </StatusPill>
             </Flex>
           ) : null}
 
