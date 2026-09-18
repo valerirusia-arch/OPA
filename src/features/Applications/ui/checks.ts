@@ -59,3 +59,29 @@ export const checkLabelKeys: Record<CheckKey, TranslationKey> = {
   income: "check.income",
   rules: "check.rules",
 };
+
+/**
+ * WHAT EACH CHECK LOOKED AT — the line under its name on the row.
+ *
+ * Every sentence is the WBS's own description of that story: InstantID for
+ * identity, the OFAC list "performed as part of the identity verification
+ * process", the no-lend story's "open application or loan … legacy no lend
+ * list and … recent (6 months) denied application", and income's "the
+ * objective is to verify the EXISTENCE of an income source rather than
+ * calculate or validate income amount".
+ *
+ * This is not the provider column that was taken off these rows. That was a
+ * vendor name in the evidence position, competing with the result and offering
+ * the underwriter nothing to do; this says what the check DID, which is the
+ * one thing "Passed" cannot tell them. The provider appears inside the
+ * sentence where the WBS names it, as part of what happened.
+ *
+ * The credit score and the eligibility outcome are not here: neither is drawn
+ * as a row — one is the gauge, the other the conclusion panel.
+ */
+export const checkAboutKeys: Partial<Record<CheckKey, TranslationKey>> = {
+  identity: "check.whatIdentity",
+  ofac: "check.whatOfac",
+  noLend: "check.whatNoLend",
+  income: "check.whatIncome",
+};

@@ -1,90 +1,175 @@
 // src/features/Applications/ui/VerificationList.tsx
 //
-// The automated checks for one applicant, in the order the WBS runs them, with
-// the evidence each came back with.
+// The automated checks for one applicant. It was one flat list of six rows —
+// four pass/fail checks, a credit score sitting large in the middle of them,
+// and the eligibility conclusion — and it read as chaos: *"სრული ქაოსი."* The
+// three are not the same kind of thing, so they are no longer drawn the same:
 //
-// WBS, "View application details": an internal user must be able to see
-// "verification results", and the note adds "Supporting evidence is available
-// within the application". So each row carries the provider's own answer — a
-// score, a match, a reason — not just a pass mark. An underwriter deciding on
-// somebody's loan should not have to take the pipeline's word for it.
+//   · the PASS/FAIL checks (identity, OFAC, no-lend, income) are a tidy list,
+//     each led by a status mark so the column of green ticks scans in one look;
+//   · the CREDIT SCORE is a gauge — a judgement, not a pass, so it gets the
+//     meter that says where 648 falls (see CreditScoreGauge);
+//   · the ELIGIBILITY outcome is the conclusion, set apart as a summary at the
+//     foot.
 //
-// Three things per row, as the wireframe lays them out: the check, WHO
-// answered it underneath (the provider, from the Integrations epic), and the
-// outcome on the right with the evidence beside it. The score sits large next
-// to its tag because it is the one figure on this card anybody reads twice.
-//
-// The order is a requirement rather than a layout choice: identity runs before
-// credit "to minimize external credit bureau costs", so reading the list top
-// to bottom is reading the process in the order it happened.
+// Each check still carries the provider that answered it (Integrations epic)
+// and its evidence, because an underwriter deciding on a loan should see what
+// the pipeline saw, not just its verdict.
 //
 // Dumb: it renders results it is given.
 
-import { Divider, Flex, Grid, Typography, theme } from "antd";
+import type { ReactNode } from "react";
+import { Flex, Typography, theme } from "antd";
+import {
+  CheckCircleFilled,
+  ClockCircleFilled,
+  CloseCircleFilled,
+  ExclamationCircleFilled,
+  ApiFilled,
+} from "@ant-design/icons";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { CheckOutcomeTag } from "./CheckTags";
-import { checkLabelKeys, checkProviderKeys } from "./checks";
+import { CreditScoreGauge } from "./CreditScoreGauge";
+import { checkAboutKeys, checkLabelKeys, checkProviderKeys } from "./checks";
 import { getStyles, styles } from "./VerificationList.styles";
-import type { VerificationResult } from "./types";
+import type { CheckOutcome, VerificationResult } from "./types";
 
 export type VerificationListProps = {
   results: VerificationResult[];
 };
 
+/** The status mark that leads each check row: the colour is the outcome. */
+function outcomeMark(outcome: CheckOutcome, color: (o: CheckOutcome) => string): ReactNode {
+  const common = { style: { fontSize: 18, color: color(outcome) } };
+  switch (outcome) {
+    case "passed":
+      return <CheckCircleFilled {...common} />;
+    case "review":
+      return <ExclamationCircleFilled {...common} />;
+    case "failed":
+      return <CloseCircleFilled {...common} />;
+    case "unavailable":
+      return <ApiFilled {...common} />;
+    default:
+      return <ClockCircleFilled {...common} />;
+  }
+}
+
 export function VerificationList({ results }: VerificationListProps) {
   const t = useT();
   const { token } = theme.useToken();
   const s = getStyles(token);
-  // On a phone the check name and a full sentence of evidence cannot share one
-  // line without one of them breaking mid-word; below `sm` (576px) the row
-  // stacks — name over evidence, each on its own full-width line.
-  const screens = Grid.useBreakpoint();
-  const stack = screens.sm === false;
+
+  const markColor = (outcome: CheckOutcome) =>
+    outcome === "passed"
+      ? token.colorSuccess
+      : outcome === "failed"
+        ? token.colorError
+        : outcome === "review" || outcome === "unavailable"
+          ? token.colorWarning
+          : token.colorTextTertiary;
+
+  const credit = results.find((r) => r.key === "credit");
+  const eligibility = results.find((r) => r.key === "rules");
+  /* The pass/fail pipeline, in the WBS order it runs in, minus the two that
+     are drawn on their own. */
+  const checks = results.filter((r) => r.key !== "credit" && r.key !== "rules");
+
+  const creditScore = credit && /^\d+$/.test(credit.detail ?? "")
+    ? Number(credit.detail)
+    : undefined;
 
   return (
-    <Flex vertical>
-      {results.map((result, index) => (
-        <Flex vertical key={result.key}>
-          {index > 0 ? <Divider style={styles.rule} /> : null}
-          <Flex
-            vertical={stack}
-            align={stack ? "flex-start" : "flex-start"}
-            justify="space-between"
-            gap={stack ? 8 : 16}
-            style={styles.row}
-          >
+    <Flex vertical gap={20}>
+      {/* THE CREDIT SCORE — a gauge, and the card leads on it: it is the one
+          result that takes judgement, so it sits at the top. */}
+      {credit && creditScore !== undefined ? (
+        <CreditScoreGauge
+          score={creditScore}
+          provider={t(checkProviderKeys.credit)}
+        />
+      ) : null}
+
+      {/*
+        THE CHECKS — the borrower dashboard's record rows, brought over.
+
+        They were a left column of coloured marks with the name beside each and
+        the evidence adrift at the far right: the mark, the label and the result
+        sat on three different edges, and the row was one line tall so four of
+        them stacked into a dense block — *"ადმინკაზე რომ არის, ესე არ
+        მომწონს."*
+
+        The dashboard's "steps so far" list already had the answer and it is
+        the SAME KIND OF THING: a finished event, what it was, and a tick. So
+        this takes its shape exactly — name and a line of context on the left,
+        result and the status mark together on the right, hairline between rows
+        and the dashboard's own 16 above and below. *"1 ფოტოდან გადმოიტანე
+        სფეისინგი."*
+
+        THE MARK MOVED TO THE RIGHT, next to the evidence it belongs to. A tick
+        and the words "Full match" are one statement — the outcome — and they
+        were on opposite sides of the row. Together they read as the answer;
+        the left column is then free to be the question.
+      */}
+      <Flex vertical>
+        {checks.map((result, index) => {
+          const about = checkAboutKeys[result.key];
+          return (
+            <Flex
+              key={result.key}
+              align="flex-start"
+              justify="space-between"
+              gap={24}
+              style={index > 0 ? s.row : styles.rowFirst}
+            >
+              <Flex vertical gap={2} style={styles.name}>
+                <Typography.Text style={styles.nameText}>
+                  {t(checkLabelKeys[result.key])}
+                </Typography.Text>
+                {/* WHAT THE CHECK LOOKED AT. The WBS's own words — see
+                    `checkAboutKeys`. Not the provider column that came off
+                    these rows: that was a vendor name standing where the
+                    result stands, with nothing for the underwriter to do
+                    about it. */}
+                {about ? (
+                  <Typography.Text style={s.about}>{t(about)}</Typography.Text>
+                ) : null}
+              </Flex>
+              {/* The outcome, in one place: what was found, and the mark that
+                  says how it went. Pinned to the top of the row so it sits on
+                  the check's NAME, not halfway down the sentence under it. */}
+              <Flex align="center" gap={12} style={styles.end}>
+                {result.detail ? (
+                  <Typography.Text style={s.evidence}>{result.detail}</Typography.Text>
+                ) : null}
+                {outcomeMark(result.outcome, markColor)}
+              </Flex>
+            </Flex>
+          );
+        })}
+      </Flex>
+
+      {/* THE ELIGIBILITY CONCLUSION — the automated verdict that weighs every
+          check and the score together. Set apart in a light panel; the colour
+          stays on the outcome tag, so the block itself reads calm.
+
+          The REASON sits under the title as its subtitle, where it reads as the
+          explanation of the outcome — it used to float in the middle of the row
+          between the title and the tag, disconnected from both. The tag alone
+          holds the right. */}
+      {eligibility ? (
+        <div style={s.conclusion}>
+          <Flex align="center" justify="space-between" gap={16} wrap>
             <Flex vertical style={styles.name}>
-              <Typography.Text>{t(checkLabelKeys[result.key])}</Typography.Text>
+              <Typography.Text strong>{t(checkLabelKeys.rules)}</Typography.Text>
               <Typography.Text type="secondary" style={styles.detail}>
-                {t(checkProviderKeys[result.key])}
+                {eligibility.detail ?? t(checkProviderKeys.rules)}
               </Typography.Text>
             </Flex>
-
-            <Flex
-              align="center"
-              gap={12}
-              style={stack ? styles.resultStacked : styles.result}
-            >
-              {/* The evidence, in the provider's own words. A bare score gets
-                  the figure treatment; a sentence stays a sentence. */}
-              {result.detail ? (
-                <Typography.Text
-                  style={
-                    /^\d+$/.test(result.detail)
-                      ? s.score
-                      : stack
-                        ? styles.evidenceStacked
-                        : styles.evidence
-                  }
-                >
-                  {result.detail}
-                </Typography.Text>
-              ) : null}
-              <CheckOutcomeTag outcome={result.outcome} />
-            </Flex>
+            <CheckOutcomeTag outcome={eligibility.outcome} />
           </Flex>
-        </Flex>
-      ))}
+        </div>
+      ) : null}
     </Flex>
   );
 }
