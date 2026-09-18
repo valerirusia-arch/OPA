@@ -17,6 +17,29 @@ export const styles = {
  */
 export type CardTone = "light" | "opa" | "borrower";
 
+/**
+ * THE ORANGE BAND ALONG THE FOOT OF OPA'S CARD.
+ *
+ * The brand runs on two colours and the card was wearing one of them. A band
+ * of the CTA orange at the foot puts both on the one object that should read
+ * as OPA on sight, the way the brand does everywhere else: teal holds the
+ * field, orange takes the smaller share.
+ *
+ * STILL TWO FLAT FILLS. The `linear-gradient` has both stops at the same
+ * position, so nothing blends — it is a hard edge between two solid colours,
+ * drawn without a second element. The ban on gradients is a ban on a card
+ * pretending to catch light, and this does not.
+ *
+ * IT IS A PIXEL HEIGHT, NOT A PERCENTAGE, and that is the whole reason it
+ * works. At 72% the seam cut straight through the masked number: the face is
+ * an aspect ratio, so it is a different height in the loan page's column and
+ * in the 520px dialog, and a percentage put the edge in a different place on
+ * each of them. A fixed band sits the same distance off the bottom wherever
+ * the card is drawn, and the face pads itself clear of it, so nothing ever
+ * straddles the seam.
+ */
+const OPA_BAND = 40;
+
 export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
   /* Both of the product's real finishes are dark enough to invert, so one
      flag covers the ink and a second picks the material. */
@@ -25,7 +48,7 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
     tone === "borrower"
       ? brand.cardBorrower
       : tone === "opa"
-        ? brand.cardOpa
+        ? `linear-gradient(to top, ${brand.orange} 0 ${OPA_BAND}px, ${brand.cardOpa} ${OPA_BAND}px)`
         : brand.cardLight;
   const ink = inverted ? brand.cardDarkInk : token.colorText;
   const quiet = inverted ? brand.cardDarkQuiet : token.colorTextTertiary;
@@ -55,6 +78,9 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
       minHeight: 180,
       boxSizing: "border-box",
       padding: token.paddingLG,
+      /* Clear of the band, keeping the face's own inset between the last line
+         and the orange — so the band stays empty, as it was drawn. */
+      ...(tone === "opa" ? { paddingBottom: token.paddingLG + OPA_BAND } : null),
       borderRadius: token.borderRadiusLG,
       background: ground,
       border: `1px solid ${inverted ? brand.cardDarkEdge : brand.cardLightEdge}`,
