@@ -49,7 +49,7 @@
 
 import { App, Button, Card, Dropdown, Flex, Result, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
@@ -211,39 +211,6 @@ export default function StaffApplicationsScreen({
         </Typography.Text>
       ),
     },
-    {
-      title: "",
-      key: "actions",
-      width: 72,
-      align: "end",
-      /* MORE AIR AT THE CARD'S EDGE than the table's standard inset. The
-         button was the one thing in the row with a hard edge of its own, and
-         it sat as close to the card's border as a line of text does — which
-         reads as pressed against it. decorateColumns merges a column's own
-         style over its defaults, so this is the only cell that moves. */
-      onCell: () => ({ style: { paddingInlineEnd: 32 } }),
-      onHeaderCell: () => ({ style: { paddingInlineEnd: 32 } }),
-      render: () => (
-        /*
-          A CHEVRON, AND IT WAS A BUTTON PER ROW.
-
-          "Review" was a framed control repeated seven times down a page of
-          plain text, and it was never the way in: the whole row navigates and
-          the applicant's name is a real link, so the button was a third copy
-          of one destination. Seven of them read as a column of buttons with a
-          table hiding behind it — *"საერთოდ არ არის ესეთი რამ საჭირო, რაიმე
-          უფრო clean."*
-
-          The chevron says the same thing in the amount of ink it deserves: this
-          row opens. It is the arrow the product already uses for disclosure,
-          and it is decoration — the name carries the link, the row carries the
-          click, and neither needs a duplicate in the tab order.
-        */
-        <Flex justify="flex-end">
-          <RightOutlined aria-hidden style={s.open} />
-        </Flex>
-      ),
-    },
   ];
 
   return (
@@ -289,10 +256,11 @@ export default function StaffApplicationsScreen({
           <Table<ApplicationRecord>
             rowKey="id"
             tableLayout="fixed"
-            // Applicant column is flexible + five fixed columns at 800px; on a
-            // narrow screen the applicant column would collapse to nothing.
-            // Scroll horizontally below ~1040px so every column keeps its width.
-            scroll={{ x: 1040 }}
+            // Four fixed columns at 710px plus the flexible USCIS service; on a
+            // narrow screen that column would collapse to nothing, so the table
+            // scrolls horizontally below ~980px and every column keeps its
+            // width.
+            scroll={{ x: 980 }}
             columns={decorateColumns(columns)}
             dataSource={visible}
             // The whole row opens the application; the id stays a real link so
