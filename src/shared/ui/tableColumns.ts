@@ -35,6 +35,26 @@ const HEADER_PADDING_BLOCK = 16;
 export const TABLE_ROW_HEIGHT = 64;
 
 /**
+ * THE WIDTH OF A NAME COLUMN, and the rule that goes with it.
+ *
+ * With `tableLayout="fixed"` every spare pixel goes to the one column that has
+ * no width. So a table has AT MOST ONE column without a width, and it is the
+ * longest free-text field it carries — the USCIS service, an address, an email
+ * — never a name. A flexible name column opened a 600px hole between the
+ * person and their first fact on the queue, the loans list and both dashboard
+ * tabs, all four at once.
+ *
+ * Where a table has no long field at all, every column takes a width and the
+ * browser stretches them proportionally: the air is shared instead of dumped
+ * in one place.
+ *
+ * 260 fits the longest name in the mocks over its reference line. Lists with
+ * seven columns to fit (the borrower list) size their own name column tighter
+ * and are still following the rule — what matters is that it HAS one.
+ */
+export const TABLE_NAME_WIDTH = 260;
+
+/**
  * Marks a heading cell that carries no label — the row-actions column.
  *
  * antd separates headings with a short vertical rule, which is right between

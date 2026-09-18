@@ -27,7 +27,7 @@ import { useMemo, useState } from "react";
 import { Card, Input, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
@@ -35,7 +35,8 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { decorateColumns, TABLE_NAME_WIDTH } from "../../shared/ui/tableColumns";
+import { NameCell } from "../../shared/ui/NameCell";
 import {
   ALL,
   FacetFilterChips,
@@ -192,10 +193,17 @@ export default function StaffLoansScreen({
     {
       title: t("loans.col.borrower"),
       key: "borrower",
+      /* A WIDTH, and it had none — so it took every spare pixel and opened a
+         hole between the borrower and their loan's first fact. This table has
+         no long free-text column, so every column is sized and the browser
+         shares the slack out proportionally. See TABLE_NAME_WIDTH. */
+      width: TABLE_NAME_WIDTH,
       render: (_v, row) => (
-        <Typography.Text ellipsis={{ tooltip: row.borrowerName }}>
-          <Link to={`/staff/loans/${row.loan.loanId}`}>{row.borrowerName}</Link>
-        </Typography.Text>
+        <NameCell
+          name={row.borrowerName}
+          to={`/staff/loans/${row.loan.loanId}`}
+          meta={t("loanAdmin.loanId", { id: row.loan.loanId })}
+        />
       ),
     },
     {

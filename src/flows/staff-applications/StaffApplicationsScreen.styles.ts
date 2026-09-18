@@ -7,9 +7,6 @@ export const styles = {
   /** Wide enough for an email address, which is the longest thing searched. */
   search: { width: 280 },
   row: { cursor: "pointer" },
-  /** The applicant's name over their email: two lines, one column. */
-  applicant: { minWidth: 0 },
-  email: { fontSize: 12 },
   /** Lining figures so a column of amounts lines up on the decimal. */
   amount: { fontVariantNumeric: "tabular-nums" },
   id: { fontVariantNumeric: "tabular-nums", fontWeight: 500 },

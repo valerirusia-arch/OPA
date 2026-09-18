@@ -13,13 +13,14 @@
 
 import { Card, Table, Tabs, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { decorateColumns, TABLE_NAME_WIDTH } from "../../shared/ui/tableColumns";
+import { NameCell } from "../../shared/ui/NameCell";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SummaryStats, type SummaryStat } from "../../shared/ui/SummaryStats";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
@@ -63,12 +64,41 @@ export default function StaffDashboardScreen({
   const recent = mockApplications.slice(0, 5);
   const recentLoans = allLoans.slice(0, 5);
 
+  /*
+    THESE TWO READ LIKE THE LISTS THEY SUMMARISE, and they did not.
+
+    Both drew a bare link in a column with no width, which on a full-width card
+    is a 600px hole between the borrower and their first fact — the same thing
+    the queue and the loans list had. The name column is sized now and carries
+    the row's reference under it, exactly as those lists do, and the one
+    flexible column is the longest free-text field the table has.
+
+    Recent applications gains the USCIS service for that reason: three columns
+    could not fill the card, the queue already shows it, and it is the fact
+    that says what the application actually is. Recent loans has no long field,
+    so all four are sized and the slack is shared. *"თებლები უნდა იყოს ძაან
+    კონსისტენტური."*
+  */
   const recentColumns: ColumnsType<ApplicationRecord> = [
     {
       title: t("staffDash.colBorrower"),
       key: "name",
+      width: TABLE_NAME_WIDTH,
       render: (_value, row) => (
-        <Link to={`/staff/applications/${row.id}`}>{row.borrower.name}</Link>
+        <NameCell
+          name={row.borrower.name}
+          to={`/staff/applications/${row.id}`}
+          meta={row.id}
+        />
+      ),
+    },
+    {
+      title: t("queue.col.uscis"),
+      key: "uscis",
+      render: (_value, row) => (
+        <Typography.Text ellipsis={{ tooltip: row.uscisType }}>
+          {row.uscisType}
+        </Typography.Text>
       ),
     },
     {
@@ -92,8 +122,21 @@ export default function StaffDashboardScreen({
     {
       title: t("loans.col.borrower"),
       key: "name",
+      width: TABLE_NAME_WIDTH,
       render: (_value, row) => (
-        <Link to={`/staff/loans/${row.loan.loanId}`}>{row.borrowerName}</Link>
+        <NameCell
+          name={row.borrowerName}
+          to={`/staff/loans/${row.loan.loanId}`}
+          meta={t("loanAdmin.loanId", { id: row.loan.loanId })}
+        />
+      ),
+    },
+    {
+      title: t("loans.col.funded"),
+      key: "funded",
+      width: 160,
+      render: (_value, row) => (
+        <Typography.Text type="secondary">{row.loan.fundedOn ?? "—"}</Typography.Text>
       ),
     },
     {
@@ -142,7 +185,7 @@ export default function StaffDashboardScreen({
                 children: (
                   <Table<ApplicationRecord>
                     rowKey="id"
-                    scroll={{ x: 520 }}
+                    scroll={{ x: 800 }}
                     columns={decorateColumns(recentColumns)}
                     dataSource={recent}
                     pagination={false}
@@ -162,7 +205,7 @@ export default function StaffDashboardScreen({
                 children: (
                   <Table<LoanRow>
                     rowKey={(row) => row.loan.loanId}
-                    scroll={{ x: 520 }}
+                    scroll={{ x: 800 }}
                     columns={decorateColumns(recentLoanColumns)}
                     dataSource={recentLoans}
                     pagination={false}

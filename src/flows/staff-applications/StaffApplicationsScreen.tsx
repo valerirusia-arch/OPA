@@ -47,10 +47,10 @@
 //
 // Dumb: mock rows, no fetching.
 
-import { App, Button, Card, Dropdown, Flex, Result, Table, Typography, theme } from "antd";
+import { App, Button, Card, Dropdown, Result, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { DownloadOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
@@ -58,7 +58,8 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { decorateColumns, TABLE_NAME_WIDTH } from "../../shared/ui/tableColumns";
+import { NameCell } from "../../shared/ui/NameCell";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
@@ -147,19 +148,15 @@ export default function StaffApplicationsScreen({
          longest name over its id; the slack moves to the USCIS service, which
          was the column actually short of room. *"როუები ცოტა მარცხნივ
          გამოიწიე."* */
-      width: 260,
+      width: TABLE_NAME_WIDTH,
       render: (_value, row) => (
-        <Flex vertical style={styles.applicant}>
-          <Typography.Text ellipsis>
-            <Link to={`/staff/applications/${row.id}`}>{row.borrower.name}</Link>
-          </Typography.Text>
-          <Typography.Text type="secondary" ellipsis style={styles.email}>
-            {row.id}
-            {/* A second applicant is twice the work, and worth knowing before
-                you open it. */}
-            {row.coBorrower ? ` · ${t("queue.coBorrowerTag")}` : ""}
-          </Typography.Text>
-        </Flex>
+        <NameCell
+          name={row.borrower.name}
+          to={`/staff/applications/${row.id}`}
+          /* A second applicant is twice the work, and worth knowing before you
+             open it. */
+          meta={`${row.id}${row.coBorrower ? ` · ${t("queue.coBorrowerTag")}` : ""}`}
+        />
       ),
     },
     {
