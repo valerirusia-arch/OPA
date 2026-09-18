@@ -1418,7 +1418,7 @@ export const en = {
   "queue.emptyBody": "Clear a filter, or check back when the next application is submitted.",
   "queue.coBorrowerTag": "Co-borrower",
 
-  "appDetail.back": "Applications",
+  "appDetail.back": "Back to applications",
   "appDetail.notFound": "No application with that number",
   "appDetail.borrower": "Borrower",
   "appDetail.coBorrower": "Co-borrower",
@@ -2844,7 +2844,7 @@ const es: Record<TranslationKey, string> = {
   "queue.emptyBody": "Quita un filtro o vuelve cuando se envíe la siguiente solicitud.",
   "queue.coBorrowerTag": "Coprestatario",
 
-  "appDetail.back": "Solicitudes",
+  "appDetail.back": "Volver a las solicitudes",
   "appDetail.notFound": "No hay ninguna solicitud con ese número",
   "appDetail.borrower": "Prestatario",
   "appDetail.coBorrower": "Coprestatario",

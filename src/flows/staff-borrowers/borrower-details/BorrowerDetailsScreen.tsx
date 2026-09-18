@@ -28,7 +28,6 @@ import { useState } from "react";
 import { App, Badge, Button, Card, Dropdown, Flex, Result, Tabs } from "antd";
 import type { MenuProps } from "antd";
 import {
-  ArrowLeftOutlined,
   ArrowRightOutlined,
   MoreOutlined,
   SendOutlined,
@@ -357,14 +356,10 @@ export default function BorrowerDetailsScreen({
     >
       <AdminPage
         title={name}
-        titleBefore={
-          <Button
-            shape="circle"
-            icon={<ArrowLeftOutlined />}
-            aria-label={t("borrower.back")}
-            onClick={() => navigate({ to: "/staff/borrowers" })}
-          />
-        }
+        back={{
+          label: t("borrower.back"),
+          onClick: () => navigate({ to: "/staff/borrowers" }),
+        }}
         titleAfter={
           <>
             {borrower.doNotLoan ? <DoNotLoanTag /> : null}

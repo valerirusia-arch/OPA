@@ -23,6 +23,15 @@ export const toolbarTheme: ThemeConfig = {
 
 export const styles = {
   page: { padding: PAGE_PADDING },
+  /**
+   * The way back, above the heading.
+   *
+   * A link button carries antd's own horizontal padding; the negative margin
+   * takes it back out so the words line up with the title under them rather
+   * than starting eleven pixels in. 4px under it, so the pair reads as one
+   * block — the destination and then where you are.
+   */
+  back: { paddingInline: 0, height: "auto", marginBottom: 4 },
   /** The heading sits on the same line as whatever acts on the page. */
   titleRow: { marginBottom: 24 },
   /**

@@ -34,7 +34,7 @@
 
 import { useState } from "react";
 import { App, Alert, Button, Card, Col, Divider, Flex, Result, Row, Tag, Typography, theme } from "antd";
-import { ArrowLeftOutlined, FileTextOutlined } from "@ant-design/icons";
+import { FileTextOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
 import { AdminPage } from "../../../shared/ui/AdminPage";
@@ -230,14 +230,10 @@ export default function ApplicationDetailsScreen({
          beside it: the name is who this is about, the id is what support gets
          asked for, and a page titled "A-2481" tells an underwriter nothing. */
       title={record.borrower.name}
-      titleBefore={
-        <Button
-          shape="circle"
-          icon={<ArrowLeftOutlined />}
-          aria-label={t("appDetail.back")}
-          onClick={() => navigate({ to: "/staff/applications" })}
-        />
-      }
+      back={{
+        label: t("appDetail.back"),
+        onClick: () => navigate({ to: "/staff/applications" }),
+      }}
       titleAfter={
         <Flex align="center" gap={12} wrap>
           <Typography.Text type="secondary" style={{ whiteSpace: "nowrap" }}>

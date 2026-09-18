@@ -25,7 +25,7 @@
 
 import { useState } from "react";
 import { App, Button, Card, Flex, Result, Typography } from "antd";
-import { ArrowLeftOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
 import { AdminPage } from "../../../shared/ui/AdminPage";
@@ -144,14 +144,10 @@ export default function LoanRecordScreen({
     >
       <AdminPage
         title={record.borrowerName}
-        titleBefore={
-          <Button
-            shape="circle"
-            icon={<ArrowLeftOutlined />}
-            aria-label={t("loans.back")}
-            onClick={() => navigate({ to: "/staff/loans" })}
-          />
-        }
+        back={{
+          label: t("loans.back"),
+          onClick: () => navigate({ to: "/staff/loans" }),
+        }}
         titleAfter={
           <Flex align="center" gap={12}>
             {/* The loan's own reference beside the borrower's name: support is
