@@ -75,9 +75,17 @@ export default function StaffDashboardScreen({
 
     Recent applications gains the USCIS service for that reason: three columns
     could not fill the card, the queue already shows it, and it is the fact
-    that says what the application actually is. Recent loans has no long field,
-    so all four are sized and the slack is shared. *"თებლები უნდა იყოს ძაან
+    that says what the application actually is. *"თებლები უნდა იყოს ძაან
     კონსისტენტური."*
+
+    AND NEITHER ENDS ON A RIGHT-ALIGNED COLUMN. The amount was last and set
+    `align: "end"`, which pins its digits to the card's own border — the figure
+    had no air on either side of it and the row stopped before the card did:
+    *"დეშბორდზე კედელზეა მიწებებული, არადა გვაქვს მაგის სფეისი."* The money
+    keeps its right alignment, because a column of figures reads on its
+    decimal, and it simply is not the last column any more. The queue and the
+    loans list both already ended on a left-aligned field; these two now do
+    too.
   */
   const recentColumns: ColumnsType<ApplicationRecord> = [
     {
@@ -93,27 +101,29 @@ export default function StaffDashboardScreen({
       ),
     },
     {
+      title: t("staffDash.colAmount"),
+      key: "amount",
+      width: 140,
+      align: "end",
+      render: (_value, row) => (
+        <Typography.Text style={styles.amount}>{money(row.requestedAmount)}</Typography.Text>
+      ),
+    },
+    {
+      title: t("staffDash.colStatus"),
+      key: "status",
+      width: 180,
+      render: (_value, row) => <ApplicationStatusTag status={row.status} />,
+    },
+    /* LAST, AND LEFT-ALIGNED — the queue ends the same way. See the note above
+       the columns on why a right-aligned column never sits here. */
+    {
       title: t("queue.col.uscis"),
       key: "uscis",
       render: (_value, row) => (
         <Typography.Text ellipsis={{ tooltip: row.uscisType }}>
           {row.uscisType}
         </Typography.Text>
-      ),
-    },
-    {
-      title: t("staffDash.colStatus"),
-      key: "status",
-      width: 150,
-      render: (_value, row) => <ApplicationStatusTag status={row.status} />,
-    },
-    {
-      title: t("staffDash.colAmount"),
-      key: "amount",
-      width: 130,
-      align: "end",
-      render: (_value, row) => (
-        <Typography.Text style={styles.amount}>{money(row.requestedAmount)}</Typography.Text>
       ),
     },
   ];
@@ -132,26 +142,26 @@ export default function StaffDashboardScreen({
       ),
     },
     {
-      title: t("loans.col.funded"),
-      key: "funded",
-      width: 160,
+      title: t("loans.col.amount"),
+      key: "amount",
+      width: 140,
+      align: "end",
       render: (_value, row) => (
-        <Typography.Text type="secondary">{row.loan.fundedOn ?? "—"}</Typography.Text>
+        <Typography.Text style={styles.amount}>{row.loan.amount}</Typography.Text>
       ),
     },
     {
       title: t("loans.col.status"),
       key: "status",
-      width: 150,
+      width: 180,
       render: (_value, row) => <LoanStatusTag status={row.loan.status} />,
     },
+    /* Last and left-aligned, exactly as the loans list ends. */
     {
-      title: t("loans.col.amount"),
-      key: "amount",
-      width: 130,
-      align: "end",
+      title: t("loans.col.funded"),
+      key: "funded",
       render: (_value, row) => (
-        <Typography.Text style={styles.amount}>{row.loan.amount}</Typography.Text>
+        <Typography.Text type="secondary">{row.loan.fundedOn ?? "—"}</Typography.Text>
       ),
     },
   ];

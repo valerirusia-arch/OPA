@@ -17,21 +17,8 @@ export const styles = {
  */
 export type CardTone = "light" | "opa" | "borrower";
 
-/**
- * THE TWO SKINS OPA'S OWN CARD COMES IN.
- *
- * `blue` and `graphite` are the same object in two materials — one hue walked
- * down into the same near-black — and the borrower chooses between them in the
- * card's own dialog. Nothing else in the product changes with it: this is the
- * skin of one card, not a theme.
- */
-export type CardSkin = "blue" | "graphite";
 
-export const getStyles = (
-  token: GlobalToken,
-  tone: CardTone = "light",
-  skin: CardSkin = "blue",
-) => {
+export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
   /* Both of the product's real finishes are dark enough to invert, so one
      flag covers the ink and a second picks the material. */
   const inverted = tone !== "light";
@@ -39,7 +26,7 @@ export const getStyles = (
     tone === "borrower"
       ? brand.cardBorrower
       : tone === "opa"
-        ? (skin === "graphite" ? brand.cardSkinGraphite : brand.cardSkinBlue)
+        ? brand.cardSkin
         : brand.cardLight;
   const ink = inverted ? brand.cardDarkInk : token.colorText;
   const quiet = inverted ? brand.cardDarkQuiet : token.colorTextTertiary;

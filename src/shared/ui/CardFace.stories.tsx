@@ -17,34 +17,20 @@ function Faces() {
     <Flex gap={32} wrap style={{ padding: 24 }}>
       <Flex vertical gap={12} style={{ width: SLOT }}>
         <Typography.Text type="secondary">
-          OPA's card — blue, the front OPA prints
+          OPA's card — the front OPA prints
         </Typography.Text>
-        <Card title="Virtual payment card">
+        <Card title="Your OPA card">
           <CardFace
             tone="opa"
-            skin="blue"
             front
             label="OPA virtual"
             status={{ label: "Not used yet" }}
             number="•••• 3094"
-            facts={[{ key: "e", label: "Expires", value: "11/29" }]}
-          />
-        </Card>
-      </Flex>
-
-      <Flex vertical gap={12} style={{ width: SLOT }}>
-        <Typography.Text type="secondary">
-          OPA's card — graphite, the second finish
-        </Typography.Text>
-        <Card title="Virtual payment card">
-          <CardFace
-            tone="opa"
-            skin="graphite"
-            front
-            label="OPA virtual"
-            status={{ label: "Not used yet" }}
-            number="•••• 3094"
-            facts={[{ key: "e", label: "Expires", value: "11/29" }]}
+            /* The foot: the name on the left, the expiry in the corner. */
+            facts={[
+              { key: "h", label: "Cardholder", value: "Levi Ackerman" },
+              { key: "e", label: "Expires", value: "11/29" },
+            ]}
           />
         </Card>
       </Flex>
@@ -53,10 +39,9 @@ function Faces() {
         <Typography.Text type="secondary">
           OPA's card — as USIO returns it, revealed
         </Typography.Text>
-        <Card title="Virtual payment card">
+        <Card title="Your OPA card">
           <CardFace
             tone="opa"
-            skin="blue"
             label="OPA virtual"
             status={{ label: "Mock" }}
             number="4111 2233 4455 3094"

@@ -109,7 +109,7 @@ export default function RegisterScreen() {
       <Flex style={styles.header}>
         <div style={styles.headerInner}>
           <Link to="/">
-            <Logo height={28} />
+            <Logo />
           </Link>
 
 

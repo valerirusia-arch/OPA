@@ -34,7 +34,7 @@ export function AuthLayout({ children, language, onLanguageChange }: AuthLayoutP
       <Flex vertical align="flex-start" style={styles.pane}>
         <Flex align="center" justify="space-between" style={content}>
           <Link to="/">
-            <Logo height={28} />
+            <Logo />
           </Link>
           <LanguageSwitcher value={language} onChange={onLanguageChange} size="small" />
         </Flex>

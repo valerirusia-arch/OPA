@@ -27,7 +27,6 @@
 
 import { Button, Card, Flex, Typography } from "antd";
 import { CardFace } from "../../../shared/ui/CardFace";
-import type { CardSkin } from "../../../shared/ui/CardFace.styles";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { styles } from "./VirtualCardPanel.styles";
 
@@ -38,12 +37,12 @@ export type VirtualCardPanelProps = {
    *  face prints the issuer line instead. */
   brand?: string;
   last4: string;
-  /** MM/YY, so the face carries the same three facts the saved card does. */
+  /** MM/YY, printed in the foot's right-hand corner. */
   expiry: string;
+  /** The name printed along the foot, where a card carries it. */
+  cardholder: string;
   /** Once it is, story 9's cancellation window has closed. */
   used: boolean;
-  /** Which finish the borrower has picked, in the card's own dialog. */
-  skin?: CardSkin;
   /** Fill the row's height. Only true where it shares a row. */
   fill?: boolean;
   onOpen?: () => void;
@@ -54,8 +53,8 @@ export function VirtualCardPanel({
   brand,
   last4,
   expiry,
+  cardholder,
   used,
-  skin = "blue",
   fill = false,
   onOpen,
 }: VirtualCardPanelProps) {
@@ -89,7 +88,6 @@ export function VirtualCardPanel({
             on the revealed face inside the dialog. */}
         <CardFace
           tone="opa"
-          skin={skin}
           front
           brand={brand}
           label={t("loanPage.cardIssuer")}
@@ -97,7 +95,9 @@ export function VirtualCardPanel({
             label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused"),
           }}
           number={t("payments.cardEnding", { last4 })}
+          /* The foot: the name on the left, the expiry in the corner. */
           facts={[
+            { key: "holder", label: t("loanPage.cardholder"), value: cardholder },
             { key: "expires", label: t("loanPage.cardExpires"), value: expiry },
           ]}
         />

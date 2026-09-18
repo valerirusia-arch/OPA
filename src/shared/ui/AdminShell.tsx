@@ -139,7 +139,7 @@ export function AdminShell({
           open={navOpen}
           onClose={() => setNavOpen(false)}
           width={SIDER_WIDTH}
-          title={<Logo height={18} />}
+          title={<Logo />}
           styles={{ body: styles.drawerBody }}
         >
           {navMenu_}
@@ -147,7 +147,7 @@ export function AdminShell({
       ) : (
         <Layout.Sider theme="light" width={SIDER_WIDTH} style={styles.sider}>
           <Flex align="center" style={styles.brand}>
-            <Logo height={18} />
+            <Logo />
           </Flex>
           {navMenu_}
         </Layout.Sider>

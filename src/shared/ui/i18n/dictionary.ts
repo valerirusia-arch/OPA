@@ -1044,17 +1044,12 @@ export const en = {
   "loanPage.terms": "{count} monthly payments · {apr}",
   "loanPage.viewSchedule": "View full schedule",
   "loanPage.cardEndingLabel": "Card ending",
-  "loanPage.cardModalTitle": "Your virtual card details",
+  "loanPage.cardModalTitle": "Your OPA card",
   "loanPage.cardIssuer": "Virtual card",
   /* The ownership eyebrow on the virtual card's face — see CardFace. */
   "loanPage.cardOwner": "Issued by OPA",
   "loanPage.cardholder": "Cardholder",
   "loanPage.cardExpires": "Expires",
-  /* The two finishes OPA's card comes in. A preference, not a state: it
-     changes the skin of this one card and nothing else in the product. */
-  "loanPage.cardSkin": "Card finish",
-  "loanPage.cardSkinBlue": "Blue",
-  "loanPage.cardSkinGraphite": "Graphite",
   "loanPage.cardShowDetails": "Show card details",
   "loanPage.cardHideDetails": "Hide details",
   /* The hand-off, named on its own border. */
@@ -1102,7 +1097,13 @@ export const en = {
   "schedule.overdue": "Overdue",
 
   // WBS story 7: the borrower only, and USIO is a black box.
-  "loanPage.card": "Virtual payment card",
+  /* "Virtual payment card" is the WBS's own name for the product and it is
+     right in a requirements document; over a card on the borrower's own page
+     it reads as a category rather than a possession — three words of
+     terminology for the one object on the page that is theirs. The panel says
+     whose it is and who issued it, which is what the card itself says.
+     *"თაითლი იქნებოდა უკეთესი რამე სხვა — ოპას ქარდი ან რაიმე მსგავსი."* */
+  "loanPage.card": "Your OPA card",
   "loanPage.cardBody": "USIO holds the card. OPA never sees or stores the number.",
   "loanPage.cardOpen": "View",
   "loanPage.cardUnused": "Not used yet",
@@ -2536,14 +2537,11 @@ const es: Record<TranslationKey, string> = {
   "loanPage.terms": "{count} pagos mensuales · {apr}",
   "loanPage.viewSchedule": "Ver el calendario completo",
   "loanPage.cardEndingLabel": "Tarjeta terminada en",
-  "loanPage.cardModalTitle": "Los datos de tu tarjeta virtual",
+  "loanPage.cardModalTitle": "Tu tarjeta OPA",
   "loanPage.cardIssuer": "Tarjeta virtual",
   "loanPage.cardOwner": "Emitida por OPA",
   "loanPage.cardholder": "Titular",
   "loanPage.cardExpires": "Caduca",
-  "loanPage.cardSkin": "Acabado de la tarjeta",
-  "loanPage.cardSkinBlue": "Azul",
-  "loanPage.cardSkinGraphite": "Grafito",
   "loanPage.cardShowDetails": "Ver los datos de la tarjeta",
   "loanPage.cardHideDetails": "Ocultar los datos",
   "loanPage.cardIssuerView": "Vista segura de USIO",
@@ -2581,7 +2579,7 @@ const es: Record<TranslationKey, string> = {
   "schedule.paid": "Pagado",
   "schedule.overdue": "Vencido",
 
-  "loanPage.card": "Tarjeta de pago virtual",
+  "loanPage.card": "Tu tarjeta OPA",
   "loanPage.cardBody": "USIO custodia la tarjeta. OPA nunca ve ni guarda el número.",
   "loanPage.cardOpen": "Ver",
   "loanPage.cardUnused": "Sin usar",

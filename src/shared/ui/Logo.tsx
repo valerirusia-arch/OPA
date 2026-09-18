@@ -12,6 +12,21 @@
 import logoSrc from "./opa-symbol.png";
 import { styles } from "./Logo.styles";
 
+/**
+ * ONE SIZE, AND IT IS THE SIGN-UP PAGE'S.
+ *
+ * The mark was drawn at four sizes — 28 on the auth screens, 22 and 20 in the
+ * borrower's top bar, 18 in the back office's rail — none of them chosen
+ * against the others, and at 18 it had shrunk to a smudge. The auth screens
+ * are where a person meets the brand first and the size there is the size of
+ * the brand: *"საინაფ ფეიჯზე რა ზომაც არის, ადმინზეც და ბოროვერის აპშიც იმ
+ * ზომის გააკეთე."*
+ *
+ * It is the default rather than a constant every caller has to remember, so a
+ * new placement is the right size by saying nothing.
+ */
+export const LOGO_HEIGHT = 28;
+
 export type LogoProps = {
   /** Rendered height in px. The mark is square, so the width follows. */
   height?: number;
@@ -20,7 +35,7 @@ export type LogoProps = {
 // The source PNG is 256×256 with the symbol filling the frame.
 const SRC = 256;
 
-export function Logo({ height = 28 }: LogoProps) {
+export function Logo({ height = LOGO_HEIGHT }: LogoProps) {
   return (
     <svg
       height={height}

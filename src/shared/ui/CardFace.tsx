@@ -62,7 +62,7 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { frontStyles, getStyles, styles, type CardSkin, type CardTone } from "./CardFace.styles";
+import { frontStyles, getStyles, styles, type CardTone } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
@@ -110,11 +110,6 @@ export type CardFaceProps = {
   /** The number can be copied. Only where it IS a number — a mask cannot. */
   copyable?: boolean;
   /**
-   * Which finish OPA's own card is wearing. Ignored on the other tones — the
-   * borrower's card is not OPA's to skin.
-   */
-  skin?: CardSkin;
-  /**
    * THE FRONT OF OPA'S OWN CARD, as OPA prints it.
    *
    * Three things and no more: the mark top left, the card's state top right,
@@ -138,7 +133,6 @@ export function CardFace({
   number,
   facts = [],
   copyable = false,
-  skin = "blue",
   front = false,
 }: CardFaceProps) {
   /* Both of the product's real finishes are dark: they take white ink, and
@@ -146,7 +140,7 @@ export function CardFace({
      the unused pale-blue one does neither. */
   const inverted = tone !== "light";
   const { token } = theme.useToken();
-  const s = getStyles(token, tone, skin);
+  const s = getStyles(token, tone);
   const figures = getFigureStyles(token);
 
   /* OPA'S OWN FRONT. It returns early rather than threading `front` through
@@ -171,10 +165,32 @@ export function CardFace({
           ) : null}
         </Flex>
 
-        {/* THE MASKED NUMBER ALONG THE FOOT, where a card's number is. It is
-            the token's last four, which is OPA's to print; the full number
-            never reaches OPA and arrives only on the revealed face. */}
-        <Typography.Text style={s.number}>{number}</Typography.Text>
+        {/* THE NUMBER, THEN THE FOOT — a card's own arrangement.
+
+            The masked number was alone on the bottom line; it moves up a step
+            and the line under it carries the two things printed along the foot
+            of a real card: the name on the left, the expiry in the corner
+            opposite. *"სადაც ანგარიში წერია, მანდ სახელი დააწერე; ანგარიში
+            ოდნავ მაღლა აწიე; და დეითი მარჯვენა კუთხეში დაბლა."*
+
+            VALUES ONLY, no labels: a card does not introduce its own expiry,
+            and the two are told apart by where they sit. `facts` in order —
+            the first left, the last right — so the caller decides what is
+            printed by what it passes, and passing one prints one. */}
+        <Flex vertical gap={14}>
+          <Typography.Text style={s.number}>{number}</Typography.Text>
+
+          {facts.length > 0 ? (
+            <Flex align="flex-end" justify="space-between" gap={16}>
+              <Typography.Text style={s.footValue}>{facts[0].value}</Typography.Text>
+              {facts.length > 1 ? (
+                <Typography.Text style={s.footValue}>
+                  {facts[facts.length - 1].value}
+                </Typography.Text>
+              ) : null}
+            </Flex>
+          ) : null}
+        </Flex>
       </Flex>
     );
   }

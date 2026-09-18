@@ -119,7 +119,7 @@ export function AppHeader({
       ) : null}
 
       <Link to="/" aria-label={t("header.home")}>
-        <Logo height={22} />
+        <Logo />
       </Link>
 
       {compact ? (
@@ -128,7 +128,7 @@ export function AppHeader({
           open={navOpen}
           onClose={() => setNavOpen(false)}
           width={260}
-          title={<Logo height={20} />}
+          title={<Logo />}
           styles={{ body: { padding: 0 } }}
         >
           <Menu

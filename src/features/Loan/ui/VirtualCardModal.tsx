@@ -26,10 +26,9 @@
 // screen knows the hand-off happened.
 
 import { useState } from "react";
-import { Alert, Button, Descriptions, Flex, Modal, Segmented, Tag, Typography, theme } from "antd";
+import { Alert, Button, Descriptions, Flex, Modal, Tag, Typography, theme } from "antd";
 import { EyeOutlined, LockOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
-import type { CardSkin } from "../../../shared/ui/CardFace.styles";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { pill } from "../../../shared/ui/tag.styles";
 import { getStyles, styles } from "./VirtualCardModal.styles";
@@ -44,9 +43,6 @@ export type VirtualCardModalProps = {
   /** MM/YY, as printed on the card. */
   expiry: string;
   used: boolean;
-  /** Which finish the card is wearing, and how the borrower changes it. */
-  skin?: CardSkin;
-  onSkinChange?: (skin: CardSkin) => void;
   /**
    * The moment the borrower asks USIO for the card. Dev mounts the real embed
    * here; the panel below stands in for it until then.
@@ -71,8 +67,6 @@ export function VirtualCardModal({
   cardholder,
   expiry,
   used,
-  skin = "blue",
-  onSkinChange,
   onOpenAtIssuer,
   onCancel,
 }: VirtualCardModalProps) {
@@ -147,7 +141,6 @@ export function VirtualCardModal({
         <Flex vertical gap={12} style={styles.face}>
           <CardFace
             tone="opa"
-            skin={skin}
             brand={brand}
             label={t("loanPage.cardIssuer")}
             status={{ label: t("loanPage.cardMock") }}
@@ -175,7 +168,6 @@ export function VirtualCardModal({
         <Flex vertical gap={16} style={styles.face}>
           <CardFace
             tone="opa"
-            skin={skin}
             front
             brand={brand}
             label={t("loanPage.cardIssuer")}
@@ -184,26 +176,10 @@ export function VirtualCardModal({
             }}
             number={t("payments.cardEnding", { last4 })}
             facts={[
+              { key: "holder", label: t("loanPage.cardholder"), value: cardholder },
               { key: "expires", label: t("loanPage.cardExpires"), value: expiry },
             ]}
           />
-
-          {/* THE FINISH, CHOSEN HERE AND NOWHERE ELSE. The card's own dialog
-              is where a borrower is already looking at the card, so it is
-              where they change how it looks — a preference about one object,
-              not a setting buried in a profile. No WBS story names it; the
-              designer asked for it and it changes nothing the WBS does name. */}
-          <Flex align="center" justify="space-between" gap={12} wrap>
-            <Typography.Text type="secondary">{t("loanPage.cardSkin")}</Typography.Text>
-            <Segmented<CardSkin>
-              value={skin}
-              onChange={(next) => onSkinChange?.(next)}
-              options={[
-                { value: "blue", label: t("loanPage.cardSkinBlue") },
-                { value: "graphite", label: t("loanPage.cardSkinGraphite") },
-              ]}
-            />
-          </Flex>
 
           {/* WHAT OPA ACTUALLY HOLDS — the token's four digits, the expiry and
               the name on the card. Beside the blank front rather than printed
