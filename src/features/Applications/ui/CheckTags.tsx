@@ -81,9 +81,31 @@ export function CheckOutcomeTag({ outcome }: { outcome: CheckOutcome }) {
  */
 export function CheckNameTag({ check }: { check?: CheckKey }) {
   const t = useT();
+  const { token } = theme.useToken();
   if (!check) return <>{"—"}</>;
   return (
-    <Tag variant="filled" style={pill}>
+    /*
+      A WHITE GROUND WITH THE PRODUCT'S HAIRLINE, not antd's default lozenge.
+
+      A `Tag` with no colour takes `defaultBg`, which on this warm palette
+      composites to a cream slab. On a white row that is a faint warm smudge;
+      the moment the row is hovered and takes the light blue tint, the cream
+      sits on top of it as a dirty patch and the word inside it goes muddy —
+      *"რომ ვაჰოვერებ, ეს ნაცრისფერი იკარგება... შეგვიძლია ეს ბექგრაუნდი
+      გავათეთროთ?"*
+
+      White reads the same on both grounds, and the hairline is what keeps it a
+      shape once the fill stops doing that job — the same pair the product's
+      status pills settled on.
+    */
+    <Tag
+      variant="filled"
+      style={{
+        ...pill,
+        background: token.colorBgContainer,
+        border: `1px solid ${token.colorSplit}`,
+      }}
+    >
       {t(checkLabelKeys[check])}
     </Tag>
   );

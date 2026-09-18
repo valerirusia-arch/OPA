@@ -19,4 +19,7 @@ export const getStyles = (token: GlobalToken) =>
   ({
     /** The step that flagged a row, quieter than the row's own facts. */
     routedBy: { color: token.colorTextSecondary },
+    /** "This row opens." Small and quiet: it is a signpost, not a control —
+     *  the whole row navigates and the applicant's name is the real link. */
+    open: { fontSize: 12, color: token.colorTextQuaternary },
   }) satisfies Record<string, CSSProperties>;

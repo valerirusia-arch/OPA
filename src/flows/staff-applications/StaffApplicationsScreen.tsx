@@ -49,7 +49,7 @@
 
 import { App, Button, Card, Dropdown, Flex, Result, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { DownloadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, RightOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
@@ -214,7 +214,7 @@ export default function StaffApplicationsScreen({
     {
       title: "",
       key: "actions",
-      width: 130,
+      width: 72,
       align: "end",
       /* MORE AIR AT THE CARD'S EDGE than the table's standard inset. The
          button was the one thing in the row with a hard edge of its own, and
@@ -223,21 +223,24 @@ export default function StaffApplicationsScreen({
          style over its defaults, so this is the only cell that moves. */
       onCell: () => ({ style: { paddingInlineEnd: 32 } }),
       onHeaderCell: () => ({ style: { paddingInlineEnd: 32 } }),
-      render: (_value, row) => (
+      render: () => (
+        /*
+          A CHEVRON, AND IT WAS A BUTTON PER ROW.
+
+          "Review" was a framed control repeated seven times down a page of
+          plain text, and it was never the way in: the whole row navigates and
+          the applicant's name is a real link, so the button was a third copy
+          of one destination. Seven of them read as a column of buttons with a
+          table hiding behind it — *"საერთოდ არ არის ესეთი რამ საჭირო, რაიმე
+          უფრო clean."*
+
+          The chevron says the same thing in the amount of ink it deserves: this
+          row opens. It is the arrow the product already uses for disclosure,
+          and it is decoration — the name carries the link, the row carries the
+          click, and neither needs a duplicate in the tab order.
+        */
         <Flex justify="flex-end">
-          {/* SMALL. The whole row already opens the application — this button
-              repeats that for the keyboard and for anyone who wants a target
-              to aim at, so it is a second way in, not the way in. At the
-              product's full 48px it was the heaviest object on a row of plain
-              text and seven of them ran down the page like a column of
-              buttons with a table behind it. *"არაა საჭირო ამხელა ღილაკი,
-              უფრო კომპაქტურად, რომ მეტად clean იყოს."* */}
-          <Button
-            size="small"
-            onClick={() => navigate({ to: `/staff/applications/${row.id}` })}
-          >
-            {t("queue.review")}
-          </Button>
+          <RightOutlined aria-hidden style={s.open} />
         </Flex>
       ),
     },
