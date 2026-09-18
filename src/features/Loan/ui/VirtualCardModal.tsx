@@ -26,7 +26,7 @@
 // screen knows the hand-off happened.
 
 import { useState } from "react";
-import { Alert, Button, Descriptions, Flex, Modal, Tag, Typography, theme } from "antd";
+import { Alert, Button, Flex, Modal, Tag, Typography, theme } from "antd";
 import { EyeOutlined, LockOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -165,7 +165,11 @@ export function VirtualCardModal({
            face — its own fill, its own type, its own arrangement — so opening
            the dialog swapped one card for a different-looking one. One
            component, one material, one object. */
-        <Flex vertical gap={16} style={styles.face}>
+        <div style={styles.face}>
+          {/* NOTHING BUT THE CARD. A labelled list of the cardholder and the
+              expiry sat under it while the front was blank and had something
+              to make up for; the front prints both along its foot now, so the
+              list was the same two facts stated twice, six inches apart. */}
           <CardFace
             tone="opa"
             front
@@ -180,24 +184,7 @@ export function VirtualCardModal({
               { key: "expires", label: t("loanPage.cardExpires"), value: expiry },
             ]}
           />
-
-          {/* WHAT OPA ACTUALLY HOLDS — the token's four digits, the expiry and
-              the name on the card. Beside the blank front rather than printed
-              on it, because these are OPA's records of the card, not what the
-              card has written on its face. *"ვიუს როცა დავაწვები, მანდ
-              შემეძლო ინფორმაციის ნახვა."* */}
-          <Descriptions
-            column={1}
-            size="small"
-            colon={false}
-            items={[
-              { key: "holder", label: t("loanPage.cardholder"), children: cardholder },
-              /* Not the number: the face above prints it now. This list is
-                 what the front does not carry. */
-              { key: "expires", label: t("loanPage.cardExpires"), children: expiry },
-            ]}
-          />
-        </Flex>
+        </div>
       )}
 
       {/* Said before the button, not after it: what pressing it does. Once it
