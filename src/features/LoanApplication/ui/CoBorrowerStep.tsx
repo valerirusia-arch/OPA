@@ -32,11 +32,12 @@ import {
 } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useT } from "../../../shared/ui/i18n/useT";
+import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { StatusPill } from "../../../shared/ui/StatusPill";
 import { useAuthRules } from "../../Auth/ui/validation";
 import { StepActions, type StepActionLabels } from "./StepActions";
 import { getStyles as getSharedStyles, styles as shared } from "./StepShared.styles";
-import { getStyles, styles } from "./CoBorrowerStep.styles";
+import { styles } from "./CoBorrowerStep.styles";
 import type { CoBorrowerInvitation } from "./types";
 
 export type CoBorrowerFormValues = {
@@ -107,7 +108,6 @@ export function CoBorrowerStep({
   const t = useT();
   const rules = useAuthRules();
   const { token } = theme.useToken();
-  const s = getStyles(token);
   const sharedStyles = getSharedStyles(token);
   const [form] = Form.useForm<CoBorrowerFormValues>();
 
@@ -177,32 +177,30 @@ export function CoBorrowerStep({
           </Form.Item>
 
           {invitation ? (
-            <Flex align="center" justify="space-between" gap={12} style={s.invitation}>
-              <Flex vertical>
-                <Typography.Text strong style={styles.name}>
-                  {invitation.firstName} {invitation.lastName}
-                </Typography.Text>
-                <Typography.Text type="secondary" style={styles.meta}>
-                  {invitation.email} ·{" "}
-                  {t(
-                    invitation.status === "accepted"
-                      ? "coBorrowerStep.acceptedOn"
-                      : invitation.status === "expired"
-                        ? "coBorrowerStep.expiredOn"
-                        : "coBorrowerStep.expiresOn",
-                    { date: invitation.expiresOn }
-                  )}
-                </Typography.Text>
-              </Flex>
-              {/* THE PRODUCT'S OWN STATUS COMPONENT, not a bare Tag. Pending /
-                  Accepted / Expired is a state, and a state in this product is
-                  a dotted pill — it was the one status drawn as a plain
-                  lozenge, which on this tinted card read as a cream patch
-                  rather than a status. */}
-              <StatusPill color={status?.color}>
-                {t(status?.key ?? "invitation.pending")}
-              </StatusPill>
-            </Flex>
+            /* THE PERSON, in the shared drawing — `selected`, because this one
+               the borrower chose. The underwriting screen draws the same
+               co-borrower with the same component in its quiet tone. */
+            <div style={styles.invitation}>
+              <PersonPanel
+                tone="selected"
+                name={`${invitation.firstName} ${invitation.lastName}`}
+                meta={`${invitation.email} · ${t(
+                  invitation.status === "accepted"
+                    ? "coBorrowerStep.acceptedOn"
+                    : invitation.status === "expired"
+                      ? "coBorrowerStep.expiredOn"
+                      : "coBorrowerStep.expiresOn",
+                  { date: invitation.expiresOn }
+                )}`}
+                /* Pending / Accepted / Expired is a state, and a state in this
+                   product is a dotted pill. */
+                trailing={
+                  <StatusPill color={status?.color}>
+                    {t(status?.key ?? "invitation.pending")}
+                  </StatusPill>
+                }
+              />
+            </div>
           ) : null}
 
           {sendError ? (

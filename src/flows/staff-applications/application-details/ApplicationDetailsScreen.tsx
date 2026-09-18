@@ -46,6 +46,7 @@ import { useT } from "../../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../../features/Auth/ui/useIdleTimer";
 import { DetailGrid } from "../../../features/Borrowers/ui/DetailGrid";
+import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { ApplicationStatusTag } from "../../../features/Borrowers/ui/StatusTags";
 import { VerificationList } from "../../../features/Applications/ui/VerificationList";
 import {
@@ -184,6 +185,21 @@ export default function ApplicationDetailsScreen({
     );
   }
 
+  /**
+   * THE APPLICANT, and the person attached to them, drawn differently on
+   * purpose.
+   *
+   * The BORROWER is what this page is about, so their details get the record
+   * grid every other detail page uses — a labelled cell per fact, which is how
+   * you read a record.
+   *
+   * The CO-BORROWER is not a second record: they are somebody attached to this
+   * application, and the wizard already draws them that way — a name with
+   * their details on one line, in a panel. Two identical four-cell grids made
+   * them look like two subjects of one page, and the co-borrower's own facts
+   * are three short ones. *"კაი იქნებოდა როგორც აპლიკაციაშია, მაგ სტილის რომ
+   * იყოს."*
+   */
   const person = (heading: string, who: ApplicationPerson) => (
     <Card key={heading} title={heading} style={styles.card}>
       <DetailGrid
@@ -195,6 +211,15 @@ export default function ApplicationDetailsScreen({
           { key: "phone", label: t("field.phone"), value: who.phone },
           { key: "state", label: t("borrowers.col.state"), value: who.state },
         ]}
+      />
+    </Card>
+  );
+
+  const attachedPerson = (heading: string, who: ApplicationPerson) => (
+    <Card key={heading} title={heading} style={styles.card}>
+      <PersonPanel
+        name={who.name}
+        meta={`${who.email} · ${who.phone} · ${who.state}`}
       />
     </Card>
   );
@@ -372,7 +397,7 @@ export default function ApplicationDetailsScreen({
       {person(t("appDetail.borrower"), record.borrower)}
 
       {record.coBorrower ? (
-        person(t("appDetail.coBorrower"), record.coBorrower)
+        attachedPerson(t("appDetail.coBorrower"), record.coBorrower)
       ) : (
         <Card title={t("appDetail.coBorrower")} style={styles.card}>
           <Typography.Text type="secondary">{t("appDetail.noCoBorrower")}</Typography.Text>

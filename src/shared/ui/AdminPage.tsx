@@ -35,12 +35,15 @@ export type AdminPageProps = {
    * detail page: nobody comes here to leave, and the one person who does is
    * looking for words, not for a target.
    *
-   * So it is an arrow, above the name, where a breadcrumb goes. THE WORDS CAME
-   * OFF AGAIN: "Back to applications" beside an arrow is the arrow explained,
-   * and on the one page in the product you can only have arrived at from that
-   * list there is nowhere else the arrow could go — *"ტექსტი არაა საჭირო
-   * საერთოდ, უბრალოდ აროუ ჩასვი."* The label stays as the accessible name, so
-   * a screen reader still hears the destination.
+   * So it is an arrow BESIDE the name — *"აროუ გვერდზე უნდა ჰქონდეს ამ
+   * სახელს"* — and an arrow only: "Back to applications" beside an arrow is
+   * the arrow explained, and on a page you can only have arrived at from that
+   * list there is nowhere else it could go. The label stays as the accessible
+   * name, so a screen reader still hears the destination.
+   *
+   * It sat on its own line above the title for a pass, which put a step
+   * between the heading and the top of the page and made the name look like
+   * the second thing on it.
    */
   back?: { label: string; onClick: () => void };
   children: ReactNode;
@@ -56,17 +59,6 @@ export function AdminPage({
 }: AdminPageProps) {
   return (
     <div style={styles.page}>
-      {back ? (
-        <Button
-          type="link"
-          size="small"
-          icon={<ArrowLeftOutlined />}
-          aria-label={back.label}
-          style={styles.back}
-          onClick={back.onClick}
-        />
-      ) : null}
-
       <Flex
         align="center"
         justify="space-between"
@@ -78,6 +70,18 @@ export function AdminPage({
             fall onto a second line on a phone, rather than squeezing the id
             column down to one character per line. */}
         <Flex align="center" gap={12} wrap>
+          {/* The way back, at the head of the line the name is on. It is an
+              object rather than type, so it stays centred on the group while
+              the group itself aligns on a baseline. */}
+          {back ? (
+            <Button
+              type="link"
+              icon={<ArrowLeftOutlined />}
+              aria-label={back.label}
+              style={styles.back}
+              onClick={back.onClick}
+            />
+          ) : null}
           {/*
             WHAT FOLLOWS THE TITLE SITS ON ITS BASELINE, not on its centre.
 

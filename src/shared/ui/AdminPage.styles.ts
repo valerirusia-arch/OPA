@@ -24,14 +24,13 @@ export const toolbarTheme: ThemeConfig = {
 export const styles = {
   page: { padding: PAGE_PADDING },
   /**
-   * The way back, above the heading.
+   * The way back, at the head of the title's own line.
    *
-   * A link button carries antd's own horizontal padding; the negative margin
-   * takes it back out so the words line up with the title under them rather
-   * than starting eleven pixels in. 4px under it, so the pair reads as one
-   * block — the destination and then where you are.
+   * No padding and no button height: a link button's box would put eleven
+   * pixels of air between the arrow and the name and stand a 40px control
+   * against a line of type. What is left is the glyph.
    */
-  back: { paddingInline: 0, height: "auto", marginBottom: 4 },
+  back: { paddingInline: 0, height: "auto", fontSize: 18 },
   /** The heading sits on the same line as whatever acts on the page. */
   titleRow: { marginBottom: 24 },
   /**
