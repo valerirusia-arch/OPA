@@ -222,12 +222,39 @@ export const mockBorrowers: Borrower[] = [
       submitted: "28 Aug 2026",
       referral: "Partner: Casa Legal",
     },
-    coBorrower: {
+    /* Daniel Okafor co-signs this one. His details are HIS record (1008), not
+       a copy kept here — see `coBorrowerId` in types. */
+    coBorrowerId: "1008",
+  },
+  /*
+   * A CO-BORROWER, AS THE WBS HAS THEM: a borrower record like any other.
+   *
+   * He co-signs 1003's application and has not applied for anything himself,
+   * so he has an account and a profile and NO `application` — which is exactly
+   * what "Accept borrower invitation (registration through the invitation) —
+   * the system shall allow a co-borrower to create a personal account" leaves
+   * behind. He appears in the borrower list, he opens, and Manage account
+   * edits him, none of which a nested sub-record could do.
+   */
+  {
+    id: "1008",
+    active: true,
+    doNotLoan: false,
+    profile: {
       firstName: "Daniel",
       lastName: "Okafor",
-      relationship: "Spouse",
+      dateOfBirth: "07 Feb 1991",
+      ssn: "•••-••-4820",
+      country: "Nigeria",
       email: "daniel.okafor@example.com",
       phone: "(312) 555-0190",
+      street: "4410 North Sheridan Road, Unit 1207",
+      city: "Chicago",
+      state: "IL",
+      zip: "60640",
+      communication: "Email",
+      emailVerified: true,
+      phoneVerified: true,
       identityVerified: true,
     },
   },

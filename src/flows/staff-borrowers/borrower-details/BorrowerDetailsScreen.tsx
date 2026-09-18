@@ -25,7 +25,7 @@
 // three actions are local state plus a console.log for Dev to wire.
 
 import { useState } from "react";
-import { App, Badge, Button, Card, Dropdown, Flex, Result, Tabs } from "antd";
+import { App, Badge, Button, Card, Dropdown, Flex, Result, Tabs, Typography } from "antd";
 import type { MenuProps } from "antd";
 import {
   ArrowRightOutlined,
@@ -58,6 +58,7 @@ import {
 } from "../../../features/Borrowers/ui/StatusTags";
 import type { Borrower } from "../../../features/Borrowers/ui/types";
 import { fullName } from "../../../features/Borrowers/ui/types";
+import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { mockBorrowers } from "../mockBorrowers";
 import { styles } from "./BorrowerDetailsScreen.styles";
 
@@ -160,8 +161,21 @@ export default function BorrowerDetailsScreen({
   );
 
   const application = borrower.application;
-  const coBorrower = borrower.coBorrower;
   const loan = borrower.loan;
+
+  /*
+   * THE TWO ENDS OF THE CO-SIGNING LINK, both resolved to real records.
+   *
+   * `coBorrower` is who co-signs THIS borrower's application. `sponsoring` is
+   * the other direction: the borrowers THIS person co-signs for — up to three,
+   * per the WBS's "Co-borrowers can sponsor up to 3 borrowers" — which is the
+   * only thing on a co-borrower's own file that says they are one.
+   *
+   * Both are lookups rather than stored fields, because there is one link and
+   * storing it twice is how two copies of it start disagreeing.
+   */
+  const coBorrower = borrowers.find((item) => item.id === borrower.coBorrowerId);
+  const sponsoring = borrowers.filter((item) => item.coBorrowerId === borrower.id);
 
   const applicationItems: DetailItem[] = application
     ? [
@@ -200,24 +214,6 @@ export default function BorrowerDetailsScreen({
       ]
     : [];
 
-  const coBorrowerItems: DetailItem[] = coBorrower
-    ? [
-        { key: "firstName", label: t("field.firstName"), value: coBorrower.firstName },
-        { key: "lastName", label: t("field.lastName"), value: coBorrower.lastName },
-        {
-          key: "relationship",
-          label: t("detail.relationship"),
-          value: coBorrower.relationship,
-        },
-        { key: "email", label: t("field.email"), value: coBorrower.email },
-        { key: "phone", label: t("field.phone"), value: coBorrower.phone },
-        {
-          key: "identityVerified",
-          label: t("detail.identityVerified"),
-          value: yesNo(coBorrower.identityVerified),
-        },
-      ]
-    : [];
 
   /*
     THE LOAN TAB'S FIELDS — SIX OF THEM, AND THE STATE IS NOT ONE.
@@ -417,15 +413,84 @@ export default function BorrowerDetailsScreen({
                 key: "coBorrower",
                 label: t("borrower.tab.coBorrower"),
                 children: (
-                  <Flex vertical style={styles.tabBody}>
+                  <Flex vertical gap={16} style={styles.tabBody}>
+                    {/*
+                      THE PERSON, AND THE WAY TO THEIR FILE — not a copy of it.
+
+                      This tab used to restate six of the co-borrower's fields.
+                      They were the only copy of those facts anywhere, so there
+                      was no way to change them: "Manage borrower accounts"
+                      lives on a borrower's own record, and the co-borrower did
+                      not have one. Now they do, and this says who they are and
+                      goes there.
+                    */}
                     {coBorrower ? (
-                      <DetailGrid items={coBorrowerItems} />
-                    ) : (
+                      <>
+                        <PersonPanel
+                          name={fullName(coBorrower.profile)}
+                          meta={`${coBorrower.profile.email} · ${coBorrower.profile.phone} · ${coBorrower.profile.state}`}
+                        />
+                        <Button
+                          type="link"
+                          style={styles.recordLink}
+                          onClick={() =>
+                            navigate({ to: `/staff/borrowers/${coBorrower.id}` })
+                          }
+                        >
+                          {t("coBorrower.openRecord")}
+                        </Button>
+                      </>
+                    ) : sponsoring.length === 0 ? (
+                      /* Only when the tab has nothing at all to say. On a
+                         co-borrower's own file "this application has no
+                         co-borrower" is both true and beside the point — they
+                         have no application, and what the tab is here to show
+                         is who they co-sign for. */
                       <EmptyState
                         title={t("coBorrower.emptyTitle")}
                         description={t("coBorrower.emptyDescription")}
                       />
-                    )}
+                    ) : null}
+
+                    {/*
+                      THE OTHER DIRECTION: who THIS person co-signs for.
+
+                      A co-borrower's own file looked like any other borrower's
+                      — an account, a profile, and no application — with nothing
+                      on it to say why it exists. This is that, and it is also
+                      where the WBS's cap becomes visible: "Co-borrowers can
+                      sponsor up to 3 borrowers", which nothing in the product
+                      could show while a co-borrower was six fields inside
+                      somebody else's record.
+                    */}
+                    {sponsoring.length > 0 ? (
+                      <Flex vertical gap={8} style={styles.sponsoring}>
+                        <Typography.Text style={styles.sponsoringLabel}>
+                          {t("coBorrower.sponsoring")}
+                        </Typography.Text>
+                        {sponsoring.map((sponsored) => (
+                          <PersonPanel
+                            key={sponsored.id}
+                            name={fullName(sponsored.profile)}
+                            meta={sponsored.application?.uscisType}
+                            trailing={
+                              <Button
+                                type="link"
+                                style={styles.recordLink}
+                                onClick={() =>
+                                  navigate({ to: `/staff/borrowers/${sponsored.id}` })
+                                }
+                              >
+                                {t("coBorrower.openRecord")}
+                              </Button>
+                            }
+                          />
+                        ))}
+                        <Typography.Text type="secondary" style={styles.sponsoringCap}>
+                          {t("coBorrower.sponsoringCap")}
+                        </Typography.Text>
+                      </Flex>
+                    ) : null}
                   </Flex>
                 ),
               },

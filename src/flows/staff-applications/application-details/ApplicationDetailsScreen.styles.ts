@@ -10,6 +10,9 @@ export const styles = {
    * pattern the payments page and the back-office dashboard use.
    */
   tabbedBody: { paddingTop: 0 },
+  /** A link button with antd's own padding taken off, so it ends the panel's
+   *  row rather than floating in from its edge. */
+  recordLink: { paddingInline: 0, height: "auto" },
   /** The cards down the page, all on one rhythm. */
   card: { marginBottom: 24 },
   /** The decision banner sits above everything, before the record itself. */

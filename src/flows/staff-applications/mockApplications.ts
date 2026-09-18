@@ -82,6 +82,7 @@ export const mockApplications: ApplicationRecord[] = [
     id: "A-2476",
     status: "review",
     borrower: {
+      recordId: "1003",
       name: "Grace Okafor",
       email: "grace.okafor@example.com",
       phone: "(915) 555-0177",
@@ -96,10 +97,15 @@ export const mockApplications: ApplicationRecord[] = [
       ],
     },
     coBorrower: {
-      name: "Levi Ackerman",
-      email: "leviackerman@example.com",
-      phone: "(915) 555-0166",
-      state: "TX",
+      /* The same person as borrower record 1008, because the record is where
+         his details are edited and this page links to it. Two mocks that
+         disagree would put a name on this page and a different one behind its
+         own link. */
+      recordId: "1008",
+      name: "Daniel Okafor",
+      email: "daniel.okafor@example.com",
+      phone: "(312) 555-0190",
+      state: "IL",
       checks: [
         { key: "identity", outcome: "passed", detail: "Full match", ranOn: "Sep 06, 2026" },
         { key: "ofac", outcome: "passed", detail: "No match", ranOn: "Sep 06, 2026" },

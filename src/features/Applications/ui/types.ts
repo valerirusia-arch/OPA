@@ -104,6 +104,16 @@ export type InformationRequest = {
 };
 
 export type ApplicationPerson = {
+  /**
+   * Their borrower record's id, so the underwriting screen can send you to it.
+   *
+   * WBS puts editing on "Manage borrower accounts", which lives on a
+   * borrower's own record — and a co-borrower has one, because the role is a
+   * link between two records rather than a field inside one. This page is
+   * evidence; the record is where a correction is made, and the two need a
+   * door between them.
+   */
+  recordId?: string;
   name: string;
   email: string;
   phone: string;

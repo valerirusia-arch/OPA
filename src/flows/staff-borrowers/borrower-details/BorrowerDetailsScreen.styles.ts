@@ -26,6 +26,13 @@ export const styles = {
    * loan tab ends in a comment, and it showed.
    */
   tabBody: { padding: CARD_INSET },
+  /** A link button with its own padding taken off, so its words line up with
+   *  the panel above it. */
+  recordLink: { paddingInline: 0, height: "auto", alignSelf: "flex-start" },
+  /** The reverse side of the link, under whatever the tab showed first. */
+  sponsoring: { marginTop: 8 },
+  sponsoringLabel: { fontWeight: 500 },
+  sponsoringCap: { fontSize: 13 },
   /** The way through to the loan's own record, under its summary. */
   /** The loan's state and the way to its full record, on one line above the
    *  fields. A state is not a field and a way out is not a comment — see the

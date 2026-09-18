@@ -78,14 +78,27 @@ export type BorrowerApplication = {
   referral: string;
 };
 
-export type CoBorrower = {
-  firstName: string;
-  lastName: string;
-  relationship: string;
-  email: string;
-  phone: string;
-  identityVerified: boolean;
-};
+/*
+ * There is no CoBorrower TYPE, and that is the point.
+ *
+ * There used to be: six fields — name, relationship, email, phone, identity —
+ * embedded in the borrower who invited them. It made a co-borrower a property
+ * of one borrower's record, and three things in the WBS say they are not:
+ *
+ *   "Manage borrower accounts — Admin/Underwriter shall be able to manually
+ *    update BORROWER/CO-BORROWER personal data" — so they must be editable,
+ *    and a sub-record of somebody else's file had nowhere to be edited.
+ *   "View the list of BORROWER/CO-BORROWERS" — so they are a row in that list.
+ *   "The system shall allow a co-borrower to CREATE A PERSONAL ACCOUNT" — so
+ *    they have one, with everything an account carries.
+ *
+ * And the cap settles it: "Co-borrowers can sponsor up to 3 borrowers." One
+ * person co-signing three applications would have been three copies of the
+ * same six fields, each separately editable and free to disagree.
+ *
+ * So a co-borrower IS a Borrower record, and the role is a link between two of
+ * them on one application — `Borrower.coBorrowerId` below.
+ */
 
 export type BorrowerLoan = {
   /**
@@ -170,7 +183,16 @@ export type Borrower = {
   active: boolean;
   profile: BorrowerProfile;
   application?: BorrowerApplication;
-  coBorrower?: CoBorrower;
+  /**
+   * WHO CO-SIGNS THIS BORROWER'S APPLICATION — another borrower record's id.
+   *
+   * The role is per application, not a property of a person: whoever starts an
+   * application is its borrower, whoever they invite is its co-borrower, and
+   * the same person can be both on different applications. So this is a link,
+   * not a nested record, and the co-borrower's own file is where their details
+   * are read and changed.
+   */
+  coBorrowerId?: string;
   loan?: BorrowerLoan;
   /** WBS story 10 — the marker, and what the list filters on. */
   doNotLoan: boolean;

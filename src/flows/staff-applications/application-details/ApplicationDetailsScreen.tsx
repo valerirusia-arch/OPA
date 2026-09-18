@@ -221,6 +221,22 @@ export default function ApplicationDetailsScreen({
       <PersonPanel
         name={who.name}
         meta={`${who.email} · ${who.phone} · ${who.state}`}
+        /* THE DOOR TO THEIR RECORD. This page is evidence — an underwriter
+           reads it and decides on it. A correction to somebody's details is
+           "Manage borrower accounts", which lives on their own record, and a
+           co-borrower has one. Without this the page states a fact and gives
+           no way to act on it being wrong. */
+        trailing={
+          who.recordId ? (
+            <Button
+              type="link"
+              style={styles.recordLink}
+              onClick={() => navigate({ to: `/staff/borrowers/${who.recordId}` })}
+            >
+              {t("coBorrower.openRecord")}
+            </Button>
+          ) : undefined
+        }
       />
     </Card>
   );

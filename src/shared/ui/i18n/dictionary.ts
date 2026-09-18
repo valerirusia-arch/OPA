@@ -689,6 +689,14 @@ export const en = {
   "loan.closed": "Closed",
   "application.emptyTitle": "No application yet",
   "application.emptyDescription": "This borrower hasn't started a loan application.",
+  /* The way to the co-borrower's own file, where their details are read and
+     changed. Manage account lives on a borrower's record and a co-borrower has
+     one — see Borrower.coBorrowerId. */
+  "coBorrower.openRecord": "Open their borrower record",
+  /* On a co-borrower's OWN file: the applications they co-sign. The only thing
+     there that says they are one. WBS caps it at three. */
+  "coBorrower.sponsoring": "Co-signs for",
+  "coBorrower.sponsoringCap": "A co-borrower may co-sign for up to 3 borrowers.",
   "coBorrower.emptyTitle": "No co-borrower",
   "coBorrower.emptyDescription": "This application has no co-borrower.",
   "loan.emptyTitle": "No loan yet",
@@ -2259,6 +2267,9 @@ const es: Record<TranslationKey, string> = {
   "application.emptyTitle": "Todavía no hay solicitud",
   "application.emptyDescription":
     "Este prestatario no ha iniciado una solicitud de préstamo.",
+  "coBorrower.openRecord": "Abrir su ficha de prestatario",
+  "coBorrower.sponsoring": "Avala a",
+  "coBorrower.sponsoringCap": "Un coprestatario puede avalar hasta 3 prestatarios.",
   "coBorrower.emptyTitle": "Sin coprestatario",
   "coBorrower.emptyDescription": "Esta solicitud no tiene coprestatario.",
   "loan.emptyTitle": "Todavía no hay préstamo",
