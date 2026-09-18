@@ -4,27 +4,30 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 import { brand } from "../../theme/tokens";
 
-/** The graph-paper cell. Large enough to read as texture, not as a table. */
-const GRID_CELL = 88;
-
 /**
- * Where the rule dissolves. Matched to the veil, so the ground resolves once —
- * and it starts giving way earlier than the colour does, because a rule that
- * is still legible where the wash has gone reads as a table, not as texture.
+ * HOW FAR THE WASH IS BLURRED, and how far it is grown to allow for it.
+ *
+ * A blur samples outwards, so a layer blurred inside its own box fades to
+ * transparent at all four edges and the page's grey shows in a band around
+ * the wash. The layer is grown by more than the blur radius so the soft edge
+ * falls outside the section entirely.
  */
-const MASK =
-  "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 46%," +
-  " rgba(0,0,0,0.18) 74%, rgba(0,0,0,0) 92%)";
+const WASH_BLUR = 72;
+const WASH_BLEED = WASH_BLUR * 2;
 
 export const styles = {
   /**
-   * The graph paper, on its own layer so it can be faded on its own.
+   * THE WASH, ON ITS OWN LAYER — because it is blurred.
    *
-   * It cannot live in the section's own `background` list: a mask applies to
-   * the whole element, so fading the rule there would fade the wash and the
-   * content with it and let the page's grey show through.
+   * It used to be the section's own `background`, which cannot be blurred
+   * without blurring the content standing on it. On its own layer it takes a
+   * filter of its own and everything above it stays sharp.
+   *
+   * The graph paper that used to sit here is gone: a ruled ground under a
+   * single card read as a form the card had been dropped onto — *"უკან ეს
+   * გრიდები მოაშორე."*
    */
-  grid: { position: "absolute", inset: 0, pointerEvents: "none" },
+  wash: { position: "absolute", pointerEvents: "none" },
   content: { position: "relative", width: "100%" },
   /** Lets the page's own ground show through. */
   plain: { background: "none" },
@@ -45,39 +48,62 @@ export const getStyles = (token: GlobalToken) =>
       // minHeight is set by the component, from its own measured top offset.
       boxSizing: "border-box",
       display: "flex",
-      background: [
-        /**
-         * A veil that thickens downwards.
-         *
-         * The wash was made to fill a 120px band at the top of a card, where
-         * it is a stripe of colour. Stretched over a whole page it stops being
-         * texture and starts being the subject, and the content has to fight
-         * it to be read. It gives way from about halfway and is spent near
-         * the bottom, so the card on these pages still sits on colour —
-         * white resolving directly under a white card left the card with
-         * nothing to stand against.
-         */
-        "linear-gradient(180deg, rgba(255,255,255,0.42) 0%," +
-          " rgba(255,255,255,0.80) 58%, rgba(255,255,255,0.99) 86%," +
-          " rgba(255,255,255,1) 100%)",
-        brand.cover,
-      ].join(", "),
-      // Kept in the object so the token is read; the section owns no border.
+      overflow: "hidden",
+      background: token.colorBgContainer,
       color: token.colorText,
     },
     /**
-     * The rule, fading out with the colour it sits on.
+     * The colour, softened twice over.
      *
-     * Graph paper that runs to a hard edge at the bottom of the window looks
-     * like the page was cropped. Dissolving it on the same stretch the wash
-     * dies out lets the whole ground resolve to plain white together.
+     * LIGHTER, because the washes were mixed for a 120px band at the top of a
+     * card and over a whole page the same strengths read as weather —
+     * *"ძაან მუქია უკან, ოდნავ უფრო ნათელი."* Their alphas come down in
+     * `brand.cover`.
+     *
+     * AND BLURRED, so what is left has no edge anywhere. A radial gradient is
+     * already soft, but four of them overlapping make seams where they meet;
+     * the blur dissolves those and leaves colour with no shape to it.
+     *
+     * The veil over the top still thickens downwards, so the page resolves to
+     * white before the bottom of the window and a white card near the foot
+     * still has something to stand against.
      */
-    gridRule: {
+    wash: {
+      inset: -WASH_BLEED,
+      filter: `blur(${WASH_BLUR}px)`,
       background: [
-        `repeating-linear-gradient(to right, ${brand.gridLine} 0 1px, transparent 1px ${GRID_CELL}px)`,
-        `repeating-linear-gradient(to bottom, ${brand.gridLine} 0 1px, transparent 1px ${GRID_CELL}px)`,
+        "linear-gradient(180deg, rgba(255,255,255,0.30) 0%," +
+          " rgba(255,255,255,0.74) 58%, rgba(255,255,255,0.98) 86%," +
+          " rgba(255,255,255,1) 100%)",
+        brand.cover,
       ].join(", "),
-      maskImage: MASK,
-      WebkitMaskImage: MASK,
+    },
+    /**
+     * THE FROSTED PANE THE CARD STANDS ON.
+     *
+     * A white card on the wash had nothing between it and the colour: it
+     * floated. A pane of glass slightly larger than the card gives it
+     * something to sit on, and because the pane is translucent the wash still
+     * reads through it — *"რაიმე ფრეიმი დაადო და იმას ბექგრაუნდ ბლარი
+     * გააკეთო, და ზევიდან ეს კონტეინერი დაადო."*
+     *
+     * `backdropFilter` rather than a fill: it blurs what is BEHIND the pane,
+     * so the colour under it stays colour instead of becoming a flat tint,
+     * and the pane reads as glass rather than as a second card.
+     *
+     * The width is the caller's, because only the screen knows how wide its
+     * own content column is.
+     */
+    frame: {
+      position: "relative",
+      width: "100%",
+      marginInline: "auto",
+      boxSizing: "border-box",
+      padding: token.paddingLG,
+      borderRadius: token.borderRadiusLG * 2,
+      background: brand.glassFill,
+      border: `1px solid ${brand.glassEdge}`,
+      backdropFilter: `blur(${token.paddingLG}px)`,
+      WebkitBackdropFilter: `blur(${token.paddingLG}px)`,
     },
   }) satisfies Record<string, CSSProperties>;

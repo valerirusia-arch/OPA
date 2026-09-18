@@ -133,8 +133,6 @@ export const brand = {
    * placeholder text.
    */
   quiet: "rgba(38, 36, 35, 0.66)",
-  /** Faint graph-paper rule for hero backgrounds. */
-  gridLine: "rgba(38, 36, 35, 0.03)",
   /** The top bar's own ground: white, not opaque, so the page reads as
    *  continuing under it. */
   headerVeil: "rgba(255, 255, 255, 0.72)",
@@ -150,12 +148,23 @@ export const brand = {
    * peach is the avatar's own tint, so the two read as one idea.
    */
   cover: [
-    "radial-gradient(58% 120% at 12% 8%, rgba(30,124,151,0.34) 0%, rgba(30,124,151,0) 62%)",
-    "radial-gradient(46% 105% at 74% 4%, rgba(232,160,139,0.34) 0%, rgba(232,160,139,0) 60%)",
-    "radial-gradient(52% 120% at 92% 88%, rgba(62,201,210,0.30) 0%, rgba(62,201,210,0) 62%)",
-    "radial-gradient(60% 130% at 44% 108%, rgba(184,92,35,0.20) 0%, rgba(184,92,35,0) 60%)",
-    "#F6F3F0",
+    "radial-gradient(58% 120% at 12% 8%, rgba(30,124,151,0.20) 0%, rgba(30,124,151,0) 62%)",
+    "radial-gradient(46% 105% at 74% 4%, rgba(232,160,139,0.20) 0%, rgba(232,160,139,0) 60%)",
+    "radial-gradient(52% 120% at 92% 88%, rgba(62,201,210,0.17) 0%, rgba(62,201,210,0) 62%)",
+    "radial-gradient(60% 130% at 44% 108%, rgba(184,92,35,0.11) 0%, rgba(184,92,35,0) 60%)",
+    "#FAF8F6",
   ].join(", "),
+
+  /**
+   * THE FROSTED FRAME a standalone page's card sits on.
+   *
+   * White at not-quite-half, so the wash behind it still comes through as
+   * colour while everything it carries reads on a light ground; the edge is
+   * white at 70%, which is what makes a pane of glass look like an object
+   * rather than a lighter patch.
+   */
+  glassFill: "rgba(255, 255, 255, 0.45)",
+  glassEdge: "rgba(255, 255, 255, 0.70)",
 
   /**
    * THE CARDS, in their finishes.

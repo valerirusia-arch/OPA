@@ -3,6 +3,13 @@
 import type { CSSProperties } from "react";
 import { CARD_MAX_WIDTH } from "../../features/LoanApplication/ui/ApplicationWizard.styles";
 
+/**
+ * The frosted pane the card stands on: the content column plus a margin of
+ * glass on each side. Wide enough to read as a pane the card sits on, not so
+ * wide that it becomes the page.
+ */
+export const FRAME_MAX_WIDTH = CARD_MAX_WIDTH + 48;
+
 export const styles = {
   column: {
     width: "100%",
