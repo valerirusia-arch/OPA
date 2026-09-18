@@ -24,6 +24,7 @@
 //   SubmittedMark        — filled sheet, green check    → hand it in
 
 import { theme } from "antd";
+import { brand } from "../../../theme/tokens";
 
 export type IdentityVerifiedMarkProps = {
   /** Rendered square. The artwork scales from a 120-unit viewBox. */
@@ -75,7 +76,7 @@ export function IdentityVerifiedMark({ size = 112 }: IdentityVerifiedMarkProps) 
       {/* The handle, drawn first so the lens sits on top of it. */}
       <path
         d="M92 94l10 10"
-        stroke={token.colorSuccess}
+        stroke={brand.successMark}
         strokeWidth="6"
         strokeLinecap="round"
       />
@@ -86,7 +87,7 @@ export function IdentityVerifiedMark({ size = 112 }: IdentityVerifiedMarkProps) 
         cx="82"
         cy="84"
         r="15"
-        fill={token.colorSuccess}
+        fill={brand.successMark}
         stroke={token.colorBgContainer}
         strokeWidth="3"
       />

@@ -88,6 +88,21 @@ export const brand = {
    * action never read as the same colour.
    */
   success: "#2E7D57",
+  /**
+   * THE SAME GREEN, A SHADE LIGHTER — for the illustrations' badges only.
+   *
+   * `success` carries WORDS: "Approved", "Funded", "Passed", at 12 and 14px on
+   * white and on `successSoft`. It is as light as it can go and still be read,
+   * so it cannot follow the designer's note about the badge on the submitted
+   * mark being heavy — *"ზედმეტად მუქი მწვანე, ოდნავ სულ ოდნავ გააღავე."*
+   *
+   * An illustration's disc carries no text: a white tick on it needs contrast
+   * the other way round, and there is room to spare. So the marks get their
+   * own step, lifted just enough to stop the badge reading as a full stop in
+   * the middle of a soft drawing, and the semantic green is left where the
+   * type needs it.
+   */
+  successMark: "#3E9370",
   successSoft: "#E7F1EC",
   danger: "#C0392B",
   warning: "#C08A2E",
@@ -207,10 +222,22 @@ export const brand = {
    *
    * So the face is one linear ramp with enough stops to stay smooth all the
    * way down: brand blue at the top corner, through the deep blues, into a
-   * near-black that is still faintly blue rather than a neutral grey.
+   * near-black at the foot.
+   *
+   * AND THE FOOT IS NOT BLACK — the brand's other colour bleeds into it.
+   * *"შავის ნაცვლად ოდნავ შეაპარე ბლარში ნარინჯისფერი."* A soft bloom of the
+   * CTA orange sits in the bottom corner, under the type and well spread, so
+   * the card carries both of the brand's colours without ever stating the
+   * second one: where the blue runs out, what is left is warm rather than
+   * neutral. The darkest stops are warmed to meet it, so the bloom lands on a
+   * ground that is already leaning that way instead of on a cold grey.
    */
-  cardSkin:
-    "linear-gradient(160deg, #3E86BC 0%, #2A6FA6 18%, #1A5488 36%, #0E3A60 54%, #0A2436 70%, #0B1218 86%, #0C0E11 100%)",
+  cardSkin: [
+    "radial-gradient(78% 58% at 86% 108%, rgba(184,92,35,0.50) 0%," +
+      " rgba(184,92,35,0.22) 42%, rgba(184,92,35,0) 74%)",
+    "linear-gradient(160deg, #3E86BC 0%, #2A6FA6 18%, #1A5488 36%, #0E3A60 54%," +
+      " #0A2334 70%, #12110F 86%, #14100C 100%)",
+  ].join(", "),
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
   cardLight: "#E7F1F4",

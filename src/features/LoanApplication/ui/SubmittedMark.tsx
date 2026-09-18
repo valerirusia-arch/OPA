@@ -20,6 +20,7 @@
 // every colour comes from the theme.
 
 import { theme } from "antd";
+import { brand } from "../../../theme/tokens";
 
 export type SubmittedMarkProps = {
   /** Rendered square. The artwork scales from a 120-unit viewBox. */
@@ -64,7 +65,7 @@ export function SubmittedMark({ size = 112 }: SubmittedMarkProps) {
         cx="82"
         cy="84"
         r="15"
-        fill={token.colorSuccess}
+        fill={brand.successMark}
         stroke={token.colorBgContainer}
         strokeWidth="3"
       />

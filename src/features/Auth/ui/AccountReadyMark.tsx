@@ -24,6 +24,7 @@
 // Drawn rather than composed because antd has no illustration to compose from.
 
 import { theme } from "antd";
+import { brand } from "../../../theme/tokens";
 
 export type AccountReadyMarkProps = {
   /** Rendered square. The artwork scales from a 120-unit viewBox. */
@@ -78,7 +79,7 @@ export function AccountReadyMark({ size = 112 }: AccountReadyMarkProps) {
         cx="82"
         cy="84"
         r="15"
-        fill={token.colorSuccess}
+        fill={brand.successMark}
         stroke={token.colorBgContainer}
         strokeWidth="3"
       />

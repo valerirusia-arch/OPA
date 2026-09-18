@@ -38,17 +38,23 @@
       /*
         SERIF ON PAGE TITLES ONLY. The site leads its pages with a serif and
         sets everything else in the sans — so the serif is bound here to the
-        PAGE headings only (Typography.Title level 2, the staff/auth heading,
-        and level 3, the borrower page heading) plus the page-sized empty-state
-        title. Card heads, step and section headings (level 4/5), modals and
-        drawers stay sans, which reads better inside a container — *"მხოლოდ
-        ფეიჯების სათაურები... კონტეინერების შიგნით 4 ფოტოს შრიფტი."*
+        PAGE headings only: Typography.Title level 2 (the staff and auth
+        heading) and level 3 (the borrower page heading). Card heads, step and
+        section headings (level 4/5), modals and drawers stay sans, which reads
+        better inside a container — *"მხოლოდ ფეიჯების სათაურები... კონტეინერების
+        შიგნით."*
+
+        `.ant-result-title` USED TO BE ON THIS LIST and has come off. A Result
+        is not a page heading: every one of them in this product sits inside a
+        card — the application gate, the access-denied page, the empty states —
+        so the serif was appearing exactly where the rule above says it should
+        not, in the middle of a container. *"ამ კონტეინერში არ უნდა იყოს ეს
+        სტილის ტექსტი."*
       */
       h2.ant-typography,
       h3.ant-typography,
       .ant-typography h2,
-      .ant-typography h3,
-      .ant-result-title {
+      .ant-typography h3 {
         font-family: "Playfair Display", Georgia, "Times New Roman", serif;
       }
       /*
