@@ -2,25 +2,26 @@
 //
 // Every change to the requested loan amount, and who made it.
 //
-// The wireframe reserves the space and says so in as many words — "here will
-// be maybe small table (change history)". The WBS decides what goes in it, and
-// it is not vague at all: "All changes shall be logged with the PREVIOUS
-// VALUE, UPDATED VALUE, USER, DATE, and REASON for the modification." Five
-// things, five columns.
+// The wireframe reserves the space — "here will be maybe small table (change
+// history)" — and the WBS decides what goes in it: "All changes shall be logged
+// with the PREVIOUS VALUE, UPDATED VALUE, USER, DATE, and REASON."
+//
+// NOT A TABLE, though. Four columns for a handful of entries put the amounts,
+// the name and the reason on their own narrow tracks and scrolled the last one
+// out of sight — *"ძალიან უცნაურია ეს თებლი, აქ თებლს არ ვიზამდი."* A change
+// is one sentence: an amount became another amount, on a date, by someone, for
+// a reason. So each entry is read as that — the change as the headline, the
+// when / who / why on one quiet line under it — a log, not a grid.
 //
 // It reads the same audit entries the full trail below the page does, narrowed
-// to the ones that moved a figure. Two lists would be two versions of the same
-// history, and the one an underwriter happened to be looking at would be the
-// one they trusted.
+// to the ones that moved a figure, so the two never disagree.
 //
 // Dumb: it renders entries it is given.
 
-import { Flex, Table, Typography } from "antd";
+import { Divider, Flex, Typography, theme } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import type { ColumnsType } from "antd/es/table";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { decorateColumns } from "../../../shared/ui/tableColumns";
-import { styles } from "./ChangeHistory.styles";
+import { getStyles, styles } from "./ChangeHistory.styles";
 import type { AuditEntry } from "./types";
 
 export type ChangeHistoryProps = {
@@ -30,15 +31,13 @@ export type ChangeHistoryProps = {
 
 export function ChangeHistory({ entries }: ChangeHistoryProps) {
   const t = useT();
+  const { token } = theme.useToken();
+  const s = getStyles(token);
 
   /**
    * Amount changes only, matched on the action rather than on "has a from and
-   * a to".
-   *
-   * An overridden decision also records a previous and a new value, and it
-   * would have landed in this table under a heading that says the amount
-   * changed. The full trail lower down the page is where every kind of change
-   * belongs; this panel answers one question.
+   * a to" — an overridden decision also records a previous and a new value, and
+   * belongs in the full trail, not under a heading about the amount.
    */
   const changes = entries.filter((entry) => entry.action === "audit.amountChanged");
 
@@ -50,56 +49,30 @@ export function ChangeHistory({ entries }: ChangeHistoryProps) {
     );
   }
 
-  const columns: ColumnsType<AuditEntry> = [
-    {
-      title: t("amountPanel.colWhen"),
-      key: "on",
-      width: 150,
-      render: (_v, row) => (
-        <Typography.Text type="secondary">{row.on}</Typography.Text>
-      ),
-    },
-    {
-      title: t("amountPanel.colChange"),
-      key: "change",
-      render: (_v, row) => (
-        <Flex align="center" gap={8} wrap>
-          <Typography.Text delete type="secondary">
-            {row.from}
-          </Typography.Text>
-          <ArrowRightOutlined />
-          <Typography.Text style={styles.to}>{row.to}</Typography.Text>
-        </Flex>
-      ),
-    },
-    {
-      title: t("amountPanel.colBy"),
-      key: "by",
-      width: 140,
-      render: (_v, row) => row.by,
-    },
-    {
-      title: t("amountPanel.colReason"),
-      key: "reason",
-      render: (_v, row) =>
-        row.reason ? (
-          <Typography.Text>{row.reason}</Typography.Text>
-        ) : (
-          <Typography.Text type="secondary">{"—"}</Typography.Text>
-        ),
-    },
-  ];
-
   return (
-    <Table<AuditEntry>
-      rowKey="id"
-      size="small"
-      tableLayout="fixed"
-      columns={decorateColumns(columns)}
-      dataSource={changes}
-      pagination={false}
-      scroll={{ x: "max-content" }}
-    />
+    <Flex vertical>
+      {changes.map((entry, index) => (
+        <div key={entry.id}>
+          {index > 0 ? <Divider style={styles.rule} /> : null}
+          <Flex vertical gap={4}>
+            {/* The change itself, the headline of the entry. */}
+            <Flex align="center" gap={10} wrap>
+              <Typography.Text delete style={s.from}>
+                {entry.from}
+              </Typography.Text>
+              <ArrowRightOutlined style={s.arrow} />
+              <Typography.Text style={s.to}>{entry.to}</Typography.Text>
+            </Flex>
+            {/* When, who, and — where there is one — why, as one quiet line. */}
+            <Typography.Text type="secondary" style={styles.meta}>
+              {entry.on}
+              {` · ${entry.by}`}
+              {entry.reason ? ` · ${entry.reason}` : ""}
+            </Typography.Text>
+          </Flex>
+        </div>
+      ))}
+    </Flex>
   );
 }
 

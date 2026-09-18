@@ -11,7 +11,6 @@
 
 import type { ReactNode } from "react";
 import { Flex, Grid, theme } from "antd";
-import { PictureOutlined } from "@ant-design/icons";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "../../../shared/ui/LanguageSwitcher";
 import { Logo } from "../../../shared/ui/Logo";
@@ -45,11 +44,9 @@ export function AuthLayout({ children, language, onLanguageChange }: AuthLayoutP
         </Flex>
       </Flex>
 
-      {screens.lg && (
-        <Flex style={styles.aside} align="center" justify="center" aria-hidden>
-          <PictureOutlined style={styles.asideIcon} />
-        </Flex>
-      )}
+      {/* The brand family photo fills the hero panel (a background image, so no
+          <img> element the antd-only rule forbids). */}
+      {screens.lg && <div style={styles.aside} aria-hidden />}
     </Flex>
   );
 }

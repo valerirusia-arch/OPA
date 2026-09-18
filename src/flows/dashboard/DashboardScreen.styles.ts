@@ -25,7 +25,7 @@ export const styles = {
    * `clamp` crosses the same range continuously and needs no render to know
    * the width.
    */
-  empty: { paddingBlock: "clamp(32px, 5vw, 48px)", textAlign: "center" },
+  empty: { paddingBlock: "clamp(24px, 4vw, 36px)", textAlign: "center" },
   emptyCopy: { maxWidth: 420 },
   /** A table fills its card to the edges: the rows have their own inset and a
    *  second one around them reads as a table inside a box. */

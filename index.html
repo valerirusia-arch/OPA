@@ -6,6 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OPA</title>
     <!--
+      BRAND TYPE. The One Percent for America site pairs Noe Display (a
+      high-contrast serif) on headings with Gotham (a geometric sans) on body.
+      Neither is free to embed, so the closest web substitutes are loaded:
+      Playfair Display for the serif, Montserrat for the sans. The sans is the
+      global fontFamily (tokens.ts); the serif is bound to the heading classes
+      in the style block below.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!--
       Document-level reset only. The browser's default 8px body margin pushed
       every screen off the layout grid. Everything else is themed through antd
       tokens (/src/theme) — no stylesheet in src/, by design.
@@ -22,36 +36,48 @@
         -moz-osx-font-smoothing: grayscale;
       }
       /*
-        The greeting hand's wave. Referenced by name from LoginScreen.styles.ts
-        (`animation: opa-wave 3s ...`); @keyframes has no CSSProperties form, so
-        it lives here. The hand waves through the first third of the cycle, then
-        rests — so it gives one friendly wave roughly every three seconds rather
-        than swinging non-stop.
+        SERIF ON PAGE TITLES ONLY. The site leads its pages with a serif and
+        sets everything else in the sans — so the serif is bound here to the
+        PAGE headings only (Typography.Title level 2, the staff/auth heading,
+        and level 3, the borrower page heading) plus the page-sized empty-state
+        title. Card heads, step and section headings (level 4/5), modals and
+        drawers stay sans, which reads better inside a container — *"მხოლოდ
+        ფეიჯების სათაურები... კონტეინერების შიგნით 4 ფოტოს შრიფტი."*
       */
-      @keyframes opa-wave {
+      h2.ant-typography,
+      h3.ant-typography,
+      .ant-typography h2,
+      .ant-typography h3,
+      .ant-result-title {
+        font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+      }
+      /*
+        …EXCEPT a big number that happens to be a Title level 2 (the loan
+        amount on the application's details step). A figure is not a heading;
+        it stays sans and tabular.
+      */
+      .opa-figure {
+        font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif !important;
+      }
+      /*
+        The greeting sparkle's twinkle. Referenced by name from
+        GreetingSparkle.styles.ts (`animation: opa-twinkle ...`); @keyframes has
+        no CSSProperties form, so it lives here. A gentle pulse in scale and
+        opacity, so the pair of sparkles breathes rather than blinks.
+      */
+      @keyframes opa-twinkle {
         0%,
-        30%,
         100% {
-          transform: rotate(0deg);
+          opacity: 1;
+          transform: scale(1);
         }
-        5% {
-          transform: rotate(14deg);
-        }
-        10% {
-          transform: rotate(-8deg);
-        }
-        15% {
-          transform: rotate(14deg);
-        }
-        20% {
-          transform: rotate(-8deg);
-        }
-        25% {
-          transform: rotate(12deg);
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        [style*="opa-wave"] {
+        [style*="opa-twinkle"] {
           animation: none !important;
         }
       }

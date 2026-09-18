@@ -84,7 +84,9 @@ export function VirtualCardPanel({
           /* GRAPHITE IS OPA'S. The borrower's own debit card on /payments
              wears the navy gradient; this one is issued by us and spends our
              money, so it is not allowed to look like theirs. */
-          tone="graphite"
+          tone="opa"
+          /* …and it says so in words, so the finish is not the only tell. */
+          owner={t("loanPage.cardOwner")}
           brand={brand}
           label={t("loanPage.cardIssuer")}
           status={{

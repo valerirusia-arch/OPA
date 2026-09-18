@@ -119,7 +119,11 @@ export default function StaffBorrowersScreen({
       // when the text is actually truncated, so short names get no stray hover.
       render: (_value, row) => (
         <Typography.Text ellipsis={{ tooltip: fullName(row.profile) }}>
-          <Link to={`/staff/borrowers/${row.id}`}>{fullName(row.profile)}</Link>
+          {/* Ink, not the link teal — the whole row navigates, so the name
+              reads as ordinary text rather than a coloured link. */}
+          <Link to={`/staff/borrowers/${row.id}`} style={{ color: "inherit" }}>
+            {fullName(row.profile)}
+          </Link>
         </Typography.Text>
       ),
     },

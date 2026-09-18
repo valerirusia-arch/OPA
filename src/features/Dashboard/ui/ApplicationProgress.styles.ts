@@ -26,7 +26,12 @@ export const styles = {
   /** `minWidth: 0` so the sentence wraps inside its own column instead of
    *  widening the row and pushing the button off the card. */
   copyBlock: { minWidth: 0 },
-  title: { marginTop: 0, marginBottom: 0 },
+  /* 500, not antd's 600 Title. The step's name — Review, Signing, Funding — is
+     a heading on a card that already leads with the track and its own copy; at
+     600 it reads as a second heavy thing. Matches StageFoot's title, so the
+     stage name weighs the same before and after funding. *"ამ სტეპებზე
+     თაითლებს ბოლდნესი დააკელი — რევიუს, ფუნდინგს, სიგნინს."* */
+  title: { marginTop: 0, marginBottom: 0, fontWeight: 500 },
   /**
    * NO MEASURE CAP. The sentence takes the column it is in.
    *

@@ -8,7 +8,7 @@ export const styles = {
   card: { marginBottom: 24 },
   /** The decision banner sits above everything, before the record itself. */
   banner: { marginBottom: 24 },
-  amount: { fontSize: 20, fontWeight: 600, fontVariantNumeric: "tabular-nums" },
+  amount: { fontSize: 16, fontWeight: 600, fontVariantNumeric: "tabular-nums" },
   /** The requested figure, struck through once an underwriter has changed it. */
   amountWas: { textDecoration: "line-through", fontVariantNumeric: "tabular-nums" },
   request: { paddingBlock: 12 },

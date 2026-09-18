@@ -140,7 +140,7 @@ export function VirtualCardModal({
         */
         <Flex vertical gap={12} style={styles.face}>
           <CardFace
-            tone="graphite"
+            tone="opa"
             brand={brand}
             label={t("loanPage.cardIssuer")}
             status={{ label: t("loanPage.cardMock") }}
@@ -167,7 +167,7 @@ export function VirtualCardModal({
            component, one material, one object. */
         <div style={styles.face}>
           <CardFace
-            tone="graphite"
+            tone="opa"
             brand={brand}
             label={t("loanPage.cardIssuer")}
             number={t("payments.cardEnding", { last4 })}

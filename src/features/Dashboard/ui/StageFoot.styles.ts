@@ -15,7 +15,12 @@ export const styles = {
   /** The heading row. 8 under it, which is the gap the band's own heading
    *  keeps above the line that follows it. */
   head: { marginBottom: 8 },
-  title: { marginTop: 0, marginBottom: 0 },
+  /* A touch lighter than antd's 600 Title. This heading — "Repayment started",
+     "Funding", the step's own name — sits on a card that has just stated the
+     balance in the page's one big figure; a 600 heading under that competes
+     with it. 500 still reads as a heading, just not a second bold thing on the
+     card. *"ბოლდნესი ცოტა უფრო დააკელი ამ თაითლს."* */
+  title: { marginTop: 0, marginBottom: 0, fontWeight: 500 },
   /* The drawer pulls ITSELF back out to the card's edge — StepsDrawer's
      `flush` prop is on by default and carries the -12 that cancels antd's
      Collapse padding. A second copy of that number here would be one more

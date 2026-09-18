@@ -222,39 +222,6 @@ export default function ApplicationDetailsScreen({
     </Card>
   );
 
-  const decisionBanner = record.decision ? (
-    <Alert
-      style={styles.banner}
-      type={record.decision.outcome === "approved" ? "success" : "error"}
-      showIcon
-      title={t("appDetail.decidedBy", {
-        outcome: t(
-          record.decision.outcome === "approved"
-            ? "application.approved"
-            : "application.declined"
-        ),
-        name: record.decision.by,
-        date: record.decision.on,
-      })}
-      description={
-        <Flex vertical gap={4}>
-          <Typography.Text type="secondary">
-            {t(
-              record.decision.source === "automated"
-                ? "appDetail.sourceAutomated"
-                : record.decision.source === "manual"
-                  ? "appDetail.sourceManual"
-                  : "appDetail.sourceOverride"
-            )}
-          </Typography.Text>
-          {record.decision.reason ? (
-            <Typography.Text>{record.decision.reason}</Typography.Text>
-          ) : null}
-        </Flex>
-      }
-    />
-  ) : null;
-
   return shell(
     <AdminPage
       /* The borrower's name, per the wireframe. The application's own id is
@@ -270,11 +237,23 @@ export default function ApplicationDetailsScreen({
         />
       }
       titleAfter={
-        <Flex align="center" gap={12}>
+        <Flex align="center" gap={12} wrap>
           <Typography.Text type="secondary" style={{ whiteSpace: "nowrap" }}>
             {record.id}
           </Typography.Text>
           <ApplicationStatusTag status={record.status} />
+          {/* The decision's attribution sits right on the status — "Approved
+              by System · <date>" — instead of in a banner below. The full story
+              (why, automated vs override) lives in the History card; the banner
+              only repeated it. *"სტატუსთან by System და თარიღი; ბანერი წავშალე."* */}
+          {record.decision ? (
+            <Typography.Text type="secondary" style={{ whiteSpace: "nowrap" }}>
+              {t("appDetail.decidedByShort", {
+                name: record.decision.by,
+                date: record.decision.on,
+              })}
+            </Typography.Text>
+          ) : null}
         </Flex>
       }
       /* THE DECISION, AT THE FAR RIGHT OF THE PAGE HEADER — level with the
@@ -290,8 +269,17 @@ export default function ApplicationDetailsScreen({
                 {t("appAction.override")}
               </Button>
             ) : (
-              <Flex gap={8}>
-                <Button danger onClick={() => setAction("decline")}>
+              <Flex gap={8} align="center">
+                {/* Hierarchy: Approve is the filled primary, Decline steps back
+                    to a SECONDARY button — a light neutral frame with red text,
+                    not the heavy red-outlined danger it was. Framed, so it reads
+                    as a real button, but clearly the lesser of the two. The
+                    gravity of the action is in its confirmation dialog.
+                    *"ჩარჩო მეორეხარისხოვანი."* */}
+                <Button
+                  style={{ color: token.colorError }}
+                  onClick={() => setAction("decline")}
+                >
                   {t("appAction.decline")}
                 </Button>
                 <Button type="primary" onClick={() => setAction("approve")}>
@@ -302,8 +290,6 @@ export default function ApplicationDetailsScreen({
           : undefined
       }
     >
-      {decisionBanner}
-
       {/* Said once, plainly, instead of a row of buttons that refuse.
 
           Only OPA Staff ever reaches this line now — the WBS puts them here

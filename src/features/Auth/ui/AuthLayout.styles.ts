@@ -49,16 +49,19 @@ export const getStyles = (token: GlobalToken, hasAside: boolean, compact = false
           minWidth: 0,
           padding: compact ? "32px 24px" : `40px ${PAGE_GUTTER}px`,
         },
-    /** Reserved for the hero image — the glyph marks the slot until artwork exists. */
+    /** The hero panel — the brand family photo, covering the panel and clipped
+     *  to its rounded corners. A background image on a div rather than an <img>,
+     *  which the antd-only rule forbids in presentation. The fill shows while
+     *  the photo loads. */
     aside: {
       flex: 1,
       minWidth: 0,
       margin: ASIDE_MARGIN,
       borderRadius: token.borderRadius,
-      background: token.colorFill,
-    },
-    asideIcon: {
-      fontSize: 96,
-      color: token.colorTextQuaternary,
+      backgroundColor: token.colorFill,
+      backgroundImage: "url(/auth-hero.jpg)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      overflow: "hidden",
     },
   }) satisfies Record<string, CSSProperties>;

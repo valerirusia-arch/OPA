@@ -29,6 +29,7 @@ import {
   theme,
 } from "antd";
 import {
+  CreditCardOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
   LockOutlined,
@@ -36,6 +37,9 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
+import { PaymentCardManager } from "../../features/Payments/ui/PaymentCardManager";
+import { applyCard, usePaymentsRecord } from "../loan/loanRecord";
+import { useCustomerViewer } from "../../shared/ui/viewerRole";
 import { AppHeader } from "../../shared/ui/AppHeader";
 import { ProfileLayout } from "../../features/Profile/ui/ProfileLayout";
 import { borrowerNav } from "../../shared/ui/navigation";
@@ -56,7 +60,6 @@ import { ChangePasswordModal } from "../../features/Profile/ui/ChangePasswordMod
 import { LockedField } from "../../features/Profile/ui/LockedField";
 import { VerifiedLabel } from "../../features/Profile/ui/VerifiedLabel";
 import { VerifyContactModal } from "../../features/Profile/ui/VerifyContactModal";
-import { getStyles as getButtonStates } from "../../shared/ui/buttonStates.styles";
 import { getStyles, styles } from "./ProfileScreen.styles";
 
 export type ContactValues = {
@@ -141,7 +144,6 @@ export default function ProfileScreen({
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
   const [form] = Form.useForm<ContactValues>();
   const { token } = theme.useToken();
-  const buttons = getButtonStates(token);
   const s = getStyles(token);
 
   /**
@@ -149,6 +151,13 @@ export default function ProfileScreen({
    * — so three sections rather than one long page. See ProfileLayout.
    */
   const [section, setSection] = useState("personal");
+
+  /* The repayment card, managed here now rather than on the payments page —
+     the designer moved it. It reads the reader's OWN card off the shared
+     record and saves through the same door the wizard uses. */
+  const cardRole = useCustomerViewer().role;
+  const payments = usePaymentsRecord();
+  const ownCard = payments?.cards.find((c) => c.owner === cardRole && c.active);
 
   /** Shared with the staff profile, so the two never drift apart. */
 
@@ -247,6 +256,7 @@ export default function ProfileScreen({
             icon: <UserOutlined />,
           },
           { key: "contact", label: t("profile.navContact"), icon: <MailOutlined /> },
+          { key: "card", label: t("profile.navCard"), icon: <CreditCardOutlined /> },
           { key: "password", label: t("profile.navPassword"), icon: <LockOutlined /> },
         ]}
       >
@@ -421,15 +431,15 @@ export default function ProfileScreen({
 
               <Form.Item style={styles.noMargin}>
                 <Flex gap={12} justify="flex-end" style={styles.actions}>
-                  <Button disabled={!dirty} onClick={() => form.resetFields()}>
+                  {/* Ordinary buttons, the way the rest of the product draws
+                      them — a plain default Cancel and a primary Save. The old
+                      custom idle/dimmed treatment read off-brand after the
+                      rebrand. *"ჩვეულებრივად იყოს, ფეიმენთის გვერდზე კარგად
+                      არის."* */}
+                  <Button onClick={() => form.resetFields()}>
                     {t("common.cancel")}
                   </Button>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    disabled={!dirty}
-                    style={dirty ? undefined : buttons.idlePrimary}
-                  >
+                  <Button type="primary" htmlType="submit" disabled={!dirty}>
                     {t("profile.save")}
                   </Button>
                 </Flex>
@@ -507,6 +517,30 @@ export default function ProfileScreen({
                 {t("profile.change")}
               </Button>
             </Flex>
+          </>
+        ) : null}
+
+        {section === "card" ? (
+          <>
+            <Typography.Title level={4} style={styles.sectionTitle}>
+              {t("profile.navCard")}
+            </Typography.Title>
+            <Typography.Text type="secondary" style={styles.sectionSubtitle}>
+              {t("profile.cardSubtitle")}
+            </Typography.Text>
+            {/* The same visual the application uses to collect the card — Repay's
+                embedded form in a provider-named panel, the card on file once a
+                token is held. See PaymentCardManager. */}
+            <PaymentCardManager
+              card={ownCard}
+              onSaveCard={(cardToken, replacing) => {
+                console.log("save repayment card", { cardToken });
+                applyCard(cardToken, cardRole);
+                message.success(
+                  t(replacing ? "payments.cardReplaced" : "payments.cardSaved")
+                );
+              }}
+            />
           </>
         ) : null}
       </ProfileLayout>

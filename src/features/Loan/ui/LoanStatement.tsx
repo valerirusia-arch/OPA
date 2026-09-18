@@ -139,10 +139,11 @@ export function LoanStatement({
             TWO WEIGHTS, BOTH antd's.
 
             Filled where the action is the point of the page (signing, paying),
-            and TEXT — no outline — where it is a way somewhere else. An
+            and a BLUE LINK — no outline — where it is a way somewhere else. An
             outlined button gives "view the schedule" the same weight as the
-            thing the page is asking you to do, and boxes a label that reads
-            perfectly well on its own.
+            thing the page is asking you to do; a link carries the accent
+            without the box, so "View full schedule →" reads as the way onward
+            it is. *"ეს გავალურჯოთ."*
           */}
             <Typography.Text style={s.figure}>{value}</Typography.Text>
             {caption ? (
@@ -155,10 +156,10 @@ export function LoanStatement({
               <Button
                 size="large"
                 block={!floats}
-                type={action.emphasis === "primary" ? "primary" : "text"}
+                type={action.emphasis === "primary" ? "primary" : "link"}
                 onClick={action.onClick}
                 /* A primary call-to-action stays centred across its full-width
-                   button; a quiet text action (e.g. "View full schedule") lines
+                   button; a quiet link action (e.g. "View full schedule") lines
                    up on the left with the label and figure above it rather than
                    floating in the middle of the card. */
                 style={

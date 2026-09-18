@@ -10,21 +10,22 @@ export const styles = {
 } satisfies Record<string, CSSProperties>;
 
 /**
- * The three finishes. `graphite` is the flat slab OPA issues, `dark` the navy
- * gradient the borrower brought, `light` the pale blue the pair was first
- * drawn in and which nothing uses.
+ * The three finishes, named after WHOSE card they are — the colour is the part
+ * that changes, the ownership is not. `opa` is the brand teal OPA issues on,
+ * `borrower` the warm graphite of the card the borrower brought, `light` the
+ * pale blue the pair was first drawn in and which nothing uses.
  */
-export type CardTone = "light" | "dark" | "graphite";
+export type CardTone = "light" | "opa" | "borrower";
 
 export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
   /* Both of the product's real finishes are dark enough to invert, so one
      flag covers the ink and a second picks the material. */
   const inverted = tone !== "light";
   const ground =
-    tone === "graphite"
-      ? brand.cardGraphite
-      : tone === "dark"
-        ? brand.cardDark
+    tone === "borrower"
+      ? brand.cardBorrower
+      : tone === "opa"
+        ? brand.cardOpa
         : brand.cardLight;
   const ink = inverted ? brand.cardDarkInk : token.colorText;
   const quiet = inverted ? brand.cardDarkQuiet : token.colorTextTertiary;
@@ -74,6 +75,22 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
     },
     /** The issuer line takes the finish's ink. */
     label: { color: quiet },
+    /**
+     * The ownership eyebrow at the very top of the face — "ISSUED BY OPA" on
+     * the card OPA issues, "YOUR CARD" on the one the borrower brought. It is
+     * the one line that says WHOSE card this is in words, so the two faces are
+     * told apart by more than their finish. Uppercase and tracked like the
+     * product's micro-labels, in the finish's quiet ink so it sits behind the
+     * number rather than competing with it.
+     */
+    owner: {
+      display: "block",
+      fontSize: 11,
+      letterSpacing: "0.06em",
+      textTransform: "uppercase",
+      fontWeight: 600,
+      color: quiet,
+    },
     /**
      * The number across the middle.
      *

@@ -39,6 +39,7 @@
 
 import { Button, Card, Flex, Typography } from "antd";
 import {
+  ArrowRightOutlined,
   BankOutlined,
   CreditCardOutlined,
   FileTextOutlined,
@@ -103,6 +104,13 @@ export default function DashboardScreen({
 
   const paidCount = payments?.schedule.filter((row) => row.status === "paid").length ?? 0;
   const nextDue = payments?.schedule.find((row) => row.status !== "paid");
+  /* The last few attempts. Only once there is a loan to have paid against —
+     before funding an empty "Recent payments" card is a third block of blank
+     space on a page that already says, twice over, that nothing is open yet.
+     *"არ გვჭირდება ამის ემფთი სფეისი."* At funding the schedule exists but
+     nothing is paid, so the card can still be empty there; that empty state
+     is a loan with no payments yet, which is worth showing. */
+  const recent = payments ? payments.history.slice(0, 5) : [];
 
   /*
     THE FOUR TILES, each carrying the fact its page is about.
@@ -202,23 +210,10 @@ export default function DashboardScreen({
                       ref: record.id,
                     })}
               </Typography.Title>
-              {/*
-                ONE SENTENCE, AND ONLY WHERE THERE IS NOTHING ELSE TO READ.
-
-                It used to run in every state — "Your application is with OPA.
-                Here is where it stands." over a band that says exactly that
-                in more detail, and "Here is your loan, what it costs and what
-                is coming" over the loan, the cost and what is coming. A line
-                that introduces what is already on screen is furniture.
-                *"ეს ტექსტი აღარ უნდა, მხოლოდ empty space-ზე იყოს."*
-
-                Before there is an application there IS nothing else to read,
-                and the sentence is then the only thing telling somebody why
-                the page is empty. So it stays exactly there.
-              */}
-              {live ? null : (
-                <Typography.Text type="secondary">{t("dashboard.leadNone")}</Typography.Text>
-              )}
+              {/* NO SUBTITLE. A line under the title that says "nothing is open
+                  yet" only repeats what the (now unique) title and the empty
+                  frame below already say. *"დესქრიფშენი არ მინდა."* The other
+                  states never had one; now none does. */}
             </Flex>
 
 
@@ -317,30 +312,36 @@ export default function DashboardScreen({
                 />
               </div>
             ) : (
-              /* THE FRAME STAYS, EMPTY — and it was wrong to take it out with
-                 the rest. *"ეს მჭირდება ემთი სფეისზეც რომ იყოს."*
+              /* THE FRAME STAYS, EMPTY. Stripped, the page's first state was a
+                 greeting sitting directly on four valueless tiles — nothing to
+                 read and no way to start the thing that fills them. The band is
+                 where the money goes, so before there is any it carries the
+                 drawing, the sentence, and the way in.
 
-                 Stripped, the page's first state was a greeting sitting
-                 directly on four tiles with no values in them: nothing to
-                 read, and no way to start the thing that fills them. The
-                 band is where the money goes, so before there is any it
-                 carries the drawing, the sentence, and the way in.
-
-                 AND IT IS TITLED, unlike the same band when it is full. A
-                 figure names itself — "OUTSTANDING BALANCE" and "APPLIED FOR"
-                 sit above their own numbers — but an empty frame has nothing
-                 to do that with. */
-              <Card title={t("dashboard.loanBand")} style={styles.band}>
-                <Flex vertical align="center" gap={16} style={styles.empty}>
-                  <NoLoanMark size={140} />
+                 NO TITLE, though. "Your loan" only ever showed in THIS state —
+                 the moment there is an application or a loan the band becomes
+                 the track or the balance, and neither is titled — so a heading
+                 here was a label that appeared in one state out of a dozen.
+                 *"ეს თაითლი არასწორია... წაშალეთ."* The greeting above already
+                 names the page. */
+              <Card style={styles.band}>
+                <Flex vertical align="center" gap={12} style={styles.empty}>
+                  {/* Grey, not accent-teal: on the empty dashboard the one
+                      colour that should draw the eye is the button, and the
+                      designer wants the illustration neutral. *"ფერი არ მინდა,
+                      ნაცრისფერი."* */}
+                  <NoLoanMark size={128} muted />
                   <Typography.Text type="secondary" style={styles.emptyCopy}>
                     {t("dashboard.emptyBody")}
                   </Typography.Text>
-                  {/* Outlined, not filled: it is the only control in the frame,
-                      so it is unmissable without a saturated fill — and the
-                      accent now lives in the illustration above it, matching the
-                      /loan and /payments empty states. */}
-                  <Button size="large" onClick={() => navigate({ to: "/application" })}>
+                  {/* Filled blue: the one thing to do on an empty page, and the
+                      designer asked for the accent on it — *"cta ლურჯი ფერის
+                      იყოს."* */}
+                  <Button
+                    type="primary"
+                    size="large"
+                    onClick={() => navigate({ to: "/application" })}
+                  >
                     {t("loanPage.startApplication")}
                   </Button>
                 </Flex>
@@ -384,23 +385,31 @@ export default function DashboardScreen({
               Drawn only once the schedule exists — before funding there is
               nothing to have paid.
             */}
+            {/* ONLY ONCE THERE IS A LOAN. With rows it is a flush table
+                (padding 0, corners clipped by the card); at funding, before the
+                first payment, it shows a compact "no payments yet". Before
+                there is any loan it is not drawn — an empty payments card on a
+                page that has no application is blank space nobody asked for. */}
             {payments ? (
               <Card
                 title={t("dashboard.recentTitle")}
-                /* `overflow: hidden` so the table's own square corners are
-                   cut by the card's radius. With the body's padding at 0 the
-                   last row runs to the frame, and without the clip it ran
-                   past it. */
-                style={styles.tableCard}
-                styles={{ body: styles.tableBody }}
+                /* `overflow: hidden` so the table's own square corners are cut
+                   by the card's radius; only where the body's padding is 0. */
+                style={recent.length > 0 ? styles.tableCard : styles.band}
+                styles={recent.length > 0 ? { body: styles.tableBody } : undefined}
                 extra={
-                  <Button type="link" onClick={() => navigate({ to: "/payments" })}>
+                  <Button
+                    type="link"
+                    iconPosition="end"
+                    icon={<ArrowRightOutlined />}
+                    onClick={() => navigate({ to: "/payments" })}
+                  >
                     {t("dashboard.recentAll")}
                   </Button>
                 }
               >
                 <PaymentHistory
-                  transactions={payments.history.slice(0, 5)}
+                  transactions={recent}
                   reader={viewer.role === "coBorrower" ? "coBorrower" : "borrower"}
                 />
               </Card>

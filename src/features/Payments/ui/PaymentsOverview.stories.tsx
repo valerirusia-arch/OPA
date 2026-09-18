@@ -25,7 +25,6 @@ const meta = {
   args: {
     onPay: () => {},
     onRetry: () => {},
-    onSaveCard: () => {},
     onViewLoan: () => {},
   },
 } satisfies Meta<typeof PaymentsOverview>;

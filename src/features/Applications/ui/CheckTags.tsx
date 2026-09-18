@@ -10,7 +10,7 @@
 // never in red — an underwriter skimming a column must not read a broken
 // Equifax call as a bad credit report.
 
-import { Tag } from "antd";
+import { Tag, theme } from "antd";
 import {
   ApiOutlined,
   CheckCircleOutlined,
@@ -50,13 +50,18 @@ const outcomeIcons: Record<CheckOutcome, React.ReactNode> = {
 
 export function CheckOutcomeTag({ outcome }: { outcome: CheckOutcome }) {
   const t = useT();
+  const { token } = theme.useToken();
 
+  // WHITE GROUND, coloured edge and text. The filled tint (a pale amber for
+  // "Needs review") disappeared on the light panel it sits in — *"ეს ყვითელი
+  // ფერი არ ჩანს, თეთრი ბექგრაუნდი მიეცი."* A white pill with the outcome's
+  // colour on its border, icon and label reads on any surface.
   return (
     <Tag
       color={outcomeColors[outcome]}
-      variant="filled"
+      variant="outlined"
       icon={outcomeIcons[outcome]}
-      style={pill}
+      style={{ ...pill, background: token.colorBgContainer }}
     >
       {t(outcomeKeys[outcome])}
     </Tag>

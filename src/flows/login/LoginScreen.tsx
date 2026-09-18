@@ -41,15 +41,8 @@ export default function LoginScreen() {
   return (
     <AuthLayout>
       <Typography.Title level={2} style={styles.heading}>
-        {t("login.title")}{" "}
-        {/* Decorative: the heading already greets, so screen readers skip it. */}
-        <span style={styles.wave} aria-hidden>
-          👋
-        </span>
+        {t("login.title")}
       </Typography.Title>
-      <Typography.Text type="secondary" style={styles.subheading}>
-        {t("login.subtitle")}
-      </Typography.Text>
 
       <div style={styles.toggleWrap}>
         <AudienceToggle<Audience>

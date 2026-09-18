@@ -23,6 +23,9 @@ export function SavedCardFace({ card }: SavedCardFaceProps) {
 
   return (
     <CardFace
+      /* Whose card it is, in words — the borrower's own, brought by them, as
+         opposed to the one OPA issues on /loan. */
+      owner={t("card.owner")}
       /* The network draws itself top left; the words stay as the accessible
          name and as the fallback for a brand the mark does not cover. */
       brand={card.brand}

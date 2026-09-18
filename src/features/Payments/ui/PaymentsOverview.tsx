@@ -39,24 +39,21 @@
 // Dumb: everything arrives as props and leaves as a callback.
 
 import {
-  Button, Card, Col, Collapse, Flex, Grid, Result, Row, Tabs, Typography, theme,
+  Button, Card, Collapse, Flex, Result, Tabs, Typography, theme,
 } from "antd";
 import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
 import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { leadPanelBody } from "../../../shared/ui/panel.styles";
-import type { CardToken } from "../../LoanApplication/ui/types";
 import { BalanceSummary } from "./BalanceSummary";
 import { PaymentHistory } from "./PaymentHistory";
 import { PaymentSchedule } from "./PaymentSchedule";
-import { RepaymentCardPanel } from "./RepaymentCardPanel";
 import { getStyles, styles } from "./PaymentsOverview.styles";
 import type {
   Installment,
   PaymentTransaction,
   PaymentsRecord,
-  RepaymentCard,
 } from "./types";
 
 
@@ -79,7 +76,6 @@ export type PaymentsOverviewProps = {
   /** No installment means the borrower pressed the balance card's button. */
   onPay?: (installment?: Installment) => void;
   onRetry?: (transaction: PaymentTransaction) => void;
-  onSaveCard?: (card: CardToken, replacing?: RepaymentCard) => void;
   onViewLoan?: () => void;
   /** Only reachable when there is no application and the reader is the borrower. */
   onStartApplication?: () => void;
@@ -91,26 +87,12 @@ export function PaymentsOverview({
   role = "borrower",
   onPay,
   onRetry,
-  onSaveCard,
   onViewLoan,
   onStartApplication,
 }: PaymentsOverviewProps) {
   const t = useT();
   const { token } = theme.useToken();
   const s = getStyles(token);
-
-  /**
-   * Whether the balance and the card are actually beside each other.
-   *
-   * The equal-height stretch is only correct when they are. Below `lg` the
-   * columns stack, and a Card carrying `height: 100%` there resolved to a
-   * definite 409px — measured — which was the height of its BODY and not of
-   * its head plus its body, so the last detail figure was drawn 27px outside
-   * the card, over the head of the card below. Two guesses at the flex
-   * properties did not fix that, because the cause was never the flex.
-   */
-  const screens = Grid.useBreakpoint();
-  const sideBySide = screens.lg === true;
 
   /*
     A PAGE WITH NOTHING TO REPAY, drawn as one thing.
@@ -130,7 +112,7 @@ export function PaymentsOverview({
     return (
       <Card>
         <Result
-          icon={<NoScheduleMark />}
+          icon={<NoScheduleMark muted />}
           title={t(nothingAtAll ? "payments.noLoanTitle" : "payments.noneTitle")}
           subTitle={t(nothingAtAll ? "payments.noLoanBody" : "payments.noneBody")}
           extra={
@@ -186,45 +168,18 @@ export function PaymentsOverview({
         </PageNotice>
       ) : null}
 
-      <Row gutter={[24, 24]} style={styles.row}>
-        {/* WBS stories 3 and 10. The page's one figure and the one action. */}
-        <Col xs={24} lg={16} style={sideBySide ? styles.column : undefined}>
-          {/* NO HEAD. The label lives inside, above the figure, the way the
-              loan page's statement states its own — see BalanceSummary. */}
-          <Card
-            style={sideBySide ? styles.stretchCard : undefined}
-            /* THE PAGE'S LEAD, at the lead inset. It was antd's own 24, which
-               made the same figure under the same label sit 8px closer to its
-               card edge here than on /loan. See shared/ui/panel.styles.ts. */
-            styles={{
-              body: sideBySide ? { ...leadPanelBody, ...styles.fillBody } : leadPanelBody,
-            }}
-          >
-            <BalanceSummary
-              balance={record.balance}
-              next={next}
-              fill={sideBySide}
-              onPay={() => onPay?.()}
-            />
-          </Card>
-        </Col>
-
-        {/* WBS stories 7 and 8. Small content, so a small slot — it was half
-            the page before and mostly empty.
-
-            This one brings its own Card: its head carries the Update action,
-            and whether that action belongs there is a question only the panel's
-            own state can answer. */}
-        <Col xs={24} lg={8} style={sideBySide ? styles.column : undefined}>
-          <RepaymentCardPanel
-            title={t("payments.savedCard")}
-            cards={record.cards}
-            role={role}
-            fill={sideBySide}
-            onSaveCard={onSaveCard}
-          />
-        </Col>
-      </Row>
+      {/* WBS stories 3 and 10. The page's one figure and the one action.
+          FULL WIDTH now — the saved payment card moved to the profile page, so
+          the balance no longer shares its row and takes the whole width, at the
+          lead inset. NO HEAD: the label lives inside, above the figure, the way
+          the loan page's statement states its own — see BalanceSummary. */}
+      <Card style={styles.card} styles={{ body: leadPanelBody }}>
+        <BalanceSummary
+          balance={record.balance}
+          next={next}
+          onPay={() => onPay?.()}
+        />
+      </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
           inset tab bar, the same treatment the back-office tables use, so the
@@ -243,8 +198,16 @@ export function PaymentsOverview({
               label: t("loanPage.schedule"),
               children: (
                 <>
-                  {/* WBS story 2, with story 5's Pay now on each payable line. */}
-                  <PaymentSchedule installments={record.schedule} onPay={onPay} />
+                  {/* WBS story 2, with story 5's Pay now on each payable line.
+                      ONLY WHAT IS STILL OWED. A paid instalment drops off the
+                      schedule — its completed payment is in the history tab —
+                      so this tab is the borrower's list of what is left to pay.
+                      *"რაც გადავხადე ჰისთორიში წავა, პირველ ტაბზე მხოლოდ
+                      გადასახდელები."* */}
+                  <PaymentSchedule
+                    installments={record.schedule.filter((row) => row.status !== "paid")}
+                    onPay={onPay}
+                  />
 
                   {/* WBS story 10 is "review applied late fees AND OVERDUE
                       PAYMENT INFORMATION". A fee in a column tells the borrower

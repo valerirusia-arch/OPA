@@ -182,6 +182,9 @@ export const en = {
   "profile.pageSubtitle": "Your details, how OPA reaches you, and your password.",
   "profile.navPersonal": "Personal information",
   "profile.navContact": "Contact details",
+  "profile.navCard": "Payment card",
+  "profile.cardSubtitle":
+    "Add or update the debit card OPA takes your repayments from. OPA never sees the number — Repay holds it.",
   "profile.navPassword": "Password",
   "profile.passwordSubtitle":
     "Choose a password you don't use anywhere else. You'll stay signed in on this device.",
@@ -257,11 +260,12 @@ export const en = {
   */
   "dashboard.titleApplication": "Application {ref}",
   "dashboard.titleLoan": "Loan {ref}",
-  /* Nothing open. There is no reference to name, and "Welcome back" is what
-     was wrong with the old title, so the page says what its state is. The
-     sentence under it — the only place that sentence still survives — then
-     explains what to do about it. */
-  "dashboard.titleNone": "No application yet",
+  /* Nothing open. Not the flat, generic "No application yet" — the designer
+     asked for something specific to this page and this product, and with the
+     subtitle gone the title carries the whole greeting on its own. *"არ მინდა
+     ესეთი თაითლი... რამე უნიკალური და ზუსტი."* It frames the empty page as the
+     beginning of the one thing it is for, rather than reporting an absence. */
+  "dashboard.titleNone": "Your loan starts here",
   "dashboard.leadNone": "Nothing is open yet. Start an application and it all appears here.",
   "dashboard.leadApplication": "Your application is with OPA. Here is where it stands.",
   "dashboard.leadApplicationCoBorrower":
@@ -832,6 +836,8 @@ export const en = {
   "card.replace": "Update card",
   "card.update": "Update",
   "card.brandLine": "{brand} debit",
+  /* The ownership eyebrow on the borrower's own saved card — see CardFace. */
+  "card.owner": "Your card",
   "card.expiresLabel": "Expires",
   // The mock of Repay's embedded form. Labelled as a mock on purpose: the WBS
   // is explicit that these fields are Repay's, not OPA's.
@@ -1039,7 +1045,9 @@ export const en = {
   "loanPage.viewSchedule": "View full schedule",
   "loanPage.cardEndingLabel": "Card ending",
   "loanPage.cardModalTitle": "Your virtual card details",
-  "loanPage.cardIssuer": "OPA virtual",
+  "loanPage.cardIssuer": "Virtual card",
+  /* The ownership eyebrow on the virtual card's face — see CardFace. */
+  "loanPage.cardOwner": "Issued by OPA",
   "loanPage.cardholder": "Cardholder",
   "loanPage.cardExpires": "Expires",
   "loanPage.cardShowDetails": "Show card details",
@@ -1241,6 +1249,23 @@ export const en = {
   "check.credit": "Credit check",
   "check.income": "Income verification",
   "check.rules": "Eligibility outcome",
+  /* WHAT EACH CHECK ACTUALLY DID — the second line on its row, straight out of
+     the WBS's own description of the story. A label names the check; this says
+     what the pipeline looked at, which is the part an underwriter cannot infer
+     from "Passed". */
+  "check.whatIdentity":
+    "LexisNexis InstantID matched the name, date of birth, address and SSN against public records.",
+  "check.whatOfac":
+    "Screened against the OFAC sanctions list, as part of the identity check.",
+  "check.whatNoLend":
+    "Looked for an open application or loan, and checked the legacy no-lend list and denials from the last 6 months.",
+  "check.whatIncome":
+    "Read the uploaded documents to confirm an income source exists. The amount itself is not verified.",
+  // The credit-score gauge (see CreditScoreGauge).
+  "verify.creditScore": "Credit score",
+  "verify.bandPoor": "Poor",
+  "verify.bandFair": "Fair",
+  "verify.bandGood": "Good",
   "check.pending": "Not run yet",
   "check.passed": "Passed",
   "check.review": "Needs review",
@@ -1399,6 +1424,7 @@ export const en = {
   "appDetail.answeredOn": "Answered {date}",
   "appDetail.awaitingAnswer": "Waiting for the borrower",
   "appDetail.decidedBy": "{outcome} by {name} on {date}",
+  "appDetail.decidedByShort": "by {name} · {date}",
   "appDetail.sourceAutomated": "Automated",
   "appDetail.sourceManual": "Manual",
   "appDetail.sourceOverride": "Override",
@@ -1822,6 +1848,9 @@ const es: Record<TranslationKey, string> = {
     "Tus datos, cómo te contacta OPA y tu contraseña.",
   "profile.navPersonal": "Información personal",
   "profile.navContact": "Datos de contacto",
+  "profile.navCard": "Tarjeta de pago",
+  "profile.cardSubtitle":
+    "Agrega o actualiza la tarjeta de débito de la que OPA cobra tus pagos. OPA nunca ve el número — lo guarda Repay.",
   "profile.navPassword": "Contraseña",
   "profile.passwordSubtitle":
     "Elige una contraseña que no uses en ningún otro sitio. Seguirás con la sesión iniciada en este dispositivo.",
@@ -1866,7 +1895,7 @@ const es: Record<TranslationKey, string> = {
   "dashboard.title": "Panel",
   "dashboard.titleApplication": "Solicitud {ref}",
   "dashboard.titleLoan": "Préstamo {ref}",
-  "dashboard.titleNone": "Aún no hay solicitud",
+  "dashboard.titleNone": "Aquí empieza tu préstamo",
   "dashboard.leadNone": "Todavía no hay nada abierto. Inicia una solicitud y aparecerá todo aquí.",
   "dashboard.leadApplication": "Tu solicitud está en OPA. Aquí ves en qué punto está.",
   "dashboard.leadApplicationCoBorrower":
@@ -2338,6 +2367,7 @@ const es: Record<TranslationKey, string> = {
   "card.replace": "Cambiar la tarjeta",
   "card.update": "Cambiar",
   "card.brandLine": "{brand} débito",
+  "card.owner": "Tu tarjeta",
   "card.expiresLabel": "Caduca",
   "card.number": "Número de tarjeta",
   "card.expiry": "Caducidad",
@@ -2494,7 +2524,8 @@ const es: Record<TranslationKey, string> = {
   "loanPage.viewSchedule": "Ver el calendario completo",
   "loanPage.cardEndingLabel": "Tarjeta terminada en",
   "loanPage.cardModalTitle": "Los datos de tu tarjeta virtual",
-  "loanPage.cardIssuer": "OPA virtual",
+  "loanPage.cardIssuer": "Tarjeta virtual",
+  "loanPage.cardOwner": "Emitida por OPA",
   "loanPage.cardholder": "Titular",
   "loanPage.cardExpires": "Caduca",
   "loanPage.cardShowDetails": "Ver los datos de la tarjeta",
@@ -2651,6 +2682,18 @@ const es: Record<TranslationKey, string> = {
   "check.credit": "Consulta de crédito",
   "check.income": "Verificación de ingresos",
   "check.rules": "Resultado de elegibilidad",
+  "check.whatIdentity":
+    "LexisNexis InstantID cotejó el nombre, la fecha de nacimiento, el domicilio y el SSN con registros públicos.",
+  "check.whatOfac":
+    "Cotejado con la lista de sanciones OFAC, como parte de la verificación de identidad.",
+  "check.whatNoLend":
+    "Buscó una solicitud o un préstamo abiertos, y consultó la lista heredada de no préstamo y los rechazos de los últimos 6 meses.",
+  "check.whatIncome":
+    "Leyó los documentos subidos para confirmar que existe una fuente de ingresos. El importe no se verifica.",
+  "verify.creditScore": "Puntaje de crédito",
+  "verify.bandPoor": "Bajo",
+  "verify.bandFair": "Medio",
+  "verify.bandGood": "Bueno",
   "check.pending": "Aún no ejecutada",
   "check.passed": "Superada",
   "check.review": "Requiere revisión",
@@ -2807,6 +2850,7 @@ const es: Record<TranslationKey, string> = {
   "appDetail.answeredOn": "Respondido el {date}",
   "appDetail.awaitingAnswer": "Esperando al prestatario",
   "appDetail.decidedBy": "{outcome} por {name} el {date}",
+  "appDetail.decidedByShort": "por {name} · {date}",
   "appDetail.sourceAutomated": "Automática",
   "appDetail.sourceManual": "Manual",
   "appDetail.sourceOverride": "Anulación",

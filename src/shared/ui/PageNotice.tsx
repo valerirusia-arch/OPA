@@ -1,34 +1,31 @@
 // src/shared/ui/PageNotice.tsx
 //
-// A PAGE'S ONE NOTICE, with its chrome taken off.
+// A PAGE'S ONE NOTICE — a soft, rounded, light panel.
 //
-// These were antd Alerts as antd draws them: a tinted panel, a 1px ring in
-// the state's own hue, a title in bold and a paragraph under it, full width
-// above the page's first card. Four of them across the borrower's side, each
-// one a coloured slab sitting over a white card that has its own border and
-// its own heading — so the page opened with two boxes before it said
-// anything.
-//
-// The designer took the box away and kept the signal: *"ამ ალერტებს არც
-// ბექგრაუნდი და არც სტროუკი სჭირდებათ — მხოლოდ იყოს ეს მწვანე ან წითელი ან
-// ნარინჯისფერი, მაგ ფერის ალერტი და გვერდზე ტექსტი."* What is left is the
-// state's own mark and a sentence beside it, which is all a notice was ever
-// carrying: the colour says what kind of news it is and the words say what
-// the news is.
+// It has been three things. First an antd Alert as antd draws it: a tinted
+// slab, a 1px ring in the state's hue, a bold title over a paragraph. Then the
+// opposite — the box taken off entirely, down to a bare icon and a sentence —
+// which read as unfinished, thrown onto the page. Now the middle: the panel is
+// back, but as the product's own soft surface — the state's pale tint, a very
+// light neutral hairline (so its edge reads on the page), the app's large
+// radius, and the bare per-type glyph with nothing behind it. *"ამ ალერტებს
+// უნდა ვუშველოთ... უფრო შევალამაზოთ, უფრო საინტერესო, მაგრამ მსუბუქი."* See
+// notice.styles.ts for how each part earns "light".
 //
 // AND ONE SENTENCE, NOT TWO STACKED. Half of them had a bold title with a
 // paragraph under it, which is a heading for a single line of text — *"ეს
-// თაითლი არაა საჭირო, უბრალოდ გააერთიანე ტექსტი."* The callers now hand over
-// one message.
+// თაითლი არაა საჭირო, უბრალოდ გააერთიანე ტექსტი."* The callers hand over one
+// message; the colour says what kind of news it is and the words say what it
+// is.
 //
 // STILL AN antd ALERT. It keeps the role, the live-region behaviour and the
-// per-type icon; only the panel is removed. Composing this out of a Flex and
-// an icon would mean hand-rolling something antd provides, and it would drop
-// the semantics with the border.
+// per-type icon and tint; only the chrome is restyled. Composing this out of a
+// Flex and an icon would mean hand-rolling something antd provides, and it
+// would drop the alert semantics with the border.
 
 import type { ReactNode } from "react";
-import { Alert } from "antd";
-import { pageNotice, pageNoticeIcon } from "./notice.styles";
+import { Alert, theme } from "antd";
+import { getNoticeStyles } from "./notice.styles";
 
 export type PageNoticeProps = {
   /** Which kind of news it is. Drives the icon and its colour, nothing else. */
@@ -40,12 +37,14 @@ export type PageNoticeProps = {
 };
 
 export function PageNotice({ tone, children, style }: PageNoticeProps) {
+  const { token } = theme.useToken();
+  const s = getNoticeStyles(token);
   return (
     <Alert
       type={tone}
       showIcon
-      style={style ? { ...pageNotice, ...style } : pageNotice}
-      styles={{ icon: pageNoticeIcon }}
+      style={style ? { ...s.notice, ...style } : s.notice}
+      styles={{ icon: s.icon, title: s.message }}
       title={children}
     />
   );

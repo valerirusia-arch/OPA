@@ -19,7 +19,7 @@
 // Dumb: mock default, local state for the dialog, console.log for the rest.
 
 import { useState } from "react";
-import { App, Typography } from "antd";
+import { Typography } from "antd";
 import { useNavigate } from "@tanstack/react-router";
 import { AppHeader } from "../../shared/ui/AppHeader";
 import { HeroBackdrop } from "../../shared/ui/HeroBackdrop";
@@ -37,7 +37,6 @@ import {
 } from "../../features/Payments/ui/MakePaymentModal";
 import type { Installment, PaymentsRecord } from "../../features/Payments/ui/types";
 import {
-  applyCard,
   applyPayment,
   hasOpenApplication,
   useLoanRecord,
@@ -69,7 +68,6 @@ export default function PaymentsScreen({
   const unreadCount = useUnreadCount(viewer.role);
   const person = userName ?? viewer.name;
   const t = useT();
-  const { message } = App.useApp();
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
 
   const role = viewer.role;
@@ -177,14 +175,6 @@ export default function PaymentsScreen({
                   (row) => row.id === transaction.installmentId
                 );
                 setPaying({ installment: installment ?? nextInstallment });
-              }}
-              onSaveCard={(card, replacing) => {
-                console.log("save repayment card", { card, replaced: replacing?.id });
-                /* WBS story 8: the old card is deleted and the new one saved,
-                   so the panel has to show the new one — and it is the
-                   READER's own card. Neither party replaces the other's. */
-                applyCard(card, role);
-                message.success(t(replacing ? "payments.cardReplaced" : "payments.cardSaved"));
               }}
               onViewLoan={() => navigate({ to: "/loan" })}
               /* The Application TAB, not the wizard. Every other Start in the

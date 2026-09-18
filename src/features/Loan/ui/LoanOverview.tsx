@@ -187,7 +187,7 @@ export function LoanOverview({
   const nothingHere = () => (
     <Card>
       <Result
-        icon={<NoLoanMark />}
+        icon={<NoLoanMark muted />}
         title={t("loanPage.none")}
         subTitle={t("loanPage.noneBody")}
         extra={

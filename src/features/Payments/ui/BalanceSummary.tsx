@@ -193,10 +193,13 @@ export function BalanceSummary({
   );
 
   return (
-    /* Fills its card and pushes the detail row to the base: the balance is the
-       headline, the three figures at the foot are its footnote, and the space
-       between them separates two groups rather than trailing off the end of
-       one. */
+    /* Fills its card, balance at the TOP and the foot-figures at the BASE.
+       This card is the shorter of the two in its row (the saved card carries a
+       card face), so filling to equal height leaves spare space. Centring the
+       block was tried; the designer's call is to pin the answer where it has
+       always sat and let the small print hold the foot — *"ეს დააბრუნე მაღლა
+       სადაც იყო, ქვემოთ ისინი დატოვე."* — so the label, figure and next-line
+       lead the card and the three figures sit along its base under the rule. */
     <Flex
       vertical
       justify={fill ? "space-between" : undefined}
@@ -241,7 +244,13 @@ export function BalanceSummary({
             figure it qualifies. Not over the card and not under the number:
             a reader takes "outstanding balance · 22 days overdue" as one
             statement, which is what it is. */}
-        <Flex align="center" gap={10} wrap style={styles.labelRow}>
+        {/* BASELINE, not centre. The label is 11px uppercase caps and the
+            state beside it is a larger mixed-case word; centring their line
+            boxes drops the state visibly below the caps, because the caps sit
+            high in a 1.6 line box. Sitting both on one baseline is what makes
+            "OUTSTANDING BALANCE · Accelerated" read as a single line of text.
+            *"ტექსტთან ოდნავ დაბლა წერია — გასაცენტრებელია."* */}
+        <Flex align="baseline" gap={10} wrap style={styles.labelRow}>
           <Typography.Text style={s.labelInline}>{t("payments.outstanding")}</Typography.Text>
           {status ? (
             /* BARE HERE, and only here. The state is a qualifier of the
@@ -334,18 +343,17 @@ export function BalanceSummary({
             {stacked ? action : null}
           </Flex>
         )}
-      </Flex>
-
       {/*
-        THE BAR, BETWEEN THE ANSWER AND ITS SMALL PRINT.
-
-        Above the rule because it belongs to the balance — it is the same
-        number seen from the other end — and below the caption because the
-        caption is about the NEXT payment and the bar is about all of them.
-        No percentage printed inside it: antd would put the figure at the end
-        of the line where it reads as a label for the empty part, so it goes
-        under the bar at the start, against the filled end, which is what it
-        describes.
+        THE BAR, GROUPED WITH THE ANSWER — inside the figure block, under the
+        caption. It belongs to the balance (the same number seen from the other
+        end), and grouping it here is what stops a `fill` card floating it in
+        the middle: with the root column set to space-between, a bar left as its
+        own child sat halfway down the empty gap. Inside the block, the top of
+        the card carries label + figure + caption + bar as one thing and the
+        small print sits at the foot — one intentional gap between the two,
+        instead of a void with a bar adrift in it. No percentage printed inside
+        the bar: antd sets it at the empty end as if labelling it, so the count
+        goes under the bar's filled start.
       */}
       {progress && progress.total > 0 ? (
         <Flex vertical gap={8} style={styles.progress}>
@@ -365,6 +373,7 @@ export function BalanceSummary({
           </Typography.Text>
         </Flex>
       ) : null}
+      </Flex>
 
       {/* At label size: detail about the figure above, not three more figures
           competing with it. The rule is what the card's head used to be — the

@@ -40,11 +40,12 @@
 // objects: OPA issues one and spends it, the borrower brings the other and is
 // charged on it.
 //
-// A third finish settles it: GRAPHITE is OPA's, NAVY is the borrower's own.
-// Same geometry, same type, same white ink — one object in two materials, not
-// two designs. The material is the whole distinction: the navy is a gradient
-// pretending to catch light, the graphite a flat slab that does not pretend,
-// which suits the card with no physical existence.
+// A third finish settles it, and the rebrand decided which way round it goes:
+// OPA'S CARD IS THE BRAND TEAL, the borrower's own a warm graphite. Same
+// geometry, same type, same white ink — one object in two materials, not two
+// designs. OPA takes the identity colour because OPA issues that card; the
+// borrower's is neutral because it is not OPA's to brand. Both are flat solid
+// fills, no gradient and no bloom.
 // `tone="light"` stays: it is drawn, it works, and it is one prop away.
 //
 // STILL NOT A REPLICA. No brand artwork, no logo, no hologram, no magnetic
@@ -64,12 +65,19 @@ import { getStyles, styles, type CardTone } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
-   * Which finish, and it is the one thing that says WHOSE card this is:
-   * `graphite` for the virtual card OPA issues, `dark` for the debit card the
-   * borrower brought. `light` is the pale finish the pair was first drawn in,
-   * kept and not in use.
+   * Which finish. It used to be the ONLY thing that said whose card this is —
+   * graphite for the card OPA issues, navy for the one the borrower brought —
+   * which was too quiet a signal on its own. `owner` now says it in words too.
+   * `light` is the pale finish the pair was first drawn in, kept and not in use.
    */
   tone?: CardTone;
+  /**
+   * Whose card this is, in words, along the top of the face: "Issued by OPA"
+   * on the virtual card, "Your card" on the borrower's own. The finish carries
+   * the same distinction visually; this makes it unmistakable — *"რომ
+   * მანახებს, რომ ეს ოპას ბარათია, ეს ჩემი ბარათია."*
+   */
+  owner?: string;
   /**
    * Top left: what this card is, in the product's own label treatment.
    *
@@ -103,7 +111,8 @@ export type CardFaceProps = {
 };
 
 export function CardFace({
-  tone = "dark",
+  tone = "borrower",
+  owner,
   label,
   brand,
   status,
@@ -121,7 +130,14 @@ export function CardFace({
 
   return (
     <Flex vertical justify="space-between" gap={20} style={s.face}>
-      <Flex align="center" justify="space-between" gap={12}>
+      {/* The ownership eyebrow, then what the card is — grouped so the top of
+          the face reads "whose card · which card" and the number holds the
+          base. */}
+      <Flex vertical gap={owner ? 10 : 0}>
+        {owner ? (
+          <Typography.Text style={s.owner}>{owner}</Typography.Text>
+        ) : null}
+        <Flex align="center" justify="space-between" gap={12}>
         {/* THE NETWORK'S MARK WHERE THE CARD ITSELF CARRIES IT. A person
             checking which card is on file recognises the mark before they
             read anything, and the brand is one of the four facts OPA is
@@ -151,6 +167,7 @@ export function CardFace({
             {status.label}
           </Tag>
         ) : null}
+        </Flex>
       </Flex>
 
       {/* The number and its small print as one block: a card's expiry is a

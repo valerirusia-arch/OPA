@@ -107,7 +107,7 @@ export function LoanDetailsStep({
         </Typography.Text>
         {selected ? (
           <>
-            <Typography.Title level={2} style={s.amountValue}>
+            <Typography.Title level={2} className="opa-figure" style={s.amountValue}>
               {money(selected.amount)}
             </Typography.Title>
             <Typography.Text type="secondary" style={styles.amountTerms}>
@@ -115,7 +115,11 @@ export function LoanDetailsStep({
             </Typography.Text>
           </>
         ) : (
-          <Typography.Title level={2} style={{ ...s.amountValue, ...s.amountEmpty }}>
+          <Typography.Title
+            level={2}
+            className="opa-figure"
+            style={{ ...s.amountValue, ...s.amountEmpty }}
+          >
             —
           </Typography.Title>
         )}

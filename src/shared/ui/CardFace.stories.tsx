@@ -17,11 +17,11 @@ function Faces() {
     <Flex gap={32} wrap style={{ padding: 24 }}>
       <Flex vertical gap={12} style={{ width: SLOT }}>
         <Typography.Text type="secondary">
-          Graphite — the card OPA issues
+          Brand teal — the card OPA issues
         </Typography.Text>
         <Card title="Virtual payment card">
           <CardFace
-            tone="graphite"
+            tone="opa"
             label="OPA virtual"
             status={{ label: "Not used yet" }}
             number="•••• 3094"
@@ -32,7 +32,7 @@ function Faces() {
 
       <Flex vertical gap={12} style={{ width: SLOT }}>
         <Typography.Text type="secondary">
-          Navy — the card the borrower brought
+          Graphite — the card the borrower brought
         </Typography.Text>
         <Card title="Saved payment card">
           <CardFace

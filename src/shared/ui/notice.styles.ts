@@ -1,38 +1,67 @@
 // src/shared/ui/notice.styles.ts
 
 import type { CSSProperties } from "react";
+import type { GlobalToken } from "antd";
 
 /**
- * THE PANEL, REMOVED — see PageNotice.tsx for why.
+ * A PAGE'S ONE NOTICE — soft, rounded, and light.
  *
- * `background` and `border` go to nothing and the padding with them, so the
- * notice's first pixel is its icon and its text starts on the same left edge
- * as the page's own content. What antd keeps doing is the part that matters:
- * the icon, its colour, and the alert semantics.
+ * These were once antd Alerts as antd draws them (a tinted slab, a 1px ring in
+ * the state's hue, a bold title), then stripped all the way back to a bare
+ * icon and a sentence with no panel at all. The bare version read as thrown-in
+ * — *"ამ ალერტებს უნდა ვუშველოთ... უფრო შევალამაზოთ, უფრო საინტერესო, მაგრამ
+ * მსუბუქი."* So the panel comes back, but as the product's own soft surface
+ * rather than antd's default alert:
  *
- * The 24 below is the page's band rhythm, the same gap every card on these
- * screens leaves under itself.
+ *   · the state's own PALE tint for the ground (antd's per-type background,
+ *     kept — it is already light);
+ *   · a VERY LIGHT NEUTRAL hairline, not the type's own hue. A tinted panel on
+ *     the near-white page has almost no edge and reads as spilled ink — *"ომ
+ *     რე ბექგრაუნდზე ცუდად ზის"* — so it needs an outline, but the coloured
+ *     ring antd draws is exactly the heavy part; `colorSplit` (6% ink) defines
+ *     the edge without shouting;
+ *   · the product's large radius, so it reads as one of this app's rounded
+ *     cards and not a system banner;
+ *   · the mark left as the bare per-type glyph. It carried a white chip for a
+ *     while and the designer took it off — *"ამას უკან თეთრი ბექგრაუნდი არ
+ *     სჭირდება"* — so the one spot of the state's colour is the icon itself,
+ *     on the tint, nothing behind it.
+ *
+ * The colour of the glyph and the ground stay antd's per-type values, so one
+ * component still covers success / info / warning / error from the `tone` prop.
  */
-export const pageNotice: CSSProperties = {
-  background: "transparent",
-  border: "none",
-  padding: 0,
-  marginBottom: 24,
-  /**
-   * THE MARK SITS ON THE FIRST LINE, NOT IN THE MIDDLE OF THE PARAGRAPH.
-   *
-   * antd centres a title-only Alert's icon against the whole text block,
-   * which is right for the one-line notices and wrong the moment one wraps:
-   * the funding notice runs to two lines and its icon was drawn floating
-   * between them, attached to neither.
-   */
-  alignItems: "flex-start",
-};
-
-/**
- * And the nudge that puts it ON that line rather than above it.
- *
- * The glyph is 16 and the copy's line box is 14 x 1.6 = 22.4, so 3px lands
- * the mark's centre on the first line's centre.
- */
-export const pageNoticeIcon: CSSProperties = { marginTop: 3 };
+export const getNoticeStyles = (token: GlobalToken) =>
+  ({
+    /**
+     * The panel: the type's pale tint, the product's large radius, a card's
+     * inset, and a neutral hairline so its edge reads on the page.
+     *
+     * `flex-start` keeps the mark on the FIRST line — antd centres a title-only
+     * alert's icon against the whole block, which floats it between the lines
+     * the moment the copy wraps.
+     */
+    notice: {
+      border: `1px solid ${token.colorSplit}`,
+      borderRadius: token.borderRadiusLG,
+      padding: "14px 16px",
+      marginBottom: 24,
+      alignItems: "flex-start",
+    },
+    /**
+     * The mark: the bare per-type glyph, nothing behind it. A hair of top
+     * margin drops a 16px icon's centre onto the copy's first line (14 × 1.6 =
+     * 22.4), and it never shrinks when the sentence wraps.
+     */
+    icon: {
+      flex: "none",
+      fontSize: 16,
+      marginInlineEnd: 12,
+      marginTop: 3,
+    },
+    /** The sentence, at the page's own body measure — not antd's tighter
+     *  alert line-height, which packs a two-line notice too close. */
+    message: {
+      color: token.colorText,
+      lineHeight: token.lineHeight,
+    },
+  }) satisfies Record<string, CSSProperties>;

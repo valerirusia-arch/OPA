@@ -26,6 +26,7 @@
 
 import { useState } from "react";
 import { App, Badge, Button, Card, Dropdown, Flex, Result, Tabs } from "antd";
+import type { MenuProps } from "antd";
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -33,6 +34,7 @@ import {
   SendOutlined,
   StopOutlined,
   UserOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
@@ -287,6 +289,61 @@ export default function BorrowerDetailsScreen({
     setFlagging(false);
   };
 
+  /*
+    EVERY ACTION IN THE ⋮ MENU, not a row of buttons with a menu on the end.
+    *"ამ 3 წერტილში ჩასვი ყველა ეს ექშენი."* The record's own actions — managing
+    it, sending the set-password link, flagging it, and (Admin only) withdrawing
+    access — are occasional, so they collapse behind one control and leave the
+    title row to the name and its status tags. Each item keeps the WBS role gate
+    it had as a button: Manage / Send link for Admin & Underwriter, DO NOT LOAN
+    for those two AND OPA Staff, access for the Admin alone.
+  */
+  const actionItems: MenuProps["items"] = [
+    ...(canEdit
+      ? [
+          {
+            key: "manage",
+            icon: <UserOutlined />,
+            label: t("borrower.manage"),
+            onClick: () => setManaging(true),
+          },
+          {
+            key: "sendLink",
+            icon: <SendOutlined />,
+            label: t("borrower.sendLink"),
+            onClick: () => {
+              console.log("send set-password link", borrower.profile.email);
+              message.success(t("users.linkSent"));
+            },
+          },
+        ]
+      : []),
+    {
+      key: "flag",
+      icon: <StopOutlined />,
+      // Red only when ADDING the flag; removing it is an ordinary action.
+      danger: !borrower.doNotLoan,
+      label: borrower.doNotLoan ? t("doNotLoan.remove") : t("doNotLoan.add"),
+      onClick: () => setFlagging(true),
+    },
+    // Withdrawing access is rare and severe, so it sits after a divider from
+    // the daily actions — WBS story 9, the Admin's alone.
+    ...(canManageAccess
+      ? [
+          { type: "divider" as const },
+          {
+            key: "access",
+            icon: <UserSwitchOutlined />,
+            danger: borrower.active,
+            label: borrower.active
+              ? t("users.action.deactivate")
+              : t("users.action.activate"),
+            onClick: () => setChangingAccess(true),
+          },
+        ]
+      : []),
+  ];
+
   return (
     <AdminShell
       sections={staffNavFor(role)}
@@ -319,56 +376,13 @@ export default function BorrowerDetailsScreen({
           </>
         }
         extra={
-          <>
-            {canEdit ? (
-              <>
-                <Button icon={<UserOutlined />} onClick={() => setManaging(true)}>
-                  {t("borrower.manage")}
-                </Button>
-                <Button
-                  // A key describes what waits at the other end; the button's
-                  // own job is to send. 
-                  icon={<SendOutlined />}
-                  onClick={() => {
-                    console.log("send set-password link", borrower.profile.email);
-                    message.success(t("users.linkSent"));
-                  }}
-                >
-                  {t("borrower.sendLink")}
-                </Button>
-              </>
-            ) : null}
-            {/* The one action the WBS also gives OPA Staff. */}
-            <Button
-              danger={!borrower.doNotLoan}
-              icon={<StopOutlined />}
-              onClick={() => setFlagging(true)}
-            >
-              {borrower.doNotLoan ? t("doNotLoan.remove") : t("doNotLoan.add")}
-            </Button>
-            {/* Withdrawing an account is rare and severe, so it sits in a menu
-                rather than as a fourth button competing with the daily ones. */}
-            {canManageAccess ? (
-              <Dropdown
-                trigger={["click"]}
-                placement="bottomRight"
-                menu={{
-                  items: [
-                    {
-                      key: "access",
-                      danger: borrower.active,
-                      label: borrower.active
-                        ? t("users.action.deactivate")
-                        : t("users.action.activate"),
-                      onClick: () => setChangingAccess(true),
-                    },
-                  ],
-                }}
-              >
-                <Button icon={<MoreOutlined />} aria-label={t("borrower.moreActions")} />
-              </Dropdown>
-            ) : null}
-          </>
+          <Dropdown
+            trigger={["click"]}
+            placement="bottomRight"
+            menu={{ items: actionItems }}
+          >
+            <Button icon={<MoreOutlined />} aria-label={t("borrower.moreActions")} />
+          </Dropdown>
         }
       >
         <Card
