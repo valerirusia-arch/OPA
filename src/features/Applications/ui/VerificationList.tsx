@@ -79,6 +79,27 @@ export function VerificationList({ results }: VerificationListProps) {
     ? Number(credit.detail)
     : undefined;
 
+  /*
+    WHY THE RULES HAVE NOT RUN, when they have not.
+
+    "Eligibility outcome — Not run yet" under a card of checks, one of which is
+    flagged, reads as a gap in the evidence: the underwriter is left to work
+    out for themselves whether something is missing or whether this is how it
+    is meant to look. It is how it is meant to look. The WBS runs the business
+    rules LAST — "Applications may be routed to manual review from any
+    automated verification step (Identity Verification, Income Verification,
+    Credit Check or Business Rule Evaluation)" — so a check that stopped the
+    pipeline stopped the rules with it, and they will run when it is settled.
+
+    Which check is derived from the results rather than taken as a prop: the
+    first one, in the WBS's own running order, that did not pass. That is by
+    definition where the pipeline halted. *"ამ დროს რა ხდება?"*
+  */
+  const blockedBy =
+    eligibility?.outcome === "pending"
+      ? checks.find((result) => result.outcome !== "passed")
+      : undefined;
+
   return (
     <Flex vertical gap={20}>
       {/* THE CREDIT SCORE — a gauge, and the card leads on it: it is the one
@@ -163,7 +184,12 @@ export function VerificationList({ results }: VerificationListProps) {
             <Flex vertical style={styles.name}>
               <Typography.Text strong>{t(checkLabelKeys.rules)}</Typography.Text>
               <Typography.Text type="secondary" style={styles.detail}>
-                {eligibility.detail ?? t(checkProviderKeys.rules)}
+                {eligibility.detail ??
+                  (blockedBy
+                    ? t("check.rulesBlocked", {
+                        check: t(checkLabelKeys[blockedBy.key]),
+                      })
+                    : t(checkProviderKeys.rules))}
               </Typography.Text>
             </Flex>
             <CheckOutcomeTag outcome={eligibility.outcome} />

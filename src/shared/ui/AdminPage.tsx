@@ -35,9 +35,12 @@ export type AdminPageProps = {
    * detail page: nobody comes here to leave, and the one person who does is
    * looking for words, not for a target.
    *
-   * So it is a line of type with an arrow, above the name, where a breadcrumb
-   * goes — and it SAYS WHERE IT GOES, which the circle could only do in a
-   * tooltip and a screen reader.
+   * So it is an arrow, above the name, where a breadcrumb goes. THE WORDS CAME
+   * OFF AGAIN: "Back to applications" beside an arrow is the arrow explained,
+   * and on the one page in the product you can only have arrived at from that
+   * list there is nowhere else the arrow could go — *"ტექსტი არაა საჭირო
+   * საერთოდ, უბრალოდ აროუ ჩასვი."* The label stays as the accessible name, so
+   * a screen reader still hears the destination.
    */
   back?: { label: string; onClick: () => void };
   children: ReactNode;
@@ -58,11 +61,10 @@ export function AdminPage({
           type="link"
           size="small"
           icon={<ArrowLeftOutlined />}
+          aria-label={back.label}
           style={styles.back}
           onClick={back.onClick}
-        >
-          {back.label}
-        </Button>
+        />
       ) : null}
 
       <Flex

@@ -1289,6 +1289,9 @@ export const en = {
   "check.unavailable": "Service unavailable",
   "check.ranOn": "Ran {date}",
   "check.notRun": "Not run",
+  /* Why the eligibility rules are still pending. They run LAST, so a check
+     that stopped the pipeline is the reason — see VerificationList. */
+  "check.rulesBlocked": "The rules run last. {check} has to be settled first.",
 
   "application.pendingAction": "Pending action",
 
@@ -2715,6 +2718,8 @@ const es: Record<TranslationKey, string> = {
   "check.unavailable": "Servicio no disponible",
   "check.ranOn": "Ejecutada el {date}",
   "check.notRun": "Sin ejecutar",
+  "check.rulesBlocked":
+    "Las reglas se ejecutan al final. Primero hay que resolver: {check}.",
 
   "application.pendingAction": "Acción pendiente",
 
