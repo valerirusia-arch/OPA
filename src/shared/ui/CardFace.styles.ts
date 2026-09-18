@@ -58,7 +58,12 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
       padding: token.paddingLG,
       borderRadius: token.borderRadiusLG,
       background: ground,
-      border: `1px solid ${inverted ? brand.cardDarkEdge : brand.cardLightEdge}`,
+      /* NO RIM ON A DARK FACE. The hairline was white at 10%, which on a card
+         sitting on a white page draws a pale line around the whole object —
+         *"რაღაცა სტროუკები აქვს გარედან, რაც არ მომწონს."* A dark card already
+         has an edge: it is dark against white. The line exists for the pale
+         finish, which would otherwise dissolve into the card body under it. */
+      ...(inverted ? null : { border: `1px solid ${brand.cardLightEdge}` }),
       /* A card is an object with a thickness; the page's own elevation says so
          without a second frame. */
       boxShadow: brand.shadowCard,

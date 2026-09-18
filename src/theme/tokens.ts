@@ -195,10 +195,23 @@ export const brand = {
    * The sheen is a single soft highlight, not a second hue — it is what stops
    * a long ramp reading as a printing error.
    */
-  cardSkin: [
-    "radial-gradient(85% 65% at 76% 24%, rgba(255,255,255,0.16), transparent 62%)",
-    "linear-gradient(158deg, #3B82B8 0%, #24689E 22%, #14507F 42%, #0C3355 60%, #14181D 82%, #0E1114 100%)",
-  ].join(", "),
+  /**
+   * ONE SMOOTH RAMP, AND NOTHING LAID OVER IT.
+   *
+   * A soft radial highlight used to sit on top of this, meant as the sheen the
+   * reference card has. It landed across the middle-right, where the blue is
+   * already handing over to the black, and read as a pale patch lifted out of
+   * the dark — a printing fault rather than light: *"შავი ფერი, რაღაცები
+   * ამოწეულია."* A gloss painted onto a flat ramp needs the geometry the
+   * reference gets from being a photograph of a curved object; without it, it
+   * is just a lighter area.
+   *
+   * So the face is one linear ramp with enough stops to stay smooth all the
+   * way down: brand blue at the top corner, through the deep blues, into a
+   * near-black that is still faintly blue rather than a neutral grey.
+   */
+  cardSkin:
+    "linear-gradient(160deg, #3E86BC 0%, #2A6FA6 18%, #1A5488 36%, #0E3A60 54%, #0A2436 70%, #0B1218 86%, #0C0E11 100%)",
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
   cardLight: "#E7F1F4",
@@ -217,7 +230,6 @@ export const brand = {
   cardDarkInk: "#FFFFFF",
   cardDarkQuiet: "rgba(255, 255, 255, 0.68)",
   cardLightEdge: "rgba(38, 36, 35, 0.08)",
-  cardDarkEdge: "rgba(255, 255, 255, 0.10)",
 
   /** A payment card's face — the same warm/teal washes on a pale ground. */
   cardFace: [

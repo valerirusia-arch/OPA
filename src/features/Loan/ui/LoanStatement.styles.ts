@@ -46,6 +46,11 @@ export const styles = {
 
 export const getStyles = (token: GlobalToken) => {
   const figures = getFigureStyles(token);
+  /** The micro-label's own line box — its size at the body's line height.
+   *  Read from the two of them rather than written down, so a change to either
+   *  keeps the action level with the label. */
+  const labelLine = Number(figures.microLabel.fontSize) * token.lineHeight;
+
   return {
     /** No colour and no second radius: it is a card, sitting a little roomier
      *  than the cards under it. The row it sits in owns the gap below it. */
@@ -60,7 +65,20 @@ export const getStyles = (token: GlobalToken) => {
      */
     actionSlot: {
       position: "absolute",
-      top: LEAD_PANEL_INSET,
+      /*
+        LEVEL WITH THE LABEL, not with the top of the panel.
+
+        `top: LEAD_PANEL_INSET` lined up the button's BOX with the label's box,
+        and a `size="large"` button is 48px tall against the micro-label's ~18 —
+        so its words landed fifteen pixels lower, level with nothing, adrift
+        between the label and the figure. *"View full schedule მინდა რომ next
+        payment-ის სიმაღლეზე იყოს."*
+
+        Centring the taller box on the shorter line is the arithmetic below.
+        The button has no fill, so the part of it that reaches above the panel's
+        inset draws nothing — only its words move.
+      */
+      top: LEAD_PANEL_INSET + (labelLine - token.controlHeightLG) / 2,
       right: LEAD_PANEL_INSET - 16,
       zIndex: 1,
     },
