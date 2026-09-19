@@ -107,16 +107,18 @@ export function LoanDocumentsTable({
         <Row gutter={[16, 16]} style={styles.chips}>
           {packageParts.map((part) => (
             <Col key={part.key} xs={24} sm={8}>
-              {/* The product's own label-over-value pairing, boxed: the part's
-                  name in the 11px label treatment, its state underneath as
-                  the same status pill every other screen uses. */}
-              <Flex vertical gap={10} style={s.part}>
+              {/* ONE LINE, NOT TWO. The name and the state stacked with the
+                  pill under them, which made a box 130px tall to carry a label
+                  and a chip — three of them mostly padding, above a table. On
+                  one line the box is the height of the thing it holds, the
+                  name reads on the left and the state ends the row, which is
+                  the arrangement every other summary in this product uses.
+                  *"უფრო ლამაზად მოსვა."* */}
+              <Flex align="center" justify="space-between" gap={12} style={s.part}>
                 <Typography.Text style={s.partName}>{part.name}</Typography.Text>
-                <Flex>
-                  <StatusPill color={part.signed ? "success" : "warning"}>
-                    {t(part.signed ? "loanPage.executed" : "loanAdmin.unsigned")}
-                  </StatusPill>
-                </Flex>
+                <StatusPill color={part.signed ? "success" : "warning"}>
+                  {t(part.signed ? "loanPage.executed" : "loanAdmin.unsigned")}
+                </StatusPill>
               </Flex>
             </Col>
           ))}
