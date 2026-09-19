@@ -236,6 +236,73 @@ export const mockBorrowers: Borrower[] = [
    * behind. He appears in the borrower list, he opens, and Manage account
    * edits him, none of which a nested sub-record could do.
    */
+  /*
+   * WBS story 9's own case: approved, funded, and CANCELLED before the virtual
+   * card was ever used. It exists so the state has somewhere to be seen — the
+   * back office could not show a cancelled loan at all, and story 10 gives
+   * internal users "all loan information".
+   */
+  {
+    id: "1009",
+    active: true,
+    doNotLoan: false,
+    profile: {
+      firstName: "Tomas",
+      lastName: "Rivera",
+      dateOfBirth: "22 Sep 1987",
+      ssn: "•••-••-3310",
+      country: "Guatemala",
+      email: "tomas.rivera@example.com",
+      phone: "(602) 555-0143",
+      street: "915 East Roosevelt Street",
+      city: "Phoenix",
+      state: "AZ",
+      zip: "85006",
+      communication: "SMS",
+      emailVerified: true,
+      phoneVerified: true,
+      identityVerified: true,
+    },
+    application: {
+      status: "approved",
+      uscisType: "I-485",
+      loanAmount: "$1,440.00",
+      annualIncome: "$46,500.00",
+      incomeDocUploaded: true,
+      coBorrowerRequired: false,
+      docsSigned: true,
+      householdSize: 4,
+      submitted: "24 Jul 2026",
+      referral: "Search",
+    },
+    loan: {
+      loanId: "app_4mn8xqz2",
+      status: "cancelled",
+      amount: "$1,440.00",
+      rate: "1.00%",
+      repaymentTerms: "12 months · $120.65/mo",
+      repaymentStartsOn: "—",
+      agreementSigned: true,
+      virtualCard: "•••• 7781",
+      /* The whole condition of story 9: cancelling is allowed only while this
+         is false, and it stayed false. */
+      virtualCardUsed: false,
+      debitCard: "•••• 5120",
+      fundedOn: "29 Jul 2026",
+      documents: [
+        { id: "x1", name: "Loan agreement.pdf", type: "loan_agreement", on: "28 Jul 2026", executed: true, uploadedBy: "system" },
+      ],
+      comments: [
+        {
+          id: "x2",
+          on: "31 Jul 2026 09:05",
+          by: "Priya Raman",
+          text: "Borrower cancelled before spending the card. Nothing was drawn.",
+        },
+      ],
+      payments: { schedule: [], history: [] },
+    },
+  },
   {
     id: "1008",
     active: true,

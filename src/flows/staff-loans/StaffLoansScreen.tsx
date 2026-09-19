@@ -57,7 +57,8 @@ export type StaffLoansScreenProps = {
   idleMs?: number;
 };
 
-const STATUSES: LoanStatus[] = ["funded", "repaying", "closed"];
+/** Every state a loan can be in, so the filter can reach every row. */
+const STATUSES: LoanStatus[] = ["funded", "repaying", "closed", "cancelled"];
 
 /**
  * What this list can be filtered by. A plain record of strings, because that

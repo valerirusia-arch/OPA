@@ -21,5 +21,14 @@ export const styles = {
 
 export const getStyles = (token: GlobalToken) =>
   ({
+    /** The recalculated terms, under the figure they follow from — quiet,
+     *  because it is a consequence and not something to fill in. */
+    terms: {
+      display: "block",
+      marginTop: 8,
+      marginBottom: 20,
+      fontSize: 13,
+      color: token.colorTextTertiary,
+    },
     blockTitle: { fontWeight: 500, color: token.colorText },
   }) satisfies Record<string, CSSProperties>;

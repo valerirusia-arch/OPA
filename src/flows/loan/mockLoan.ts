@@ -139,8 +139,16 @@ export const mockAwaitingSignature: ApplicationSummary = {
   decisionNote: "Your application was approved. Sign the loan agreement and OPA pays the filing fee.",
   loan: {
     stage: "awaitingSignature",
-    amount: "$1,440.00",
-    unusedBalance: "$1,440.00",
+    /*
+     * REDUCED BY THE UNDERWRITER — the case the borrower has to be told about,
+     * and the moment they meet it. WBS lets them "reduce or adjust the
+     * requested loan amount to reflect the amount approved", and the revised
+     * figure goes into the agreement now in front of the borrower to sign.
+     * $1,440 asked, $1,300 approved.
+     */
+    amount: "$1,300.00",
+    requestedAmount: "$1,440.00",
+    unusedBalance: "$1,300.00",
     apr: "1.00%",
     term: "12 months",
     firstPaymentOn: "Oct 01, 2026",

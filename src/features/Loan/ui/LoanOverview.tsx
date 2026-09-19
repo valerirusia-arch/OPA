@@ -421,8 +421,12 @@ export function LoanOverview({
       : {
           label: t("loanPage.loanAmount"),
           value: loan.amount,
-          caption:
-            loan.stage === "awaitingSignature"
+          /* THE REDUCTION COMES FIRST, where there was one. Everything else
+             this caption says is about WHERE the loan is; this is about WHAT
+             it is, and the borrower is a click away from signing for it. */
+          caption: loan.requestedAmount
+            ? t("loanPage.approvedInstead", { requested: loan.requestedAmount })
+            : loan.stage === "awaitingSignature"
               ? signedByReader
                 ? t("loanPage.stageAwaitingOther", { name: otherSigner ?? "" })
                 : t("loanPage.stageAwaitingSignature")

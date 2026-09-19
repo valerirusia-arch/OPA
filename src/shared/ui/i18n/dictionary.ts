@@ -687,6 +687,8 @@ export const en = {
   "loan.funded": "Funded",
   "loan.repaying": "Repaying",
   "loan.closed": "Closed",
+  /* WBS story 9: cancelled by the borrower before the card was used. */
+  "loan.cancelled": "Cancelled",
   "application.emptyTitle": "No application yet",
   "application.emptyDescription": "This borrower hasn't started a loan application.",
   /* The way to the co-borrower's own file, where their details are read and
@@ -1162,6 +1164,10 @@ export const en = {
   "loanPage.journeyDecision": "Decision",
 
   "loanPage.submittedOn": "Submitted {date}",
+  /* Shown instead of the submission date when the approved amount differs
+     from the one asked for. WBS lets the Underwriter reduce it, and the
+     borrower meets that figure in the agreement — so the page says it first. */
+  "loanPage.approvedInstead": "OPA approved this amount. You asked for {requested}.",
   "loanPage.withdrawTitle": "Withdraw this application",
   "loanPage.withdrawBody": "You can stop the application while no decision has been made. Applying again later starts from the beginning.",
 
@@ -1479,6 +1485,9 @@ export const en = {
   "amountPanel.currentIs": "Currently {amount}",
   "amountPanel.newAmount": "New amount (USD)",
   "amountPanel.history": "Change history",
+  /* WBS: changing the amount shall "recalculate loan terms if applicable" —
+     so the panel says what the borrower will actually pay. */
+  "amountPanel.terms": "Repaid in {months} monthly payments of {amount}.",
   "amountPanel.noChanges": "The amount has not been changed.",
   "amountPanel.colWhen": "When",
   "amountPanel.colChange": "Change",
@@ -2274,6 +2283,7 @@ const es: Record<TranslationKey, string> = {
   "loan.funded": "Desembolsado",
   "loan.repaying": "En pago",
   "loan.closed": "Cerrado",
+  "loan.cancelled": "Cancelado",
   "application.emptyTitle": "Todavía no hay solicitud",
   "application.emptyDescription":
     "Este prestatario no ha iniciado una solicitud de préstamo.",
@@ -2634,6 +2644,8 @@ const es: Record<TranslationKey, string> = {
   "loanPage.journeyDecision": "Decisión",
 
   "loanPage.submittedOn": "Enviada el {date}",
+  "loanPage.approvedInstead":
+    "OPA aprobó este importe. Solicitaste {requested}.",
   "loanPage.withdrawTitle": "Retirar esta solicitud",
   "loanPage.withdrawBody": "Puedes detener la solicitud mientras no haya una decisión. Volver a solicitar más adelante empieza desde el principio.",
 
@@ -2914,6 +2926,7 @@ const es: Record<TranslationKey, string> = {
   "amountPanel.currentIs": "Actualmente {amount}",
   "amountPanel.newAmount": "Nuevo importe (USD)",
   "amountPanel.history": "Historial de cambios",
+  "amountPanel.terms": "Se paga en {months} pagos de {amount} al mes.",
   "amountPanel.noChanges": "El importe no se ha modificado.",
   "amountPanel.colWhen": "Cuándo",
   "amountPanel.colChange": "Cambio",

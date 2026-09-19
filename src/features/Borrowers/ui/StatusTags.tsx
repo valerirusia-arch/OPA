@@ -55,12 +55,19 @@ const loanKeys: Record<LoanStatus, TranslationKey> = {
   funded: "loan.funded",
   repaying: "loan.repaying",
   closed: "loan.closed",
+  cancelled: "loan.cancelled",
 };
 
 export function LoanStatusTag({ status }: { status: LoanStatus }) {
   const t = useT();
   return (
-    <StatusPill color={status === "closed" ? undefined : "success"}>
+    /* Funded and repaying are green: money moved and is moving back. Closed is
+       neutral — it ran its course. CANCELLED is neutral too and deliberately
+       NOT red: WBS story 9 makes it the borrower's own right to cancel before
+       the card is spent, so it is an outcome, not a failure. */
+    <StatusPill
+      color={status === "closed" || status === "cancelled" ? undefined : "success"}
+    >
       {t(loanKeys[status])}
     </StatusPill>
   );

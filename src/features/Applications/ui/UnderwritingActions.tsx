@@ -39,6 +39,27 @@ import { useAuthRules } from "../../Auth/ui/validation";
 import { RangeField } from "../../LoanApplication/ui/RangeField";
 import { ChangeHistory } from "./ChangeHistory";
 import { getStyles, styles } from "./UnderwritingActions.styles";
+
+/**
+ * THE LOAN'S OWN TERMS, so the panel can say what it just did.
+ *
+ * Both numbers are the product's, not this screen's invention. The rate is the
+ * WBS's one stated figure — "The APR remains at 1%" — and the term is the one
+ * every loan in this product is written for, which is what the loan pages and
+ * the schedules already show.
+ *
+ * Standard amortisation: the payment that clears the principal and its
+ * interest in `TERM_MONTHS` equal instalments. A zero amount has no payment
+ * rather than a division by zero.
+ */
+const APR = 0.01;
+const TERM_MONTHS = 12;
+
+const instalment = (amount: number) => {
+  if (!amount) return 0;
+  const monthly = APR / 12;
+  return (amount * monthly) / (1 - Math.pow(1 + monthly, -TERM_MONTHS));
+};
 import type { AuditEntry, Decision } from "./types";
 
 export type AmountChange = { amount: number; reason: string };
@@ -75,6 +96,8 @@ export function UnderwritingActions({
   const s = getStyles(token);
   const [requestForm] = Form.useForm<{ note: string }>();
   const [amountForm] = Form.useForm<{ amount: number; reason: string }>();
+  /** What the field holds right now, so the terms under it move with it. */
+  const nextAmount = Form.useWatch("amount", amountForm);
 
   const current = approvedAmount ?? requestedAmount;
 
@@ -174,6 +197,30 @@ export function UnderwritingActions({
                           caption={t("amountPanel.currentIs", { amount: money(current) })}
                         />
                       </Form.Item>
+
+                      {/*
+                        WHAT THE BORROWER WILL ACTUALLY PAY, recalculated as the
+                        figure moves.
+
+                        WBS: "The system shall validate the updated amount,
+                        RECALCULATE LOAN TERMS IF APPLICABLE, record the change
+                        in the audit trail, and use the revised amount in
+                        subsequent loan approval and agreement generation." The
+                        panel changed the amount and said nothing about the
+                        terms, so an underwriter reducing $760 to $610 could not
+                        see what they had just done to the monthly instalment —
+                        the one number the borrower lives with.
+
+                        The rate and the term are the product's, not this
+                        screen's: 1% APR from the WBS, over the term the loan is
+                        written for. See `instalment`.
+                      */}
+                      <Typography.Text style={s.terms}>
+                        {t("amountPanel.terms", {
+                          months: String(TERM_MONTHS),
+                          amount: money(instalment(nextAmount ?? current)),
+                        })}
+                      </Typography.Text>
 
                       <Form.Item
                         label={t("amountModal.reason")}

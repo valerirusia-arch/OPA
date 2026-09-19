@@ -59,6 +59,18 @@ export type LoanRecord = {
   stage: LoanStage;
   /** WBS story 8: "loan amount, remaining unused balance, APR, repayment terms". */
   amount: string;
+  /**
+   * WHAT WAS ASKED FOR, when OPA approved something else.
+   *
+   * The Underwriter may "reduce or adjust the requested loan amount... to
+   * reflect the amount approved", and the revised figure then goes "into
+   * subsequent loan approval and AGREEMENT GENERATION". So the borrower first
+   * meets it on this page, with the agreement in front of them — which makes
+   * this the last honest moment to say the number moved.
+   *
+   * Absent when the two are the same, which is the ordinary case.
+   */
+  requestedAmount?: string;
   unusedBalance: string;
   apr: string;
   term: string;
@@ -133,6 +145,7 @@ export type ApplicationSummary = {
   /** WBS: "Submitted, Under Review, Pending action, Approved, declined". */
   status: ApplicationStatus;
   uscisType: string;
+  /** What OPA settled on — the figure the agreement and the card carry. */
   amount: string;
   submittedOn: string;
   /**

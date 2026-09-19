@@ -34,7 +34,18 @@ export type ApplicationStatus =
   | "approved"
   | "declined";
 
-export type LoanStatus = "funded" | "repaying" | "closed";
+/**
+ * WHAT STATE A LOAN IS IN, back office side.
+ *
+ * `cancelled` was missing and the WBS needs it twice over. Story 9: "Borrower
+ * shall be able to cancel an approved loan before the virtual payment card has
+ * been used" — so it is a state a loan really reaches, and the borrower's own
+ * side has carried it since Epic 5 (`LoanStage`). Story 10: internal users
+ * "shall be able to review ALL loan information" — and a loan that has been
+ * cancelled is loan information. Without it the back office simply lost those
+ * loans: not in the list, not in the filter, nowhere to open.
+ */
+export type LoanStatus = "funded" | "repaying" | "closed" | "cancelled";
 
 export type BorrowerProfile = {
   firstName: string;
