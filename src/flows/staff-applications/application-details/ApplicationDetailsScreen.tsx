@@ -33,6 +33,7 @@
 // every action is local state plus a console.log for Dev to wire.
 
 import { useState } from "react";
+import dayjs from "dayjs";
 import { App, Alert, Button, Card, Col, Flex, Result, Row, Tabs, Tag, Typography, theme } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
@@ -60,7 +61,10 @@ import type {
   ApplicationPerson,
   ApplicationRecord,
   AuditEntry,
+  Decision,
+  DecisionSource,
 } from "../../../features/Applications/ui/types";
+import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
 import { mockApplications } from "../mockApplications";
 import { getStyles, styles } from "./ApplicationDetailsScreen.styles";
 
@@ -111,6 +115,44 @@ export default function ApplicationDetailsScreen({
   const [approvedAmount, setApprovedAmount] = useState<number | undefined>(
     record?.approvedAmount,
   );
+  /*
+   * THE DECISION, ALSO LOCAL — and it was not.
+   *
+   * Approving logged to the console and raised a toast, and then the page said
+   * exactly what it had said before: the status still read "Pending action",
+   * the Approve button was still there offering to do it again, and the
+   * History card had no entry. The one action the whole screen exists for was
+   * the only one that left no trace, while changing the amount beside it
+   * updated live. *"აქ აფრუვს რომ ვაწვები, არ აეფრუვებს."*
+   *
+   * WBS on all three: "Approval reason and timestamp are recorded", "Decline
+   * reason is mandatory", "Override reason is mandatory and recorded for audit
+   * purposes" — so each one writes to the trail as well.
+   */
+  const [decision, setDecision] = useState<Decision | undefined>(record?.decision);
+
+  /**
+   * ONE WAY TO SETTLE AN APPLICATION, for all three actions.
+   *
+   * WBS records a reason and a timestamp on every one of them — "Approval
+   * reason and timestamp are recorded", "Decline reason is mandatory",
+   * "Override reason is mandatory and recorded for audit purposes" — so each
+   * writes the decision AND an entry in the trail, by the person who made it.
+   */
+  const settle = (
+    outcome: "approved" | "declined",
+    source: DecisionSource,
+    reason: string | undefined,
+    action: TranslationKey,
+  ) => {
+    const on = dayjs().format("MMM DD, YYYY HH:mm");
+    setDecision({ outcome, source, reason, by: viewer.name, on });
+    setAudit((entries) => [
+      ...entries,
+      { id: `d${entries.length + 1}`, on, by: viewer.name, action, reason },
+    ]);
+    close();
+  };
 
   /** WBS: only an Underwriter performs business actions on an application. */
   const canDecide = viewer.role === "underwriter";
@@ -320,16 +362,30 @@ export default function ApplicationDetailsScreen({
           <Typography.Text type="secondary" style={{ whiteSpace: "nowrap" }}>
             {record.id}
           </Typography.Text>
-          <ApplicationStatusTag status={record.status} />
+          {/* THE STATUS FOLLOWS THE DECISION. It read `record.status`, so an
+              application approved on this screen went on saying "Pending
+              action" beside the name while the History card underneath said
+              it had been approved a second ago — the page disagreeing with
+              itself. The record's own status is what it arrived with; once a
+              decision is made here, that is the status. */}
+          <ApplicationStatusTag
+            status={
+              decision
+                ? decision.outcome === "approved"
+                  ? "approved"
+                  : "declined"
+                : record.status
+            }
+          />
           {/* The decision's attribution sits right on the status — "Approved
               by System · <date>" — instead of in a banner below. The full story
               (why, automated vs override) lives in the History card; the banner
               only repeated it. *"სტატუსთან by System და თარიღი; ბანერი წავშალე."* */}
-          {record.decision ? (
+          {decision ? (
             <Typography.Text type="secondary" style={{ whiteSpace: "nowrap" }}>
               {t("appDetail.decidedByShort", {
-                name: record.decision.by,
-                date: record.decision.on,
+                name: decision.by,
+                date: decision.on,
               })}
             </Typography.Text>
           ) : null}
@@ -342,7 +398,7 @@ export default function ApplicationDetailsScreen({
          (setAction opens them). *"სულ მარჯვნივ, თაითლის რიგში."* */
       extra={
         canDecide
-          ? record.decision
+          ? decision
             ? (
               <Button onClick={() => setAction("override")}>
                 {t("appAction.override")}
@@ -575,11 +631,11 @@ export default function ApplicationDetailsScreen({
               <UnderwritingActions
                 requestedAmount={record.requestedAmount}
                 approvedAmount={approvedAmount}
-                decision={record.decision}
+                decision={decision}
                 audit={audit}
                 /* WBS: the amount may be adjusted "before the final approval
                    decision", so the panel closes once there is one. */
-                canChangeAmount={record.decision === undefined}
+                canChangeAmount={decision === undefined}
                 onRequestInfo={(note) => {
                   console.log("request information", record.id, note);
                   message.success(t("requestModal.send"));
@@ -621,8 +677,8 @@ export default function ApplicationDetailsScreen({
         onCancel={close}
         onApprove={(note) => {
           console.log("approve application", record.id, note);
+          settle("approved", "manual", note, "audit.approved");
           message.success(t("appAction.approve"));
-          close();
         }}
       />
       <DeclineModal
@@ -630,18 +686,18 @@ export default function ApplicationDetailsScreen({
         onCancel={close}
         onDecline={(reason) => {
           console.log("decline application", record.id, reason);
+          settle("declined", "manual", reason, "audit.declined");
           message.success(t("appAction.decline"));
-          close();
         }}
       />
       <OverrideModal
         open={action === "override"}
-        current={record.decision?.outcome}
+        current={decision?.outcome}
         onCancel={close}
         onOverride={(outcome, reason) => {
           console.log("override decision", record.id, outcome, reason);
+          settle(outcome, "override", reason, "audit.overridden");
           message.success(t("appAction.override"));
-          close();
         }}
       />
     </AdminPage>
