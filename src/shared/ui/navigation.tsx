@@ -18,6 +18,8 @@ import {
 } from "@ant-design/icons";
 import type { ReactNode } from "react";
 import type { TranslationKey } from "./i18n/dictionary";
+import { awaitsReview } from "../../features/Applications/ui/checks";
+import { mockApplications } from "../../flows/staff-applications/mockApplications";
 import type { StaffRole } from "./viewerRole";
 
 export type NavItem = {
@@ -78,8 +80,18 @@ export const staffNav: NavSection[] = [
         labelKey: "nav.reviewQueue",
         icon: <AuditOutlined />,
         to: "/staff/applications",
-        // What is waiting for a decision. Mock, like every other count here.
-        badge: 4,
+        /*
+          WHAT IS ACTUALLY WAITING, counted from the same rule the queue
+          filters by.
+          
+          It was the number 4, typed in, against a queue that rendered seven
+          rows — so the rail promised one thing and the page showed another,
+          which is the kind of disagreement that makes a reader stop trusting
+          both. `awaitsReview` is the one definition of "needs an underwriter";
+          the queue lists by it and the badge counts by it, so they cannot
+          drift apart again.
+        */
+        badge: mockApplications.filter(awaitsReview).length,
       },
       { key: "loans", labelKey: "nav.loans", icon: <BankOutlined />, to: "/staff/loans" },
       {

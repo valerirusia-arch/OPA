@@ -85,3 +85,21 @@ export const checkAboutKeys: Partial<Record<CheckKey, TranslationKey>> = {
   noLend: "check.whatNoLend",
   income: "check.whatIncome",
 };
+
+/**
+ * IS THIS APPLICATION STILL WAITING FOR A PERSON?
+ *
+ * The underwriting queue's own story is "Route application for manual review —
+ * the system shall route applications REQUIRING MANUAL REVIEW to the
+ * underwriting queue", so an application the rules already settled does not
+ * belong in it. It was listing every application, which put two automatically
+ * decided ones in the queue with an empty Source column — the one column that
+ * exists to name which step routed a row, showing a dash because nothing did.
+ *
+ * Those two are still reachable, and still overridable: the back-office
+ * dashboard's "Recent applications" lists every application with its status
+ * and links straight through, which is where "Override automated decision"
+ * starts from.
+ */
+export const awaitsReview = (application: { decision?: unknown }) =>
+  application.decision === undefined;

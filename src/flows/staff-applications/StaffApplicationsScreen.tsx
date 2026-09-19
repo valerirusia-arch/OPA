@@ -64,6 +64,7 @@ import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
 import { CheckNameTag } from "../../features/Applications/ui/CheckTags";
+import { awaitsReview } from "../../features/Applications/ui/checks";
 import type { ApplicationRecord } from "../../features/Applications/ui/types";
 import { mockApplications } from "./mockApplications";
 import { getStyles, styles } from "./StaffApplicationsScreen.styles";
@@ -126,12 +127,16 @@ export default function StaffApplicationsScreen({
 
 
   /**
-   * The rows, in the order the WBS puts them there.
+   * The rows: what still needs an underwriter, and nothing else.
    *
-   * No filtering left: the queue IS the filter — "the system shall route
-   * applications requiring manual review to the underwriting queue".
+   * "The system shall route applications REQUIRING MANUAL REVIEW to the
+   * underwriting queue" — so the queue IS the filter, and an application the
+   * rules already decided is not in it. Listing every application put two
+   * settled ones here with a dash in the Source column, which is the column
+   * that names which step routed a row: nothing had. They stay reachable from
+   * the dashboard's recent list, which is where an override starts.
    */
-  const visible = applications;
+  const visible = applications.filter(awaitsReview);
 
   const columns: ColumnsType<ApplicationRecord> = [
     {
