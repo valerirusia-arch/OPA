@@ -29,6 +29,9 @@ import {
   theme,
 } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
+import type { Dayjs } from "dayjs";
+import { DateOfBirthPicker } from "../../Auth/ui/DateOfBirthPicker";
+import { useCountryOptions } from "../../Auth/ui/options";
 import { useAuthRules } from "../../Auth/ui/validation";
 import { stateOptions } from "../../Auth/ui/options";
 import { getStyles, styles } from "./ManageBorrowerModal.styles";
@@ -37,6 +40,18 @@ export type ManageBorrowerValues = {
   firstName: string;
   middleName?: string;
   lastName: string;
+  /** Dayjs while the form holds it; the screen formats it onto the record. */
+  dateOfBirth?: Dayjs | null;
+  /**
+   * A NEW full SSN, or nothing.
+   *
+   * The back office never holds the stored number — the record carries a mask
+   * and only a mask — so there is nothing to put in this field and nothing to
+   * correct in place. It is a REPLACEMENT: left empty, the number on file is
+   * untouched; filled, it becomes the new one.
+   */
+  ssn?: string;
+  country?: string;
   email: string;
   phone: string;
   street: string;
@@ -47,6 +62,9 @@ export type ManageBorrowerValues = {
 
 export type ManageBorrowerModalProps = {
   open: boolean;
+  /** The SSN as the record carries it — masked. Shown as the field's own hint
+   *  and placeholder, because it is the only form of it the back office has. */
+  maskedSsn?: string;
   initialValues?: ManageBorrowerValues;
   onSubmit?: (values: ManageBorrowerValues) => void;
   onCancel?: () => void;
@@ -54,6 +72,7 @@ export type ManageBorrowerModalProps = {
 
 export function ManageBorrowerModal({
   open,
+  maskedSsn = "",
   initialValues,
   onSubmit,
   onCancel,
@@ -63,6 +82,8 @@ export function ManageBorrowerModal({
   const { token } = theme.useToken();
   const s = getStyles(token);
   const [form] = Form.useForm<ManageBorrowerValues>();
+  const countries = useCountryOptions();
+  const masked = maskedSsn;
 
   useEffect(() => {
     if (!open) return;
@@ -117,6 +138,65 @@ export function ManageBorrowerModal({
         </Row>
 
         {/* Rules instead of headings: the blocks need marking, not naming. */}
+        <Divider style={s.groupRule} />
+
+        {/*
+          THE IDENTITY BLOCK, AND IT IS THIS FORM'S WHOLE REASON FOR EXISTING.
+
+          WBS: "Personal information used for identity verification, underwriting
+          or regulatory compliance (e.g., NAME, DATE OF BIRTH, SSN) cannot be
+          updated through SELF-SERVICE. Any changes to borrower identity
+          information require OPA STAFF INTERVENTION and are handled outside the
+          self-service portal."
+
+          The self-service portal is the borrower's app. This is the back
+          office, and staff intervention is what happens here — which is why
+          the name has always been editable in this modal. Date of birth and
+          SSN are named in the same breath as the name and were the only two
+          of the three with nowhere to be corrected; country of origin is
+          collected at registration and had the same gap.
+        */}
+        <Row gutter={16}>
+          <Col xs={24} md={8}>
+            <Form.Item
+              label={t("field.dateOfBirth")}
+              name="dateOfBirth"
+              rules={[rules.requiredValue()]}
+              required
+            >
+              {/* The product's own date-of-birth control, the one registration
+                  uses — a second drawing of the same field is how two of them
+                  start disagreeing about what a date looks like. */}
+              <DateOfBirthPicker />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={8}>
+            <Form.Item
+              label={t("field.ssn")}
+              name="ssn"
+              rules={rules.ssnOptional}
+              extra={t("manageBorrower.ssnHint", { masked })}
+            >
+              <Input placeholder={masked} />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={8}>
+            <Form.Item
+              label={t("field.country")}
+              name="country"
+              rules={[rules.required()]}
+              required
+            >
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={countries}
+                placeholder={t("field.countryPlaceholder")}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Divider style={s.groupRule} />
 
         <Row gutter={16}>

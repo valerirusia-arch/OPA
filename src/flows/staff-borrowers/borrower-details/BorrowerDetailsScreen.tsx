@@ -25,6 +25,7 @@
 // three actions are local state plus a console.log for Dev to wire.
 
 import { useState } from "react";
+import dayjs from "dayjs";
 import { App, Badge, Button, Card, Dropdown, Flex, Result, Tabs, Typography } from "antd";
 import type { MenuProps } from "antd";
 import {
@@ -61,6 +62,27 @@ import { fullName } from "../../../features/Borrowers/ui/types";
 import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { mockBorrowers } from "../mockBorrowers";
 import { styles } from "./BorrowerDetailsScreen.styles";
+
+/**
+ * The record stores a date of birth as it reads — "14 May 1990" — and the
+ * product's own picker works in Dayjs, so the screen is where the two meet.
+ * One format, named once, so the two directions cannot drift apart.
+ */
+const DOB_FORMAT = "DD MMM YYYY";
+const parseDob = (value: string) => {
+  const parsed = dayjs(value, DOB_FORMAT);
+  return parsed.isValid() ? parsed : undefined;
+};
+
+/**
+ * A NEW SSN, MASKED ON THE WAY IN.
+ *
+ * The back office shows and holds nothing but the last four — "Masked. The
+ * full number is never shown in the back office" — so a replacement is stored
+ * the same way the moment it arrives. Nothing here is the place the full
+ * number lives; this is a prototype and it never sees one.
+ */
+const maskSsn = (value: string) => `•••-••-${value.replace(/\D/g, "").slice(-4)}`;
 
 export type BorrowerDetailsScreenProps = {
   borrowers?: Borrower[];
@@ -260,9 +282,46 @@ export default function BorrowerDetailsScreen({
   const name = fullName(borrower.profile);
 
   const saveAccount = (values: ManageBorrowerValues) => {
-    console.log("update borrower", borrower.id, values);
-    setDraft({ ...borrower, profile: { ...borrower.profile, ...values } });
-    message.success(t("manageBorrower.saved"));
+    const { dateOfBirth, ssn, ...rest } = values;
+    /*
+     * WBS: "When phone number/email are updated — THE VERIFICATION PROCESS
+     * SHOULD RE-OCCUR."
+     *
+     * The record was keeping its ticks through an address change, so a staff
+     * correction left the file saying a brand-new address had been verified.
+     * Whether the re-verification is an email or an SMS is Dev's; what the
+     * record has to stop claiming is the old result.
+     */
+    const emailChanged = values.email !== borrower.profile.email;
+    const phoneChanged = values.phone !== borrower.profile.phone;
+
+    setDraft({
+      ...borrower,
+      profile: {
+        ...borrower.profile,
+        ...rest,
+        /* The picker works in Dayjs; the record stores the date as it reads. */
+        dateOfBirth: dateOfBirth
+          ? dateOfBirth.format(DOB_FORMAT)
+          : borrower.profile.dateOfBirth,
+        /* Blank means "leave it alone" — see ManageBorrowerValues.ssn. A new
+           number is masked on the way in, because the back office holds no
+           more of it than the record shows. */
+        ssn: ssn ? maskSsn(ssn) : borrower.profile.ssn,
+        emailVerified: emailChanged ? false : borrower.profile.emailVerified,
+        phoneVerified: phoneChanged ? false : borrower.profile.phoneVerified,
+      },
+    });
+    console.log("update borrower", borrower.id, {
+      ...rest,
+      ssnReplaced: Boolean(ssn),
+      reverify: { email: emailChanged, phone: phoneChanged },
+    });
+    message.success(
+      emailChanged || phoneChanged
+        ? t("manageBorrower.reverify")
+        : t("manageBorrower.saved")
+    );
     setManaging(false);
   };
 
@@ -576,10 +635,13 @@ export default function BorrowerDetailsScreen({
 
       <ManageBorrowerModal
         open={managing}
+        maskedSsn={borrower.profile.ssn}
         initialValues={{
           firstName: borrower.profile.firstName,
           middleName: borrower.profile.middleName,
           lastName: borrower.profile.lastName,
+          dateOfBirth: parseDob(borrower.profile.dateOfBirth),
+          country: borrower.profile.country,
           email: borrower.profile.email,
           phone: borrower.profile.phone,
           street: borrower.profile.street,

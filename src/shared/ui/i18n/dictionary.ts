@@ -704,6 +704,14 @@ export const en = {
 
   // Manage borrower account
   "manageBorrower.title": "Manage borrower account",
+  /* The back office holds a mask, never the number, so this field replaces
+     rather than edits — and saying so is what stops a blank looking like a
+     deletion. */
+  "manageBorrower.ssnHint": "On file: {masked}. Leave empty to keep it.",
+  /* WBS: "When phone number/email are updated - the verification process
+     should re-occur." */
+  "manageBorrower.reverify":
+    "Email or phone changed, so they are unverified again.",
   "manageBorrower.saved": "Borrower details updated",
 
   // Set password, from the emailed invitation link
@@ -2277,6 +2285,10 @@ const es: Record<TranslationKey, string> = {
     "El préstamo aparece aquí cuando la solicitud se aprueba y se desembolsa.",
 
   "manageBorrower.title": "Gestionar la cuenta del prestatario",
+  "manageBorrower.ssnHint":
+    "En el sistema: {masked}. Déjalo vacío para no cambiarlo.",
+  "manageBorrower.reverify":
+    "El correo o el teléfono cambiaron, así que vuelven a estar sin verificar.",
   "manageBorrower.saved": "Datos del prestatario actualizados",
 
   "setPassword.title": "Crea tu contraseña",

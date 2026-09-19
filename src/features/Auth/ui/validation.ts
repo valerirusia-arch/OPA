@@ -123,6 +123,17 @@ export function useAuthRules() {
         onLeave({ pattern: /^\d{3}-?\d{2}-?\d{4}$/, message: t("validation.ssn") }),
       ],
 
+      /**
+       * THE SAME NUMBER, WHERE LEAVING IT BLANK IS AN ANSWER.
+       *
+       * The back office holds only a mask, so its SSN field cannot be an edit
+       * of what is there — it is a replacement, and "no replacement" has to be
+       * allowed. Same format when something IS typed.
+       */
+      ssnOptional: [
+        onLeave({ pattern: /^\d{3}-?\d{2}-?\d{4}$/, message: t("validation.ssn") }),
+      ],
+
       zip: [required(), onLeave({ pattern: /^\d{5}$/, message: t("validation.zip") })],
 
       /**
