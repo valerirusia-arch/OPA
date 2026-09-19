@@ -47,12 +47,32 @@ const PERF_STATS: SummaryStat[] = [
 
 type PerfRow = { key: string; channel: string; loans: number; reports: number; approval: string };
 
-const PERF_ROWS: PerfRow[] = [
-  { key: "r1", channel: "Organic search", loans: 64, reports: 80, approval: "72%" },
-  { key: "r2", channel: "Partner referral", loans: 38, reports: 51, approval: "66%" },
-  { key: "r3", channel: "Email newsletter", loans: 22, reports: 33, approval: "61%" },
-  { key: "r4", channel: "Community webinar", loans: 18, reports: 23, approval: "58%" },
-];
+/**
+ * THE BY-CHANNEL RESULTS, DERIVED FROM THE DIMENSION CHOSEN.
+ *
+ * This was a constant list of four invented channel names, so the page
+ * answered "analyse by campaign" and "analyse by referral partner" with
+ * exactly the same four rows — the one screen in the product whose entire
+ * story is comparison, comparing nothing. WBS: "Authorized internal users
+ * shall be able to analyze lending performance BY CAMPAIGN, PARTNER GROUP,
+ * REFERRAL PARTNER, AND ACQUISITION SOURCE."
+ *
+ * So the channels are the real ones — the campaigns, groups, partners and
+ * sources the Admin actually maintains on the three screens beside this one —
+ * and switching the dimension re-reads the table against that list. The
+ * figures stay mock, because nothing in this prototype has lending volume to
+ * count; they are derived from the name so a given channel keeps the same
+ * numbers between visits instead of flickering.
+ */
+const figuresFor = (name: string, index: number): Omit<PerfRow, "key" | "channel"> => {
+  const seed = name.length + index * 7;
+  const loans = 12 + ((seed * 13) % 60);
+  return {
+    loans,
+    reports: loans + 6 + (seed % 22),
+    approval: `${52 + ((seed * 5) % 34)}%`,
+  };
+};
 
 type Dimension = "campaign" | "group" | "partner" | "source";
 type ReportKind = "credit" | "consumer";
@@ -106,6 +126,27 @@ export default function AcquisitionPerformanceScreen({
             : mockSources.map((s) => s.name);
     return names.map((label) => ({ label, value: label }));
   }, [dimension]);
+
+  /* One row per channel OF THE CHOSEN DIMENSION, and narrowed to the one
+     channel when the reader has picked one — which is what "analyse this
+     campaign" asks for. */
+  const perfRows: PerfRow[] = useMemo(() => {
+    const names =
+      dimension === "campaign"
+        ? mockCampaigns.map((c) => c.name)
+        : dimension === "group"
+          ? mockGroups.map((g) => g.name)
+          : dimension === "partner"
+            ? mockReferralPartners.map((p) => p.name)
+            : mockSources.map((s) => s.name);
+    return names
+      .filter((name) => !value || name === value)
+      .map((channel, index) => ({
+        key: `${dimension}-${channel}`,
+        channel,
+        ...figuresFor(channel, index),
+      }));
+  }, [dimension, value]);
 
   const dimensionOptions = (Object.keys(DIMENSION_LABEL) as Dimension[]).map((key) => ({
     label: t(DIMENSION_LABEL[key]),
@@ -214,7 +255,7 @@ export default function AcquisitionPerformanceScreen({
                 rowKey="key"
                 scroll={{ x: 640 }}
                 columns={decorateColumns(perfColumns)}
-                dataSource={PERF_ROWS}
+                dataSource={perfRows}
                 pagination={false}
               />
             </Card>
