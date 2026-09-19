@@ -5,11 +5,12 @@ import type { GlobalToken } from "antd";
 
 export const styles = {
   /**
-   * A tabbed card carries no body padding: the tab bar takes the card's inset
-   * and the panel under it starts where the bar's own line ends, the same
-   * pattern the payments page and the back-office dashboard use.
+   * The tab bar sits INSIDE the card's body, under its title — so it reads as
+   * a control belonging to this card rather than to the page. It pulls itself
+   * up by the body's own top padding, so the bar sits where the content would
+   * have started.
    */
-  tabbedBody: { paddingTop: 0 },
+  checksTabs: { marginTop: -8 },
   /** A link button with antd's own padding taken off, so it ends the panel's
    *  row rather than floating in from its edge. */
   recordLink: { paddingInline: 0, height: "auto" },

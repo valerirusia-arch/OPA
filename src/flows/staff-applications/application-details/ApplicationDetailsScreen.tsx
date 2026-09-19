@@ -263,26 +263,29 @@ export default function ApplicationDetailsScreen({
    */
   const checksCard = (
     <Card
-      title={record.coBorrower ? undefined : t("appDetail.checks")}
+      /*
+        THE CARD KEEPS ITS TITLE, TABS OR NOT.
+        
+        It briefly lost it when there were tabs, on the reasoning that the tab
+        bar had replaced the head. That made the tabs the top-left object of a
+        page-width column, which is where PAGE tabs live — and the page read as
+        if switching to "Co-borrower" changed what the whole screen was about,
+        the underwriting actions beside it included. It does not: there is one
+        application, one amount and one decision, and the tabs switch nothing
+        but which applicant's checks you are reading. The title says which card
+        they belong to, which is the whole job it was doing.
+      */
+      title={t("appDetail.checks")}
       style={styles.card}
-      styles={record.coBorrower ? { body: styles.tabbedBody } : undefined}
       extra={
-        record.coBorrower ? undefined : (
-          <Tag variant="filled" style={pill}>
-            {t("appDetail.bySystem")}
-          </Tag>
-        )
+        <Tag variant="filled" style={pill}>
+          {t("appDetail.bySystem")}
+        </Tag>
       }
     >
       {record.coBorrower ? (
         <Tabs
-          /* The `System` tag rides with the tabs rather than the card head,
-             which the tab bar has replaced. */
-          tabBarExtraContent={
-            <Tag variant="filled" style={pill}>
-              {t("appDetail.bySystem")}
-            </Tag>
-          }
+          style={styles.checksTabs}
           items={[
             {
               key: "borrower",
