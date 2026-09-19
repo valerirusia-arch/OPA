@@ -62,6 +62,7 @@ import type {
   ApplicationRecord,
   AuditEntry,
   Decision,
+  InformationRequest,
   DecisionSource,
 } from "../../../features/Applications/ui/types";
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
@@ -130,6 +131,19 @@ export default function ApplicationDetailsScreen({
    * purposes" — so each one writes to the trail as well.
    */
   const [decision, setDecision] = useState<Decision | undefined>(record?.decision);
+  /*
+   * THE REQUESTS AND THE STATUS, for the same reason.
+   *
+   * Sending a request for more information logged to the console and raised a
+   * toast, and the Information requests card below went on saying "Nothing has
+   * been asked for" — with the thing that had just been asked for nowhere on
+   * the page. The status did not move either, though the whole point of the
+   * WBS's story is that the application is now waiting on the borrower.
+   */
+  const [requests, setRequests] = useState<InformationRequest[]>(
+    record?.requests ?? [],
+  );
+  const [status, setStatus] = useState(record?.status);
 
   /**
    * ONE WAY TO SETTLE AN APPLICATION, for all three actions.
@@ -139,13 +153,16 @@ export default function ApplicationDetailsScreen({
    * "Override reason is mandatory and recorded for audit purposes" — so each
    * writes the decision AND an entry in the trail, by the person who made it.
    */
+  /** One stamp format for everything this page records. */
+  const stampNow = () => dayjs().format("MMM DD, YYYY HH:mm");
+
   const settle = (
     outcome: "approved" | "declined",
     source: DecisionSource,
     reason: string | undefined,
     action: TranslationKey,
   ) => {
-    const on = dayjs().format("MMM DD, YYYY HH:mm");
+    const on = stampNow();
     setDecision({ outcome, source, reason, by: viewer.name, on });
     setAudit((entries) => [
       ...entries,
@@ -374,7 +391,7 @@ export default function ApplicationDetailsScreen({
                 ? decision.outcome === "approved"
                   ? "approved"
                   : "declined"
-                : record.status
+                : (status ?? record.status)
             }
           />
           {/* The decision's attribution sits right on the status — "Approved
@@ -528,11 +545,11 @@ export default function ApplicationDetailsScreen({
       </Card>
 
       <Card title={t("appDetail.requests")} style={styles.card}>
-        {record.requests.length === 0 ? (
+        {requests.length === 0 ? (
           <Typography.Text type="secondary">{t("appDetail.noRequests")}</Typography.Text>
         ) : (
           <Flex vertical>
-            {record.requests.map((request, index) => (
+            {requests.map((request, index) => (
               <Flex vertical key={request.id}>
                 <Flex
                   vertical
@@ -638,6 +655,31 @@ export default function ApplicationDetailsScreen({
                 canChangeAmount={decision === undefined}
                 onRequestInfo={(note) => {
                   console.log("request information", record.id, note);
+                  /*
+                    WBS: "Underwriter shall be able to request additional
+                    documents or information from the borrower", and the
+                    borrower's own story answers it — so the application is now
+                    WAITING ON THEM. Three things follow from one action: the
+                    request joins the list below, the trail records it, and the
+                    status becomes "Pending action", which is the word the WBS
+                    uses for exactly this state.
+                  */
+                  const on = stampNow();
+                  setRequests((prev) => [
+                    ...prev,
+                    { id: `r${prev.length + 1}`, askedOn: on, askedBy: name, note },
+                  ]);
+                  setAudit((prev) => [
+                    ...prev,
+                    {
+                      id: `ri${prev.length + 1}`,
+                      on,
+                      by: name,
+                      action: "audit.infoRequested",
+                      reason: note,
+                    },
+                  ]);
+                  setStatus("pendingAction");
                   message.success(t("requestModal.send"));
                 }}
                 onChangeAmount={({ amount, reason }) => {

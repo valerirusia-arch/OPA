@@ -24,6 +24,7 @@
 // adding is local state plus a console.log.
 
 import { useState } from "react";
+import dayjs from "dayjs";
 import { App, Button, Card, Flex, Result, Typography } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
@@ -37,6 +38,7 @@ import { useIdleTimer, DEFAULT_IDLE_MS } from "../../../features/Auth/ui/useIdle
 import { DetailGrid, type DetailItem } from "../../../features/Borrowers/ui/DetailGrid";
 import { LoanStatusTag } from "../../../features/Borrowers/ui/StatusTags";
 import { LoanDocumentsTable } from "../../../features/Loan/ui/LoanDocumentsTable";
+import type { LoanComment, LoanDocument } from "../../../features/Loan/ui/types";
 import { AddDocumentCommentModal } from "../../../features/Loan/ui/LoanAdminModals";
 import { LoanAdminPanel } from "../../../features/Loan/ui/LoanAdminPanel";
 import { AcquisitionPanel } from "../../../features/Loan/ui/AcquisitionPanel";
@@ -66,6 +68,8 @@ export default function LoanRecordScreen({
 
   /** Up here with the other hooks: the screen returns early below. */
   const [adding, setAdding] = useState(false);
+  const [addedDocs, setAddedDocs] = useState<LoanDocument[]>([]);
+  const [addedComments, setAddedComments] = useState<LoanComment[]>([]);
 
   const record = loans.find((row) => row.loan.loanId === params.id);
 
@@ -103,7 +107,20 @@ export default function LoanRecordScreen({
     );
   }
 
-  const { loan } = record;
+  const { loan: stored } = record;
+  /*
+   * WHAT WAS ADDED THIS SESSION, so the page shows it.
+   *
+   * The header above has always said "adding is local state plus a
+   * console.log", and only the second half was true: pressing Add logged the
+   * values, raised a toast, closed the dialog, and left the documents table
+   * and the comment list exactly as they were — the thing just added nowhere
+   * on the page. WBS story 11 is "manually update loan details (ADD
+   * DOCUMENTS, COMMENTS)", and a prototype that cannot show the result of the
+   * one action on the screen cannot be reviewed.
+   */
+  const loan = { ...stored, documents: [...stored.documents, ...addedDocs],
+    comments: [...stored.comments, ...addedComments] };
 
   const items: DetailItem[] = [
     { key: "amount", label: t("loanPage.loanAmount"), value: loan.amount },
@@ -204,6 +221,37 @@ export default function LoanRecordScreen({
         onCancel={() => setAdding(false)}
         onAdd={(values) => {
           console.log("add to loan", loan.loanId, values);
+          /*
+            One dialog, two WBS things: "add documents, comments". Either half
+            may be empty — a comment with no file, a file with no comment — so
+            each is appended only if it is there, and both carry who and when,
+            which is what the documents table's own columns ask for.
+          */
+          const on = dayjs().format("DD MMM YYYY");
+          if (values.files?.length) {
+            setAddedDocs((prev) => [
+              ...prev,
+              ...values.files!.map((file, index) => ({
+                id: `added-${prev.length + index + 1}`,
+                name: file.name,
+                type: "other" as const,
+                on,
+                uploadedBy: name,
+                comment: values.comment,
+              })),
+            ]);
+          }
+          if (values.comment && !values.files?.length) {
+            setAddedComments((prev) => [
+              ...prev,
+              {
+                id: `c-added-${prev.length + 1}`,
+                on: `${on} ${dayjs().format("HH:mm")}`,
+                by: name,
+                text: values.comment!,
+              },
+            ]);
+          }
           message.success(t("loanAdmin.noteAdded"));
           setAdding(false);
         }}

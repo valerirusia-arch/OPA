@@ -1524,6 +1524,8 @@ export const en = {
   "audit.approved": "Approved",
   "audit.declined": "Declined",
   "audit.overridden": "Decision overridden",
+  /* WBS: "Request additional information" — the underwriter asked, and the
+     trail records who and when along with the note itself. */
   "audit.infoRequested": "Information requested",
   "audit.infoSubmitted": "Borrower answered",
   "audit.amountChanged": "Approved amount changed",
