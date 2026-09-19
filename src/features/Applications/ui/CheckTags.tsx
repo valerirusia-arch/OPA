@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { pill } from "../../../shared/ui/tag.styles";
+import { labelTag, pill } from "../../../shared/ui/tag.styles";
 import { checkLabelKeys } from "./checks";
 import type { CheckKey, CheckOutcome } from "./types";
 
@@ -98,14 +98,7 @@ export function CheckNameTag({ check }: { check?: CheckKey }) {
       shape once the fill stops doing that job — the same pair the product's
       status pills settled on.
     */
-    <Tag
-      variant="filled"
-      style={{
-        ...pill,
-        background: token.colorBgContainer,
-        border: `1px solid ${token.colorSplit}`,
-      }}
-    >
+    <Tag variant="filled" style={labelTag(token)}>
       {t(checkLabelKeys[check])}
     </Tag>
   );

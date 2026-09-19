@@ -177,7 +177,13 @@ export function ManageBorrowerModal({
               rules={rules.ssnOptional}
               extra={t("manageBorrower.ssnHint", { masked })}
             >
-              <Input placeholder={masked} />
+              {/* NO PLACEHOLDER. It printed the masked number and the hint
+                  under it printed the same masked number — the field said
+                  "•••-••-2602" twice, once as if it were typed in and once as
+                  a note. The hint is the one that can also say what a blank
+                  means, so the field itself stays empty, which is the truth of
+                  it. */}
+              <Input />
             </Form.Item>
           </Col>
           <Col xs={24} md={8}>

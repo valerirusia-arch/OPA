@@ -18,7 +18,6 @@
 import { useMemo, useState } from "react";
 import {
   App,
-  Badge,
   Button,
   Card,
   Dropdown,
@@ -42,7 +41,8 @@ import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer, type StaffRole } from "../../shared/ui/viewerRole";
 import { decorateColumns } from "../../shared/ui/tableColumns";
 import { useT } from "../../shared/ui/i18n/useT";
-import { pill } from "../../shared/ui/tag.styles";
+import { labelTag } from "../../shared/ui/tag.styles";
+import { StatusPill } from "../../shared/ui/StatusPill";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import {
   useIdleTimer,
@@ -259,8 +259,11 @@ export default function StaffUsersScreen({
       title: t("users.col.role"),
       dataIndex: "role",
       width: 190,
+      /* A role is a LABEL, not a status — a value from a closed set, with no
+         state to it — so it keeps the plain tag and takes the product's
+         neutral label treatment rather than antd's cream default. */
       render: (role: UserRole) => (
-        <Tag variant="filled" style={pill}>
+        <Tag variant="filled" style={labelTag(token)}>
           {roleLabel(role)}
         </Tag>
       ),
@@ -269,16 +272,20 @@ export default function StaffUsersScreen({
       title: t("users.col.status"),
       dataIndex: "status",
       width: 180,
-      // A dot and a word, not a third pill: the eye can scan a column of dots.
+      /*
+        THE PRODUCT'S STATUS PILL, and it was an antd Badge.
+        
+        The Badge was chosen so a column of bare dots would scan — which it
+        does — but it left this table drawing statuses two ways: a dot-and-word
+        here and a pill in the column beside it. A status has one appearance in
+        this product. The dot survives; it is what StatusPill is built around.
+      */
       render: (status: UserStatus) => (
-        <Badge
-          status={status === "active" ? "success" : "default"}
-          text={
-            status === "active"
-              ? t("users.status.active")
-              : t("users.status.inactive")
-          }
-        />
+        <StatusPill color={status === "active" ? "success" : undefined}>
+          {status === "active"
+            ? t("users.status.active")
+            : t("users.status.inactive")}
+        </StatusPill>
       ),
     },
     {
@@ -289,9 +296,12 @@ export default function StaffUsersScreen({
       // it is the one row an Admin may still need to chase.
       render: (state: PasswordState) =>
         state === "pending" ? (
-          <Tag color="warning" variant="filled" style={pill}>
+          /* Waiting on somebody is a STATE, so it is the product's status
+             pill — with the dot and the hairline every other status on every
+             other screen wears, instead of a bare amber lozenge. */
+          <StatusPill color="warning">
             {t("users.password.pending")}
-          </Tag>
+          </StatusPill>
         ) : (
           <Typography.Text style={s.quiet}>
             {t("users.password.set")}
