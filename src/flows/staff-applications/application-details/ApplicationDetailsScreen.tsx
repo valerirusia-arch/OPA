@@ -277,12 +277,6 @@ export default function ApplicationDetailsScreen({
       */
       title={t("appDetail.checks")}
       style={styles.card}
-      /* TWO RULES, ONE PIXEL APART — the card head's and the tab bar's, which
-         stacked into a double line under the title and boxed the tabs in.
-         The head drops its rule where the tabs bring one; the tab bar's is
-         the only line, and it is the one that means something (it carries the
-         active tab's marker). */
-      styles={record.coBorrower ? { header: styles.headNoRule } : undefined}
       extra={
         <Tag variant="filled" style={pill}>
           {t("appDetail.bySystem")}

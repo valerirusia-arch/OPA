@@ -28,7 +28,17 @@ export const styles = {
   tabBody: { padding: CARD_INSET },
   /** A link button with its own padding taken off, so its words line up with
    *  the panel above it. */
-  recordLink: { paddingInline: 0, height: "auto", alignSelf: "flex-start" },
+  /**
+   * A link button with antd's own padding taken off, so its words line up with
+   * the panel above it — and with its trailing arrow given room, since with
+   * zero padding the glyph sat flush against whatever edge it ended on.
+   */
+  recordLink: {
+    paddingInline: 0,
+    height: "auto",
+    alignSelf: "flex-start",
+    marginInlineEnd: 2,
+  },
   /** The reverse side of the link, under whatever the tab showed first. */
   sponsoring: { marginTop: 8 },
   sponsoringLabel: { fontWeight: 500 },
@@ -37,7 +47,15 @@ export const styles = {
   /** The loan's state and the way to its full record, on one line above the
    *  fields. A state is not a field and a way out is not a comment — see the
    *  note in the tab. */
-  /** The tab body's own gap separates it from the grid now, so it carries no
-   *  margin of its own — two of them stacked into 44px of nothing. */
-  loanState: { width: "100%" },
+  /**
+   * The state and the way through, facing each other across the tab's first
+   * line — and standing clear of the facts below.
+   *
+   * The tab body's gap alone put the grid 24 under them, which read as the
+   * same distance the grid's own rows keep from each other, so the pair
+   * looked like one more row of it. The extra 12 makes the line a header for
+   * what follows rather than part of it. *"ცოტა მაგათ ქვემოთ ინფო უფრო ჩაწიე
+   * დაბლა, და ფუნდედი და ეს პირისპირ დატოვე."*
+   */
+  loanState: { width: "100%", marginBottom: 12 },
 } satisfies Record<string, CSSProperties>;

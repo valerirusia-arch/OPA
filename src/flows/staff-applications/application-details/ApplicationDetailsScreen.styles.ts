@@ -6,18 +6,18 @@ import type { GlobalToken } from "antd";
 const ROW_PAD = 16;
 
 export const styles = {
-  /** The head keeps its title and gives up its rule to the tab bar below. */
-  headNoRule: { borderBottom: "none" },
   /**
-   * The tab bar sits INSIDE the card's body, under its title — so it reads as
-   * a control belonging to this card rather than to the page.
+   * The tab bar sits INSIDE the card's body, under the head's own rule.
    *
-   * It pulls up hard enough to close the gap the card's head and body padding
-   * leave between them, so the tabs hang off the title instead of floating
-   * between two rules, and antd's own margin under the bar is what separates
-   * it from the panel. *"ეს უკეთ რომ მოსვა."*
+   * The rule went away for a pass, on the argument that it doubled with the
+   * bar's. The designer wants it back: a title separated from what follows it
+   * is how every other card on this page reads, and a rule, the tabs, and the
+   * bar's own line are a title and then a control — which is what they are.
+   * *"ეს დააბრუნე როგორც იყო, სტროუკი ჰქონდა."* The pull-up goes with it, so
+   * the bar keeps the body's own top padding and hangs below the rule instead
+   * of against it.
    */
-  checksTabs: { marginTop: -20 },
+  checksTabs: { marginTop: 0 },
   /** A link button with antd's own padding taken off, so it ends the panel's
    *  row rather than floating in from its edge. */
   recordLink: { paddingInline: 0, height: "auto" },
