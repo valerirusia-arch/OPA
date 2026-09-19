@@ -33,7 +33,7 @@
 // every action is local state plus a console.log for Dev to wire.
 
 import { useState } from "react";
-import { App, Alert, Button, Card, Col, Divider, Flex, Result, Row, Tabs, Tag, Typography, theme } from "antd";
+import { App, Alert, Button, Card, Col, Flex, Result, Row, Tabs, Tag, Typography, theme } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
@@ -277,6 +277,12 @@ export default function ApplicationDetailsScreen({
       */
       title={t("appDetail.checks")}
       style={styles.card}
+      /* TWO RULES, ONE PIXEL APART — the card head's and the tab bar's, which
+         stacked into a double line under the title and boxed the tabs in.
+         The head drops its rule where the tabs bring one; the tab bar's is
+         the only line, and it is the one that means something (it carries the
+         active tab's marker). */
+      styles={record.coBorrower ? { header: styles.headNoRule } : undefined}
       extra={
         <Tag variant="filled" style={pill}>
           {t("appDetail.bySystem")}
@@ -478,8 +484,11 @@ export default function ApplicationDetailsScreen({
           <Flex vertical>
             {record.requests.map((request, index) => (
               <Flex vertical key={request.id}>
-                {index > 0 ? <Divider style={styles.rule} /> : null}
-                <Flex vertical style={styles.request}>
+                <Flex
+                  vertical
+                  gap={4}
+                  style={index > 0 ? s.recordRow : styles.recordRowFirst}
+                >
                   <Flex align="center" justify="space-between" gap={12}>
                     <Typography.Text type="secondary" style={styles.meta}>
                       {t("appDetail.askedBy", {
@@ -529,8 +538,11 @@ export default function ApplicationDetailsScreen({
           <Flex vertical>
             {audit.map((entry, index) => (
               <Flex vertical key={entry.id}>
-                {index > 0 ? <Divider style={styles.rule} /> : null}
-                <Flex vertical style={styles.request}>
+                <Flex
+                  vertical
+                  gap={4}
+                  style={index > 0 ? s.recordRow : styles.recordRowFirst}
+                >
                   <Flex align="center" justify="space-between" gap={12}>
                     <Typography.Text>{t(entry.action)}</Typography.Text>
                     <Typography.Text type="secondary" style={styles.meta}>

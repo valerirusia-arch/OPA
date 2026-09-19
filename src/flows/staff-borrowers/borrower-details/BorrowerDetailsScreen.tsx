@@ -498,7 +498,13 @@ export default function BorrowerDetailsScreen({
                 key: "loan",
                 label: t("borrower.tab.loan"),
                 children: (
-                  <Flex vertical style={styles.tabBody}>
+                  /*
+                    A GAP BETWEEN THE THREE BLOCKS. There was none, and the
+                    record grid stopped reserving a trailing margin of its own,
+                    so "Comments" landed straight under the grid's last row and
+                    read as one more cell in it — a heading inside a table.
+                  */
+                  <Flex vertical gap={24} style={styles.tabBody}>
                     {loan ? (
                       <>
                         {/*
@@ -530,9 +536,17 @@ export default function BorrowerDetailsScreen({
                               it lives on the loan record, which is also where
                               the documents table with its uploader and comment
                               columns lives. This is the way through. */}
+                          {/* A LINK, not a framed button. It is a way out of a
+                              summary, the same errand as "Open their borrower
+                              record" on the tab beside it, and those two should
+                              not be two different weights of control. An
+                              outlined box also made it the heaviest thing on a
+                              read-only tab. */}
                           <Button
+                            type="link"
                             icon={<ArrowRightOutlined />}
                             iconPlacement="end"
+                            style={styles.recordLink}
                             onClick={() =>
                               navigate({ to: `/staff/loans/${loan.loanId}` })
                             }

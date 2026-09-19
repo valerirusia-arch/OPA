@@ -3,14 +3,21 @@
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 
+const ROW_PAD = 16;
+
 export const styles = {
+  /** The head keeps its title and gives up its rule to the tab bar below. */
+  headNoRule: { borderBottom: "none" },
   /**
    * The tab bar sits INSIDE the card's body, under its title — so it reads as
-   * a control belonging to this card rather than to the page. It pulls itself
-   * up by the body's own top padding, so the bar sits where the content would
-   * have started.
+   * a control belonging to this card rather than to the page.
+   *
+   * It pulls up hard enough to close the gap the card's head and body padding
+   * leave between them, so the tabs hang off the title instead of floating
+   * between two rules, and antd's own margin under the bar is what separates
+   * it from the panel. *"ეს უკეთ რომ მოსვა."*
    */
-  checksTabs: { marginTop: -8 },
+  checksTabs: { marginTop: -20 },
   /** A link button with antd's own padding taken off, so it ends the panel's
    *  row rather than floating in from its edge. */
   recordLink: { paddingInline: 0, height: "auto" },
@@ -21,8 +28,21 @@ export const styles = {
   amount: { fontSize: 16, fontWeight: 600, fontVariantNumeric: "tabular-nums" },
   /** The requested figure, struck through once an underwriter has changed it. */
   amountWas: { textDecoration: "line-through", fontVariantNumeric: "tabular-nums" },
-  request: { paddingBlock: 12 },
-  rule: { marginBlock: 0 },
+  /**
+   * ONE RECORD ROW — the audit trail and the information requests, which are
+   * the same shape and were spaced like single lines.
+   *
+   * Each row carries up to three: what happened, the figures it moved between,
+   * and the reason. At 12 above and below, with the three set solid and a
+   * Divider between rows, a row's own lines sat closer to the NEXT row's than
+   * to each other and the whole card read as one grey block. 16 and a 4 gap
+   * are what the verification list and the dashboard's own record list
+   * settled on. *"აქ სფეისინგი მოაგვარე."*
+   *
+   * The rule is the row's own border rather than a Divider element, so it
+   * carries no line box of its own and the first row does not get one.
+   */
+  recordRowFirst: { width: "100%", paddingBlock: ROW_PAD },
   /** It follows the record grid rather than opening the card, so it keeps the
    *  grid's own row gap above it and nothing below. */
   note: { marginTop: 24, marginBottom: 0 },
@@ -32,6 +52,13 @@ export const styles = {
 
 export const getStyles = (token: GlobalToken) =>
   ({
+    /** Every record row but the first: hairlines BETWEEN rows, none under the
+     *  last, which would be a rule with nothing beneath it. */
+    recordRow: {
+      width: "100%",
+      paddingBlock: ROW_PAD,
+      borderTop: `1px solid ${token.colorSplit}`,
+    },
     /** A quiet frame for the borrower's answer to a request. */
     answer: {
       marginTop: 12,

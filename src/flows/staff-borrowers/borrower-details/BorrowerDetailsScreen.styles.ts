@@ -37,5 +37,7 @@ export const styles = {
   /** The loan's state and the way to its full record, on one line above the
    *  fields. A state is not a field and a way out is not a comment — see the
    *  note in the tab. */
-  loanState: { marginBottom: 20, width: "100%" },
+  /** The tab body's own gap separates it from the grid now, so it carries no
+   *  margin of its own — two of them stacked into 44px of nothing. */
+  loanState: { width: "100%" },
 } satisfies Record<string, CSSProperties>;
