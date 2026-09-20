@@ -80,6 +80,15 @@ export type BalanceSummaryProps = {
    * for September is the page arguing with itself.
    */
   showDetails?: boolean;
+  /**
+   * The micro-label above the figure — "Outstanding balance".
+   *
+   * OFF WHERE THE CARD'S HEAD ALREADY SAYS IT. On /payments this panel now
+   * sits under a head reading "Outstanding balance", and a label repeating it
+   * 20px lower is a heading saying what the line below it says. The
+   * dashboard's copy stands alone in a headless band and keeps it.
+   */
+  showLabel?: boolean;
   /** True only where this card is the first thing on its page, which is the
    *  dashboard and nowhere else. It sets the figure one rank up. */
   hero?: boolean;
@@ -101,6 +110,7 @@ export function BalanceSummary({
   pastDue,
   progress,
   showDetails = true,
+  showLabel = true,
   hero = false,
   next,
   fill = false,
@@ -250,8 +260,11 @@ export function BalanceSummary({
             high in a 1.6 line box. Sitting both on one baseline is what makes
             "OUTSTANDING BALANCE · Accelerated" read as a single line of text.
             *"ტექსტთან ოდნავ დაბლა წერია — გასაცენტრებელია."* */}
+        {showLabel || status ? (
         <Flex align="baseline" gap={10} wrap style={styles.labelRow}>
-          <Typography.Text style={s.labelInline}>{t("payments.outstanding")}</Typography.Text>
+          {showLabel ? (
+            <Typography.Text style={s.labelInline}>{t("payments.outstanding")}</Typography.Text>
+          ) : null}
           {status ? (
             /* BARE HERE, and only here. The state is a qualifier of the
                figure below it, not an item in a list of statuses — see the
@@ -261,6 +274,7 @@ export function BalanceSummary({
             </StatusPill>
           ) : null}
         </Flex>
+        ) : null}
 
         {/*
           BESIDE THE FIGURE ON THE DASHBOARD, UNDER IT EVERYWHERE ELSE.

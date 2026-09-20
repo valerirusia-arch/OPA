@@ -181,13 +181,19 @@ export function PaymentsOverview({
         ჰქონდეს... ღილაკი არ იყოს, ტექსტი და აროუ იყოს, და თაითლის მარჯვნივ,
         როგორც წინა კონტეინერზე."*
 
-        The head reads "Repayment" rather than "Your balance": the figure
-        under it is already labelled "Outstanding balance", and a head that
-        repeats the label it sits above is a heading saying what the line
-        below it says.
+        THE HEAD NAMES THE FIGURE: "Outstanding balance". It read "Repayment"
+        first, which is both vaguer and taken — the tab under this card is
+        called "Repayment schedule" — and the designer put their finger on it:
+        *"ამის თაითლი სწორია? რაღაც თითქოს არ მოერგო... ან აუთსტენდინგ ბალანს
+        ან რამე მსგავსი."* It is also the WBS's own wording for what this
+        panel is for: "review the current outstanding loan balance".
+
+        And the micro-label inside the panel goes with it — see `showLabel`.
+        Two lines saying "Outstanding balance" 20px apart is a heading saying
+        what the line below it says.
       */}
       <Card
-        title={t("loanPage.repayment")}
+        title={t("payments.outstanding")}
         /* Only where there is something payable. A way onward over a settled
            loan is a door onto nothing. */
         extra={
@@ -202,7 +208,7 @@ export function PaymentsOverview({
       >
         {/* `onPay` is withheld on purpose: the head carries the action now,
             and the panel's own button would be the same door twice. */}
-        <BalanceSummary balance={record.balance} next={next} />
+        <BalanceSummary balance={record.balance} next={next} showLabel={false} />
       </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
