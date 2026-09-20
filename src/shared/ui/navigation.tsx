@@ -12,9 +12,9 @@ import {
   BarChartOutlined,
   CreditCardOutlined,
   DashboardOutlined,
-  FunnelPlotOutlined,
-  IdcardOutlined,
+  NodeIndexOutlined,
   TeamOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import type { ReactNode } from "react";
 import type { TranslationKey } from "./i18n/dictionary";
@@ -103,11 +103,7 @@ export const staffNav: NavSection[] = [
       {
         key: "acquisition",
         labelKey: "nav.acquisition",
-        /* A FUNNEL, because that is what the group is: sources → partners →
-           campaigns → performance. The node-graph glyph that was here drew a
-           flowchart, which named neither the work nor the four screens under
-           it. */
-        icon: <FunnelPlotOutlined />,
+        icon: <NodeIndexOutlined />,
         children: [
           { key: "source", labelKey: "nav.source", to: "/staff/acquisition/sources" },
           { key: "partners", labelKey: "nav.partners", to: "/staff/acquisition/partners" },
@@ -122,12 +118,7 @@ export const staffNav: NavSection[] = [
     labelKey: "nav.groupAdmin",
     items: [
       { key: "reporting", labelKey: "nav.reporting", icon: <BarChartOutlined />, to: "/staff/reporting" },
-      /* AN ID CARD, NOT A PERSON. Borrowers two rows up is a crowd and this
-         was a single figure: at 14px "one person" versus "three people" is not
-         a distinction anyone reads, and both pages are about people. The card
-         says accounts, which is what this page actually manages — admin and
-         underwriter logins and their roles. */
-      { key: "users", labelKey: "nav.users", icon: <IdcardOutlined />, to: "/staff/users" },
+      { key: "users", labelKey: "nav.users", icon: <UserOutlined />, to: "/staff/users" },
     ],
   },
 ];

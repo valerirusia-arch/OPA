@@ -88,8 +88,8 @@ import {
   CheckOutlined,
   CreditCardOutlined,
   DollarCircleOutlined,
-  FileDoneOutlined,
-  SignatureOutlined,
+  EditOutlined,
+  SafetyOutlined,
   StopOutlined,
 } from "@ant-design/icons";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -172,7 +172,7 @@ export function LoanJourney({ status, stage, paid, dates, notes }: LoanJourneyPr
     {
       key: "approved",
       title: t("application.approved"),
-      icon: <FileDoneOutlined />,
+      icon: <SafetyOutlined />,
       /* WHAT THE DECISION IS WAITING ON, while it is still the current step.
          These four were three separate rail steps before, which made a
          borrower whose co-borrower had not answered look like they were one
@@ -191,7 +191,7 @@ export function LoanJourney({ status, stage, paid, dates, notes }: LoanJourneyPr
     {
       key: "signed",
       title: t("loanPage.journeySigned"),
-      icon: <SignatureOutlined />,
+      icon: <EditOutlined />,
       content: notes?.signed,
     },
     /* The card is what "funded" MEANS here: OPA does not hand over cash, it

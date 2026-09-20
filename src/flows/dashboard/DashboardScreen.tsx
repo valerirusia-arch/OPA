@@ -40,10 +40,10 @@
 import { Button, Card, Flex, Typography } from "antd";
 import {
   ArrowRightOutlined,
+  BankOutlined,
   CreditCardOutlined,
   FileTextOutlined,
-  ScheduleOutlined,
-  WalletOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 
 import { useNavigate } from "@tanstack/react-router";
@@ -126,7 +126,7 @@ export default function DashboardScreen({
   const tiles = [
     {
       key: "loan",
-      icon: <WalletOutlined />,
+      icon: <BankOutlined />,
       label: t("dashboard.tileLoan"),
       value: loan?.amount ?? record?.amount,
       hint: loan ? t("dashboard.tileLoanHint", { apr: loan.apr }) : undefined,
@@ -153,7 +153,7 @@ export default function DashboardScreen({
         },
     {
       key: "payments",
-      icon: <ScheduleOutlined />,
+      icon: <HistoryOutlined />,
       label: t("dashboard.tilePayments"),
       value: payments
         ? t("dashboard.tilePaymentsValue", {
