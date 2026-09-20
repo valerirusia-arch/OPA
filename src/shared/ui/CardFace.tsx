@@ -62,7 +62,7 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { frontStyles, getStyles, styles } from "./CardFace.styles";
+import { getFrontStyles, getStyles, styles } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
@@ -103,6 +103,26 @@ export type CardFaceProps = {
   /** The number can be copied. Only where it IS a number — a mask cannot. */
   copyable?: boolean;
   /**
+   * THE CARD AS AN OBJECT AND NOTHING ELSE — no number on it at all.
+   *
+   * For the details dialog, where the card is the picture at the top and every
+   * fact about it is in the list underneath. Printing the masked number on the
+   * face there would state a fact the list states two inches below it, and the
+   * designer's reference puts nothing on the card but its identity: the mark
+   * on its tile at the top, what the card IS along the foot, and whose it is
+   * under that. *"ზემოთ ოპას ლოგო, ქვემოთ ოპას ვირტუალ ქარდ რომ ეწეროს, და
+   * ქვემოთ პატარაზე სახელი და გვარი."*
+   *
+   * The state goes bottom right, where the reference card carries its network
+   * mark — *"მარჯვნივ ეწერება ინ იუს, დაბლა, მასტერქარდის მაგივრად."* OPA's
+   * card has no network artwork to put there, and "In use" is the one thing
+   * about this card that changes.
+   *
+   * `number` is still required and simply not printed: same component, same
+   * contract, three drawings of one object.
+   */
+  nameplate?: boolean;
+  /**
    * THE FRONT OF OPA'S OWN CARD, as OPA prints it.
    *
    * Three things and no more: the mark top left, the card's state top right,
@@ -126,13 +146,46 @@ export function CardFace({
   facts = [],
   copyable = false,
   front = false,
+  nameplate = false,
 }: CardFaceProps) {
   /* The face is dark: it takes white ink and prints its own status pill
      rather than wearing antd's chip. */
   const inverted = true;
   const { token } = theme.useToken();
   const s = getStyles(token);
+  const front_ = getFrontStyles(token);
   const figures = getFigureStyles(token);
+
+  /* THE NAMEPLATE. Same early-return reason as `front` below: it is a third
+     drawing of the one object, not this face with things switched off. */
+  if (nameplate) {
+    return (
+      <Flex vertical justify="space-between" gap={20} style={s.face}>
+        <Flex align="flex-start" justify="space-between" gap={12}>
+          <div style={front_.mark}>
+            <Logo height={30} />
+          </div>
+        </Flex>
+
+        {/* WHAT IT IS, WHOSE IT IS, AND HOW IT STANDS — one line of each, all
+            along the foot. `flex-end` so the state sits on the name's line
+            rather than floating level with the card's title above it. */}
+        <Flex align="flex-end" justify="space-between" gap={16}>
+          <Flex vertical gap={2}>
+            <Typography.Text style={s.plate}>{label}</Typography.Text>
+            {facts.length > 0 ? (
+              <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
+            ) : null}
+          </Flex>
+          {status ? (
+            <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
+              {status.label}
+            </Tag>
+          ) : null}
+        </Flex>
+      </Flex>
+    );
+  }
 
   /* OPA'S OWN FRONT. It returns early rather than threading `front` through
      six branches below, because it genuinely is a different drawing: not this
@@ -142,8 +195,8 @@ export function CardFace({
     return (
       <Flex vertical justify="space-between" gap={20} style={s.face}>
         <Flex align="flex-start" justify="space-between" gap={12}>
-          <div style={frontStyles.mark}>
-            <Logo height={36} />
+          <div style={front_.mark}>
+            <Logo height={30} />
           </div>
           {/* Top right, printed on the card rather than stuck to it — the same
               pill cut from the face's own material that the revealed card

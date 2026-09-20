@@ -36,6 +36,21 @@ function Faces() {
 
       <Flex vertical gap={12} style={{ width: SLOT }}>
         <Typography.Text type="secondary">
+          OPA's card — the nameplate, for the details dialog
+        </Typography.Text>
+        <Card title="Your OPA card">
+          <CardFace
+            nameplate
+            label="OPA Virtual Card"
+            status={{ label: "Not used yet" }}
+            number="•••• 3094"
+            facts={[{ key: "h", label: "Cardholder", value: "Levi Ackerman" }]}
+          />
+        </Card>
+      </Flex>
+
+      <Flex vertical gap={12} style={{ width: SLOT }}>
+        <Typography.Text type="secondary">
           OPA's card — as USIO returns it, revealed
         </Typography.Text>
         <Card title="Your OPA card">

@@ -232,17 +232,45 @@ export const brand = {
    * neutral. The darkest stops are warmed to meet it, so the bloom lands on a
    * ground that is already leaning that way instead of on a cold grey.
    */
+  /*
+    BRIGHTER, AND BLUER ALL THE WAY DOWN — 2026-09-20.
+
+    The ramp above ran brand blue into a warmed near-black, which is how an
+    issued card is printed but is not what the designer sent: an iridescent
+    face, light and luminous, several hues sliding into one another. *"ოდნავ
+    მეტი ლურჯი რომ გაურიო და მაგ სიკაშკაშის იყოს."*
+
+    So the black is gone and the ramp stays blue end to end, opening about two
+    stops, with three washes over it — cyan into the top left, a warm peach
+    across the top right, and the CTA orange along the foot where it already
+    was. Together they read as one iridescent surface rather than as four
+    coloured patches, because none of them is strong enough to be named.
+
+    THE FOOT STAYS THE DEEPEST PART, and that is doing work rather than
+    taste: everything printed on this card is white, and all of it sits in
+    the lower half — the number, the name, the expiry. A face that is bright
+    where the type is would be a card nobody can read. The top is where the
+    light goes, and the only thing up there is the mark, which now sits on a
+    white tile of its own and no longer needs the ground to be dark.
+  */
   cardSkin: [
+    /* Cyan into the top left, the brand's own highlight hue. */
+    "radial-gradient(76% 92% at 10% 2%, rgba(62,201,210,0.52) 0%," +
+      " rgba(62,201,210,0.18) 46%, rgba(62,201,210,0) 70%)",
+    /* A warm peach across the top right, which is what stops the face reading
+       as one blue with a light corner. */
+    "radial-gradient(70% 86% at 94% 6%, rgba(232,160,139,0.40) 0%," +
+      " rgba(232,160,139,0.14) 48%, rgba(232,160,139,0) 72%)",
     /* Two blooms, so the warmth runs the WHOLE foot rather than sitting in one
        corner — *"ეს ნარინჯისფერი ლოგოს მხრიდანაც უქენი."* The right one leads
        and the left answers it a little quieter, so the foot is warm end to end
        without becoming a second band of colour. */
-    "radial-gradient(78% 58% at 86% 108%, rgba(184,92,35,0.50) 0%," +
-      " rgba(184,92,35,0.22) 42%, rgba(184,92,35,0) 74%)",
-    "radial-gradient(64% 52% at 10% 106%, rgba(184,92,35,0.38) 0%," +
-      " rgba(184,92,35,0.16) 44%, rgba(184,92,35,0) 76%)",
-    "linear-gradient(160deg, #3E86BC 0%, #2A6FA6 18%, #1A5488 36%, #0E3A60 54%," +
-      " #0A2334 70%, #12110F 86%, #14100C 100%)",
+    "radial-gradient(78% 58% at 86% 108%, rgba(184,92,35,0.42) 0%," +
+      " rgba(184,92,35,0.18) 42%, rgba(184,92,35,0) 74%)",
+    "radial-gradient(64% 52% at 10% 106%, rgba(184,92,35,0.30) 0%," +
+      " rgba(184,92,35,0.12) 44%, rgba(184,92,35,0) 76%)",
+    "linear-gradient(158deg, #5FA8D8 0%, #4890C6 20%, #3576AF 40%, #275C93 60%," +
+      " #1D4675 78%, #17375C 100%)",
   ].join(", "),
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
@@ -257,8 +285,18 @@ export const brand = {
   mcAmber: "#F79E1B",
   mcOverlap: "#FF5F00",
 
-  /** The status pill on a dark finish: the card's own material, not a sticker. */
-  cardDarkPill: "rgba(255, 255, 255, 0.14)",
+  /**
+   * The status pill on the card: the card's own material, not a sticker.
+   *
+   * IT WAS WHITE AT 14%, which works on a near-black face and fails on the
+   * bright one. The pill sits top right, where the new skin is lightest —
+   * measured, white text on a 14% white pill over that area came out around
+   * 2.5:1, so the one word on the card that changes was the hardest thing on
+   * it to read. A translucent DARK pill is the same idea the other way up:
+   * still mixed from the face rather than stuck on it, still one value for
+   * the whole card, and white on it clears AA wherever the pill lands.
+   */
+  cardDarkPill: "rgba(10, 30, 46, 0.42)",
   cardDarkInk: "#FFFFFF",
   cardDarkQuiet: "rgba(255, 255, 255, 0.68)",
   cardLightEdge: "rgba(38, 36, 35, 0.08)",

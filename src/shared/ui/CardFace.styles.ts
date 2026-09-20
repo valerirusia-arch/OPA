@@ -111,6 +111,21 @@ export const getStyles = (token: GlobalToken) => {
       color: ink,
       fontVariantNumeric: "tabular-nums",
     },
+    /**
+     * THE CARD'S NAME along the foot of the nameplate — the biggest thing
+     * printed on that face, because on that face it is the only thing that
+     * says what the object is.
+     *
+     * 18 and not 20, measured: at 20 "OPA Virtual Card" is ~172px and the
+     * state pill beside it ~90, which is 8px more than a 320-wide card has
+     * between its insets — so the name wrapped onto two lines and the pill
+     * came to rest against it. 18 is the same step the masked number takes
+     * on the front, so the two faces stay one family either way.
+     */
+    plate: { fontSize: 18, fontWeight: 600, color: ink, letterSpacing: "0.01em" },
+    /** Whose card it is, under the name — smaller, and in the quiet ink, the
+     *  way a real card prints the holder under the product name. */
+    plateSub: { fontSize: 13, color: quiet, letterSpacing: "0.02em" },
     /** The foot's labels and values, in the finish's own ink. */
     footLabel: {
       fontSize: 11,
@@ -148,20 +163,28 @@ export const getStyles = (token: GlobalToken) => {
  * OPA application and are accessible only via a secure embedded view", so they
  * appear on the revealed face and nowhere else.
  */
-export const frontStyles = {
-  /**
-   * The mark sits where an issuer's does: top left, at the face's own inset.
-   *
-   * LIFTED, AND THAT IS A STAND-IN. The brand symbol is a teal disc with a
-   * white flame knocked out of it, drawn for a light page — on a card that
-   * runs from deep blue into near-black the disc all but disappears, and it is
-   * the only thing printed on this face, so it has to read. The filter raises
-   * the disc's luminance without touching the flame, which is already white.
-   *
-   * What this actually wants is a KNOCKOUT version of the mark from OPA — the
-   * same gap the card networks' artwork has, and the same answer: the file
-   * belongs in `src/assets/brand/`. A filter is a way to keep the card
-   * reviewable until it lands, not the finish.
-   */
-  mark: { flex: "none", filter: "brightness(1.85) saturate(1.15)" },
-} satisfies Record<string, CSSProperties>;
+export const getFrontStyles = (token: GlobalToken) =>
+  ({
+    /**
+     * THE MARK ON A WHITE TILE, top left, at the face's own inset.
+     *
+     * It used to be the bare symbol with `filter: brightness(1.85)` on it — a
+     * stand-in, and an honest one while the card ran into near-black and a
+     * teal disc all but disappeared on it. The face is bright and blue now,
+     * where a brightened teal disc on a light blue ground reads as neither.
+     *
+     * The tile is the reference's own answer and a better one than a filter:
+     * the mark keeps its real colours, it reads on any part of any ground,
+     * and it is what an issuer's badge on a real card actually looks like.
+     * A knockout mark from OPA would still be welcome — `src/assets/brand/` —
+     * but this no longer needs one to be right.
+     */
+    mark: {
+      flex: "none",
+      display: "flex",
+      background: token.colorBgContainer,
+      borderRadius: token.borderRadius,
+      padding: 5,
+      boxShadow: brand.shadowRest,
+    },
+  }) satisfies Record<string, CSSProperties>;

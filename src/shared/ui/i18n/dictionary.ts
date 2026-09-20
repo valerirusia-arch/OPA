@@ -1075,6 +1075,16 @@ export const en = {
   "loanPage.cardMock": "Mock",
   "loanPage.cardNumber": "Card number",
   "loanPage.cardCvv": "CVV",
+  /* The details list's first row, and the name printed on the card face.
+     "Virtual card" alone did not say whose; the dialog is where a borrower
+     checks what this object actually is. */
+  "loanPage.cardType": "Card type",
+  "loanPage.cardTypeValue": "OPA Virtual Card",
+  /* What OPA is allowed to print before USIO has been asked. The last four
+     and the expiry are OPA's; the rest of the number and the security code
+     are not, so they are dots until the secure view returns them. */
+  "loanPage.cardNumberMasked": "•••• •••• •••• {last4}",
+  "loanPage.cardCvvMasked": "•••",
   "loanPage.cardRevealedNote": "These details are shown by USIO, not by OPA. Close this window when you are done — anyone looking at your screen can read them.",
   "loanPage.cancelTitle": "Cancel this loan",
   "loanPage.cancelBody": "You can still cancel while the virtual card is unused. The card is closed and nothing is paid out.",
@@ -2586,6 +2596,10 @@ const es: Record<TranslationKey, string> = {
   "loanPage.cardMock": "Simulación",
   "loanPage.cardNumber": "Número de tarjeta",
   "loanPage.cardCvv": "CVV",
+  "loanPage.cardType": "Tipo de tarjeta",
+  "loanPage.cardTypeValue": "Tarjeta virtual OPA",
+  "loanPage.cardNumberMasked": "•••• •••• •••• {last4}",
+  "loanPage.cardCvvMasked": "•••",
   "loanPage.cardRevealedNote": "Estos datos los muestra USIO, no OPA. Cierra esta ventana al terminar: cualquiera que vea tu pantalla puede leerlos.",
   "loanPage.cancelTitle": "Cancelar este préstamo",
   "loanPage.cancelBody": "Puedes cancelar mientras la tarjeta virtual siga sin usarse. La tarjeta se cierra y no se desembolsa nada.",
