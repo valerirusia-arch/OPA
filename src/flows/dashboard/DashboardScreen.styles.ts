@@ -4,6 +4,9 @@ import type { CSSProperties } from "react";
 import { contentRow } from "../../shared/ui/grid";
 
 export const styles = {
+  /** In a card's head: no end padding, so the link aligns with the head's own
+   *  edge — the same as /loan's and /payments' panels. */
+  headAction: { paddingInlineEnd: 0 },
   /** THE SAME FRAME AS /loan AND /payments, from the same constant. It was a
    *  hand-rolled 1216 at 32, which is 48px narrower and 8px higher than the
    *  two pages this one sits between — three widths for one product. */

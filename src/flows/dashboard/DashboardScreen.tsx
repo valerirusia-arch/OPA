@@ -210,7 +210,33 @@ export default function DashboardScreen({
                 sentence the greeting has already said is three half-answers
                 where the page has one. */}
             {payments ? (
-              <Card style={styles.band} styles={{ body: leadPanelBody }}>
+              /*
+                A HEAD, AND THE ACTION IN IT — the same object /loan's two
+                panels and /payments' balance card are. *"მინდა ასევე დაამატო
+                თაითლი როგორც წინა კონტეინერებს... და მეიქ ფეიმენთი თაითლის
+                გვერდზე, მხოლოდ სიტყვა, როგორც წინაზე."*
+
+                The orange button that used to be pinned in this card's corner
+                is now a link beside the title, and it is drawn only while
+                there is something payable — a way onward over a settled loan
+                is a door onto nothing.
+              */
+              <Card
+                title={t("dashboard.standingTitle")}
+                extra={
+                  nextDue ? (
+                    <Button
+                      type="link"
+                      style={styles.headAction}
+                      onClick={() => navigate({ to: "/payments" })}
+                    >
+                      {t("payments.makePayment")} <ArrowRightOutlined />
+                    </Button>
+                  ) : undefined
+                }
+                style={styles.band}
+                styles={{ body: leadPanelBody }}
+              >
                 <BalanceSummary
                   balance={payments.balance}
                   /* The first thing on this page, and the only thing at its
@@ -255,7 +281,8 @@ export default function DashboardScreen({
                      a fourth fact about the loan. */
                   showDetails={false}
                   next={nextDue}
-                  onPay={nextDue ? () => navigate({ to: "/payments" }) : undefined}
+                  /* WITHHELD ON PURPOSE: the head carries the action now, and
+                     the card's own button would be the same door twice. */
                 />
                 {/* THE JOURNEY DOES NOT END WITH THE PICTURE OF IT. The band
                     above swapped to this card at funding and took the rail

@@ -1651,6 +1651,13 @@ export const en = {
      Plain English, which is the register the rest of this product speaks to
      borrowers in. */
   "payments.owedTitle": "What you owe",
+  /* THE DASHBOARD BAND'S HEAD, the pair to "What you owe" on /payments. The
+     card under it is not the balance alone: it is the balance, how far
+     through the schedule it is, and which step of the loan the borrower is
+     standing on. A plain-English question the card answers, in the same
+     register as its pair. *"ეს არის შენი ლოანის ტრეკერი ან რამე ლამაზად კაი
+     თაითლი."* */
+  "dashboard.standingTitle": "Where your loan stands",
   "payments.makePayment": "Make a payment",
   "payments.nothingDue": "Nothing left to pay",
   "payments.feesApplied": "Fees applied",
@@ -3090,6 +3097,7 @@ const es: Record<TranslationKey, string> = {
 
   "payments.outstanding": "Saldo pendiente",
   "payments.owedTitle": "Lo que debes",
+  "dashboard.standingTitle": "Cómo va tu préstamo",
   "payments.makePayment": "Hacer un pago",
   "payments.nothingDue": "No queda nada por pagar",
   "payments.feesApplied": "Recargos",
