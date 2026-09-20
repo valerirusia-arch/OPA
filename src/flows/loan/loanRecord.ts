@@ -169,6 +169,13 @@ const LOAN_STAGES: BorrowerStage[] = [
   "funding",
   "funded",
   "cardUsed",
+  /* PAID OFF WAS MISSING FROM THIS LIST and it is the other way a loan ends.
+     `cancelled` was here and `paidOff` was not, so /loan's demo bar could
+     reach the unhappy ending and not the happy one — which also left the
+     statement's "Nothing left to pay" unreachable on the page that draws it.
+     The delinquency stages stay off this list on purpose: they are about the
+     money and belong to /payments and the dashboard. */
+  "paidOff",
   "cancelled",
 ];
 
