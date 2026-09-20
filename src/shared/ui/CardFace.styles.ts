@@ -145,12 +145,26 @@ export const getStyles = (token: GlobalToken) => {
      * the object is.
      *
      * It has the width to itself: the holder and the state share the line
-     * BELOW it, so 22 never has to be traded against a pill.
+     * BELOW it, so it never has to be traded against a pill.
+     *
+     * 14, MEASURED OFF THE DESIGNER'S OWN CROP — *"ტექსტს ამხელაზე რატომ
+     * წერ?"* Compared as a fraction of the card's width, so the two crops'
+     * different scales cancel: the name ran 0.55 of the card's width here
+     * against 0.438 in theirs. On a real card the product's name is small
+     * print beside the number; here there is no number, and it still should
+     * not be the headline.
+     *
+     * (The DOM is no help for this: the text sits in a `Flex vertical`, so
+     * its span stretches to the card's inner width whatever the font size,
+     * and every ratio read off `getBoundingClientRect` comes back the same.)
      */
-    plate: { fontSize: 22, fontWeight: 600, color: ink, letterSpacing: "0.01em" },
-    /** Whose card it is, under the name, in the finish's quiet ink — the way
-     *  a real card prints the holder under the product's name. */
-    plateSub: { fontSize: 15, color: quiet, letterSpacing: "0.02em" },
+    plate: { fontSize: 14, fontWeight: 600, color: ink, letterSpacing: "0.01em" },
+    /**
+     * Whose card it is, under the name, in the finish's quiet ink — the way a
+     * real card prints the holder under the product's name. 11 by the same
+     * measurement: 0.34 of the card's width here against their 0.273.
+     */
+    plateSub: { fontSize: 11, color: quiet, letterSpacing: "0.02em" },
     /** The state on a thumbnail: the same pill, at the size that face can
      *  carry. It is the only thing printed on the nameplate besides the mark
      *  — see the note at the call site. */

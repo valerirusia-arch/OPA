@@ -1138,7 +1138,10 @@ export const en = {
   "loanPage.card": "Your OPA card",
   "loanPage.cardBody": "USIO holds the card. OPA never sees or stores the number.",
   "loanPage.cardOpen": "View",
-  "loanPage.cardUnused": "Not used yet",
+  /* NOT "Not used yet". The card sits on a face beside "In use", and the
+     pair reads as a state either way; "yet" adds a promise the pill does
+     not need to make. *"ამას yet არ უნდა."* */
+  "loanPage.cardUnused": "Not used",
   "loanPage.cardUsed": "In use",
 
   // WBS story 9: only while the card is unused.
