@@ -36,13 +36,9 @@ export type VirtualCardPanelProps = {
   /** The network USIO issued it on, where OPA has said which. Absent, the
    *  face prints the issuer line instead. */
   brand?: string;
-  /**
-   * NEITHER THE LAST FOUR NOR THE EXPIRY ARE PROPS ANY MORE.
-   *
-   * The face stopped printing digits — see the note at the CardFace call —
-   * and the panel asked for nothing else to do with them. Both still reach
-   * the screen, in the details dialog, from the same record the screen reads.
-   */
+  last4: string;
+  /** MM/YY, printed in the foot's right-hand corner. */
+  expiry: string;
   /** The name printed along the foot, where a card carries it. */
   cardholder: string;
   /** Once it is, story 9's cancellation window has closed. */
@@ -55,6 +51,8 @@ export type VirtualCardPanelProps = {
 export function VirtualCardPanel({
   title,
   brand,
+  last4,
+  expiry,
   cardholder,
   used,
   fill = false,
@@ -85,25 +83,22 @@ export function VirtualCardPanel({
           and there is no "card ending" label above the digits: a masked
           number does not need to be introduced as one. */}
       <Flex vertical justify={fill ? "center" : "flex-start"} style={styles.body}>
-        {/* THE NAMEPLATE, AND NO DIGITS ON IT. The mark on its tile at the
-            top; along the foot the card's own name, the holder under it and
-            the state in the opposite corner — *"არ მინდა რამე ციფრები ეწეროს
-            გარედან."*
-
-            The masked last four and the expiry were printed here and are
-            gone: both are facts OPA holds, so this is a drawing decision
-            rather than a privacy one. A card face with a number on it invites
-            a reader to use it, and this number cannot be used — the one that
-            can is in the details dialog, with the expiry and the security
-            code, where USIO hands them over. */}
+        {/* OPA'S OWN FRONT: the mark, whether the card has been spent, and the
+            masked number. The expiry and the rest are USIO's and appear only
+            on the revealed face inside the dialog. */}
         <CardFace
-          variant="nameplate"
+          front
           brand={brand}
-          label={t("loanPage.cardTypeValue")}
+          label={t("loanPage.cardIssuer")}
           status={{
             label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused"),
           }}
-          facts={[{ key: "holder", label: t("loanPage.cardholder"), value: cardholder }]}
+          number={t("payments.cardEnding", { last4 })}
+          /* The foot: the name on the left, the expiry in the corner. */
+          facts={[
+            { key: "holder", label: t("loanPage.cardholder"), value: cardholder },
+            { key: "expires", label: t("loanPage.cardExpires"), value: expiry },
+          ]}
         />
 
         {/* PRODUCT.md's fourth principle: name the hand-over. This is where

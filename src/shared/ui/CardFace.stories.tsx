@@ -17,24 +17,30 @@ function Faces() {
     <Flex gap={32} wrap style={{ padding: 24 }}>
       <Flex vertical gap={12} style={{ width: SLOT }}>
         <Typography.Text type="secondary">
-          OPA's card — the thumb, inside the details dialog
+          OPA's card — the front OPA prints
         </Typography.Text>
         <Card title="Your OPA card">
           <CardFace
-            variant="thumb"
-            label="OPA Virtual Card"
+            front
+            label="OPA virtual"
             status={{ label: "Not used yet" }}
+            number="•••• 3094"
+            /* The foot: the name on the left, the expiry in the corner. */
+            facts={[
+              { key: "h", label: "Cardholder", value: "Levi Ackerman" },
+              { key: "e", label: "Expires", value: "11/29" },
+            ]}
           />
         </Card>
       </Flex>
 
       <Flex vertical gap={12} style={{ width: SLOT }}>
         <Typography.Text type="secondary">
-          OPA's card — the nameplate, as /loan draws it
+          OPA's card — the nameplate, for the details dialog
         </Typography.Text>
         <Card title="Your OPA card">
           <CardFace
-            variant="nameplate"
+            nameplate
             label="OPA Virtual Card"
             status={{ label: "Not used yet" }}
             number="•••• 3094"

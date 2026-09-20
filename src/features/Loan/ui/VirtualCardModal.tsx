@@ -33,7 +33,7 @@
 // Dumb: it renders what it is handed and reports that it was opened.
 
 import { Flex, Modal, Typography, theme } from "antd";
-import { BlockOutlined, CheckOutlined, LockOutlined } from "@ant-design/icons";
+import { CheckOutlined, CopyOutlined, LockOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { Logo } from "../../../shared/ui/Logo";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -100,33 +100,23 @@ export function VirtualCardModal({
     {
       key: "number",
       label: t("loanPage.cardNumber"),
-      value: <Typography.Text style={s.rowValue}>{pan}</Typography.Text>,
-      /* THE ONE ROW WORTH COPYING — a card number is read off a screen and
-         typed into a form, and this is the form's way of not being retyped.
-         It is the row's action, so it hangs on the row's right edge and is
-         centred against the WHOLE row rather than against the digits: inside
-         the value it sat on the number's own line, level with nothing, a
-         third of the way down a 64px row. *"ეს აიქონი გაასაშუალოე და შუაში
-         აწიე."*
-
-         A `Typography.Text` with no children renders antd's copy button and
-         nothing else — the clipboard, the copied state and the accessible
-         label all stay antd's, and only the placement is ours. */
-      action: (
+      value: (
+        /* The one row worth copying — a card number is read off a screen and
+           typed into a form, and this is the form's way of not being retyped.
+           The glyph hangs on the row's right edge; see `rowValue`. */
         <Typography.Text
+          style={{ ...s.rowValue, ...styles.rowValue }}
           copyable={{
             text: pan.replace(/\s/g, ""),
             tooltips: false,
             icon: [
-              <span key="copy" style={s.copyChip}>
-                <BlockOutlined />
-              </span>,
-              <span key="copied" style={s.copiedChip}>
-                <CheckOutlined />
-              </span>,
+              <CopyOutlined key="copy" style={s.copyIcon} />,
+              <CheckOutlined key="copied" style={s.copiedIcon} />,
             ],
           }}
-        />
+        >
+          {pan}
+        </Typography.Text>
       ),
     },
     {
@@ -166,7 +156,7 @@ export function VirtualCardModal({
             მასტერქარდის მაგივრად."* Nothing else; see CardFace's nameplate. */}
         <div style={styles.face}>
           <CardFace
-            variant="thumb"
+            nameplate
             label={t("loanPage.cardTypeValue")}
             status={{ label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused") }}
             number={t("payments.cardEnding", { last4 })}
@@ -181,17 +171,13 @@ export function VirtualCardModal({
       <div style={s.list}>
         {rows.map((row, index) => (
           <Flex
-            align="center"
-            justify="space-between"
-            gap={16}
+            vertical
+            gap={2}
             key={row.key}
             style={index < rows.length - 1 ? s.rowRuled : s.row}
           >
-            <Flex vertical gap={2}>
-              <Typography.Text style={s.rowLabel}>{row.label}</Typography.Text>
-              {row.value}
-            </Flex>
-            {"action" in row ? row.action : null}
+            <Typography.Text style={s.rowLabel}>{row.label}</Typography.Text>
+            {row.value}
           </Flex>
         ))}
       </div>
