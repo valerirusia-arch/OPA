@@ -263,17 +263,26 @@ export const brand = {
       " rgba(184,92,35,0.26) 44%, rgba(184,92,35,0) 78%)",
     "radial-gradient(70% 62% at 8% 100%, rgba(184,92,35,0.42) 0%," +
       " rgba(184,92,35,0.18) 46%, rgba(184,92,35,0) 80%)",
-    /* ONE BLUE, TOP TO BOTTOM.
-       There were three hues over this ramp — cyan into the top left, a warm
-       peach across the top right, the orange at the foot — and together they
-       made the face read as a swatch rather than as a card: *"აქ ბევრი ფერია
-       ხომ ხედავ."* The cyan in particular turned the top corner green.
-       *"ეგ ლურჯი გახადე, ზუსტად იგივე როგორიც შუაშია ლურჯი."* So the washes
-       are gone and the ramp is one hue from top to bottom, light to deep —
-       the orange at the foot is the only second colour left, which is the
-       brand's own pair and nothing more. */
-    "linear-gradient(158deg, #5093C8 0%, #427FB4 20%, #35679B 42%," +
-      " #2B5482 62%, #21426A 80%, #1A3556 100%)",
+    /* ONE HUE, TOP TO BOTTOM.
+       There were three over this ramp — cyan into the top left, a warm peach
+       across the top right, the orange at the foot — and together they made
+       the face read as a swatch rather than as a card: *"აქ ბევრი ფერია ხომ
+       ხედავ."* The washes are gone; the orange at the foot is the only second
+       colour left, which is the brand's own pair and nothing more.
+
+       AND THE HUE IS THE DESIGNER'S OWN SWATCH, #30647D, sampled from the
+       chip they sent. It is a true blue no longer: at H 199°, S 45%, L 34%
+       it is the BRAND TEAL family, four degrees off `primary` (#146580) and
+       a good deal quieter — so the card now belongs to the same colour as
+       the product's chrome instead of sitting beside it in a blue of its
+       own. The six stops are that one swatch at six lightnesses, 54% down to
+       16%, with the swatch itself sitting at 42% where the face is widest.
+
+       THE FOOT STAYS THE DEEPEST PART, which is doing work rather than
+       taste: everything printed on this card is white and all of it sits in
+       the lower half. */
+    "linear-gradient(158deg, #569CBE 0%, #4085A6 20%, #30647D 42%," +
+      " #275164 62%, #1E3F4E 80%, #17303C 100%)",
   ].join(", "),
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
