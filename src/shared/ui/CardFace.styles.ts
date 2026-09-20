@@ -157,9 +157,16 @@ export const getStyles = (token: GlobalToken) => {
      * It has the width to itself: the holder and the state share the line
      * BELOW it, so it never has to be traded against a pill.
      *
-     * 17. It was measured at 14 off the designer's crop and that was a step
-     * too far — *"ძაან რატომ დააპატარავე, სულ ოდნავ გაადიდე 2 ან 4
-     * პიქსელით."* The measurement below is still why it is not 22. — *"ტექსტს ამხელაზე რატომ
+     * 5% of the card's width — 14px on the 285 card /loan draws.
+     *
+     * FOUR PASSES, AND THE LAST ONE SETTLED IT WITH A PICTURE. 22 read as a
+     * headline; 14 was called too small; 17 and then 16 were still over. The
+     * designer then sent the card at the size they wanted it and asked for
+     * that and nothing else — *"ტექსტების და ლოგოს ზომა ესე დააბრუნე, მხოლოდ
+     * ეგ."* Measured off it, the name runs 0.437 of the card's width, which
+     * is 5cqw — and the same 0.438 the earlier reference gave. So 14 was
+     * right the first time; what was wrong was reading it back as "too
+     * small" from a crop at a different scale. — *"ტექსტს ამხელაზე რატომ
      * წერ?"* Compared as a fraction of the card's width, so the two crops'
      * different scales cancel: the name ran 0.55 of the card's width here
      * against 0.438 in theirs. On a real card the product's name is small
@@ -171,7 +178,7 @@ export const getStyles = (token: GlobalToken) => {
      * and every ratio read off `getBoundingClientRect` comes back the same.)
      */
     plate: {
-      fontSize: "6cqw",
+      fontSize: "5cqw",
       lineHeight: 1.25,
       fontWeight: 600,
       color: ink,
@@ -179,18 +186,19 @@ export const getStyles = (token: GlobalToken) => {
     },
     /**
      * Whose card it is, under the name, in the finish's quiet ink — the way a
-     * real card prints the holder under the product's name. 13, the same
-     * three steps back up as the name above it.
+     * real card prints the holder under the product's name. 3.8%, measured
+     * off the same picture: 0.293 of the card's width against the name's
+     * 0.437.
      */
-    plateSub: { fontSize: "4.6cqw", lineHeight: 1.3, color: quiet, letterSpacing: "0.02em" },
+    plateSub: { fontSize: "3.8cqw", lineHeight: 1.3, color: quiet, letterSpacing: "0.02em" },
     /** The state on a thumbnail: the same pill, at the size that face can
      *  carry. It is the only thing printed on the nameplate besides the mark
      *  — see the note at the call site. */
     /** The state pill, in the same card-relative units as everything else. */
     platePill: {
-      fontSize: "4.2cqw",
-      lineHeight: 1.7,
-      paddingInline: "3.6cqw",
+      fontSize: "3.5cqw",
+      lineHeight: 1.8,
+      paddingInline: "3cqw",
       height: "auto",
     },
     /** The foot's labels and values, in the finish's own ink. */
@@ -245,18 +253,20 @@ export const getMarkStyles = (token: GlobalToken) => {
    * So: white, which is the only value on this palette that the deep teal
    * disc is unambiguously darker than, wherever the tile lands.
    *
-   * Sized in `cqw` like everything else on the face — 17% of the card's own
-   * width — so the mark is the same size relative to the card at 160 and at
-   * 660.
+   * Sized in `cqw` like everything else on the face — 12% of the card's own
+   * width, a 34px tile on the 285 card /loan draws. It was 17% and then 14%,
+   * and both were a tile the eye reached before the card's own name:
+   * *"ლოგოც დიდია."* 12 is what the designer's own picture measures, where
+   * the mark takes 11.7% of the card and carries no tile at all.
    */
   const tile: CSSProperties = {
     flex: "none",
     alignSelf: "flex-start",
     boxSizing: "border-box",
-    width: "17cqw",
-    height: "17cqw",
-    padding: "2.6cqw",
-    borderRadius: "4cqw",
+    width: "12cqw",
+    height: "12cqw",
+    padding: "1.6cqw",
+    borderRadius: "3cqw",
     background: token.colorBgContainer,
     boxShadow: brand.shadowRest,
     display: "flex",
