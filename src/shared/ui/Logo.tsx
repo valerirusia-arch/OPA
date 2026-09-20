@@ -9,6 +9,7 @@
 // The source is a 256×256 square, so the mark renders square at the given
 // height.
 
+import type { CSSProperties } from "react";
 import logoSrc from "./opa-symbol.png";
 import { styles } from "./Logo.styles";
 
@@ -30,12 +31,18 @@ export const LOGO_HEIGHT = 28;
 export type LogoProps = {
   /** Rendered height in px. The mark is square, so the width follows. */
   height?: number;
+  /**
+   * For the one placement that cannot state a pixel height: the card face,
+   * whose every measurement is a fraction of its own width. It passes
+   * `{ width: "100%", height: "100%" }` and lets the wrapper do the sizing.
+   */
+  style?: CSSProperties;
 };
 
 // The source PNG is 256×256 with the symbol filling the frame.
 const SRC = 256;
 
-export function Logo({ height = LOGO_HEIGHT }: LogoProps) {
+export function Logo({ height = LOGO_HEIGHT, style }: LogoProps) {
   return (
     <svg
       height={height}
@@ -43,7 +50,7 @@ export function Logo({ height = LOGO_HEIGHT }: LogoProps) {
       viewBox={`0 0 ${SRC} ${SRC}`}
       role="img"
       aria-label="One Percent for America"
-      style={styles.mark}
+      style={style ? { ...styles.mark, ...style } : styles.mark}
     >
       <image href={logoSrc} x={0} y={0} width={SRC} height={SRC} />
     </svg>

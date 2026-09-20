@@ -1137,7 +1137,11 @@ export const en = {
      *"თაითლი იქნებოდა უკეთესი რამე სხვა — ოპას ქარდი ან რაიმე მსგავსი."* */
   "loanPage.card": "Your OPA card",
   "loanPage.cardBody": "USIO holds the card. OPA never sees or stores the number.",
-  "loanPage.cardOpen": "View",
+  /* NOT "View". A link that says View asks "view what?" — and this card now
+     prints nothing a reader could mistake for the answer, so the word has to
+     carry it: what is behind it is the number, the expiry and the security
+     code. *"ვიუვის ნაცვლად რაიმე უფრო ორიგინალური და ქლინ."* */
+  "loanPage.cardOpen": "Card details",
   /* NOT "Not used yet". The card sits on a face beside "In use", and the
      pair reads as a state either way; "yet" adds a promise the pill does
      not need to make. *"ამას yet არ უნდა."* */
@@ -2641,7 +2645,7 @@ const es: Record<TranslationKey, string> = {
 
   "loanPage.card": "Tu tarjeta OPA",
   "loanPage.cardBody": "USIO custodia la tarjeta. OPA nunca ve ni guarda el número.",
-  "loanPage.cardOpen": "Ver",
+  "loanPage.cardOpen": "Datos de la tarjeta",
   "loanPage.cardUnused": "Sin usar",
   "loanPage.cardUsed": "En uso",
 

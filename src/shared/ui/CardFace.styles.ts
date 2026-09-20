@@ -7,6 +7,9 @@ import { brand } from "../../theme/tokens";
 export const styles = {
   /** The two-column foot: holder left, expiry right. */
   foot: { marginTop: 12 },
+  /** The card's name and the line under it, spaced by a fraction of the card
+   *  so the block holds together at any width. */
+  plateBlock: { gap: "1.4cqw" },
 } satisfies Record<string, CSSProperties>;
 
 /**
@@ -53,30 +56,46 @@ export const getStyles = (token: GlobalToken) => {
      * proportion of a payment card (ID-1), so the face is that shape wherever
      * it is drawn, and `minHeight` is only the floor for a very narrow phone.
      */
+    /**
+     * THE CARD, AND THE CONTAINER EVERYTHING ON IT IS MEASURED AGAINST.
+     *
+     * *"ზომები ყველაფერი უნდა იყოს ბარათის შესაბამისი."* This face is drawn
+     * at three widths — 160 in the details dialog, ~285 in /loan's column,
+     * ~660 when that column goes full width on a narrow window — and until
+     * now every measurement on it was a fixed pixel count chosen for the
+     * middle one. At 660 the mark was a speck in a corner and the name was
+     * small print; at 160 the same numbers were too big to fit.
+     *
+     * `container-type: inline-size` makes the face a query container, so
+     * everything inside can be stated in `cqw` — a percentage of the card's
+     * own width — and the card is one drawing at any size. The fractions
+     * come from the 285 card the designer approved: 8.4% padding, 14% for
+     * the mark, 6% for the name.
+     *
+     * THE PADDING IS ON THE CHILD, NOT HERE. An element cannot query itself:
+     * `cqw` inside a container resolves against the nearest ANCESTOR
+     * container, so a padding in `cqw` on this box would be measuring the
+     * card outside it. `faceInner` carries it instead.
+     *
+     * NO `minHeight`. It was 180, which is exactly what the 285 card
+     * computes to, so it did nothing there and squashed the 160 one into a
+     * square. The aspect ratio is the height.
+     */
     face: {
       aspectRatio: "1.586",
-      minHeight: 180,
+      containerType: "inline-size",
       boxSizing: "border-box",
-      padding: token.paddingLG,
-      /*
-       * LESS ROUND — *"ზედმეტად მომრგვალებულია."*
-       *
-       * `borderRadiusLG` is 14, and on a 340px-wide card that is 4% of the
-       * width: a soft-cornered tile rather than a card. A payment card's
-       * corner (ID-1) is 3.18mm on an 85.6mm card — almost exactly 3.7% —
-       * but the eye reads a rectangle of this size as a card at less than
-       * that, because a real one is held rather than drawn flat. 10 is the
-       * product's own `borderRadius`, so this takes no new number.
-       */
       borderRadius: token.borderRadius,
       background: ground,
-      /* NO RIM. The hairline was white at 10%, which on a card sitting on a
-         white page draws a pale line around the whole object — *"რაღაცა
-         სტროუკები აქვს გარედან, რაც არ მომწონს."* A dark card already has an
-         edge: it is dark against white. */
-      /* A card is an object with a thickness; the page's own elevation says so
-         without a second frame. */
+      /* A card is an object with a thickness; the page's own elevation says
+         so without a second frame. */
       boxShadow: brand.shadowCard,
+    },
+    /** The card's contents, inset by a fraction of the card's own width. */
+    faceInner: {
+      height: "100%",
+      boxSizing: "border-box",
+      padding: "8.4cqw",
     },
     /**
      * The status pill, printed on the card rather than stuck to it — see the
@@ -130,15 +149,6 @@ export const getStyles = (token: GlobalToken) => {
      * `minHeight: 180` fights the aspect ratio and makes a 240-wide card 180
      * tall — a square, not a card.
      */
-    plateFace: {
-      aspectRatio: "1.586",
-      boxSizing: "border-box",
-      padding: 12,
-      /* The same corner as the page's card — see `face`. */
-      borderRadius: token.borderRadius,
-      background: ground,
-      boxShadow: brand.shadowCard,
-    },
     /**
      * THE CARD'S NAME along the foot of the front — the biggest thing printed
      * on that face, because on that face it is the only thing that says what
@@ -147,7 +157,9 @@ export const getStyles = (token: GlobalToken) => {
      * It has the width to itself: the holder and the state share the line
      * BELOW it, so it never has to be traded against a pill.
      *
-     * 14, MEASURED OFF THE DESIGNER'S OWN CROP — *"ტექსტს ამხელაზე რატომ
+     * 17. It was measured at 14 off the designer's crop and that was a step
+     * too far — *"ძაან რატომ დააპატარავე, სულ ოდნავ გაადიდე 2 ან 4
+     * პიქსელით."* The measurement below is still why it is not 22. — *"ტექსტს ამხელაზე რატომ
      * წერ?"* Compared as a fraction of the card's width, so the two crops'
      * different scales cancel: the name ran 0.55 of the card's width here
      * against 0.438 in theirs. On a real card the product's name is small
@@ -158,17 +170,29 @@ export const getStyles = (token: GlobalToken) => {
      * its span stretches to the card's inner width whatever the font size,
      * and every ratio read off `getBoundingClientRect` comes back the same.)
      */
-    plate: { fontSize: 14, fontWeight: 600, color: ink, letterSpacing: "0.01em" },
+    plate: {
+      fontSize: "6cqw",
+      lineHeight: 1.25,
+      fontWeight: 600,
+      color: ink,
+      letterSpacing: "0.01em",
+    },
     /**
      * Whose card it is, under the name, in the finish's quiet ink — the way a
-     * real card prints the holder under the product's name. 11 by the same
-     * measurement: 0.34 of the card's width here against their 0.273.
+     * real card prints the holder under the product's name. 13, the same
+     * three steps back up as the name above it.
      */
-    plateSub: { fontSize: 11, color: quiet, letterSpacing: "0.02em" },
+    plateSub: { fontSize: "4.6cqw", lineHeight: 1.3, color: quiet, letterSpacing: "0.02em" },
     /** The state on a thumbnail: the same pill, at the size that face can
      *  carry. It is the only thing printed on the nameplate besides the mark
      *  — see the note at the call site. */
-    platePill: { fontSize: 11, lineHeight: "18px", paddingInline: 8 },
+    /** The state pill, in the same card-relative units as everything else. */
+    platePill: {
+      fontSize: "4.2cqw",
+      lineHeight: 1.7,
+      paddingInline: "3.6cqw",
+      height: "auto",
+    },
     /** The foot's labels and values, in the finish's own ink. */
     footLabel: {
       fontSize: 11,
@@ -206,39 +230,41 @@ export const getStyles = (token: GlobalToken) => {
  * OPA application and are accessible only via a secure embedded view", so they
  * appear on the revealed face and nowhere else.
  */
-export const getFrontStyles = (token: GlobalToken) =>
-  ({
-    /**
-     * THE MARK ON A WHITE TILE, top left, at the face's own inset.
-     *
-     * It used to be the bare symbol with `filter: brightness(1.85)` on it — a
-     * stand-in, and an honest one while the card ran into near-black and a
-     * teal disc all but disappeared on it. The face is bright and blue now,
-     * where a brightened teal disc on a light blue ground reads as neither.
-     *
-     * The tile is the reference's own answer and a better one than a filter:
-     * the mark keeps its real colours, it reads on any part of any ground,
-     * and it is what an issuer's badge on a real card actually looks like.
-     * A knockout mark from OPA would still be welcome — `src/assets/brand/` —
-     * but this no longer needs one to be right.
-     */
-    mark: {
-      flex: "none",
-      display: "flex",
-      background: token.colorBgContainer,
-      borderRadius: token.borderRadius,
-      padding: 5,
-      boxShadow: brand.shadowRest,
-      alignSelf: "flex-start",
-    },
-    /** The same tile on the thumbnail, at the size that face can carry. */
-    markSmall: {
-      flex: "none",
-      display: "flex",
-      background: token.colorBgContainer,
-      borderRadius: token.borderRadiusSM,
-      padding: 4,
-      boxShadow: brand.shadowRest,
-      alignSelf: "flex-start",
-    },
-  }) satisfies Record<string, CSSProperties>;
+export const markStyles = (() => {
+  /**
+   * THE MARK'S TILE — the status pill's material, not a white box.
+   *
+   * The white square was a way of guaranteeing the mark read on any ground,
+   * and it cost the card the one piece of brand artwork on it: a white box is
+   * what the eye sees first, the symbol second — *"ეს თეთრი ბექგრაუნდი მინდა
+   * მოვხსნათ."* Taking it away entirely did not work either: a deep teal disc
+   * on a mid blue card is the same value as its ground and disappears.
+   *
+   * The designer's own answer is the one that holds: *"Not used-ს რომ აქვს
+   * ეგეთ ბექგრაუნდს ჩავუსვამდი."* The translucent dark the state pill is cut
+   * from is the card's own material, so the mark sits ON the card rather than
+   * in a sticker on it, and it reads at any point of any ground because it is
+   * darker than all of them.
+   *
+   * Sized in `cqw` like everything else on the face: 14% of the card's width,
+   * so the mark is the same size relative to the card at 160 and at 660.
+   */
+  const tile: CSSProperties = {
+    flex: "none",
+    alignSelf: "flex-start",
+    boxSizing: "border-box",
+    width: "17cqw",
+    height: "17cqw",
+    padding: "2.6cqw",
+    borderRadius: "4cqw",
+    background: brand.cardDarkPill,
+    display: "flex",
+  };
+  return {
+    mark: tile,
+    /** The same tile; the thumbnail differs only in the card's width. */
+    markSmall: tile,
+    /** The mark fills its tile — see the note on `style` in Logo. */
+    markGlyph: { width: "100%", height: "100%" } satisfies CSSProperties,
+  } satisfies Record<string, CSSProperties>;
+})();

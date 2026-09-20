@@ -62,7 +62,7 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { getFrontStyles, getStyles, styles } from "./CardFace.styles";
+import { getStyles, markStyles, styles } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
@@ -157,74 +157,75 @@ export function CardFace({
   const inverted = true;
   const { token } = theme.useToken();
   const s = getStyles(token);
-  const front_ = getFrontStyles(token);
   const figures = getFigureStyles(token);
 
   /* THE NAMEPLATE. Same early-return reason as `front` below: it is a third
      drawing of the one object, not this face with things switched off. */
   if (nameplate) {
     return (
-      <Flex vertical justify="space-between" gap={12} style={s.plateFace}>
-        <div style={front_.markSmall}>
-          <Logo height={18} />
-        </div>
+      <div style={s.face}>
+        <Flex vertical justify="space-between" gap={12} style={s.faceInner}>
+          <div style={markStyles.markSmall}>
+            <Logo style={markStyles.markGlyph} />
+          </div>
 
-        {/* THE STATE, AND NOTHING ELSE. The mark top left, the state bottom
-            right — which is the reference's own arrangement, its logo in one
-            corner and its network mark in the other, and it is the only one
-            that survives at thumbnail size. The holder's name was here and
-            came off: it is the second row of the list 100px below, and
-            carrying it forced the card 60px wider than the reference's to
-            stop "Levi Ackerman" breaking in two. `facts` is accepted and not
-            printed on this face. */}
-        <Flex justify="flex-end">
-          {status ? (
-            <Tag variant="filled" style={{ ...pill, ...s.cutPill, ...s.platePill }}>
-              {status.label}
-            </Tag>
-          ) : null}
-        </Flex>
-      </Flex>
-    );
-  }
-
-  /* OPA'S OWN FRONT. It returns early rather than threading `front` through
-     six branches below, because it genuinely is a different drawing: not this
-     face with things switched off, but the front of the card OPA issues —
-     see `frontStyles`. */
-  if (front) {
-    return (
-      <Flex vertical justify="space-between" gap={20} style={s.face}>
-        <div style={front_.mark}>
-          <Logo height={30} />
-        </div>
-
-        {/* WHAT IT IS, then WHOSE IT IS with the state opposite — two lines,
-            not one. On one line the name and the state competed for the width
-            and the card's own title had nowhere to go; stacked, the title
-            gets the face to itself and the pair under it reads as its
-            caption. */}
-        <Flex vertical gap={4}>
-          <Typography.Text style={s.plate}>{label}</Typography.Text>
-          <Flex align="center" justify="space-between" gap={12}>
-            {facts.length > 0 ? (
-              <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
-            ) : (
-              <span />
-            )}
+          {/* THE STATE, AND NOTHING ELSE. The mark in one corner and the
+              state in the other — the reference's own arrangement, and the
+              only one that survives at 160px. The card's name and the holder
+              are the title and the second row of the list directly under it,
+              so printing them here as well would be the same words twice.
+              `facts` is accepted and not printed on this face. */}
+          <Flex justify="flex-end">
             {status ? (
-              <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
+              <Tag variant="filled" style={{ ...pill, ...s.cutPill, ...s.platePill }}>
                 {status.label}
               </Tag>
             ) : null}
           </Flex>
         </Flex>
-      </Flex>
+      </div>
+    );
+  }
+
+  /* OPA'S OWN FRONT. It returns early rather than threading `front` through
+     six branches below, because it genuinely is a different drawing: not this
+     face with things switched off, but the front of the card OPA issues. */
+  if (front) {
+    return (
+      <div style={s.face}>
+        <Flex vertical justify="space-between" style={s.faceInner}>
+          <div style={markStyles.mark}>
+            <Logo style={markStyles.markGlyph} />
+          </div>
+
+          {/* WHAT IT IS, then WHOSE IT IS with the state opposite — two lines,
+              not one. On one line the name and the state competed for the
+              width and the card's own title had nowhere to go; stacked, the
+              title gets the face to itself and the pair under it reads as its
+              caption. The gap is a fraction of the card, like everything else
+              on it. */}
+          <Flex vertical style={styles.plateBlock}>
+            <Typography.Text style={s.plate}>{label}</Typography.Text>
+            <Flex align="center" justify="space-between" gap={12}>
+              {facts.length > 0 ? (
+                <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
+              ) : (
+                <span />
+              )}
+              {status ? (
+                <Tag variant="filled" style={{ ...pill, ...s.cutPill, ...s.platePill }}>
+                  {status.label}
+                </Tag>
+              ) : null}
+            </Flex>
+          </Flex>
+        </Flex>
+      </div>
     );
   }
 
   return (
-    <Flex vertical justify="space-between" gap={20} style={s.face}>
+    <Flex vertical justify="space-between" gap={20} style={{ ...s.face, ...s.faceInner }}>
       {/* The ownership eyebrow, then what the card is — grouped so the top of
           the face reads "whose card · which card" and the number holds the
           base. */}

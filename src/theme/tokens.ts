@@ -254,23 +254,26 @@ export const brand = {
     white tile of its own and no longer needs the ground to be dark.
   */
   cardSkin: [
-    /* Cyan into the top left, the brand's own highlight hue. */
-    "radial-gradient(76% 92% at 10% 2%, rgba(62,201,210,0.52) 0%," +
-      " rgba(62,201,210,0.18) 46%, rgba(62,201,210,0) 70%)",
-    /* A warm peach across the top right, which is what stops the face reading
-       as one blue with a light corner. */
-    "radial-gradient(70% 86% at 94% 6%, rgba(232,160,139,0.40) 0%," +
-      " rgba(232,160,139,0.14) 48%, rgba(232,160,139,0) 72%)",
-    /* Two blooms, so the warmth runs the WHOLE foot rather than sitting in one
-       corner — *"ეს ნარინჯისფერი ლოგოს მხრიდანაც უქენი."* The right one leads
-       and the left answers it a little quieter, so the foot is warm end to end
-       without becoming a second band of colour. */
-    "radial-gradient(78% 58% at 86% 108%, rgba(184,92,35,0.42) 0%," +
-      " rgba(184,92,35,0.18) 42%, rgba(184,92,35,0) 74%)",
-    "radial-gradient(64% 52% at 10% 106%, rgba(184,92,35,0.30) 0%," +
-      " rgba(184,92,35,0.12) 44%, rgba(184,92,35,0) 76%)",
-    "linear-gradient(158deg, #5FA8D8 0%, #4890C6 20%, #3576AF 40%, #275C93 60%," +
-      " #1D4675 78%, #17375C 100%)",
+    /* The CTA orange along the foot, in two blooms so the warmth runs the
+       whole hem rather than sitting in one corner — *"ეს ნარინჯისფერი ლოგოს
+       მხრიდანაც უქენი."* The right one leads, the left answers it quieter.
+       Both centres sit just inside the card: pushed to 106% most of each
+       bloom fell off the bottom edge and only its faintest tail showed. */
+    "radial-gradient(84% 70% at 84% 102%, rgba(184,92,35,0.58) 0%," +
+      " rgba(184,92,35,0.26) 44%, rgba(184,92,35,0) 78%)",
+    "radial-gradient(70% 62% at 8% 100%, rgba(184,92,35,0.42) 0%," +
+      " rgba(184,92,35,0.18) 46%, rgba(184,92,35,0) 80%)",
+    /* ONE BLUE, TOP TO BOTTOM.
+       There were three hues over this ramp — cyan into the top left, a warm
+       peach across the top right, the orange at the foot — and together they
+       made the face read as a swatch rather than as a card: *"აქ ბევრი ფერია
+       ხომ ხედავ."* The cyan in particular turned the top corner green.
+       *"ეგ ლურჯი გახადე, ზუსტად იგივე როგორიც შუაშია ლურჯი."* So the washes
+       are gone and the ramp is one hue from top to bottom, light to deep —
+       the orange at the foot is the only second colour left, which is the
+       brand's own pair and nothing more. */
+    "linear-gradient(158deg, #5093C8 0%, #427FB4 20%, #35679B 42%," +
+      " #2B5482 62%, #21426A 80%, #1A3556 100%)",
   ].join(", "),
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
