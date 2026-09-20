@@ -58,7 +58,17 @@ export const getStyles = (token: GlobalToken) => {
       minHeight: 180,
       boxSizing: "border-box",
       padding: token.paddingLG,
-      borderRadius: token.borderRadiusLG,
+      /*
+       * LESS ROUND — *"ზედმეტად მომრგვალებულია."*
+       *
+       * `borderRadiusLG` is 14, and on a 340px-wide card that is 4% of the
+       * width: a soft-cornered tile rather than a card. A payment card's
+       * corner (ID-1) is 3.18mm on an 85.6mm card — almost exactly 3.7% —
+       * but the eye reads a rectangle of this size as a card at less than
+       * that, because a real one is held rather than drawn flat. 10 is the
+       * product's own `borderRadius`, so this takes no new number.
+       */
+      borderRadius: token.borderRadius,
       background: ground,
       /* NO RIM. The hairline was white at 10%, which on a card sitting on a
          white page draws a pale line around the whole object — *"რაღაცა
@@ -124,7 +134,8 @@ export const getStyles = (token: GlobalToken) => {
       aspectRatio: "1.586",
       boxSizing: "border-box",
       padding: 12,
-      borderRadius: token.borderRadiusLG,
+      /* The same corner as the page's card — see `face`. */
+      borderRadius: token.borderRadius,
       background: ground,
       boxShadow: brand.shadowCard,
     },
