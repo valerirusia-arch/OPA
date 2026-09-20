@@ -249,13 +249,14 @@ export const getMarkStyles = () => {
    * 'Not used'-ს აქვს."* The white belongs to the FLAME, which is the mark's
    * own drawing; the box around it belongs to the card.
    *
-   * `cardDarkPill` is the translucent dark the state pill is cut from, so the
-   * two things printed on this face are made of one material and the mark
-   * sits ON the card rather than in a sticker stuck to it. It was rejected
-   * once, on the argument that a teal disc inside a dark tile on the dark half
-   * of the ramp is three near-values stacked — true of the DISC, and beside
-   * the point: what reads at this size is the white flame inside it, and a
-   * flame is brighter against dark than against white.
+   * `cardDarkPill` is the translucent WHITE the state pill is cut from, so the
+   * two things printed on this face are made of one material and the mark sits
+   * ON the card rather than in a sticker stuck to it.
+   *
+   * It was a translucent DARK for one pass, and that lost the drawing: a dark
+   * disc inside a dark tile put the white flame — the whole point of the mark
+   * — on a ground nearly its own value. *"შიგნით უნდა დაგეტოვა თეთრი ფერი,
+   * ცეცხლში შიგნით."* Over a mid ground both the disc and the flame read.
    *
    * Sized in `cqw` like everything else on the face — 12% of the card's own
    * width, a 34px tile on the 285 card /loan draws. It was 17% and then 14%,

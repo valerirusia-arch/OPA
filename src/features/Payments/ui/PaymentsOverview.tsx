@@ -210,12 +210,14 @@ export function PaymentsOverview({
       >
         {/* `onPay` is withheld on purpose: the head carries the action now,
             and the panel's own button would be the same door twice. */}
-        {/* NO DETAIL STRIP. Fees applied, pay off today and the final payment
-            date moved to the dashboard's fact tiles and are not kept here as
-            well — *"ეს 3 რაღაცა მინდა აქ გადმოიტანო."* What is left is what
-            this page's first card is for: the figure and when the next
-            payment is due. */}
-        <BalanceSummary balance={record.balance} next={next} showDetails={false} />
+        {/* THE THREE FIGURES ARE BACK — *"ფეიმენტზე 3 ინფო გვქონდა ქვემოთ,
+            ეგ დააბრუნე."* They also sit in the dashboard's fact tiles, and
+            that is not an accident to clean up: the dashboard states the loan
+            at a glance and this page is the one a borrower opens to act on
+            it, so WBS story 6's payoff and story 10's applied fees belong
+            beside the schedule they explain as much as they belong on the
+            summary. */}
+        <BalanceSummary balance={record.balance} next={next} />
       </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an

@@ -298,17 +298,25 @@ export const brand = {
   mcOverlap: "#FF5F00",
 
   /**
-   * The status pill on the card: the card's own material, not a sticker.
+   * THE MATERIAL OF EVERYTHING PRINTED ON THE CARD — the state pill and the
+   * tile the mark sits on. Translucent WHITE, so both read as light let
+   * through the card rather than as stickers placed on it.
    *
-   * IT WAS WHITE AT 14%, which works on a near-black face and fails on the
-   * bright one. The pill sits top right, where the new skin is lightest —
-   * measured, white text on a 14% white pill over that area came out around
-   * 2.5:1, so the one word on the card that changes was the hardest thing on
-   * it to read. A translucent DARK pill is the same idea the other way up:
-   * still mixed from the face rather than stuck on it, still one value for
-   * the whole card, and white on it clears AA wherever the pill lands.
+   * It has been both ways. White at 14% failed when the skin still had a
+   * bright cyan corner: the pill sat top right, where the face was lightest,
+   * and white text on it measured about 2.5:1. A translucent dark fixed that
+   * and cost the mark — a dark disc inside a dark tile, with the white flame
+   * that is the point of the drawing sitting on a ground nearly its own
+   * value. *"ნოთ იუზდ და ეს ლოგოც უკან მსგავსი გამჭვირვალობა ჰქონდეთ, ოღონდ
+   * იყოს თეთრისკენ."*
+   *
+   * White works now because the skin changed under it: one teal-blue ramp,
+   * no bright corner, and both things sit in its lower half. 20% over the
+   * ramp's 62% stop composites to about #527483, where white text measures
+   * 4.9:1 — clear of AA — and the mark's dark disc and white flame both have
+   * a mid ground to read against.
    */
-  cardDarkPill: "rgba(10, 30, 46, 0.42)",
+  cardDarkPill: "rgba(255, 255, 255, 0.20)",
   cardDarkInk: "#FFFFFF",
   cardDarkQuiet: "rgba(255, 255, 255, 0.68)",
   cardLightEdge: "rgba(38, 36, 35, 0.08)",
