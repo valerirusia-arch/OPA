@@ -392,12 +392,22 @@ export function LoanOverview({
           title: t("loanPage.statement"),
           label: t("loanPage.nextPayment"),
           value: loan.nextPayment,
-          /* Nothing is due once the last line is paid, and a date under a
-             zero would read as one more instalment to come. */
+          /*
+            NO DUE DATE UNDER THE FIGURE — *"ეს ტექსტი არ დაგვჭირდება მაგ
+            კონტენერში."* On a funded loan the card already dates itself
+            twice: "REPAYMENT STARTS Oct 01, 2026" in the fact row, which IS
+            the first due date, and "final payment Sep 01, 2027" under the
+            track. A third date directly under the figure was the card
+            explaining itself three times.
+
+            The caption survives for exactly one state: nothing left to pay.
+            A $0.00 next payment with no word under it reads as a card that
+            has lost its data rather than a loan that is finished.
+          */
           caption:
             paidCount === totalCount && totalCount > 0
               ? t("payments.nothingDue")
-              : t("loanPage.dueOn", { due: loan.nextPaymentOn }),
+              : undefined,
           action: { label: t("loanPage.viewSchedule"), onClick: onViewSchedule },
           progress: {
             paid: paidCount,
