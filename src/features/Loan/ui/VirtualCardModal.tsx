@@ -1,118 +1,80 @@
 // src/features/Loan/ui/VirtualCardModal.tsx
 //
-// The wireframe's "Your Virtual Card Details", rebuilt to the arrangement the
-// designer sent: the CARD as a picture at the top, and everything about it as
-// one bordered list underneath — type, cardholder, number, security code,
-// expiry. One object, then its record.
+// The wireframe's "Your Virtual Card Details", in the arrangement the designer
+// sent: a small picture of the card, its name centred under it, and one
+// bordered list holding everything the card says — type, cardholder, number,
+// security code, expiry.
 //
-// WHY THE LIST AND NOT THE CARD CARRIES THE FACTS. Both were tried. Printing
-// the number, the holder and the expiry on the face reads well while there
-// are three of them and falls apart at five: a security code has no place on
-// the front of a card, and a face crowded with labelled values stops being a
-// picture of an object. Split, each half does one job — the face says WHICH
-// card, the list says WHAT IT SAYS — and the list can hold the two facts that
-// are not OPA's to print at all.
-//
-// THE LIST IS THERE BEFORE THE BUTTON IS PRESSED, with the protected values
-// as dots. That is the honest drawing of what this product holds:
+// ONE VIEW, NO SECOND PRESS. There was a "Show card details" button and the
+// protected values sat as dots until it was pressed. *"შოვ ქარდ დეთაილს არ
+// გვინდა, ეგრევე ვანახოთ დეტალები, როგორც კი გავხსნით."* The request the WBS
+// cares about is still made — it is the View on the loan page that makes it.
+// This dialog IS the secure view, so it opens showing what the secure view
+// returned rather than making the borrower ask twice for the thing they
+// already asked for. What Dev changes at integration is where the values come
+// from, not how many presses it takes to see them:
 //
 //   "Card details are NOT stored, processed or transmitted by OPA application
 //    and are accessible only via a SECURE EMBEDDED VIEW / directly on USIO and
 //    is working as a 'black box' for OPA application."
 //
-// The type, the holder, the last four and the expiry are OPA's own, so they
-// are printed from the first frame. The rest of the number and the security
-// code are USIO's, so they are dots until USIO is asked — and the rows do not
-// move when the answer arrives, because the dots are set at the same size and
-// weight as the digits that replace them.
+// So the PAN and the security code below are a mock and say so in the code:
+// invented digits in a prototype, never a card, and nothing in OPA will ever
+// hold them. Dev replaces those two values with USIO's embedded view; the
+// type, the cardholder and the expiry are OPA's own and stay.
 //
-// THE EMBED IS A MOCK AND SAYS SO — the same call Epic 3 settled for Repay's
-// card form. "OPA does not own these fields" is not "the prototype must not
-// show them": hiding the one moment the borrower came for leaves the designer
-// with nothing to judge. Dev REPLACES the revealed values with USIO's real
-// embedded view rather than restyling this list.
+// WHY THE LIST AND NOT THE CARD CARRIES THE FACTS. Both were tried. Printing
+// the number, the holder and the expiry on the face reads well while there
+// are three of them and falls apart at five: a security code has no place on
+// the front of a card, and a face crowded with labelled values stops being a
+// picture of an object. Split, each half does one job — the thumbnail says
+// WHICH card, the list says what it says.
 //
-// Dumb: local state for the reveal, a fake delay, and one callback so the
-// screen knows the hand-off happened.
+// Dumb: it renders what it is handed and reports that it was opened.
 
-import { useState } from "react";
-import { Alert, Button, Flex, Modal, Tag, Typography, theme } from "antd";
-import { EyeOutlined, LockOutlined } from "@ant-design/icons";
+import { Flex, Modal, Typography, theme } from "antd";
+import { LockOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { Logo } from "../../../shared/ui/Logo";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { pill } from "../../../shared/ui/tag.styles";
 import { getStyles, styles } from "./VirtualCardModal.styles";
 
 export type VirtualCardModalProps = {
   open: boolean;
-  /** The network USIO issued it on, where OPA has said which. Absent, the
-   *  face prints the issuer line instead. */
+  /** The network USIO issued it on, where OPA has said which. */
   brand?: string;
   last4: string;
   cardholder: string;
   /** MM/YY, as printed on the card. */
   expiry: string;
   used: boolean;
-  /**
-   * The moment the borrower asks USIO for the card. Dev mounts the real embed
-   * here; the values below stand in for it until then.
-   */
-  onOpenAtIssuer?: () => void;
   onCancel?: () => void;
 };
 
 /**
- * What USIO's view would return. Mock, and only ever mock — these are invented
+ * What USIO's view returns. Mock, and only ever mock — these are invented
  * digits in a prototype, not a card, and nothing in OPA will ever hold them.
  */
 const MOCK_PAN = "4111 2233 4455";
 const MOCK_CVV = "318";
-/** Long enough to read as a request leaving the building. */
-const HANDOFF_MS = 900;
 
 export function VirtualCardModal({
   open,
-  brand,
   last4,
   cardholder,
   expiry,
   used,
-  onOpenAtIssuer,
   onCancel,
 }: VirtualCardModalProps) {
   const t = useT();
   const { token } = theme.useToken();
   const s = getStyles(token);
 
-  const [loading, setLoading] = useState(false);
-  const [revealed, setRevealed] = useState(false);
-
-  /* Closing the dialog closes the hand-off with it: somebody who opens the
-     card again asks USIO again, which is what would actually happen. Done on
-     the close itself rather than in an effect watching `open` — an effect
-     that sets state is a second render for something the click already knew. */
-  const close = () => {
-    setLoading(false);
-    setRevealed(false);
-    onCancel?.();
-  };
-
-  const reveal = () => {
-    setLoading(true);
-    onOpenAtIssuer?.();
-    window.setTimeout(() => {
-      setLoading(false);
-      setRevealed(true);
-    }, HANDOFF_MS);
-  };
+  const pan = `${MOCK_PAN} ${last4}`;
 
   /**
    * The record of the card, in the order the reference reads it: what it is,
    * whose it is, then the three things printed on it.
-   *
-   * `secret` marks the two USIO holds — they are dots until the secure view
-   * has been asked, and they are the only rows the button changes.
    */
   const rows = [
     {
@@ -138,29 +100,21 @@ export function VirtualCardModal({
     {
       key: "number",
       label: t("loanPage.cardNumber"),
-      value: revealed ? (
-        /* Copyable only once it IS a number — a mask cannot be copied, and
-           antd would happily offer the dots. */
+      value: (
+        /* The one row worth copying — a card number is read off a screen and
+           typed into a form, and this is the form's way of not being retyped. */
         <Typography.Text
           style={{ ...s.rowValue, ...styles.rowValue }}
-          copyable={{ text: `${MOCK_PAN} ${last4}`.replace(/\s/g, ""), tooltips: false }}
+          copyable={{ text: pan.replace(/\s/g, ""), tooltips: false }}
         >
-          {`${MOCK_PAN} ${last4}`}
-        </Typography.Text>
-      ) : (
-        <Typography.Text style={s.rowMasked}>
-          {t("loanPage.cardNumberMasked", { last4 })}
+          {pan}
         </Typography.Text>
       ),
     },
     {
       key: "cvv",
       label: t("loanPage.cardCvv"),
-      value: revealed ? (
-        <Typography.Text style={s.rowValue}>{MOCK_CVV}</Typography.Text>
-      ) : (
-        <Typography.Text style={s.rowMasked}>{t("loanPage.cardCvvMasked")}</Typography.Text>
-      ),
+      value: <Typography.Text style={s.rowValue}>{MOCK_CVV}</Typography.Text>,
     },
     {
       key: "expiry",
@@ -170,58 +124,42 @@ export function VirtualCardModal({
   ];
 
   return (
+    /* NO TITLE BAR AND NO FOOTER — the close is the only chrome, the way the
+       reference draws it. The dialog's heading is the card's own name, centred
+       under its picture, because that is what a reader is here to confirm; a
+       bar across the top saying "Your OPA card" over a card said it first and
+       said it smaller. */
     <Modal
       open={open}
-      title={t("loanPage.cardModalTitle")}
-      onCancel={close}
+      onCancel={onCancel}
       destroyOnHidden
-      width={520}
-      footer={
-        <Flex align="center" justify="flex-end" gap={12}>
-          <Tag color={used ? "processing" : undefined} variant="filled" style={pill}>
-            {t(used ? "loanPage.cardUsed" : "loanPage.cardUnused")}
-          </Tag>
-          {revealed ? (
-            <Button size="large" onClick={() => setRevealed(false)}>
-              {t("loanPage.cardHideDetails")}
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              size="large"
-              icon={<EyeOutlined />}
-              loading={loading}
-              onClick={reveal}
-            >
-              {t("loanPage.cardShowDetails")}
-            </Button>
-          )}
-        </Flex>
-      }
+      width={480}
+      footer={null}
     >
-      {/* THE CARD, AND NOTHING WRITTEN ON IT. The nameplate face: the mark on
-          its white tile at the top, what the card is along the foot with the
-          holder under it, and the state where a network mark would sit. Every
-          value it used to print is in the list below, so the two halves of
-          this dialog never say the same thing twice. */}
-      <Flex justify="center" style={styles.face}>
-        <div style={styles.faceSize}>
+      <Flex vertical align="center" style={styles.head}>
+        {/* The thumbnail: the mark on its tile, the holder along the foot and
+            the state where a network mark would sit — *"მარჯვნივ ეწერება ინ
+            იუს, დაბლა, მასტერქარდის მაგივრად."* */}
+        <div style={styles.face}>
           <CardFace
             nameplate
-            brand={brand}
             label={t("loanPage.cardTypeValue")}
             status={{ label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused") }}
             number={t("payments.cardEnding", { last4 })}
             facts={[{ key: "holder", label: t("loanPage.cardholder"), value: cardholder }]}
           />
         </div>
+
+        <Typography.Title level={4} style={styles.title}>
+          {t("loanPage.cardTypeValue")}
+        </Typography.Title>
       </Flex>
 
       <div style={s.list}>
         {rows.map((row, index) => (
           <Flex
             vertical
-            gap={2}
+            gap={4}
             key={row.key}
             style={index < rows.length - 1 ? s.rowRuled : s.row}
           >
@@ -231,29 +169,16 @@ export function VirtualCardModal({
         ))}
       </div>
 
-      {/* Said before the button, not after it: what pressing it does. Once it
-          has been pressed the warning is the one that matters instead — the
-          borrower is looking at a real card number. */}
-      {revealed ? (
-        <>
-          <Alert
-            style={styles.note}
-            type="warning"
-            showIcon
-            title={t("loanPage.cardRevealedNote")}
-          />
-          <Flex align="center" gap={8} style={styles.issuerRow}>
-            <LockOutlined style={s.issuerIcon} />
-            <Typography.Text type="secondary" style={styles.issuerCaption}>
-              {t("loanPage.cardIssuerView")}
-            </Typography.Text>
-          </Flex>
-        </>
-      ) : (
-        <Typography.Text type="secondary" style={styles.note}>
-          {t("loanPage.cardBody")}
+      {/* One line, not a yellow slab: whose details these are, and the reason
+          to close the window. The warning Alert that used to live here was
+          three lines of ink under a list that is itself the sensitive thing —
+          it made the dialog look like an error. */}
+      <Flex align="flex-start" gap={8} style={styles.issuer}>
+        <LockOutlined style={{ ...s.issuerIcon, ...styles.issuerIconBox }} />
+        <Typography.Text type="secondary" style={styles.issuerText}>
+          {t("loanPage.cardIssuerNote")}
         </Typography.Text>
-      )}
+      </Flex>
     </Modal>
   );
 }

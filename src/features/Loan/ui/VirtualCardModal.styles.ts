@@ -4,49 +4,47 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 
 export const styles = {
-  /** The note under the list: what pressing the button does, or — once it has
-   *  been pressed — whose details are on screen. */
-  note: { display: "block", marginTop: 16, fontSize: 13 },
-  /** The card sits below the title with its own air. */
-  face: { marginTop: 16 },
   /**
-   * THE CARD IS SMALLER HERE THAN ON THE PAGE, and centred.
+   * THE CARD AS A THUMBNAIL — 240, down from 360.
    *
-   * On /loan the card IS the panel and takes its whole width. In this dialog
-   * it is the picture at the head of a list of facts — the reference's own
-   * arrangement — and a full-width card face above five rows of data makes
-   * the data look like a caption.
-   *
-   * 360, measured rather than picked. The foot of the nameplate has to hold
-   * the card's name and its state on one line: at 320 the row is 272 wide
-   * inside the face's insets, the pill takes ~90 and the gap 16, which leaves
-   * 166 for a name that wants ~165 — and it wrapped. 360 leaves 206, and the
-   * card is still comfortably inside the 520 dialog at the ID-1 proportion
-   * the face sets.
+   * *"ბარათი არ უნდა იყოს ამხელაზე."* In the reference the card is a small
+   * picture at the head of a record, not the subject of the dialog: it says
+   * WHICH card and the list under it says everything the card says. At 360 it
+   * was 69% of a 520 dialog and read as the point, with five rows of data
+   * trailing under it like a caption.
    */
-  faceSize: { width: 360, maxWidth: "100%" },
+  face: { width: 240, maxWidth: "100%" },
   /**
-   * The hand-off caption under the revealed list.
+   * The card clears the close button's row.
    *
-   * Its own style, not `note`: that one carries `marginTop: 16` for a line
-   * that follows a block, and inside a row beside the padlock the same margin
-   * pushed the words 16px below the icon. The row's own gap does it here.
+   * With no title bar the body starts at the modal's own 20px inset, which
+   * put the top of the card level with the X — a dialog whose first object
+   * begins in the same line as its chrome. 12 more is the difference between
+   * "it fits" and "it was placed".
    */
-  issuerCaption: { fontSize: 13 },
-  issuerRow: { marginTop: 16 },
-  /** A row's value and its copy affordance share a line. */
+  head: { marginTop: 12 },
+  /** The card's own name, centred under it — the reference's arrangement, and
+   *  the reason the thumbnail no longer prints it. */
+  title: { marginTop: 18, marginBottom: 0, textAlign: "center" },
+  /** The padlock and the sentence. `flex-start`, because the sentence runs to
+   *  two lines and an icon centred against both sits between them. */
+  issuer: { marginTop: 16 },
+  /** Nudges the padlock onto the first line's own optical centre. */
+  issuerIconBox: { marginTop: 3 },
+  issuerText: { fontSize: 13 },
+  /** The number and its copy affordance share a line. */
   rowValue: { width: "100%" },
 } satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) =>
   ({
     /** The padlock beside USIO's name: a mark, not a warning. */
-    issuerIcon: { color: token.colorTextTertiary },
+    issuerIcon: { color: token.colorTextTertiary, flex: "none" },
     /**
      * THE LIST, AS ONE BORDERED BLOCK — the reference's arrangement.
      *
      * Five facts laid loose on a dialog read as five paragraphs; inside one
-     * rounded frame with hairlines between them they read as a record of one
+     * rounded frame with hairlines between them they read as the record of one
      * object, which is what they are. The frame is also what tells a reader
      * where the card's own data stops and the dialog's own words begin.
      */
@@ -56,28 +54,26 @@ export const getStyles = (token: GlobalToken) =>
       borderRadius: token.borderRadiusLG,
       overflow: "hidden",
     },
-    /** One fact. The rule belongs to the row above it, so the last row has
-     *  none and the frame's own edge closes the block. */
-    row: { padding: "12px 16px" },
+    /**
+     * One fact. The rule belongs to the row above it, so the last row has none
+     * and the frame's own edge closes the block.
+     *
+     * 14/18 rather than 12/16: the rows are the whole content of this dialog
+     * now that the reveal step is gone, and the reference's own list is set
+     * loose — the air between a label and the next label is what makes five
+     * of them read as five facts rather than as a block of text.
+     */
+    row: { padding: "14px 18px" },
     rowRuled: {
-      padding: "12px 16px",
+      padding: "14px 18px",
       borderBottom: `1px solid ${token.colorBorderSecondary}`,
     },
     rowLabel: { fontSize: 13, color: token.colorTextTertiary, display: "block" },
     rowValue: {
-      fontSize: 15,
+      fontSize: 16,
       fontWeight: 600,
       color: token.colorText,
       letterSpacing: "0.01em",
-    },
-    /** The number and the security code, before USIO has been asked. Same
-     *  size and weight as the values they stand in for, so revealing them
-     *  does not move the row. */
-    rowMasked: {
-      fontSize: 15,
-      fontWeight: 600,
-      color: token.colorTextTertiary,
-      letterSpacing: "0.08em",
     },
     /** The mark beside "OPA Virtual Card" in the type row — the reference puts
      *  the network's badge here; OPA's card carries OPA's. */

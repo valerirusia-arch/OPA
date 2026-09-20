@@ -160,25 +160,22 @@ export function CardFace({
      drawing of the one object, not this face with things switched off. */
   if (nameplate) {
     return (
-      <Flex vertical justify="space-between" gap={20} style={s.face}>
-        <Flex align="flex-start" justify="space-between" gap={12}>
-          <div style={front_.mark}>
-            <Logo height={30} />
-          </div>
-        </Flex>
+      <Flex vertical justify="space-between" gap={12} style={s.plateFace}>
+        <div style={front_.markSmall}>
+          <Logo height={20} />
+        </div>
 
-        {/* WHAT IT IS, WHOSE IT IS, AND HOW IT STANDS — one line of each, all
-            along the foot. `flex-end` so the state sits on the name's line
-            rather than floating level with the card's title above it. */}
-        <Flex align="flex-end" justify="space-between" gap={16}>
-          <Flex vertical gap={2}>
-            <Typography.Text style={s.plate}>{label}</Typography.Text>
-            {facts.length > 0 ? (
-              <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
-            ) : null}
-          </Flex>
+        {/* WHOSE IT IS AND HOW IT STANDS, along the foot — the two things a
+            thumbnail has room for. What the card IS is the title directly
+            under it; see `plateSub`. */}
+        <Flex align="center" justify="space-between" gap={12}>
+          {facts.length > 0 ? (
+            <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
+          ) : (
+            <span />
+          )}
           {status ? (
-            <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
+            <Tag variant="filled" style={{ ...pill, ...s.cutPill, ...s.platePill }}>
               {status.label}
             </Tag>
           ) : null}

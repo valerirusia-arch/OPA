@@ -212,8 +212,10 @@ export default function LoanScreen({
       />
 
       {/* WBS story 7. Nothing in it is a secret being withheld: the number and
-          the CVV are USIO's and never reach OPA, so the button is a hand-off
-          rather than a reveal. */}
+          the CVV are USIO's and never reach OPA. Opening this dialog IS the
+          hand-off — the View above is the borrower asking USIO — so it shows
+          what the secure view returned rather than asking them to press a
+          second button for what they already pressed one for. */}
       {record?.loan?.card ? (
         <VirtualCardModal
           open={cardOpen}
@@ -222,7 +224,6 @@ export default function LoanScreen({
           cardholder={person}
           expiry={record.loan.card.expiry}
           used={record.loan.card.used}
-          onOpenAtIssuer={() => console.log("open the USIO card view")}
           onCancel={() => setCardOpen(false)}
         />
       ) : null}

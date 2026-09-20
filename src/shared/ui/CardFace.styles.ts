@@ -112,20 +112,36 @@ export const getStyles = (token: GlobalToken) => {
       fontVariantNumeric: "tabular-nums",
     },
     /**
-     * THE CARD'S NAME along the foot of the nameplate — the biggest thing
-     * printed on that face, because on that face it is the only thing that
-     * says what the object is.
+     * THE NAMEPLATE'S OWN FACE — a THUMBNAIL, not a card at reading size.
      *
-     * 18 and not 20, measured: at 20 "OPA Virtual Card" is ~172px and the
-     * state pill beside it ~90, which is 8px more than a 320-wide card has
-     * between its insets — so the name wrapped onto two lines and the pill
-     * came to rest against it. 18 is the same step the masked number takes
-     * on the front, so the two faces stay one family either way.
+     * The details dialog draws the card small, above a title and a list, the
+     * way the designer's reference does. At that size the page's card metrics
+     * are wrong twice over: `paddingLG` is a fifth of the face's width, and
+     * `minHeight: 180` fights the aspect ratio and makes a 240-wide card 180
+     * tall — a square, not a card.
      */
-    plate: { fontSize: 18, fontWeight: 600, color: ink, letterSpacing: "0.01em" },
-    /** Whose card it is, under the name — smaller, and in the quiet ink, the
-     *  way a real card prints the holder under the product name. */
-    plateSub: { fontSize: 13, color: quiet, letterSpacing: "0.02em" },
+    plateFace: {
+      aspectRatio: "1.586",
+      boxSizing: "border-box",
+      padding: 14,
+      borderRadius: token.borderRadiusLG,
+      background: ground,
+      boxShadow: brand.shadowCard,
+    },
+    /**
+     * Whose card it is, along the foot of the thumbnail.
+     *
+     * The card's NAME is not printed here. It was, at 18px, and then the
+     * dialog took the reference's arrangement — a small card, its name as a
+     * centred title directly underneath, then the list — which put the same
+     * six words twice within 40px of each other. The title says what the card
+     * is; the card says whose it is and how it stands, which is everything a
+     * thumbnail has room to say.
+     */
+    plateSub: { fontSize: 12, color: quiet, letterSpacing: "0.02em" },
+    /** The state on a thumbnail: the same pill, at the size the face can
+     *  carry without the two ends of the foot meeting. */
+    platePill: { fontSize: 11, lineHeight: "18px", paddingInline: 8 },
     /** The foot's labels and values, in the finish's own ink. */
     footLabel: {
       fontSize: 11,
@@ -186,5 +202,16 @@ export const getFrontStyles = (token: GlobalToken) =>
       borderRadius: token.borderRadius,
       padding: 5,
       boxShadow: brand.shadowRest,
+      alignSelf: "flex-start",
+    },
+    /** The same tile on the thumbnail, at the size that face can carry. */
+    markSmall: {
+      flex: "none",
+      display: "flex",
+      background: token.colorBgContainer,
+      borderRadius: token.borderRadiusSM,
+      padding: 4,
+      boxShadow: brand.shadowRest,
+      alignSelf: "flex-start",
     },
   }) satisfies Record<string, CSSProperties>;

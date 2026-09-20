@@ -1072,6 +1072,10 @@ export const en = {
   "loanPage.cardHideDetails": "Hide details",
   /* The hand-off, named on its own border. */
   "loanPage.cardIssuerView": "USIO secure view",
+  /* The one line under the list, replacing a three-line warning Alert. It has
+     to carry both facts and no more: whose details these are, and why not to
+     leave the window open. */
+  "loanPage.cardIssuerNote": "USIO holds these details, not OPA. Close this window when you are done — anyone looking at your screen can read them.",
   "loanPage.cardMock": "Mock",
   "loanPage.cardNumber": "Card number",
   "loanPage.cardCvv": "CVV",
@@ -2593,6 +2597,7 @@ const es: Record<TranslationKey, string> = {
   "loanPage.cardShowDetails": "Ver los datos de la tarjeta",
   "loanPage.cardHideDetails": "Ocultar los datos",
   "loanPage.cardIssuerView": "Vista segura de USIO",
+  "loanPage.cardIssuerNote": "Estos datos los guarda USIO, no OPA. Cierra esta ventana cuando termines: cualquiera que mire tu pantalla puede leerlos.",
   "loanPage.cardMock": "Simulación",
   "loanPage.cardNumber": "Número de tarjeta",
   "loanPage.cardCvv": "CVV",
