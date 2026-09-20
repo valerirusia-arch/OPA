@@ -391,6 +391,16 @@ export function LoanOverview({
       ? {
           title: t("loanPage.statement"),
           label: t("loanPage.nextPayment"),
+          /* SHORT: "Oct 01", not "Oct 01, 2026". The year is under the track
+             in "final payment Sep 01, 2027", and beside an 11px label a
+             four-digit year is the longest thing on the line for the least.
+             The dates in this prototype are written as English strings in the
+             mock and never localised, so dropping a trailing ", YYYY" is
+             exactly as safe as the data it reads. */
+          labelAside:
+            paidCount === totalCount && totalCount > 0
+              ? undefined
+              : loan.nextPaymentOn.replace(/,\s*\d{4}$/, ""),
           value: loan.nextPayment,
           /*
             NO DUE DATE UNDER THE FIGURE — *"ეს ტექსტი არ დაგვჭირდება მაგ

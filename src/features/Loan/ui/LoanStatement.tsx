@@ -57,6 +57,16 @@ export type LoanStatementProps = {
   title?: string;
   /** What the figure is. */
   label: string;
+  /**
+   * A second, quieter half of the label's own line.
+   *
+   * The date came off the caption under the figure — the card already dates
+   * itself twice below — and the label is where it costs nothing:
+   * "NEXT PAYMENT · OCT 01" is one line of micro-type, not a line of its own.
+   * *"ამის გვერდზე მიუწერე თარიღი, ძაან მოკლედ."* Kept very short on purpose;
+   * the year is under the track.
+   */
+  labelAside?: string;
   /** The figure. Already formatted — this component does not do money. */
   value: string;
   /** One line under the figure: when it is due, or what is happening. */
@@ -104,6 +114,7 @@ export type LoanStatementProps = {
 export function LoanStatement({
   title,
   label,
+  labelAside,
   value,
   caption,
   action,
@@ -159,7 +170,18 @@ export function LoanStatement({
         */}
         <Flex vertical>
           <Flex vertical>
-            <Typography.Text style={s.label}>{label}</Typography.Text>
+            {/* One line, two weights of the same micro-type: what the figure
+                is, and the one word of context that used to sit under it.
+                `baseline`, so the middot and both words share a line rather
+                than centring against each other's boxes. */}
+            <Flex align="baseline" gap={6} wrap style={styles.labelRow}>
+              <Typography.Text style={s.label}>{label}</Typography.Text>
+              {labelAside ? (
+                <Typography.Text style={s.labelAside}>
+                  {`· ${labelAside}`}
+                </Typography.Text>
+              ) : null}
+            </Flex>
 
           {/*
             TWO WEIGHTS, BOTH antd's.

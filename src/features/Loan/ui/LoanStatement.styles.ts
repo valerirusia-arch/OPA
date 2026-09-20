@@ -6,6 +6,10 @@ import { getFigureStyles } from "../../../shared/ui/figures.styles";
 import { LEAD_PANEL_INSET, leadPanelBody } from "../../../shared/ui/panel.styles";
 
 export const styles = {
+  /** The gap under the label belongs to the ROW now that the date shares it —
+   *  left on the word, the date beside it would centre against a box 8px
+   *  taller than the letters. */
+  labelRow: { marginBottom: 8 },
   /** In the head: no end padding, so the link aligns with the head's own
    *  edge — the same as the virtual card's. */
   headAction: { paddingInlineEnd: 0 },
@@ -87,7 +91,16 @@ export const getStyles = (token: GlobalToken) => {
     },
     /** The product's label treatment, unchanged — the same one the record
      *  grids and the payments page use. */
-    label: { ...figures.microLabel, display: "block", marginBottom: 8 },
+    label: { ...figures.microLabel, display: "block" },
+    /**
+     * The date beside the label — the SAME micro-type, not a quieter one.
+     *
+     * It was set at `colorTextQuaternary` to keep it secondary to the label,
+     * and at 11px that is a date you can see is there and cannot read. The
+     * middot does the separating; the two halves are one line of label and
+     * both have to be legible.
+     */
+    labelAside: figures.microLabel,
     /**
      * The same label in the facts grid, without the 8 under it.
      *
