@@ -48,7 +48,7 @@ type Phase = { title: string; note: string; steps: Step[] };
 const PHASES: Phase[] = [
   {
     title: "The borrower applies",
-    note: "Six steps, and the last one submits. Nothing reaches an underwriter until it does.",
+    note: "The wizard\u2019s own order: income, loan details, co-borrower, signing, card, household, review. Nothing reaches an underwriter until Review submits it, and every step stays editable until then.",
     steps: [
       {
         actor: "borrower",
@@ -58,13 +58,7 @@ const PHASES: Phase[] = [
       },
       {
         actor: "borrower",
-        title: "Sign credit authorization and disclosures",
-        wbs: "The system shall dynamically generate the required credit authorization, electronic disclosures, consent forms and other application documents based on the borrower's state of residence and applicant role. Electronic signature is performed using DocuSign.",
-        path: "/application/new",
-      },
-      {
-        actor: "borrower",
-        title: "Provide income and upload proof",
+        title: "Income — the figure, and the documents that prove it",
         wbs: "Provide the annual income; upload documents that prove the income (select document type and upload a document).",
         path: "/application/new",
       },
@@ -76,6 +70,18 @@ const PHASES: Phase[] = [
       },
       {
         actor: "borrower",
+        title: "Invite a co-borrower, if one is wanted or required",
+        wbs: "The borrower shall be able to invite a co-borrower when required or desired. See phase 2 for what happens next.",
+        path: "/application/new",
+      },
+      {
+        actor: "borrower",
+        title: "Sign the credit authorization and disclosures",
+        wbs: "The system shall dynamically generate the required credit authorization, electronic disclosures, consent forms and other application documents based on the borrower's state of residence and applicant role. Only documents required for underwriting are signed during the application process. Electronic signature is performed using DocuSign.",
+        path: "/application/new",
+      },
+      {
+        actor: "borrower",
         title: "Provide debit card details",
         wbs: "DEBIT only card details are collected using secure embedded form from Repay that works as a 'black box' for OPA. No card information is stored, only card token. Only U.S. debit cards.",
         path: "/application/new",
@@ -83,13 +89,13 @@ const PHASES: Phase[] = [
       {
         actor: "borrower",
         title: "Household info, veteran status, how they heard about OPA",
-        wbs: "See the confirmation of application submission; provide their household info (income, size), if they are veterans and select how they heard about OPA.",
+        wbs: "Provide their household info (income, size), if they are veterans and select how they heard about OPA.",
         path: "/application/new",
       },
       {
         actor: "borrower",
-        title: "Submit",
-        wbs: "Submission initiates the Loan Decisioning process.",
+        title: "Review every answer, then submit",
+        wbs: "Submission initiates the Loan Decisioning process. After the account is created, they should be able to return to the previous steps of their application process.",
         path: "/application/new",
       },
     ],
