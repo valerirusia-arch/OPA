@@ -158,15 +158,19 @@ export function VirtualCardModal({
       styles={{ body: styles.body }}
     >
       <Flex vertical align="center" style={styles.head}>
-        {/* The thumbnail: the mark on its tile top left, the state where a
-            network mark would sit — *"მარჯვნივ ეწერება ინ იუს, დაბლა,
-            მასტერქარდის მაგივრად."* Nothing else; see CardFace's nameplate. */}
+        {/* THE SAME CARD AS /loan, AT A QUARTER OF THE WIDTH. It was the mark
+            and the state alone, on the argument that nothing else survives at
+            160px; every measurement on the face is a fraction of the face
+            now, so the name and the holder come down with it — *"აქ
+            ტექსტებიც უნდა გამოჩნდეს, ოპას ვირტუალ ქარდი და ლევი აკერმანი,
+            დასქეილებული, ძაან პატარა ზომის."* One drawing at two sizes
+            rather than two drawings. */}
         <div style={styles.face}>
           <CardFace
-            nameplate
+            front
             label={t("loanPage.cardTypeValue")}
             status={{ label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused") }}
-            number={t("payments.cardEnding", { last4 })}
+            facts={[{ key: "holder", label: t("loanPage.cardholder"), value: cardholder }]}
           />
         </div>
 

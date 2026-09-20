@@ -230,24 +230,24 @@ export const getStyles = (token: GlobalToken) => {
  * OPA application and are accessible only via a secure embedded view", so they
  * appear on the revealed face and nowhere else.
  */
-export const markStyles = (() => {
+export const getMarkStyles = (token: GlobalToken) => {
   /**
-   * THE MARK'S TILE — the status pill's material, not a white box.
+   * THE MARK'S TILE — WHITE, as it was.
    *
-   * The white square was a way of guaranteeing the mark read on any ground,
-   * and it cost the card the one piece of brand artwork on it: a white box is
-   * what the eye sees first, the symbol second — *"ეს თეთრი ბექგრაუნდი მინდა
-   * მოვხსნათ."* Taking it away entirely did not work either: a deep teal disc
-   * on a mid blue card is the same value as its ground and disappears.
+   * It has been three things in a day: a white square, then nothing with a
+   * glow, then the translucent dark the state pill is cut from. The dark one
+   * was the designer's own suggestion and it is defensible — it is the card's
+   * material rather than a sticker on it — but seen on the card it lost the
+   * mark rather than showing it: a dark disc inside a dark tile on a dark
+   * half of a blue ramp is three near-values stacked. *"შიგნით არსებული
+   * ყველაფერი ფერების გარდა როგორც იყო ისე დამიბრუნე."*
    *
-   * The designer's own answer is the one that holds: *"Not used-ს რომ აქვს
-   * ეგეთ ბექგრაუნდს ჩავუსვამდი."* The translucent dark the state pill is cut
-   * from is the card's own material, so the mark sits ON the card rather than
-   * in a sticker on it, and it reads at any point of any ground because it is
-   * darker than all of them.
+   * So: white, which is the only value on this palette that the deep teal
+   * disc is unambiguously darker than, wherever the tile lands.
    *
-   * Sized in `cqw` like everything else on the face: 14% of the card's width,
-   * so the mark is the same size relative to the card at 160 and at 660.
+   * Sized in `cqw` like everything else on the face — 17% of the card's own
+   * width — so the mark is the same size relative to the card at 160 and at
+   * 660.
    */
   const tile: CSSProperties = {
     flex: "none",
@@ -257,7 +257,8 @@ export const markStyles = (() => {
     height: "17cqw",
     padding: "2.6cqw",
     borderRadius: "4cqw",
-    background: brand.cardDarkPill,
+    background: token.colorBgContainer,
+    boxShadow: brand.shadowRest,
     display: "flex",
   };
   return {
@@ -267,4 +268,4 @@ export const markStyles = (() => {
     /** The mark fills its tile — see the note on `style` in Logo. */
     markGlyph: { width: "100%", height: "100%" } satisfies CSSProperties,
   } satisfies Record<string, CSSProperties>;
-})();
+};

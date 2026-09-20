@@ -62,7 +62,7 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { getStyles, markStyles, styles } from "./CardFace.styles";
+import { getMarkStyles, getStyles, styles } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
@@ -103,6 +103,10 @@ export type CardFaceProps = {
   /** The number can be copied. Only where it IS a number — a mask cannot. */
   copyable?: boolean;
   /**
+   * @deprecated Kept only so a caller that still says `nameplate` gets the
+   * front rather than the detail face. There is ONE drawing of this card now,
+   * at whatever width it is given — see `front`.
+   *
    * THE CARD AS AN OBJECT AND NOTHING ELSE — no number on it at all.
    *
    * For the details dialog, where the card is the picture at the top and every
@@ -157,45 +161,18 @@ export function CardFace({
   const inverted = true;
   const { token } = theme.useToken();
   const s = getStyles(token);
+  const marks = getMarkStyles(token);
   const figures = getFigureStyles(token);
-
-  /* THE NAMEPLATE. Same early-return reason as `front` below: it is a third
-     drawing of the one object, not this face with things switched off. */
-  if (nameplate) {
-    return (
-      <div style={s.face}>
-        <Flex vertical justify="space-between" gap={12} style={s.faceInner}>
-          <div style={markStyles.markSmall}>
-            <Logo style={markStyles.markGlyph} />
-          </div>
-
-          {/* THE STATE, AND NOTHING ELSE. The mark in one corner and the
-              state in the other — the reference's own arrangement, and the
-              only one that survives at 160px. The card's name and the holder
-              are the title and the second row of the list directly under it,
-              so printing them here as well would be the same words twice.
-              `facts` is accepted and not printed on this face. */}
-          <Flex justify="flex-end">
-            {status ? (
-              <Tag variant="filled" style={{ ...pill, ...s.cutPill, ...s.platePill }}>
-                {status.label}
-              </Tag>
-            ) : null}
-          </Flex>
-        </Flex>
-      </div>
-    );
-  }
 
   /* OPA'S OWN FRONT. It returns early rather than threading `front` through
      six branches below, because it genuinely is a different drawing: not this
      face with things switched off, but the front of the card OPA issues. */
-  if (front) {
+  if (front || nameplate) {
     return (
       <div style={s.face}>
         <Flex vertical justify="space-between" style={s.faceInner}>
-          <div style={markStyles.mark}>
-            <Logo style={markStyles.markGlyph} />
+          <div style={marks.mark}>
+            <Logo style={marks.markGlyph} />
           </div>
 
           {/* WHAT IT IS, then WHOSE IT IS with the state opposite — two lines,
