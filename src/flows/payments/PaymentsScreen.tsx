@@ -19,7 +19,7 @@
 // Dumb: mock default, local state for the dialog, console.log for the rest.
 
 import { useState } from "react";
-import { Button, Flex, Typography } from "antd";
+import { Typography } from "antd";
 import { useNavigate } from "@tanstack/react-router";
 import { AppHeader } from "../../shared/ui/AppHeader";
 import { HeroBackdrop } from "../../shared/ui/HeroBackdrop";
@@ -156,34 +156,9 @@ export default function PaymentsScreen({
       <HeroBackdrop tone="plain" paddingBlock={0}>
         <div style={styles.page}>
           <div style={styles.column}>
-            {/*
-              THE ACTION IS IN THE TITLE ROW.
-
-              It was pinned inside the balance card's top-right corner, as far
-              from the figure it acts on as the card is wide, and when the card
-              was split in two it became a button floating in 200px of empty
-              panel. In the title row it belongs to the PAGE — which is what it
-              is, the one thing this page is for — it opens no hole in any card,
-              and it is where the reference the designer sent puts it.
-
-              Only while there is something payable: a primary action over a
-              settled loan is the loudest thing on the screen inviting somebody
-              to do what cannot be done.
-            */}
-            <Flex align="center" justify="space-between" gap={16} wrap style={styles.titleRow}>
-              <Typography.Title level={3} style={styles.title}>
-                {t("payments.title")}
-              </Typography.Title>
-              {nextInstallment ? (
-                <Button
-                  type="primary"
-                  size="large"
-                  onClick={() => setPaying({ installment: nextInstallment })}
-                >
-                  {t("payments.makePayment")}
-                </Button>
-              ) : null}
-            </Flex>
+            <Typography.Title level={3} style={styles.title}>
+              {t("payments.title")}
+            </Typography.Title>
 
             <PaymentsOverview
               record={visible}

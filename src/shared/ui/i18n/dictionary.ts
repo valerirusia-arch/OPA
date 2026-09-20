@@ -1613,17 +1613,6 @@ export const en = {
   "payments.feesApplied": "Fees applied",
   "payments.payoffToday": "Pay off today",
   "payments.maturity": "Final payment due",
-  /* The caption under the figure, in the reference's own register: a line
-     that says what the number IS, not another number. The maturity date is
-     its second sentence rather than a sixth box on the tray — it is the one
-     fact there that is a boundary and not a balance. */
-  "payments.outstandingCaption": "Everything still owed on this loan, fees included. Final payment due {due}.",
-  "payments.paidSoFar": "Paid so far",
-  /* The ring over the schedule. "Distribution" was the reference's word and it
-     is a chart's word, not a borrower's; what the ring actually splits is the
-     twelve payments by where each one stands. */
-  "payments.mixTitle": "Payments by status",
-  "payments.mixCenter": "payments",
 
   // WBS story 9's three consequences, in the borrower's words. Nothing here is
   // softened: at 96 days past due somebody is a month from owing the lot.
@@ -3048,10 +3037,6 @@ const es: Record<TranslationKey, string> = {
   "payments.feesApplied": "Recargos",
   "payments.payoffToday": "Liquidar hoy",
   "payments.maturity": "Último pago",
-  "payments.outstandingCaption": "Todo lo que queda por pagar de este préstamo, recargos incluidos. Último pago el {due}.",
-  "payments.paidSoFar": "Pagado hasta ahora",
-  "payments.mixTitle": "Pagos por estado",
-  "payments.mixCenter": "pagos",
 
   "payments.overdueTitle": "Hay un pago con {days} días de retraso",
   "payments.overdueBody": "Tienes {pastDue} vencidos. El recargo por mora se cobra el día 16 después del vencimiento y es de $5.00 o el 5% del pago no realizado, la cantidad que sea menor. Solo se cobra un recargo por cada pago omitido.",

@@ -39,14 +39,14 @@
 // Dumb: everything arrives as props and leaves as a callback.
 
 import {
-  Button, Card, Col, Collapse, Flex, Result, Row, Tabs, Typography, theme,
+  Button, Card, Collapse, Flex, Result, Tabs, Typography, theme,
 } from "antd";
 import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
 import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { RepaymentSummary } from "./RepaymentSummary";
-import { ScheduleMix } from "./ScheduleMix";
+import { leadPanelBody } from "../../../shared/ui/panel.styles";
+import { BalanceSummary } from "./BalanceSummary";
 import { PaymentHistory } from "./PaymentHistory";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { getStyles, styles } from "./PaymentsOverview.styles";
@@ -138,10 +138,6 @@ export function PaymentsOverview({
    */
   const next = record.schedule.find((row) => row.status !== "paid");
 
-  /** Counts, not money: twelve equal instalments, so the count IS the
-   *  proportion, and it needs no currency parsed to be true. */
-  const paid = record.schedule.filter((row) => row.status === "paid");
-
   const notice = stageCopy[record.balance.stage];
 
   return (
@@ -172,45 +168,18 @@ export function PaymentsOverview({
         </PageNotice>
       ) : null}
 
-      {/*
-        THE PAGE'S TOP, REBUILT TO THE REFERENCE THE DESIGNER SENT.
-
-        What was here: one white card the full width of the viewport with the
-        outstanding figure in its top-left corner, a button pinned top-right
-        and three small facts along its bottom. Three corners for one block,
-        ~700px of nothing between them at 1440, and no picture of the loan
-        anywhere on the page. Splitting it into two cards only moved the void
-        into the second one.
-
-        Now it is the arrangement the reference uses and it holds together for
-        a reason rather than by resemblance:
-
-          left (lg 15)  the ANSWER and its detail — one figureLg, a caption
-                        saying what the figure is, and a recessed tray of
-                        small raised boxes carrying the facts about it.
-          right (lg 9)  the SHAPE of the schedule — twelve instalments split
-                        by where each one stands, as a ring with its counts.
-
-        And the action left both cards for the page's title row, which is
-        where the reference puts it and why neither card has a hole in it any
-        more.
-
-        `align="stretch"` with a filling body on both: the two panels share a
-        bottom edge whichever is taller, which is what stops the row reading
-        as two cards that happen to be adjacent.
-      */}
-      <Row gutter={[24, 24]} align="stretch" style={styles.row}>
-        <Col xs={24} lg={15} style={styles.column}>
-          <RepaymentSummary
-            balance={record.balance}
-            next={next}
-            progress={{ paid: paid.length, total: record.schedule.length }}
-          />
-        </Col>
-        <Col xs={24} lg={9} style={styles.column}>
-          <ScheduleMix installments={record.schedule} />
-        </Col>
-      </Row>
+      {/* WBS stories 3 and 10. The page's one figure and the one action.
+          FULL WIDTH now — the saved payment card moved to the profile page, so
+          the balance no longer shares its row and takes the whole width, at the
+          lead inset. NO HEAD: the label lives inside, above the figure, the way
+          the loan page's statement states its own — see BalanceSummary. */}
+      <Card style={styles.card} styles={{ body: leadPanelBody }}>
+        <BalanceSummary
+          balance={record.balance}
+          next={next}
+          onPay={() => onPay?.()}
+        />
+      </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
           inset tab bar, the same treatment the back-office tables use, so the
