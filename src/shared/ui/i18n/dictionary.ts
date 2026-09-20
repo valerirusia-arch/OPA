@@ -1057,7 +1057,12 @@ export const en = {
   "loanPage.nextPayment": "Next payment",
   "loanPage.paymentsMade": "Payments made",
   "loanPage.paymentsMadeValue": "{paid} of {count}",
-  "loanPage.progressLine": "{paid} of {count} payments made · final payment {due}",
+  /* SHORT. It read "{paid} of {count} payments made · final payment {due}",
+     which is nine words for two facts under a row of capsules that draws the
+     first of them — *"ეს ტექსტიც ცოტა შეამოკლე რა."* "paid" is also how
+     /payments says the same count, so the two pages now say it the same way.
+     */
+  "loanPage.progressLine": "{paid} of {count} paid · ends {due}",
   "loanPage.dueOn": "Due {due}",
   "loanPage.terms": "{count} monthly payments · {apr}",
   "loanPage.viewSchedule": "View full schedule",
@@ -2596,7 +2601,7 @@ const es: Record<TranslationKey, string> = {
   "loanPage.nextPayment": "Próximo pago",
   "loanPage.paymentsMade": "Pagos realizados",
   "loanPage.paymentsMadeValue": "{paid} de {count}",
-  "loanPage.progressLine": "{paid} de {count} pagos realizados · último pago {due}",
+  "loanPage.progressLine": "{paid} de {count} pagadas · termina el {due}",
   "loanPage.dueOn": "Vence el {due}",
   "loanPage.terms": "{count} pagos mensuales · {apr}",
   "loanPage.viewSchedule": "Ver el calendario completo",
