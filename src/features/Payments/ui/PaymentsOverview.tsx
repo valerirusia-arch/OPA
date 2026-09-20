@@ -39,7 +39,7 @@
 // Dumb: everything arrives as props and leaves as a callback.
 
 import {
-  Button, Card, Collapse, Flex, Result, Tabs, Typography, theme,
+  Button, Card, Col, Collapse, Flex, Result, Row, Tabs, Typography, theme,
 } from "antd";
 import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
@@ -47,6 +47,7 @@ import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { leadPanelBody } from "../../../shared/ui/panel.styles";
 import { BalanceSummary } from "./BalanceSummary";
+import { NextPaymentPanel } from "./NextPaymentPanel";
 import { PaymentHistory } from "./PaymentHistory";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { getStyles, styles } from "./PaymentsOverview.styles";
@@ -138,6 +139,10 @@ export function PaymentsOverview({
    */
   const next = record.schedule.find((row) => row.status !== "paid");
 
+  /** Counts, not money: twelve equal instalments, so the count IS the
+   *  proportion, and it needs no currency parsed to be true. */
+  const paid = record.schedule.filter((row) => row.status === "paid");
+
   const notice = stageCopy[record.balance.stage];
 
   return (
@@ -168,18 +173,73 @@ export function PaymentsOverview({
         </PageNotice>
       ) : null}
 
-      {/* WBS stories 3 and 10. The page's one figure and the one action.
-          FULL WIDTH now — the saved payment card moved to the profile page, so
-          the balance no longer shares its row and takes the whole width, at the
-          lead inset. NO HEAD: the label lives inside, above the figure, the way
-          the loan page's statement states its own — see BalanceSummary. */}
-      <Card style={styles.card} styles={{ body: leadPanelBody }}>
-        <BalanceSummary
-          balance={record.balance}
-          next={next}
-          onPay={() => onPay?.()}
-        />
-      </Card>
+      {/*
+        THE ACCOUNT, AND THE NEXT TRANSACTION ON IT — two panels, not one.
+
+        It was a single card the full width of the page, and measured it was
+        the wrong shape for what it held: one figure in the top-left corner, a
+        button pinned in the top-right, three small facts along the bottom,
+        and about 700px of nothing between them at 1440. Three corners for one
+        block of content. Worse, the two things a borrower opens this page for
+        were the two furthest apart — what I owe, and the button that pays it
+        — and the amount of the next payment was on neither, only in row 4 of
+        the table below.
+
+        So the page splits along the seam that was already there. The balance
+        card keeps the ACCOUNT: the outstanding figure, how far through the
+        schedule it is, and the small print about it (WBS 3, 10, 6). The panel
+        beside it holds the NEXT TRANSACTION: amount, date, and the button
+        (WBS 2, 5). Each block is now one column of related facts read top to
+        bottom, and the action sits on the thing it acts on.
+
+        `align="stretch"` and a filling body on both: the two panels share a
+        bottom edge whichever is taller, which is what stops the row reading
+        as two cards that happen to be adjacent.
+      */}
+      <Row gutter={[24, 24]} align="stretch" style={styles.row}>
+        <Col xs={24} lg={next ? 16 : 24} style={styles.column}>
+          {/* NO HEAD: the label lives inside, above the figure, the way the
+              loan page's statement states its own — see BalanceSummary. The
+              lead inset of 32 marks this as the card the page is for; the
+              panel beside it keeps antd's 24. */}
+          <Card
+            style={{ ...styles.card, ...styles.stretchCard }}
+            styles={{ body: { ...leadPanelBody, ...styles.fillBody } }}
+          >
+            <BalanceSummary
+              balance={record.balance}
+              /* HOW FAR THROUGH, which this page never said. The dashboard's
+                 copy of this card has drawn it since Epic 6 and /payments —
+                 the page actually about repayment — showed a balance with no
+                 sense of position in the schedule. Counts, from the schedule
+                 itself. */
+              progress={{ paid: paid.length, total: record.schedule.length }}
+              /* The next payment has a panel of its own now; a caption here
+                 naming the same date would be the fact twice, 200px apart. */
+              showNext={false}
+              /* NOT OVER A SETTLED LOAN. BalanceSummary has carried this
+                 switch since it was written and nothing ever threw it, so the
+                 paid-off page answered "$0.00 — nothing left to pay" and then
+                 printed "Pay off today $0.00" and "Final payment due Sep 01,
+                 2027" under it — a closed account billing the borrower for
+                 next September. The small print is about money still owed;
+                 with none owed there is none of it. */
+              showDetails={next !== undefined}
+              fill
+            />
+          </Card>
+        </Col>
+
+        {/* Nothing left to pay leaves no panel and no button, and the balance
+            card takes the whole row back. A primary action over a settled loan
+            is the loudest thing on the page inviting something that cannot be
+            done. */}
+        {next ? (
+          <Col xs={24} lg={8} style={styles.column}>
+            <NextPaymentPanel installment={next} onPay={() => onPay?.()} />
+          </Col>
+        ) : null}
+      </Row>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
           inset tab bar, the same treatment the back-office tables use, so the

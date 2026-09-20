@@ -72,6 +72,16 @@ export type BalanceSummaryProps = {
    */
   progress?: { paid: number; total: number };
   /**
+   * The line naming the next payment, under the figure.
+   *
+   * OFF WHERE THE PAGE SAYS IT BETTER SOMEWHERE ELSE. /payments now gives the
+   * next payment a panel of its own beside this card — the amount, the date
+   * and the button to pay it — and a caption here repeating the date would be
+   * the same fact twice, 200px apart. The dashboard, where this card stands
+   * alone, keeps it.
+   */
+  showNext?: boolean;
+  /**
    * The small print under the rule.
    *
    * OFF WHEN THE LOAN IS CLOSED. "Pay off today $0.00" and a final payment
@@ -100,6 +110,7 @@ export function BalanceSummary({
   status,
   pastDue,
   progress,
+  showNext = true,
   showDetails = true,
   hero = false,
   next,
@@ -165,7 +176,7 @@ export function BalanceSummary({
      row. So this caption is only ever drawn UNDER the figure, and takes the
      margin that needs. */
   const inline = hero && !stacked;
-  const caption = (
+  const caption = !showNext ? null : (
     <Typography.Text type="secondary" style={styles.next}>
       {next
         ? t("payments.nextPaymentLine", { amount: next.amount, due: next.due })
