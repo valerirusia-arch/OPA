@@ -31,7 +31,7 @@ export const styles = {
   issuer: { marginTop: 16 },
   /** Nudges the padlock onto the first line's own optical centre. */
   issuerIconBox: { marginTop: 3 },
-  issuerText: { fontSize: 13 },
+  issuerText: { fontSize: 12 },
   /** The number and its copy affordance share a line. */
   rowValue: { width: "100%" },
 } satisfies Record<string, CSSProperties>;
@@ -58,19 +58,21 @@ export const getStyles = (token: GlobalToken) =>
      * One fact. The rule belongs to the row above it, so the last row has none
      * and the frame's own edge closes the block.
      *
-     * 14/18 rather than 12/16: the rows are the whole content of this dialog
-     * now that the reveal step is gone, and the reference's own list is set
-     * loose — the air between a label and the next label is what makes five
-     * of them read as five facts rather than as a block of text.
+     * SET DOWN A STEP, 2026-09-21 — *"ტექსტები ზედმეტად დიდია."* It was a
+     * 13px label over a 16px value with 14/18 of padding, which is bigger
+     * than anything else in the product says a label-over-value: the loan
+     * page's own fact rows are 11 over 15 and the payments tray is 11 over
+     * 20. Five rows at 16 made a small dialog read as a form. 12 over 14 is
+     * the same relationship, quieter, and the block loses about 60px.
      */
-    row: { padding: "14px 18px" },
+    row: { padding: "11px 16px" },
     rowRuled: {
-      padding: "14px 18px",
+      padding: "11px 16px",
       borderBottom: `1px solid ${token.colorBorderSecondary}`,
     },
-    rowLabel: { fontSize: 13, color: token.colorTextTertiary, display: "block" },
+    rowLabel: { fontSize: 12, color: token.colorTextTertiary, display: "block" },
     rowValue: {
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: 600,
       color: token.colorText,
       letterSpacing: "0.01em",
@@ -82,6 +84,6 @@ export const getStyles = (token: GlobalToken) =>
       display: "flex",
       background: token.colorFillQuaternary,
       borderRadius: token.borderRadiusSM,
-      padding: 4,
+      padding: 3,
     },
   }) satisfies Record<string, CSSProperties>;

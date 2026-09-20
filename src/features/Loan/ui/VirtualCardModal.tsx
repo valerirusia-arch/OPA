@@ -84,9 +84,9 @@ export function VirtualCardModal({
          badge; OPA's card is not on a public network the borrower would
          recognise, so it carries OPA's own. */
       value: (
-        <Flex align="center" gap={10}>
+        <Flex align="center" gap={9}>
           <div style={s.typeMark}>
-            <Logo height={18} />
+            <Logo height={16} />
           </div>
           <Typography.Text style={s.rowValue}>{t("loanPage.cardTypeValue")}</Typography.Text>
         </Flex>
@@ -159,7 +159,7 @@ export function VirtualCardModal({
         {rows.map((row, index) => (
           <Flex
             vertical
-            gap={4}
+            gap={2}
             key={row.key}
             style={index < rows.length - 1 ? s.rowRuled : s.row}
           >
