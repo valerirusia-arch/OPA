@@ -1198,7 +1198,11 @@ export const en = {
   /* Shown instead of the submission date when the approved amount differs
      from the one asked for. WBS lets the Underwriter reduce it, and the
      borrower meets that figure in the agreement — so the page says it first. */
-  "loanPage.approvedInstead": "OPA approved this amount. You asked for {requested}.",
+  /* SHORT, because it sits beside the label now and the label and the figure
+     say the rest. "OPA approved this amount" is what "LOAN AMOUNT $1,300.00"
+     already is; what a reader does not know is that they asked for more.
+     *"ეცადეთ ტექსტი მოკლე იყოს უფრო და გასაგები."* */
+  "loanPage.approvedInstead": "You asked for {requested}",
   "loanPage.withdrawTitle": "Withdraw this application",
   "loanPage.withdrawBody": "You can stop the application while no decision has been made. Applying again later starts from the beginning.",
 
@@ -1639,6 +1643,14 @@ export const en = {
 
   // WBS story 3, and story 10's fees alongside it.
   "payments.outstanding": "Outstanding balance",
+  /* THE BALANCE CARD'S HEAD, and it has to cover four things: the figure, the
+     fees applied to it, what it would take to close the loan today, and when
+     it ends. "Outstanding balance" named only the first and stole the label
+     off it; "Repayment" named none of them and collided with the tab below.
+     *"რამე სხვა მოფიქრე, რაც ამას და ქვემოთ არსებულ ინფოებს აერთიანებს."*
+     Plain English, which is the register the rest of this product speaks to
+     borrowers in. */
+  "payments.owedTitle": "What you owe",
   "payments.makePayment": "Make a payment",
   "payments.nothingDue": "Nothing left to pay",
   "payments.feesApplied": "Fees applied",
@@ -2681,8 +2693,7 @@ const es: Record<TranslationKey, string> = {
   "loanPage.journeyDecision": "Decisión",
 
   "loanPage.submittedOn": "Enviada el {date}",
-  "loanPage.approvedInstead":
-    "OPA aprobó este importe. Solicitaste {requested}.",
+  "loanPage.approvedInstead": "Solicitaste {requested}",
   "loanPage.withdrawTitle": "Retirar esta solicitud",
   "loanPage.withdrawBody": "Puedes detener la solicitud mientras no haya una decisión. Volver a solicitar más adelante empieza desde el principio.",
 
@@ -3069,6 +3080,7 @@ const es: Record<TranslationKey, string> = {
   "payments.startApplication": "Iniciar la solicitud",
 
   "payments.outstanding": "Saldo pendiente",
+  "payments.owedTitle": "Lo que debes",
   "payments.makePayment": "Hacer un pago",
   "payments.nothingDue": "No queda nada por pagar",
   "payments.feesApplied": "Recargos",

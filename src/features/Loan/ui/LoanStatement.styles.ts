@@ -96,14 +96,22 @@ export const getStyles = (token: GlobalToken) => {
      *  grids and the payments page use. */
     label: { ...figures.microLabel, display: "block" },
     /**
-     * The date beside the label — the SAME micro-type, not a quieter one.
+     * The line beside the label: the date, the state, the amount that was
+     * asked for — whatever this stage's one sentence is.
      *
-     * It was set at `colorTextQuaternary` to keep it secondary to the label,
-     * and at 11px that is a date you can see is there and cannot read. The
-     * middot does the separating; the two halves are one line of label and
-     * both have to be legible.
+     * SAME COLOUR AS THE LABEL, and NOT uppercase. It was `colorTextQuaternary`
+     * first, and at 11px that is a line you can see is there and cannot read.
+     * The caps came off for a different reason: the label is a NAME and wears
+     * the product's caps, this is a SENTENCE — "You asked for $1,440.00" set
+     * solid in caps is a notice, not a footnote. Mixed case also tells the two
+     * halves apart without a second colour doing it.
      */
-    labelAside: figures.microLabel,
+    labelAside: {
+      ...figures.microLabel,
+      textTransform: "none",
+      letterSpacing: "normal",
+      fontSize: 12,
+    },
     /**
      * The same label in the facts grid, without the 8 under it.
      *
@@ -115,7 +123,9 @@ export const getStyles = (token: GlobalToken) => {
     /** The one number the page exists to answer. Same 36 as the outstanding
      *  balance on /payments. */
     figure: figures.figureLg,
-    /** The line under the figure: when it is due, or what is happening now. */
+    /** The same sentence in its other home, under the figure — see
+     *  `labelAside` in the component. A step larger there, because it is a
+     *  line of its own rather than the tail of the label's. */
     caption: { color: token.colorTextDescription, fontSize: 14, marginTop: 8 },
     /** A value in the quiet rows under the track. */
     detail: { fontWeight: 500, fontVariantNumeric: "tabular-nums" },

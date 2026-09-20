@@ -270,7 +270,7 @@ export function LoanOverview({
               title={t("loanPage.statement")}
               label={t("loanPage.amount")}
               value={application.amount}
-              caption={t("loanPage.submittedOn", { date: application.submittedOn })}
+              labelAside={t("loanPage.submittedOn", { date: application.submittedOn })}
               facts={[
                 /* A reference is eight characters; a third of the panel is
                    what pushed the service that far right, with nothing in
@@ -392,32 +392,16 @@ export function LoanOverview({
           title: t("loanPage.statement"),
           label: t("loanPage.nextPayment"),
           /* SHORT: "Oct 01", not "Oct 01, 2026". The year is under the track
-             in "final payment Sep 01, 2027", and beside an 11px label a
-             four-digit year is the longest thing on the line for the least.
-             The dates in this prototype are written as English strings in the
-             mock and never localised, so dropping a trailing ", YYYY" is
-             exactly as safe as the data it reads. */
+             in "ends Sep 01, 2027", and beside the label a four-digit year is
+             the longest thing on the line for the least. The dates in this
+             prototype are written as English strings in the mock and never
+             localised, so dropping a trailing ", YYYY" is exactly as safe as
+             the data it reads. */
           labelAside:
             paidCount === totalCount && totalCount > 0
-              ? undefined
+              ? t("payments.nothingDue")
               : loan.nextPaymentOn.replace(/,\s*\d{4}$/, ""),
           value: loan.nextPayment,
-          /*
-            NO DUE DATE UNDER THE FIGURE — *"ეს ტექსტი არ დაგვჭირდება მაგ
-            კონტენერში."* On a funded loan the card already dates itself
-            twice: "REPAYMENT STARTS Oct 01, 2026" in the fact row, which IS
-            the first due date, and "final payment Sep 01, 2027" under the
-            track. A third date directly under the figure was the card
-            explaining itself three times.
-
-            The caption survives for exactly one state: nothing left to pay.
-            A $0.00 next payment with no word under it reads as a card that
-            has lost its data rather than a loan that is finished.
-          */
-          caption:
-            paidCount === totalCount && totalCount > 0
-              ? t("payments.nothingDue")
-              : undefined,
           action: { label: t("loanPage.viewSchedule"), onClick: onViewSchedule },
           progress: {
             paid: paidCount,
@@ -444,10 +428,15 @@ export function LoanOverview({
           title: t("loanPage.statement"),
           label: t("loanPage.loanAmount"),
           value: loan.amount,
-          /* THE REDUCTION COMES FIRST, where there was one. Everything else
-             this caption says is about WHERE the loan is; this is about WHAT
-             it is, and the borrower is a click away from signing for it. */
-          caption: loan.requestedAmount
+          /* ON THE LABEL'S LINE, not under the figure — *"ესენი ყველაფერი
+             ზემოთ დაუწერო, როგორც თარიღი უწერია, ყველა სტეპზე."* Every stage
+             of this panel now says its one thing in the same place: beside
+             the label, short.
+
+             THE REDUCTION COMES FIRST, where there was one. Everything else
+             this line says is about WHERE the loan is; this is about WHAT it
+             is, and the borrower is a click away from signing for it. */
+          labelAside: loan.requestedAmount
             ? t("loanPage.approvedInstead", { requested: loan.requestedAmount })
             : loan.stage === "awaitingSignature"
               ? signedByReader

@@ -58,19 +58,35 @@ export type LoanStatementProps = {
   /** What the figure is. */
   label: string;
   /**
-   * A second, quieter half of the label's own line.
+   * THIS STAGE'S ONE SENTENCE, wherever there is room for it.
    *
-   * The date came off the caption under the figure — the card already dates
-   * itself twice below — and the label is where it costs nothing:
-   * "NEXT PAYMENT · OCT 01" is one line of micro-type, not a line of its own.
-   * *"ამის გვერდზე მიუწერე თარიღი, ძაან მოკლედ."* Kept very short on purpose;
-   * the year is under the track.
+   * Every stage of this panel has one — the due date, "Waiting for your
+   * signature", "You asked for $1,440.00" — and it has two homes, chosen by
+   * whether the instalment track is drawn:
+   *
+   *   WITH a track, it goes beside the label: "NEXT PAYMENT · Oct 01". The
+   *   space under the figure belongs to the track, and a line squeezed
+   *   between them separates the number from its own picture.
+   *
+   *   WITHOUT one, it goes under the figure, where a caption belongs and
+   *   where there is nothing else to displace.
+   *
+   * *"სანამ ტრეკერი იქნება, შეგვიძლია ესენი დაბლა ეწეროს; ხოლო როცა
+   * ტრეკერი გამოჩნდება, მაღლა ადის ინფო."* One prop either way — the panel
+   * knows which of its own parts it is drawing, and the caller does not have
+   * to.
    */
   labelAside?: string;
   /** The figure. Already formatted — this component does not do money. */
   value: string;
-  /** One line under the figure: when it is due, or what is happening. */
-  caption?: string;
+  /*
+    THE CAPTION UNDER THE FIGURE IS GONE. Every stage of this panel had one —
+    the due date, "Waiting for your signature", "OPA approved this amount.
+    You asked for $1,440.00." — and they all now sit beside the label as
+    `labelAside`: *"ესენი ყველაფერი ზემოთ დაუწერო, როგორც თარიღი უწერია,
+    ყველა სტეპზე."* One line of the panel instead of two, and the figure sits
+    directly on the block under it.
+  */
   /**
    * The single action the panel offers, if the stage has one.
    *
@@ -116,7 +132,6 @@ export function LoanStatement({
   label,
   labelAside,
   value,
-  caption,
   action,
   progress,
   facts,
@@ -176,7 +191,7 @@ export function LoanStatement({
                 than centring against each other's boxes. */}
             <Flex align="baseline" gap={6} wrap style={styles.labelRow}>
               <Typography.Text style={s.label}>{label}</Typography.Text>
-              {labelAside ? (
+              {labelAside && progress ? (
                 <Typography.Text style={s.labelAside}>
                   {`· ${labelAside}`}
                 </Typography.Text>
@@ -194,8 +209,8 @@ export function LoanStatement({
             it is. *"ეს გავალურჯოთ."*
           */}
             <Typography.Text style={s.figure}>{value}</Typography.Text>
-            {caption ? (
-              <Typography.Text style={s.caption}>{caption}</Typography.Text>
+            {labelAside && !progress ? (
+              <Typography.Text style={s.caption}>{labelAside}</Typography.Text>
             ) : null}
           </Flex>
 

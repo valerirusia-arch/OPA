@@ -181,19 +181,21 @@ export function PaymentsOverview({
         ჰქონდეს... ღილაკი არ იყოს, ტექსტი და აროუ იყოს, და თაითლის მარჯვნივ,
         როგორც წინა კონტეინერზე."*
 
-        THE HEAD NAMES THE FIGURE: "Outstanding balance". It read "Repayment"
-        first, which is both vaguer and taken — the tab under this card is
-        called "Repayment schedule" — and the designer put their finger on it:
-        *"ამის თაითლი სწორია? რაღაც თითქოს არ მოერგო... ან აუთსტენდინგ ბალანს
-        ან რამე მსგავსი."* It is also the WBS's own wording for what this
-        panel is for: "review the current outstanding loan balance".
+        THE HEAD HAS TO COVER FOUR THINGS, not one: the figure, the fees
+        applied to it, what it would take to close the loan today, and when it
+        ends. "Repayment" named none of them and collided with the tab below
+        ("Repayment schedule"). "Outstanding balance" named only the first —
+        and to avoid saying it twice it had to take the label off the figure,
+        which is backwards: the label belongs to the number.
+        *"აუთსტენდინგ ბალანსი დააბრუნე სადაც იყო, და იქ რამე სხვა მოფიქრე,
+        რაც ამას და ქვემოთ არსებულ ინფოებს აერთიანებს."*
 
-        And the micro-label inside the panel goes with it — see `showLabel`.
-        Two lines saying "Outstanding balance" 20px apart is a heading saying
-        what the line below it says.
+        "What you owe" covers all four in plain English, which is the register
+        the rest of this product speaks to borrowers in — and the figure keeps
+        its own label.
       */}
       <Card
-        title={t("payments.outstanding")}
+        title={t("payments.owedTitle")}
         /* Only where there is something payable. A way onward over a settled
            loan is a door onto nothing. */
         extra={
@@ -208,7 +210,7 @@ export function PaymentsOverview({
       >
         {/* `onPay` is withheld on purpose: the head carries the action now,
             and the panel's own button would be the same door twice. */}
-        <BalanceSummary balance={record.balance} next={next} showLabel={false} />
+        <BalanceSummary balance={record.balance} next={next} />
       </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
