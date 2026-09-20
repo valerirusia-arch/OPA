@@ -7,6 +7,9 @@ import type { GlobalToken } from "antd";
 const CARD_INSET = 24;
 
 export const styles = {
+  /** In the head: no end padding, so the link aligns with the head's own edge
+   *  — the same as /loan's two panels. */
+  headAction: { paddingInlineEnd: 0 },
   /** The account's notice, above everything it is about. */
   card: { marginBottom: 24 },
   row: { marginBottom: 24 },

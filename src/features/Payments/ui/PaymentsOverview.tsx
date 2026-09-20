@@ -41,6 +41,7 @@
 import {
   Button, Card, Collapse, Flex, Result, Tabs, Typography, theme,
 } from "antd";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
 import { PageNotice } from "../../../shared/ui/PageNotice";
@@ -168,17 +169,40 @@ export function PaymentsOverview({
         </PageNotice>
       ) : null}
 
-      {/* WBS stories 3 and 10. The page's one figure and the one action.
-          FULL WIDTH now — the saved payment card moved to the profile page, so
-          the balance no longer shares its row and takes the whole width, at the
-          lead inset. NO HEAD: the label lives inside, above the figure, the way
-          the loan page's statement states its own — see BalanceSummary. */}
-      <Card style={styles.card} styles={{ body: leadPanelBody }}>
-        <BalanceSummary
-          balance={record.balance}
-          next={next}
-          onPay={() => onPay?.()}
-        />
+      {/*
+        WBS stories 3 and 10. The page's one figure and the one action.
+
+        IT HAS A HEAD NOW, and the action is in it. The panel was a bare card
+        with the figure's own label inside and a filled orange button pinned
+        in the body's top-right corner; /loan's two panels both carry an antd
+        head — a title on the left, a link with an arrow on the right, a
+        hairline under both — and a borrower moving between the two pages met
+        two different objects. *"იგივე ფეიმენტზეც მინდა რომ თაითლი აქაც
+        ჰქონდეს... ღილაკი არ იყოს, ტექსტი და აროუ იყოს, და თაითლის მარჯვნივ,
+        როგორც წინა კონტეინერზე."*
+
+        The head reads "Repayment" rather than "Your balance": the figure
+        under it is already labelled "Outstanding balance", and a head that
+        repeats the label it sits above is a heading saying what the line
+        below it says.
+      */}
+      <Card
+        title={t("loanPage.repayment")}
+        /* Only where there is something payable. A way onward over a settled
+           loan is a door onto nothing. */
+        extra={
+          next ? (
+            <Button type="link" style={styles.headAction} onClick={() => onPay?.()}>
+              {t("payments.makePayment")} <ArrowRightOutlined />
+            </Button>
+          ) : undefined
+        }
+        style={styles.card}
+        styles={{ body: leadPanelBody }}
+      >
+        {/* `onPay` is withheld on purpose: the head carries the action now,
+            and the panel's own button would be the same door twice. */}
+        <BalanceSummary balance={record.balance} next={next} />
       </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
