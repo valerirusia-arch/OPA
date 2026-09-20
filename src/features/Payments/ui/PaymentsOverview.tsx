@@ -45,9 +45,8 @@ import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
 import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { leadPanelBody } from "../../../shared/ui/panel.styles";
-import { BalanceSummary } from "./BalanceSummary";
-import { NextPaymentPanel } from "./NextPaymentPanel";
+import { RepaymentSummary } from "./RepaymentSummary";
+import { ScheduleMix } from "./ScheduleMix";
 import { PaymentHistory } from "./PaymentHistory";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { getStyles, styles } from "./PaymentsOverview.styles";
@@ -174,71 +173,43 @@ export function PaymentsOverview({
       ) : null}
 
       {/*
-        THE ACCOUNT, AND THE NEXT TRANSACTION ON IT — two panels, not one.
+        THE PAGE'S TOP, REBUILT TO THE REFERENCE THE DESIGNER SENT.
 
-        It was a single card the full width of the page, and measured it was
-        the wrong shape for what it held: one figure in the top-left corner, a
-        button pinned in the top-right, three small facts along the bottom,
-        and about 700px of nothing between them at 1440. Three corners for one
-        block of content. Worse, the two things a borrower opens this page for
-        were the two furthest apart — what I owe, and the button that pays it
-        — and the amount of the next payment was on neither, only in row 4 of
-        the table below.
+        What was here: one white card the full width of the viewport with the
+        outstanding figure in its top-left corner, a button pinned top-right
+        and three small facts along its bottom. Three corners for one block,
+        ~700px of nothing between them at 1440, and no picture of the loan
+        anywhere on the page. Splitting it into two cards only moved the void
+        into the second one.
 
-        So the page splits along the seam that was already there. The balance
-        card keeps the ACCOUNT: the outstanding figure, how far through the
-        schedule it is, and the small print about it (WBS 3, 10, 6). The panel
-        beside it holds the NEXT TRANSACTION: amount, date, and the button
-        (WBS 2, 5). Each block is now one column of related facts read top to
-        bottom, and the action sits on the thing it acts on.
+        Now it is the arrangement the reference uses and it holds together for
+        a reason rather than by resemblance:
 
-        `align="stretch"` and a filling body on both: the two panels share a
+          left (lg 15)  the ANSWER and its detail — one figureLg, a caption
+                        saying what the figure is, and a recessed tray of
+                        small raised boxes carrying the facts about it.
+          right (lg 9)  the SHAPE of the schedule — twelve instalments split
+                        by where each one stands, as a ring with its counts.
+
+        And the action left both cards for the page's title row, which is
+        where the reference puts it and why neither card has a hole in it any
+        more.
+
+        `align="stretch"` with a filling body on both: the two panels share a
         bottom edge whichever is taller, which is what stops the row reading
         as two cards that happen to be adjacent.
       */}
       <Row gutter={[24, 24]} align="stretch" style={styles.row}>
-        <Col xs={24} lg={next ? 16 : 24} style={styles.column}>
-          {/* NO HEAD: the label lives inside, above the figure, the way the
-              loan page's statement states its own — see BalanceSummary. The
-              lead inset of 32 marks this as the card the page is for; the
-              panel beside it keeps antd's 24. */}
-          <Card
-            style={{ ...styles.card, ...styles.stretchCard }}
-            styles={{ body: { ...leadPanelBody, ...styles.fillBody } }}
-          >
-            <BalanceSummary
-              balance={record.balance}
-              /* HOW FAR THROUGH, which this page never said. The dashboard's
-                 copy of this card has drawn it since Epic 6 and /payments —
-                 the page actually about repayment — showed a balance with no
-                 sense of position in the schedule. Counts, from the schedule
-                 itself. */
-              progress={{ paid: paid.length, total: record.schedule.length }}
-              /* The next payment has a panel of its own now; a caption here
-                 naming the same date would be the fact twice, 200px apart. */
-              showNext={false}
-              /* NOT OVER A SETTLED LOAN. BalanceSummary has carried this
-                 switch since it was written and nothing ever threw it, so the
-                 paid-off page answered "$0.00 — nothing left to pay" and then
-                 printed "Pay off today $0.00" and "Final payment due Sep 01,
-                 2027" under it — a closed account billing the borrower for
-                 next September. The small print is about money still owed;
-                 with none owed there is none of it. */
-              showDetails={next !== undefined}
-              fill
-            />
-          </Card>
+        <Col xs={24} lg={15} style={styles.column}>
+          <RepaymentSummary
+            balance={record.balance}
+            next={next}
+            progress={{ paid: paid.length, total: record.schedule.length }}
+          />
         </Col>
-
-        {/* Nothing left to pay leaves no panel and no button, and the balance
-            card takes the whole row back. A primary action over a settled loan
-            is the loudest thing on the page inviting something that cannot be
-            done. */}
-        {next ? (
-          <Col xs={24} lg={8} style={styles.column}>
-            <NextPaymentPanel installment={next} onPay={() => onPay?.()} />
-          </Col>
-        ) : null}
+        <Col xs={24} lg={9} style={styles.column}>
+          <ScheduleMix installments={record.schedule} />
+        </Col>
       </Row>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
