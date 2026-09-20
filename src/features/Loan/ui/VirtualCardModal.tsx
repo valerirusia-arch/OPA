@@ -33,7 +33,7 @@
 // Dumb: it renders what it is handed and reports that it was opened.
 
 import { Flex, Modal, Typography, theme } from "antd";
-import { LockOutlined } from "@ant-design/icons";
+import { CheckOutlined, CopyOutlined, LockOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { Logo } from "../../../shared/ui/Logo";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -84,9 +84,9 @@ export function VirtualCardModal({
          badge; OPA's card is not on a public network the borrower would
          recognise, so it carries OPA's own. */
       value: (
-        <Flex align="center" gap={9}>
+        <Flex align="center" gap={10}>
           <div style={s.typeMark}>
-            <Logo height={16} />
+            <Logo height={18} />
           </div>
           <Typography.Text style={s.rowValue}>{t("loanPage.cardTypeValue")}</Typography.Text>
         </Flex>
@@ -102,10 +102,18 @@ export function VirtualCardModal({
       label: t("loanPage.cardNumber"),
       value: (
         /* The one row worth copying — a card number is read off a screen and
-           typed into a form, and this is the form's way of not being retyped. */
+           typed into a form, and this is the form's way of not being retyped.
+           The glyph hangs on the row's right edge; see `rowValue`. */
         <Typography.Text
           style={{ ...s.rowValue, ...styles.rowValue }}
-          copyable={{ text: pan.replace(/\s/g, ""), tooltips: false }}
+          copyable={{
+            text: pan.replace(/\s/g, ""),
+            tooltips: false,
+            icon: [
+              <CopyOutlined key="copy" style={s.copyIcon} />,
+              <CheckOutlined key="copied" style={s.copiedIcon} />,
+            ],
+          }}
         >
           {pan}
         </Typography.Text>
@@ -133,8 +141,9 @@ export function VirtualCardModal({
       open={open}
       onCancel={onCancel}
       destroyOnHidden
-      width={480}
+      width={600}
       footer={null}
+      styles={{ body: styles.body }}
     >
       <Flex vertical align="center" style={styles.head}>
         {/* The thumbnail: the mark on its tile, the holder along the foot and
@@ -150,9 +159,9 @@ export function VirtualCardModal({
           />
         </div>
 
-        <Typography.Title level={4} style={styles.title}>
+        <Typography.Text style={{ ...s.cardName, ...styles.title }}>
           {t("loanPage.cardTypeValue")}
-        </Typography.Title>
+        </Typography.Text>
       </Flex>
 
       <div style={s.list}>
