@@ -172,7 +172,10 @@ export function CardFace({
       <div style={s.face}>
         <Flex vertical justify="space-between" style={s.faceInner}>
           <div style={marks.mark}>
-            <Logo style={marks.markGlyph} />
+            <div style={marks.markInner}>
+              <span style={marks.markDisc} />
+              <Logo style={marks.markGlyph} />
+            </div>
           </div>
 
           {/* WHAT IT IS, then WHOSE IT IS with the state opposite — two lines,

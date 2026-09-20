@@ -240,29 +240,26 @@ export const getStyles = (token: GlobalToken) => {
  */
 export const getMarkStyles = () => {
   /**
-   * THE MARK'S TILE — the state pill's material, not a white box.
+   * THE MARK'S TILE, AND THE WHITE THAT MAKES THE FLAME A FLAME.
    *
-   * It has been three things: a white square, then nothing with a glow, then
-   * this, then white again, and now this for good. The designer settled it by
-   * naming which white they meant: *"მინდა რომ ეს თეთრი ფერი იჯდეს შუაში, აი
-   * ამ ცეცხლის შუაში, მაგრამ გარედან ეს თეთრი ბექგრაუნდი ჰქონდეს, როგორც
-   * 'Not used'-ს აქვს."* The white belongs to the FLAME, which is the mark's
-   * own drawing; the box around it belongs to the card.
+   * The tile is `cardDarkPill`, the translucent white the state pill is cut
+   * from, so the two things printed on this face are one material —
+   * *"20% ბექგრაუნდი, შიგნით თეთრი ფერი."*
    *
-   * `cardDarkPill` is the translucent WHITE the state pill is cut from, so the
-   * two things printed on this face are made of one material and the mark sits
-   * ON the card rather than in a sticker stuck to it.
+   * THE DISC UNDER THE MARK IS NOT DECORATION. The brand symbol is a teal
+   * disc with the flame CUT OUT of it — sampled, `opa-symbol.png` holds two
+   * colours, #125A70 and #0089A1, and no white at all. The flame is a hole,
+   * and a hole shows whatever is behind it. That is why the mark looked right
+   * on a solid white tile and wrong on every translucent one: the flame was
+   * showing the card. A white circle behind the glyph gives the hole
+   * something to be, and the teal disc covers the rest of it.
    *
-   * It was a translucent DARK for one pass, and that lost the drawing: a dark
-   * disc inside a dark tile put the white flame — the whole point of the mark
-   * — on a ground nearly its own value. *"შიგნით უნდა დაგეტოვა თეთრი ფერი,
-   * ცეცხლში შიგნით."* Over a mid ground both the disc and the flame read.
+   * 88% and centred: the symbol's opaque bounds run x 9–247 of a 256 frame,
+   * so a circle at 88% sits inside the disc everywhere and cannot leave a
+   * white rim around it.
    *
-   * Sized in `cqw` like everything else on the face — 12% of the card's own
-   * width, a 34px tile on the 285 card /loan draws. It was 17% and then 14%,
-   * and both were a tile the eye reached before the card's own name:
-   * *"ლოგოც დიდია."* 12 is what the designer's own picture measures, where
-   * the mark takes 11.7% of the card and carries no tile at all.
+   * The right fix is still a knockout mark from OPA in `src/assets/brand/`.
+   * This is the honest way to draw the one we have.
    */
   const tile: CSSProperties = {
     flex: "none",
@@ -279,7 +276,16 @@ export const getMarkStyles = () => {
     mark: tile,
     /** The same tile; the thumbnail differs only in the card's width. */
     markSmall: tile,
-    /** The mark fills its tile — see the note on `style` in Logo. */
-    markGlyph: { width: "100%", height: "100%" } satisfies CSSProperties,
+    /** The positioning context for the white disc and the glyph over it. */
+    markInner: { position: "relative", width: "100%", height: "100%" },
+    /** What the flame's cut-out shows. See the note above. */
+    markDisc: {
+      position: "absolute",
+      inset: "6%",
+      borderRadius: "50%",
+      background: brand.cardDarkInk,
+    },
+    /** The mark itself, over the disc — see the note on `style` in Logo. */
+    markGlyph: { position: "absolute", inset: 0, width: "100%", height: "100%" },
   } satisfies Record<string, CSSProperties>;
 };
