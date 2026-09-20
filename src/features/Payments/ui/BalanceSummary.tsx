@@ -270,7 +270,9 @@ export function BalanceSummary({
                figure below it, not an item in a list of statuses — see the
                note on `bare` in StatusPill.styles.ts. */
             <StatusPill bare color={status.tone === "error" ? "error" : "warning"}>
-              {status.label}
+              {pastDue
+                ? `${status.label} · ${t("payments.pastDueInline", { amount: pastDue })}`
+                : status.label}
             </StatusPill>
           ) : null}
         </Flex>

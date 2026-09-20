@@ -41,9 +41,9 @@ import { Button, Card, Flex, Typography } from "antd";
 import {
   ArrowRightOutlined,
   BankOutlined,
-  CreditCardOutlined,
-  FileTextOutlined,
-  HistoryOutlined,
+  CalendarOutlined,
+  DollarCircleOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 
 import { useNavigate } from "@tanstack/react-router";
@@ -56,7 +56,7 @@ import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal"
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
 import { ApplicationProgress } from "../../features/Dashboard/ui/ApplicationProgress";
 import { StageFoot } from "../../features/Dashboard/ui/StageFoot";
-import { ShortcutTiles } from "../../features/Dashboard/ui/ShortcutTiles";
+import { FactTiles } from "../../features/Dashboard/ui/FactTiles";
 import { PaymentHistory } from "../../features/Payments/ui/PaymentHistory";
 import { NoLoanMark } from "../../features/Loan/ui/NoLoanMark";
 import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
@@ -113,16 +113,20 @@ export default function DashboardScreen({
   const recent = payments ? payments.history.slice(0, 5) : [];
 
   /*
-    THE FOUR TILES, each carrying the fact its page is about.
+    THE FOUR FACTS.
 
-    The card tile is the one that differs by reader, and it has to: the WBS
-    gives the virtual card to the borrower alone — "Co-borrower has no access
-    to card information" — while both of them have a repayment card of their
-    own. So the borrower's third tile is the card OPA issued them and the
-    co-borrower's is the card they pay from. Neither is shown the other's.
+    They were four ways INTO other pages — the card, the schedule, the
+    documents — each carrying a figure so the band said something on its way.
+    The designer has moved the loan's own money facts into them instead:
+    *"ეს 3 რაღაცა მინდა აქ გადმოიტანო ამათში."* What the band states now is
+    one thing in four parts — what was borrowed, what it has cost, what would
+    close it today, when it ends — which is why none of them is a link.
+
+    They come off /payments' balance card, which is where they were, and they
+    are not left behind there as well: WBS story 6's payoff and story 10's
+    applied fees now live on this page. The schedule, the history and the
+    rules stay on /payments; these four are the summary of them.
   */
-  const ownCard = payments?.cards.find((card) => card.owner === viewer.role && card.active);
-
   const tiles = [
     {
       key: "loan",
@@ -130,53 +134,24 @@ export default function DashboardScreen({
       label: t("dashboard.tileLoan"),
       value: loan?.amount ?? record?.amount,
       hint: loan ? t("dashboard.tileLoanHint", { apr: loan.apr }) : undefined,
-      to: "/loan",
-    },
-    viewer.role === "borrower"
-      ? {
-          key: "card",
-          icon: <CreditCardOutlined />,
-          label: t("dashboard.tileCard"),
-          value: loan?.card
-            ? t(loan.card.used ? "dashboard.tileCardUsed" : "dashboard.tileCardUnused")
-            : undefined,
-          hint: loan?.card ? `•••• ${loan.card.last4}` : undefined,
-          to: "/loan",
-        }
-      : {
-          key: "card",
-          icon: <CreditCardOutlined />,
-          label: t("dashboard.tileRepaymentCard"),
-          value: ownCard ? `•••• ${ownCard.last4}` : undefined,
-          hint: ownCard ? ownCard.brand : undefined,
-          to: "/payments",
-        },
-    {
-      key: "payments",
-      icon: <HistoryOutlined />,
-      label: t("dashboard.tilePayments"),
-      value: payments
-        ? t("dashboard.tilePaymentsValue", {
-            paid: String(paidCount),
-            total: String(payments.schedule.length),
-          })
-        : undefined,
-      /* NO HINT HERE, and the other three keep theirs.
-         "3 of 12 paid" is the whole question this tile answers. The next due
-         date is not a second half of it — it is a fact this page already
-         states twice more, in the balance card's own caption and as the first
-         dated row of "What happens next". The APR and the card's last four
-         stay on their tiles because nothing else on this page says them. */
-      to: "/payments",
     },
     {
-      key: "documents",
-      icon: <FileTextOutlined />,
-      label: t("dashboard.tileDocuments"),
-      value: record
-        ? t("dashboard.tileDocumentsValue", { count: String(record.documents.length) })
-        : undefined,
-      to: "/loan",
+      key: "fees",
+      icon: <DollarCircleOutlined />,
+      label: t("payments.feesApplied"),
+      value: payments?.balance.fees,
+    },
+    {
+      key: "payoff",
+      icon: <WalletOutlined />,
+      label: t("payments.payoffToday"),
+      value: payments?.balance.payoff,
+    },
+    {
+      key: "maturity",
+      icon: <CalendarOutlined />,
+      label: t("payments.maturity"),
+      value: payments?.balance.maturityOn,
     },
   ];
 
@@ -272,7 +247,13 @@ export default function DashboardScreen({
                      Settled, the card is the figure and the sentence under
                      it — which is the whole truth at that point. */
                   progress={nextDue ? { paid: paidCount, total: payments.schedule.length } : undefined}
-                  showDetails={nextDue !== undefined}
+                  /* THE THREE FIGURES MOVED TO THE TILES under this card —
+                     see `tiles`. Printing them here as well would be the same
+                     band twice, 40px apart. The past-due amount did not move
+                     with them: it folds into the state pill on the label's
+                     line, because it is the reason for the state rather than
+                     a fourth fact about the loan. */
+                  showDetails={false}
                   next={nextDue}
                   onPay={nextDue ? () => navigate({ to: "/payments" }) : undefined}
                 />
@@ -357,11 +338,7 @@ export default function DashboardScreen({
                 dashboard nobody learns. What an empty tile does NOT do is
                 print a dash: it shows its label and waits. */}
             <div style={styles.band}>
-              <ShortcutTiles
-                items={tiles}
-                emptyValue={t("dashboard.tileNothing")}
-                onOpen={(to) => navigate({ to })}
-              />
+              <FactTiles items={tiles} emptyValue={t("dashboard.tileNothing")} />
             </div>
 
             {/*

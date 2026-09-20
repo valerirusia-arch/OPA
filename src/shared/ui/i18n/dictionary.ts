@@ -1676,6 +1676,15 @@ export const en = {
      WBS story 10's "overdue payment information" where the borrower is
      already reading what they owe. */
   "payments.pastDueLabel": "Past due",
+  /* THE PAST-DUE AMOUNT, FOLDED INTO THE STATE. The three figures under the
+     balance moved to the dashboard's tiles and the past-due one could not go
+     with them: it is not a fact about the loan, it is the reason the account
+     is in the state the pill beside it names. So the pill carries both —
+     "In default · 96 days · $376.95 past due" — one red line instead of a
+     red pill and a red figure two inches apart. *"როცა აქ წითელი ინფო
+     ჩნდება, შეეცადე მოათავსო თაითლის გვერდზე... ორივე რომ შეაჯამო, მოკლედ
+     ჩაატიო."* */
+  "payments.pastDueInline": "{amount} past due",
   /* THE PERCENTAGE, AND NOTHING ELSE. It read "{percent}% repaid · {paid} of
      {total} instalments", which put three facts under a bar that draws one —
      and the instalment count is the Payments tile's own sentence. A bar needs
@@ -3098,6 +3107,7 @@ const es: Record<TranslationKey, string> = {
   "payments.stateDefault": "En mora · {days} días",
   "payments.stateAccelerated": "Acelerado · {days} días",
   "payments.pastDueLabel": "Vencido",
+  "payments.pastDueInline": "{amount} vencidos",
   "payments.progressLine": "{percent}%",
   "payments.progressCount": "{paid} de {total} pagadas",
 

@@ -1,4 +1,4 @@
-// src/features/Dashboard/ui/ShortcutTiles.styles.ts
+// src/features/Dashboard/ui/FactTiles.styles.ts
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
@@ -7,11 +7,11 @@ import { getFigureStyles } from "../../../shared/ui/figures.styles";
 
 export const styles = {
   inner: { width: "100%", height: "100%" },
-  /** The chevron is pushed to the end of this row; the label and its mark
-   *  stay together at the start, as `labelGroup`. */
+  /** The label's row. It held a chevron at its far end while these tiles were
+   *  links; what is left is the mark and the word. */
   labelRow: { width: "100%" },
   /** `minWidth: 0` so a long label ellipses inside the group rather than
-   *  shoving the chevron off the cell. */
+   *  overflowing the cell. */
   labelGroup: { minWidth: 0 },
   /**
    * 12, and it is the one place in the product set below 13.
@@ -54,8 +54,12 @@ export const getStyles = (token: GlobalToken) => {
      * `auto` its cell came out 23px shorter than the other three and its
      * hairline stopped short of theirs — a ragged rule in a row of four.
      */
+    /* NOT A BUTTON ANY MORE, so it states the border a Button used to bring
+       with it. The hover and the chevron went with the link — see FactTiles. */
     tile: {
       display: "block",
+      boxSizing: "border-box",
+      border: `1px solid ${token.colorBorderSecondary}`,
       width: "100%",
       /* Equal heights across the row, from the Row's own stretch rather than
          from a floor. The 148px minimum that used to be here held open about
@@ -74,30 +78,6 @@ export const getStyles = (token: GlobalToken) => {
       boxShadow: brand.shadowRest,
     },
     /**
-     * THE SAME CARD UNDER THE POINTER — same place, same colour.
-     *
-     * Two versions were rejected before this one, and both for the same
-     * reason: they changed the card instead of acknowledging the pointer.
-     * Lifting it to the product's full card shadow gave four tiles a 28px
-     * cast to take in turn, and the band heaved. Washing it with the page's
-     * lightest fill turned a white card grey — *"ჰოვერზე ეს ფერი არ
-     * მომწონს"*.
-     *
-     * So nothing moves and nothing is tinted: the card's own outline comes
-     * forward one step, and the chevron travels 2px toward where it is about
-     * to take you. That is the whole affordance, and it is the quietest one
-     * that still exists.
-     *
-     * The ink is pinned here too, because antd's default Button would
-     * otherwise turn its border and its text the accent colour on hover —
-     * a form control announcing itself, on a band that was taken off blue
-     * deliberately.
-     */
-    tileRaised: {
-      borderColor: brand.borderHover,
-      color: token.colorText,
-    },
-    /**
      * The label's mark.
      *
      * It was a 40px square filled with `colorFillQuaternary`. An icon at the
@@ -106,17 +86,6 @@ export const getStyles = (token: GlobalToken) => {
      * glyph sitting on a text baseline.
      */
     mark: { color: token.colorTextTertiary, fontSize: 14, flex: "none" },
-    /** The "this goes somewhere" mark. Quieter than the label it ends, because
-     *  it is an affordance and not a word. */
-    chevron: { color: token.colorTextQuaternary, fontSize: 12, flex: "none" },
-    /** Darker, and two pixels along. The distance is the point: it is the
-     *  smallest movement that reads as "this goes somewhere". */
-    chevronRaised: {
-      color: token.colorTextTertiary,
-      fontSize: 12,
-      flex: "none",
-      transform: "translateX(2px)",
-    },
     /** The product's own label treatment, so a tile reads like every other
      *  labelled figure in the app. */
     label: { ...figures.microLabel, display: "block" },

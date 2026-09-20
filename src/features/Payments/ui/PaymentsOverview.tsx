@@ -210,7 +210,12 @@ export function PaymentsOverview({
       >
         {/* `onPay` is withheld on purpose: the head carries the action now,
             and the panel's own button would be the same door twice. */}
-        <BalanceSummary balance={record.balance} next={next} />
+        {/* NO DETAIL STRIP. Fees applied, pay off today and the final payment
+            date moved to the dashboard's fact tiles and are not kept here as
+            well — *"ეს 3 რაღაცა მინდა აქ გადმოიტანო."* What is left is what
+            this page's first card is for: the figure and when the next
+            payment is due. */}
+        <BalanceSummary balance={record.balance} next={next} showDetails={false} />
       </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an

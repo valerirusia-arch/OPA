@@ -1,56 +1,42 @@
-// src/features/Dashboard/ui/ShortcutTiles.tsx
+// src/features/Dashboard/ui/FactTiles.tsx
 //
-// The dashboard's first band: four facts, each a way into the page that owns
-// it.
+// The dashboard's first band: four facts about the loan, side by side.
 //
-// THE WIREFRAME DRAWS FOUR LABELS. Loan amount, Virtual card, Payment history,
-// Documents — an icon and a word each, 286 × 128. Drawn that way they are four
-// links to pages the top navigation already lists, occupying the most valuable
-// band on the page to say nothing a reader did not already know.
+// THEY WERE FOUR LINKS AND THEY ARE NOT ANY MORE. The wireframe drew four
+// labels — Loan amount, Virtual card, Payment history, Documents — each a way
+// into the page that owns it, and each carrying its own figure so the band
+// answered something instead of repeating the navigation.
 //
-// So each one carries ITS OWN FIGURE: the amount, whether the card has been
-// used, how far through the schedule, how many documents. Same four facts,
-// same destinations — and the first thing on the page answers three questions
-// instead of repeating the navigation. *"მონაცემიც ჩავსვათ მათში."*
+// The designer has taken the navigation out of them: *"არ უნდა იყოს
+// ინტერაქციული, ანუ აროუ როა ამოიღე და ჰოვერზე როა რაღაცა ეგეც ამოიღე."*
+// What the band carries now is the loan's own money facts — the amount, the
+// fees applied to it, what would close it today, when it ends — and those are
+// not four destinations, they are one statement in four parts. Nothing is
+// lost: the pages they used to link to are in the top navigation, one click
+// away and named.
 //
-// ─────────────────────────────────────────────────────────────────────────
-// WHAT MADE THE BAND HEAVY, AND WHAT DID NOT.
+// So the Button is gone with the chevron and the hover, and with them the
+// reasons they existed:
 //
-// It was four bordered cards, each with a 40px grey square holding an icon,
-// on a 148px floor. The designer called the band visually heavy and asked for
-// as light and clean as it can be. Three things were doing the weight and
-// none of them was the border:
+//   · A TILE WAS A BUTTON because it went somewhere, and antd's focus ring,
+//     keyboard behaviour and hover came with that. A fact goes nowhere; a
+//     control that does nothing is worse than no control.
+//   · THE CHEVRON said "pressable" at rest, for a touch screen with no hover
+//     to reveal it. With nothing to press it would be a promise the tile
+//     cannot keep.
 //
-//   · a filled grey square INSIDE each bordered card — a surface on a surface,
-//     four times over, decorating a label that already says the word;
-//   · a 148px floor under content about 70px tall, so most of the band was
-//     air held open by a box;
-//   · the figures at 20px, which made four navigation numbers the loudest
-//     thing on the page after the balance.
+// WHAT SURVIVED, and why. Four separate cards rather than one divided by
+// hairlines: *"ესენი შეერთებული რომ არის არ მომწონს."* The light treatment
+// that replaced a heavier one — no 40px icon chip, no 148px floor, figures at
+// 18 rather than 20 — is all still right, and none of it was about the link.
 //
-// All three are gone. The middle pass also merged the four into ONE card
-// divided by hairlines, and that is the one part the designer sent back:
-// *"ესენი შეერთებული რომ არის არ მომწონს."* Four things that go to four
-// places are four cards. They are simply light ones now.
-//
-// A TILE IS A BUTTON. It goes somewhere, so it is a control: antd's focus
-// ring, keyboard behaviour and hover come with that, and none of them come
-// with a div that happens to have an onClick.
-//
-// AND IT SAYS SO AT REST. An earlier pass leaned on the hover fill alone to
-// mean "pressable", which is a cue that does not exist on a touch screen —
-// four routes that looked like four read-only facts to anybody on a phone.
-// A chevron at the end of the label row costs one quiet glyph and is the
-// convention for exactly this.
-//
-// Dumb: tiles in, a callback out.
+// Dumb: facts in, nothing out.
 
-import { useState, type ReactNode } from "react";
-import { Button, Col, Flex, Row, Skeleton, Typography, theme } from "antd";
-import { RightOutlined } from "@ant-design/icons";
-import { getStyles, styles } from "./ShortcutTiles.styles";
+import type { ReactNode } from "react";
+import { Col, Flex, Row, Skeleton, Typography, theme } from "antd";
+import { getStyles, styles } from "./FactTiles.styles";
 
-export type Shortcut = {
+export type Fact = {
   key: string;
   icon: ReactNode;
   label: string;
@@ -64,11 +50,10 @@ export type Shortcut = {
   value?: string;
   /** One quieter line under it, where the figure needs a qualifier. */
   hint?: string;
-  to: string;
 };
 
-export type ShortcutTilesProps = {
-  items: Shortcut[];
+export type FactTilesProps = {
+  items: Fact[];
   /**
    * What a tile MEANS when it has no figure yet.
    *
@@ -80,17 +65,11 @@ export type ShortcutTilesProps = {
    * repetitions cost nothing.
    */
   emptyValue?: string;
-  onOpen?: (to: string) => void;
 };
 
-export function ShortcutTiles({ items, emptyValue, onOpen }: ShortcutTilesProps) {
+export function FactTiles({ items, emptyValue }: FactTilesProps) {
   const { token } = theme.useToken();
   const s = getStyles(token);
-  /* WHICH TILE IS UNDER THE POINTER OR THE CARET. Local, presentational, and
-     the only state this component has: a hover that has to change a border,
-     a shadow and a child's transform at once cannot be left to antd's own
-     default-button hover, which would turn the whole card accent-coloured. */
-  const [raised, setRaised] = useState<string | null>(null);
 
   return (
     /* Four across on a desktop, two on a tablet, one on a phone, and the
@@ -100,13 +79,8 @@ export function ShortcutTiles({ items, emptyValue, onOpen }: ShortcutTilesProps)
     <Row gutter={[24, 24]}>
       {items.map((item) => (
         <Col key={item.key} xs={24} sm={12} lg={6}>
-          <Button
-            style={raised === item.key ? { ...s.tile, ...s.tileRaised } : s.tile}
-            onMouseEnter={() => setRaised(item.key)}
-            onMouseLeave={() => setRaised((key) => (key === item.key ? null : key))}
-            onFocus={() => setRaised(item.key)}
-            onBlur={() => setRaised((key) => (key === item.key ? null : key))}
-            onClick={() => onOpen?.(item.to)}
+          <div
+            style={s.tile}
             aria-label={item.value || !emptyValue ? undefined : `${item.label}. ${emptyValue}`}
           >
             {/* 12 UNDER THE LABEL, 6 UNDER THE FIGURE. Three lines at a flat
@@ -136,12 +110,6 @@ export function ShortcutTiles({ items, emptyValue, onOpen }: ShortcutTilesProps)
                     {item.label}
                   </Typography.Text>
                 </Flex>
-                {/* At the end of the row rather than on a line of its own:
-                    the vertical rhythm is label, figure, hint, and an
-                    affordance is not one of the three. */}
-                <RightOutlined
-                  style={raised === item.key ? s.chevronRaised : s.chevron}
-                />
               </Flex>
 
               {/* THE QUALIFIER SITS BESIDE THE FIGURE, NOT UNDER IT. "1.00%
@@ -167,11 +135,11 @@ export function ShortcutTiles({ items, emptyValue, onOpen }: ShortcutTilesProps)
                 ) : null}
               </Flex>
             </Flex>
-          </Button>
+          </div>
         </Col>
       ))}
     </Row>
   );
 }
 
-export default ShortcutTiles;
+export default FactTiles;
