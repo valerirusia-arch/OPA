@@ -36,9 +36,12 @@ export type VirtualCardPanelProps = {
   /** The network USIO issued it on, where OPA has said which. Absent, the
    *  face prints the issuer line instead. */
   brand?: string;
-  last4: string;
-  /** MM/YY, printed in the foot's right-hand corner. */
-  expiry: string;
+  /*
+    NEITHER THE LAST FOUR NOR THE EXPIRY ARE PROPS ANY MORE — the face stopped
+    printing digits and the panel wanted them for nothing else. Both still
+    reach the screen, in the details dialog, from the same record the screen
+    reads.
+  */
   /** The name printed along the foot, where a card carries it. */
   cardholder: string;
   /** Once it is, story 9's cancellation window has closed. */
@@ -51,8 +54,6 @@ export type VirtualCardPanelProps = {
 export function VirtualCardPanel({
   title,
   brand,
-  last4,
-  expiry,
   cardholder,
   used,
   fill = false,
@@ -83,22 +84,17 @@ export function VirtualCardPanel({
           and there is no "card ending" label above the digits: a masked
           number does not need to be introduced as one. */}
       <Flex vertical justify={fill ? "center" : "flex-start"} style={styles.body}>
-        {/* OPA'S OWN FRONT: the mark, whether the card has been spent, and the
-            masked number. The expiry and the rest are USIO's and appear only
-            on the revealed face inside the dialog. */}
+        {/* OPA'S OWN FRONT: the mark on its tile, the card's name along the
+            foot, the holder under it and the state in the corner opposite.
+            No digits — see the note on `front` in CardFace. */}
         <CardFace
           front
           brand={brand}
-          label={t("loanPage.cardIssuer")}
+          label={t("loanPage.cardTypeValue")}
           status={{
             label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused"),
           }}
-          number={t("payments.cardEnding", { last4 })}
-          /* The foot: the name on the left, the expiry in the corner. */
-          facts={[
-            { key: "holder", label: t("loanPage.cardholder"), value: cardholder },
-            { key: "expires", label: t("loanPage.cardExpires"), value: expiry },
-          ]}
+          facts={[{ key: "holder", label: t("loanPage.cardholder"), value: cardholder }]}
         />
 
         {/* PRODUCT.md's fourth principle: name the hand-over. This is where

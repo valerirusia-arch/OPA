@@ -56,14 +56,6 @@ export const styles = {
   /** Nudges the padlock onto the first line's own optical centre. */
   issuerIconBox: { marginTop: 3 },
   issuerText: { fontSize: 12 },
-  /** The number and its copy affordance share a line. */
-  rowValue: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-  },
 } satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) =>
@@ -121,9 +113,9 @@ export const getStyles = (token: GlobalToken) =>
      * Blue says "this is a link to somewhere"; this is an action on the row
      * it sits in, and grey is what the rest of the product gives those.
      */
-    copyIcon: { color: token.colorTextTertiary, fontSize: 16 },
+    copyIcon: { color: token.colorTextSecondary, fontSize: 18 },
     /** The moment after. Green, and the only time this control has a colour. */
-    copiedIcon: { color: token.colorSuccess, fontSize: 16 },
+    copiedIcon: { color: token.colorSuccess, fontSize: 18 },
     /** The mark beside "OPA Virtual Card" in the type row — the reference puts
      *  the network's badge here; OPA's card carries OPA's. */
     typeMark: {

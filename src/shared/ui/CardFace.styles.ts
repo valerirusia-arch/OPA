@@ -139,6 +139,18 @@ export const getStyles = (token: GlobalToken) => {
       background: ground,
       boxShadow: brand.shadowCard,
     },
+    /**
+     * THE CARD'S NAME along the foot of the front — the biggest thing printed
+     * on that face, because on that face it is the only thing that says what
+     * the object is.
+     *
+     * It has the width to itself: the holder and the state share the line
+     * BELOW it, so 22 never has to be traded against a pill.
+     */
+    plate: { fontSize: 22, fontWeight: 600, color: ink, letterSpacing: "0.01em" },
+    /** Whose card it is, under the name, in the finish's quiet ink — the way
+     *  a real card prints the holder under the product's name. */
+    plateSub: { fontSize: 15, color: quiet, letterSpacing: "0.02em" },
     /** The state on a thumbnail: the same pill, at the size that face can
      *  carry. It is the only thing printed on the nameplate besides the mark
      *  — see the note at the call site. */

@@ -100,12 +100,21 @@ export function VirtualCardModal({
     {
       key: "number",
       label: t("loanPage.cardNumber"),
-      value: (
-        /* The one row worth copying — a card number is read off a screen and
-           typed into a form, and this is the form's way of not being retyped.
-           The glyph hangs on the row's right edge; see `rowValue`. */
+      value: <Typography.Text style={s.rowValue}>{pan}</Typography.Text>,
+      /* THE ONE ROW WORTH COPYING — a card number is read off a screen and
+         typed into a form, and this is the form's way of not being retyped.
+         It is the ROW's action, so it is centred against the whole row rather
+         than against the digits: inside the value it sat on the number's own
+         line, a third of the way down a 64px row, level with nothing.
+         *"ეს აიქონი შუაში აწიე."*
+
+         A `Typography.Text` with no children renders antd's copy button and
+         nothing else, so the clipboard, the copied state and the accessible
+         label all stay antd's and only the placement is ours. The glyph is
+         antd's own `CopyOutlined`, passed explicitly rather than left to the
+         default. */
+      action: (
         <Typography.Text
-          style={{ ...s.rowValue, ...styles.rowValue }}
           copyable={{
             text: pan.replace(/\s/g, ""),
             tooltips: false,
@@ -114,9 +123,7 @@ export function VirtualCardModal({
               <CheckOutlined key="copied" style={s.copiedIcon} />,
             ],
           }}
-        >
-          {pan}
-        </Typography.Text>
+        />
       ),
     },
     {
@@ -171,13 +178,17 @@ export function VirtualCardModal({
       <div style={s.list}>
         {rows.map((row, index) => (
           <Flex
-            vertical
-            gap={2}
+            align="center"
+            justify="space-between"
+            gap={16}
             key={row.key}
             style={index < rows.length - 1 ? s.rowRuled : s.row}
           >
-            <Typography.Text style={s.rowLabel}>{row.label}</Typography.Text>
-            {row.value}
+            <Flex vertical gap={2}>
+              <Typography.Text style={s.rowLabel}>{row.label}</Typography.Text>
+              {row.value}
+            </Flex>
+            {"action" in row ? row.action : null}
           </Flex>
         ))}
       </div>

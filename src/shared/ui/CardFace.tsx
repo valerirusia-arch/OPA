@@ -88,7 +88,7 @@ export type CardFaceProps = {
   /** Top right: one word about its state. `color` is an antd Tag colour. */
   status?: { label: string; color?: string };
   /** The masked number. `•••• 1234` — the shorthand, not the full mask. */
-  number: string;
+  number?: string;
   /**
    * The small print along the foot.
    *
@@ -123,16 +123,20 @@ export type CardFaceProps = {
    */
   nameplate?: boolean;
   /**
-   * THE FRONT OF OPA'S OWN CARD, as OPA prints it.
+   * THE FRONT OF OPA'S OWN CARD, as the designer drew it.
    *
-   * Three things and no more: the mark top left, the card's state top right,
-   * and the masked number along the foot. Those are facts OPA is allowed to
-   * hold — a token's last four and whether it has been spent — so the front
-   * may carry them. What it may not carry is the rest: the WBS puts the full
-   * number, the expiry and the security code behind USIO's secure embedded
-   * view, and they arrive on the revealed face instead.
+   * Four things: the mark on its tile at the top; along the foot, the card's
+   * own name, the holder under it, and the state in the opposite corner.
    *
-   * `facts` is still accepted and simply not printed here.
+   * NO DIGITS — *"არ მინდა რამე ციფრები ეწეროს გარედან."* The masked last
+   * four and the expiry were printed here, and taking them off is a drawing
+   * call rather than a privacy one: both are facts OPA holds. But a card face
+   * with a number on it invites a reader to use that number, and this one
+   * cannot be used. The one that can is in the details dialog, with the
+   * expiry and the security code, where USIO hands them over.
+   *
+   * `number` is accepted and not printed here; the holder comes from the
+   * first of `facts`.
    */
   front?: boolean;
 };
@@ -191,46 +195,29 @@ export function CardFace({
   if (front) {
     return (
       <Flex vertical justify="space-between" gap={20} style={s.face}>
-        <Flex align="flex-start" justify="space-between" gap={12}>
-          <div style={front_.mark}>
-            <Logo height={30} />
-          </div>
-          {/* Top right, printed on the card rather than stuck to it — the same
-              pill cut from the face's own material that the revealed card
-              wears. It was in the panel's head; the designer put it back on
-              the card, where a card's own state belongs. */}
-          {status ? (
-            <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
-              {status.label}
-            </Tag>
-          ) : null}
-        </Flex>
+        <div style={front_.mark}>
+          <Logo height={30} />
+        </div>
 
-        {/* THE NUMBER, THEN THE FOOT — a card's own arrangement.
-
-            The masked number was alone on the bottom line; it moves up a step
-            and the line under it carries the two things printed along the foot
-            of a real card: the name on the left, the expiry in the corner
-            opposite. *"სადაც ანგარიში წერია, მანდ სახელი დააწერე; ანგარიში
-            ოდნავ მაღლა აწიე; და დეითი მარჯვენა კუთხეში დაბლა."*
-
-            VALUES ONLY, no labels: a card does not introduce its own expiry,
-            and the two are told apart by where they sit. `facts` in order —
-            the first left, the last right — so the caller decides what is
-            printed by what it passes, and passing one prints one. */}
-        <Flex vertical gap={14}>
-          <Typography.Text style={s.number}>{number}</Typography.Text>
-
-          {facts.length > 0 ? (
-            <Flex align="flex-end" justify="space-between" gap={16}>
-              <Typography.Text style={s.footValue}>{facts[0].value}</Typography.Text>
-              {facts.length > 1 ? (
-                <Typography.Text style={s.footValue}>
-                  {facts[facts.length - 1].value}
-                </Typography.Text>
-              ) : null}
-            </Flex>
-          ) : null}
+        {/* WHAT IT IS, then WHOSE IT IS with the state opposite — two lines,
+            not one. On one line the name and the state competed for the width
+            and the card's own title had nowhere to go; stacked, the title
+            gets the face to itself and the pair under it reads as its
+            caption. */}
+        <Flex vertical gap={4}>
+          <Typography.Text style={s.plate}>{label}</Typography.Text>
+          <Flex align="center" justify="space-between" gap={12}>
+            {facts.length > 0 ? (
+              <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
+            ) : (
+              <span />
+            )}
+            {status ? (
+              <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
+                {status.label}
+              </Tag>
+            ) : null}
+          </Flex>
         </Flex>
       </Flex>
     );
