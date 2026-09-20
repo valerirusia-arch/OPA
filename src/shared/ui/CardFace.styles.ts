@@ -10,24 +10,26 @@ export const styles = {
 } satisfies Record<string, CSSProperties>;
 
 /**
- * The three finishes, named after WHOSE card they are — the colour is the part
- * that changes, the ownership is not. `opa` is the brand teal OPA issues on,
- * `borrower` the warm graphite of the card the borrower brought, `light` the
- * pale blue the pair was first drawn in and which nothing uses.
+ * ONE FINISH, BECAUSE ONE CARD IS DRAWN AS A CARD.
+ *
+ * There were three: OPA's, a warm graphite for the card the borrower brought,
+ * and a pale blue nothing ever used. The graphite went dead when managing the
+ * repayment card moved to the profile and became a ROW there — the wizard's
+ * own treatment — so its whole chain (SavedCardFace, RepaymentCardPanel) was
+ * rendered nowhere but Storybook, which showed a reviewer something the
+ * product does not contain. The pale one had said "drawn, not in use" from the
+ * day it was written.
+ *
+ * What is left is the card OPA issues, which is the only object in this
+ * product that is a card.
  */
-export type CardTone = "light" | "opa" | "borrower";
+export type CardTone = "opa";
 
 
-export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
-  /* Both of the product's real finishes are dark enough to invert, so one
-     flag covers the ink and a second picks the material. */
-  const inverted = tone !== "light";
-  const ground =
-    tone === "borrower"
-      ? brand.cardBorrower
-      : tone === "opa"
-        ? brand.cardSkin
-        : brand.cardLight;
+export const getStyles = (token: GlobalToken) => {
+  /* The face is dark, so it takes white ink and prints its own status pill. */
+  const inverted = true;
+  const ground = brand.cardSkin;
   const ink = inverted ? brand.cardDarkInk : token.colorText;
   const quiet = inverted ? brand.cardDarkQuiet : token.colorTextTertiary;
   return ({
@@ -58,12 +60,10 @@ export const getStyles = (token: GlobalToken, tone: CardTone = "light") => {
       padding: token.paddingLG,
       borderRadius: token.borderRadiusLG,
       background: ground,
-      /* NO RIM ON A DARK FACE. The hairline was white at 10%, which on a card
-         sitting on a white page draws a pale line around the whole object —
-         *"რაღაცა სტროუკები აქვს გარედან, რაც არ მომწონს."* A dark card already
-         has an edge: it is dark against white. The line exists for the pale
-         finish, which would otherwise dissolve into the card body under it. */
-      ...(inverted ? null : { border: `1px solid ${brand.cardLightEdge}` }),
+      /* NO RIM. The hairline was white at 10%, which on a card sitting on a
+         white page draws a pale line around the whole object — *"რაღაცა
+         სტროუკები აქვს გარედან, რაც არ მომწონს."* A dark card already has an
+         edge: it is dark against white. */
       /* A card is an object with a thickness; the page's own elevation says so
          without a second frame. */
       boxShadow: brand.shadowCard,

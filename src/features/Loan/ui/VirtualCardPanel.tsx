@@ -87,7 +87,6 @@ export function VirtualCardPanel({
             masked number. The expiry and the rest are USIO's and appear only
             on the revealed face inside the dialog. */}
         <CardFace
-          tone="opa"
           front
           brand={brand}
           label={t("loanPage.cardIssuer")}

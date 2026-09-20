@@ -21,7 +21,6 @@ function Faces() {
         </Typography.Text>
         <Card title="Your OPA card">
           <CardFace
-            tone="opa"
             front
             label="OPA virtual"
             status={{ label: "Not used yet" }}
@@ -41,7 +40,6 @@ function Faces() {
         </Typography.Text>
         <Card title="Your OPA card">
           <CardFace
-            tone="opa"
             label="OPA virtual"
             status={{ label: "Mock" }}
             number="4111 2233 4455 3094"
@@ -54,36 +52,6 @@ function Faces() {
         </Card>
       </Flex>
 
-      <Flex vertical gap={12} style={{ width: SLOT }}>
-        <Typography.Text type="secondary">
-          Graphite — the card the borrower brought
-        </Typography.Text>
-        <Card title="Saved payment card">
-          <CardFace
-            brand="Visa"
-            label="Visa debit"
-            status={{ label: "Active", color: "success" }}
-            number="•••• 4417"
-            facts={[{ key: "e", label: "Expires", value: "08/29" }]}
-          />
-        </Card>
-      </Flex>
-
-      <Flex vertical gap={12} style={{ width: SLOT }}>
-        <Typography.Text type="secondary">
-          Light — drawn, not in use
-        </Typography.Text>
-        <Card title="Saved payment card">
-          <CardFace
-            tone="light"
-            brand="Visa"
-            label="Visa debit"
-            status={{ label: "Active", color: "success" }}
-            number="•••• 4444"
-            facts={[{ key: "e", label: "Expires", value: "09/29" }]}
-          />
-        </Card>
-      </Flex>
     </Flex>
   );
 }

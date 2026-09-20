@@ -62,16 +62,9 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { frontStyles, getStyles, styles, type CardTone } from "./CardFace.styles";
+import { frontStyles, getStyles, styles } from "./CardFace.styles";
 
 export type CardFaceProps = {
-  /**
-   * Which finish. It used to be the ONLY thing that said whose card this is —
-   * graphite for the card OPA issues, navy for the one the borrower brought —
-   * which was too quiet a signal on its own. `owner` now says it in words too.
-   * `light` is the pale finish the pair was first drawn in, kept and not in use.
-   */
-  tone?: CardTone;
   /**
    * Whose card this is, in words, along the top of the face: "Issued by OPA"
    * on the virtual card, "Your card" on the borrower's own. The finish carries
@@ -125,7 +118,6 @@ export type CardFaceProps = {
 };
 
 export function CardFace({
-  tone = "borrower",
   owner,
   label,
   brand,
@@ -135,12 +127,11 @@ export function CardFace({
   copyable = false,
   front = false,
 }: CardFaceProps) {
-  /* Both of the product's real finishes are dark: they take white ink, and
-     they print their own status pill rather than wearing antd's chip. Only
-     the unused pale-blue one does neither. */
-  const inverted = tone !== "light";
+  /* The face is dark: it takes white ink and prints its own status pill
+     rather than wearing antd's chip. */
+  const inverted = true;
   const { token } = theme.useToken();
-  const s = getStyles(token, tone);
+  const s = getStyles(token);
   const figures = getFigureStyles(token);
 
   /* OPA'S OWN FRONT. It returns early rather than threading `front` through

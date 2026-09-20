@@ -37,7 +37,7 @@
 //
 // Dumb: reads the same records every other screen reads, and navigates.
 
-import { Button, Card, Flex, Typography } from "antd";
+import { Button, Card, Col, Flex, Row, Typography } from "antd";
 import {
   ArrowRightOutlined,
   BankOutlined,
@@ -57,6 +57,7 @@ import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTim
 import { ApplicationProgress } from "../../features/Dashboard/ui/ApplicationProgress";
 import { StageFoot } from "../../features/Dashboard/ui/StageFoot";
 import { ShortcutTiles } from "../../features/Dashboard/ui/ShortcutTiles";
+import { VirtualCardPanel } from "../../features/Loan/ui/VirtualCardPanel";
 import { PaymentHistory } from "../../features/Payments/ui/PaymentHistory";
 import { NoLoanMark } from "../../features/Loan/ui/NoLoanMark";
 import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
@@ -132,25 +133,27 @@ export default function DashboardScreen({
       hint: loan ? t("dashboard.tileLoanHint", { apr: loan.apr }) : undefined,
       to: "/loan",
     },
-    viewer.role === "borrower"
-      ? {
-          key: "card",
-          icon: <CreditCardOutlined />,
-          label: t("dashboard.tileCard"),
-          value: loan?.card
-            ? t(loan.card.used ? "dashboard.tileCardUsed" : "dashboard.tileCardUnused")
-            : undefined,
-          hint: loan?.card ? `•••• ${loan.card.last4}` : undefined,
-          to: "/loan",
-        }
-      : {
-          key: "card",
-          icon: <CreditCardOutlined />,
-          label: t("dashboard.tileRepaymentCard"),
-          value: ownCard ? `•••• ${ownCard.last4}` : undefined,
-          hint: ownCard ? ownCard.brand : undefined,
-          to: "/payments",
-        },
+    /*
+      NO CARD TILE FOR THE BORROWER — they get the card itself, below.
+      
+      A tile saying "Virtual card · Not used yet · •••• 3094" is a description
+      of an object the product can simply show, on the one page the borrower
+      opens most. The co-borrower keeps a tile, because WBS story 7 is explicit
+      that they have no access to the virtual card at all — theirs points at
+      the card they repay from instead.
+    */
+    ...(viewer.role === "borrower"
+      ? []
+      : [
+          {
+            key: "card",
+            icon: <CreditCardOutlined />,
+            label: t("dashboard.tileRepaymentCard"),
+            value: ownCard ? `•••• ${ownCard.last4}` : undefined,
+            hint: ownCard ? ownCard.brand : undefined,
+            to: "/payments",
+          },
+        ]),
     {
       key: "payments",
       icon: <HistoryOutlined />,
@@ -363,6 +366,36 @@ export default function DashboardScreen({
                 onOpen={(to) => navigate({ to })}
               />
             </div>
+
+            {/*
+              THE CARD ITSELF, not a tile about it.
+
+              WBS story 7 gives the virtual card to the BORROWER and nobody
+              else — "Only the Borrower can access the virtual payment card.
+              Co-borrower has no access to card information" — so this is
+              absent for a co-borrower rather than emptied, and it is the same
+              panel the loan page draws, because two pages showing one card
+              should show one card.
+            */}
+            {viewer.role === "borrower" && loan?.card ? (
+              /* A THIRD OF THE ROW, the width the loan page gives it. At full
+                 bleed the face's own 1.586 proportion made it 440px tall — a
+                 card that size stops being a card on a page and becomes the
+                 page. */
+              <Row gutter={[24, 24]} style={styles.band}>
+                <Col xs={24} sm={16} lg={8}>
+                <VirtualCardPanel
+                  title={t("loanPage.card")}
+                  brand={loan.card.brand}
+                  last4={loan.card.last4}
+                  expiry={loan.card.expiry}
+                  cardholder={person}
+                  used={loan.card.used}
+                  onOpen={() => navigate({ to: "/loan" })}
+                />
+                </Col>
+              </Row>
+            ) : null}
 
             {/*
               THE LAST FEW PAYMENTS, AT THE VERY FOOT.

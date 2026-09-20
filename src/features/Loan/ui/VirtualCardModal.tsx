@@ -140,7 +140,6 @@ export function VirtualCardModal({
         */
         <Flex vertical gap={12} style={styles.face}>
           <CardFace
-            tone="opa"
             brand={brand}
             label={t("loanPage.cardIssuer")}
             status={{ label: t("loanPage.cardMock") }}
@@ -171,7 +170,6 @@ export function VirtualCardModal({
               to make up for; the front prints both along its foot now, so the
               list was the same two facts stated twice, six inches apart. */}
           <CardFace
-            tone="opa"
             front
             brand={brand}
             label={t("loanPage.cardIssuer")}

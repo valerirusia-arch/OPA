@@ -233,8 +233,14 @@ export const brand = {
    * ground that is already leaning that way instead of on a cold grey.
    */
   cardSkin: [
+    /* Two blooms, so the warmth runs the WHOLE foot rather than sitting in one
+       corner — *"ეს ნარინჯისფერი ლოგოს მხრიდანაც უქენი."* The right one leads
+       and the left answers it a little quieter, so the foot is warm end to end
+       without becoming a second band of colour. */
     "radial-gradient(78% 58% at 86% 108%, rgba(184,92,35,0.50) 0%," +
       " rgba(184,92,35,0.22) 42%, rgba(184,92,35,0) 74%)",
+    "radial-gradient(64% 52% at 10% 106%, rgba(184,92,35,0.38) 0%," +
+      " rgba(184,92,35,0.16) 44%, rgba(184,92,35,0) 76%)",
     "linear-gradient(160deg, #3E86BC 0%, #2A6FA6 18%, #1A5488 36%, #0E3A60 54%," +
       " #0A2334 70%, #12110F 86%, #14100C 100%)",
   ].join(", "),
