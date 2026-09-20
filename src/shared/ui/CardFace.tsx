@@ -62,7 +62,7 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { getFrontStyles, getStyles, styles } from "./CardFace.styles";
+import { getMarkStyles, getStyles, styles } from "./CardFace.styles";
 
 export type CardFaceProps = {
   /**
@@ -88,7 +88,7 @@ export type CardFaceProps = {
   /** Top right: one word about its state. `color` is an antd Tag colour. */
   status?: { label: string; color?: string };
   /** The masked number. `•••• 1234` — the shorthand, not the full mask. */
-  number: string;
+  number?: string;
   /**
    * The small print along the foot.
    *
@@ -103,39 +103,34 @@ export type CardFaceProps = {
   /** The number can be copied. Only where it IS a number — a mask cannot. */
   copyable?: boolean;
   /**
-   * THE CARD AS AN OBJECT AND NOTHING ELSE — no number on it at all.
+   * WHICH DRAWING OF THE ONE OBJECT.
    *
-   * For the details dialog, where the card is the picture at the top and every
-   * fact about it is in the list underneath. Printing the masked number on the
-   * face there would state a fact the list states two inches below it, and the
-   * designer's reference puts nothing on the card but its identity: the mark
-   * on its tile at the top, what the card IS along the foot, and whose it is
-   * under that. *"ზემოთ ოპას ლოგო, ქვემოთ ოპას ვირტუალ ქარდ რომ ეწეროს, და
-   * ქვემოთ პატარაზე სახელი და გვარი."*
+   *   detail     the full face — the network mark or the issuer line, the
+   *              number across the middle, labelled facts along the foot.
+   *              What USIO's revealed card looked like, and what the theme
+   *              showcase still draws.
+   *   nameplate  NO NUMBER AT ALL. The mark on its tile at the top; along
+   *              the foot, what the card IS, whose it is under that, and its
+   *              state in the opposite corner. This is the card as the
+   *              designer drew it — *"არ მინდა რამე ციფრები ეწეროს გარედან;
+   *              ზემოთ ოპას ლოგო, ქვემოთ ოპას ვირტუალ ქარდ, და ქვემოთ
+   *              პატარაზე სახელი და გვარი, და მარჯვნივ დაბლა ინ იუს."* It is
+   *              what /loan shows and what the details dialog's list is a
+   *              record of.
+   *   thumb      the same card at a fifth of the width, inside the details
+   *              dialog: the mark and the state, and nothing that could not
+   *              survive being 160px wide.
    *
-   * The state goes bottom right, where the reference card carries its network
-   * mark — *"მარჯვნივ ეწერება ინ იუს, დაბლა, მასტერქარდის მაგივრად."* OPA's
-   * card has no network artwork to put there, and "In use" is the one thing
-   * about this card that changes.
-   *
-   * `number` is still required and simply not printed: same component, same
-   * contract, three drawings of one object.
+   * A masked number is a fact OPA is allowed to hold, so `nameplate` leaving
+   * it off is a design call rather than a privacy one. What OPA genuinely
+   * does not hold — the full number, the expiry, the security code — is
+   * USIO's, and reaches the screen only through the details dialog.
    */
-  nameplate?: boolean;
-  /**
-   * THE FRONT OF OPA'S OWN CARD, as OPA prints it.
-   *
-   * Three things and no more: the mark top left, the card's state top right,
-   * and the masked number along the foot. Those are facts OPA is allowed to
-   * hold — a token's last four and whether it has been spent — so the front
-   * may carry them. What it may not carry is the rest: the WBS puts the full
-   * number, the expiry and the security code behind USIO's secure embedded
-   * view, and they arrive on the revealed face instead.
-   *
-   * `facts` is still accepted and simply not printed here.
-   */
-  front?: boolean;
+  variant?: CardFaceVariant;
 };
+
+/** See `variant`. */
+export type CardFaceVariant = "detail" | "nameplate" | "thumb";
 
 export function CardFace({
   owner,
@@ -145,34 +140,28 @@ export function CardFace({
   number,
   facts = [],
   copyable = false,
-  front = false,
-  nameplate = false,
+  variant = "detail",
 }: CardFaceProps) {
   /* The face is dark: it takes white ink and prints its own status pill
      rather than wearing antd's chip. */
   const inverted = true;
   const { token } = theme.useToken();
   const s = getStyles(token);
-  const front_ = getFrontStyles(token);
+  const marks = getMarkStyles(token);
   const figures = getFigureStyles(token);
 
-  /* THE NAMEPLATE. Same early-return reason as `front` below: it is a third
-     drawing of the one object, not this face with things switched off. */
-  if (nameplate) {
+  /* THE THUMB. An early return rather than the face below with things
+     switched off, because at 160px it genuinely is a different drawing. */
+  if (variant === "thumb") {
     return (
       <Flex vertical justify="space-between" gap={12} style={s.plateFace}>
-        <div style={front_.markSmall}>
+        <div style={marks.markSmall}>
           <Logo height={18} />
         </div>
 
-        {/* THE STATE, AND NOTHING ELSE. The mark top left, the state bottom
-            right — which is the reference's own arrangement, its logo in one
-            corner and its network mark in the other, and it is the only one
-            that survives at thumbnail size. The holder's name was here and
-            came off: it is the second row of the list 100px below, and
-            carrying it forced the card 60px wider than the reference's to
-            stop "Levi Ackerman" breaking in two. `facts` is accepted and not
-            printed on this face. */}
+        {/* THE STATE, AND NOTHING ELSE — the mark in one corner and the state
+            in the other, which is the reference's own arrangement and the
+            only one that survives at this size. */}
         <Flex justify="flex-end">
           {status ? (
             <Tag variant="filled" style={{ ...pill, ...s.cutPill, ...s.platePill }}>
@@ -184,53 +173,31 @@ export function CardFace({
     );
   }
 
-  /* OPA'S OWN FRONT. It returns early rather than threading `front` through
-     six branches below, because it genuinely is a different drawing: not this
-     face with things switched off, but the front of the card OPA issues —
-     see `frontStyles`. */
-  if (front) {
+  /* THE NAMEPLATE — the card as it is drawn on the page. */
+  if (variant === "nameplate") {
     return (
       <Flex vertical justify="space-between" gap={20} style={s.face}>
-        <Flex align="flex-start" justify="space-between" gap={12}>
-          <div style={front_.mark}>
-            <Logo height={30} />
-          </div>
-          {/* Top right, printed on the card rather than stuck to it — the same
-              pill cut from the face's own material that the revealed card
-              wears. It was in the panel's head; the designer put it back on
-              the card, where a card's own state belongs. */}
-          {status ? (
-            <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
-              {status.label}
-            </Tag>
-          ) : null}
-        </Flex>
+        <div style={marks.mark}>
+          <Logo height={30} />
+        </div>
 
-        {/* THE NUMBER, THEN THE FOOT — a card's own arrangement.
-
-            The masked number was alone on the bottom line; it moves up a step
-            and the line under it carries the two things printed along the foot
-            of a real card: the name on the left, the expiry in the corner
-            opposite. *"სადაც ანგარიში წერია, მანდ სახელი დააწერე; ანგარიში
-            ოდნავ მაღლა აწიე; და დეითი მარჯვენა კუთხეში დაბლა."*
-
-            VALUES ONLY, no labels: a card does not introduce its own expiry,
-            and the two are told apart by where they sit. `facts` in order —
-            the first left, the last right — so the caller decides what is
-            printed by what it passes, and passing one prints one. */}
-        <Flex vertical gap={14}>
-          <Typography.Text style={s.number}>{number}</Typography.Text>
-
-          {facts.length > 0 ? (
-            <Flex align="flex-end" justify="space-between" gap={16}>
-              <Typography.Text style={s.footValue}>{facts[0].value}</Typography.Text>
-              {facts.length > 1 ? (
-                <Typography.Text style={s.footValue}>
-                  {facts[facts.length - 1].value}
-                </Typography.Text>
-              ) : null}
-            </Flex>
-          ) : null}
+        {/* WHAT IT IS, then WHOSE IT IS with the state opposite. Two lines,
+            not one: on one line the name and the state competed for the
+            width and the card's own title had nowhere to be. */}
+        <Flex vertical gap={4}>
+          <Typography.Text style={s.plate}>{label}</Typography.Text>
+          <Flex align="center" justify="space-between" gap={12}>
+            {facts.length > 0 ? (
+              <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
+            ) : (
+              <span />
+            )}
+            {status ? (
+              <Tag variant="filled" style={{ ...pill, ...s.cutPill }}>
+                {status.label}
+              </Tag>
+            ) : null}
+          </Flex>
         </Flex>
       </Flex>
     );

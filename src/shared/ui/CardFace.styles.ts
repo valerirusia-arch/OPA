@@ -58,7 +58,12 @@ export const getStyles = (token: GlobalToken) => {
       minHeight: 180,
       boxSizing: "border-box",
       padding: token.paddingLG,
-      borderRadius: token.borderRadiusLG,
+      /* LESS ROUND. `borderRadiusLG` is 14, which on a 340px card reads as a
+         soft-cornered tile rather than a card — *"კუთხეები ზედმეტად
+         მომრგვალებული აქვს."* A payment card's corner is about 3% of its
+         width, so 10 at this size, and it is the product's own `borderRadius`
+         either way. */
+      borderRadius: token.borderRadius,
       background: ground,
       /* NO RIM. The hairline was white at 10%, which on a card sitting on a
          white page draws a pale line around the whole object — *"რაღაცა
@@ -124,13 +129,24 @@ export const getStyles = (token: GlobalToken) => {
       aspectRatio: "1.586",
       boxSizing: "border-box",
       padding: 12,
-      borderRadius: token.borderRadiusLG,
+      borderRadius: token.borderRadius,
       background: ground,
       boxShadow: brand.shadowCard,
     },
-    /** The state on a thumbnail: the same pill, at the size that face can
-     *  carry. It is the only thing printed on the nameplate besides the mark
-     *  — see the note at the call site. */
+    /**
+     * THE CARD'S NAME along the foot of the nameplate — the biggest thing
+     * printed on that face, because on that face it is the only thing that
+     * says what the object is.
+     *
+     * It gets the width to itself: the holder and the state share the line
+     * BELOW it, so 22 does not have to be traded against a pill.
+     */
+    plate: { fontSize: 22, fontWeight: 600, color: ink, letterSpacing: "0.01em" },
+    /** Whose card it is, under the name, in the finish's quiet ink — the way
+     *  a real card prints the holder under the product's name. */
+    plateSub: { fontSize: 15, color: quiet, letterSpacing: "0.02em" },
+    /** The state on the THUMB: the same pill, at the size that face can
+     *  carry. The nameplate's is the ordinary one. */
     platePill: { fontSize: 11, lineHeight: "18px", paddingInline: 8 },
     /** The foot's labels and values, in the finish's own ink. */
     footLabel: {
@@ -155,7 +171,7 @@ export const getStyles = (token: GlobalToken) => {
 };
 
 /**
- * THE FRONT OF OPA'S OWN CARD — the mark, the state, the masked number.
+ * THE MARK'S TILE — the one piece of furniture every drawing of the card has.
  *
  * It started blank, on the reading that a front printed with card details was
  * OPA claiming to hold what the WBS says it does not. That reading was too
@@ -169,7 +185,7 @@ export const getStyles = (token: GlobalToken) => {
  * OPA application and are accessible only via a secure embedded view", so they
  * appear on the revealed face and nowhere else.
  */
-export const getFrontStyles = (token: GlobalToken) =>
+export const getMarkStyles = (token: GlobalToken) =>
   ({
     /**
      * THE MARK ON A WHITE TILE, top left, at the face's own inset.

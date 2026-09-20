@@ -520,8 +520,6 @@ export function LoanOverview({
             <VirtualCardPanel
               title={t("loanPage.card")}
               brand={loan.card.brand}
-              last4={loan.card.last4}
-              expiry={loan.card.expiry}
               cardholder={cardholder}
               used={loan.card.used}
               fill={sideBySide}

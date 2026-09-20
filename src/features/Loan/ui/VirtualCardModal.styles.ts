@@ -56,14 +56,7 @@ export const styles = {
   /** Nudges the padlock onto the first line's own optical centre. */
   issuerIconBox: { marginTop: 3 },
   issuerText: { fontSize: 12 },
-  /** The number and its copy affordance share a line. */
-  rowValue: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-  },
+
 } satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) =>
@@ -117,13 +110,40 @@ export const getStyles = (token: GlobalToken) =>
      *  about 21 and bold, which is a step over antd's level-4. */
     cardName: { fontSize: 20, fontWeight: 700, color: token.colorTextHeading },
     /**
-     * The copy glyph: the reference's grey outline, not antd's link blue.
-     * Blue says "this is a link to somewhere"; this is an action on the row
-     * it sits in, and grey is what the rest of the product gives those.
+     * THE COPY CONTROL, AS A TILE RATHER THAN A GLYPH.
+     *
+     * It was antd's bare `CopyOutlined` in link blue, floating against the
+     * row's right edge with nothing to sit in — *"გამოიყენე სხვა აიქონი, რამე
+     * ლამაზი დახვეწილი."* The reference puts its own copy control in a soft
+     * rounded square, which is what gives it a shape and a target; the glyph
+     * changed with it, to the cleaner two-square `BlockOutlined`.
+     *
+     * Grey, not blue: blue says "somewhere to go", and this acts on the row
+     * it sits in.
      */
-    copyIcon: { color: token.colorTextTertiary, fontSize: 16 },
+    copyChip: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 32,
+      height: 32,
+      borderRadius: 10,
+      background: token.colorFillQuaternary,
+      color: token.colorTextSecondary,
+      fontSize: 15,
+    },
     /** The moment after. Green, and the only time this control has a colour. */
-    copiedIcon: { color: token.colorSuccess, fontSize: 16 },
+    copiedChip: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 32,
+      height: 32,
+      borderRadius: 10,
+      background: token.colorSuccessBg,
+      color: token.colorSuccess,
+      fontSize: 15,
+    },
     /** The mark beside "OPA Virtual Card" in the type row — the reference puts
      *  the network's badge here; OPA's card carries OPA's. */
     typeMark: {
