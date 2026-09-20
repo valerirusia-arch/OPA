@@ -238,20 +238,24 @@ export const getStyles = (token: GlobalToken) => {
  * OPA application and are accessible only via a secure embedded view", so they
  * appear on the revealed face and nowhere else.
  */
-export const getMarkStyles = (token: GlobalToken) => {
+export const getMarkStyles = () => {
   /**
-   * THE MARK'S TILE — WHITE, as it was.
+   * THE MARK'S TILE — the state pill's material, not a white box.
    *
-   * It has been three things in a day: a white square, then nothing with a
-   * glow, then the translucent dark the state pill is cut from. The dark one
-   * was the designer's own suggestion and it is defensible — it is the card's
-   * material rather than a sticker on it — but seen on the card it lost the
-   * mark rather than showing it: a dark disc inside a dark tile on a dark
-   * half of a blue ramp is three near-values stacked. *"შიგნით არსებული
-   * ყველაფერი ფერების გარდა როგორც იყო ისე დამიბრუნე."*
+   * It has been three things: a white square, then nothing with a glow, then
+   * this, then white again, and now this for good. The designer settled it by
+   * naming which white they meant: *"მინდა რომ ეს თეთრი ფერი იჯდეს შუაში, აი
+   * ამ ცეცხლის შუაში, მაგრამ გარედან ეს თეთრი ბექგრაუნდი ჰქონდეს, როგორც
+   * 'Not used'-ს აქვს."* The white belongs to the FLAME, which is the mark's
+   * own drawing; the box around it belongs to the card.
    *
-   * So: white, which is the only value on this palette that the deep teal
-   * disc is unambiguously darker than, wherever the tile lands.
+   * `cardDarkPill` is the translucent dark the state pill is cut from, so the
+   * two things printed on this face are made of one material and the mark
+   * sits ON the card rather than in a sticker stuck to it. It was rejected
+   * once, on the argument that a teal disc inside a dark tile on the dark half
+   * of the ramp is three near-values stacked — true of the DISC, and beside
+   * the point: what reads at this size is the white flame inside it, and a
+   * flame is brighter against dark than against white.
    *
    * Sized in `cqw` like everything else on the face — 12% of the card's own
    * width, a 34px tile on the 285 card /loan draws. It was 17% and then 14%,
@@ -267,8 +271,7 @@ export const getMarkStyles = (token: GlobalToken) => {
     height: "12cqw",
     padding: "1.6cqw",
     borderRadius: "3cqw",
-    background: token.colorBgContainer,
-    boxShadow: brand.shadowRest,
+    background: brand.cardDarkPill,
     display: "flex",
   };
   return {

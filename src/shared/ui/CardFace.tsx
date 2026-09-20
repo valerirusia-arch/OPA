@@ -161,7 +161,7 @@ export function CardFace({
   const inverted = true;
   const { token } = theme.useToken();
   const s = getStyles(token);
-  const marks = getMarkStyles(token);
+  const marks = getMarkStyles();
   const figures = getFigureStyles(token);
 
   /* OPA'S OWN FRONT. It returns early rather than threading `front` through
