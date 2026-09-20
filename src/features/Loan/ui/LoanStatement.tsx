@@ -229,20 +229,33 @@ export function LoanStatement({
               </Button>
             </div>
           ) : null}
+
+          {/*
+            THE TRACK BELONGS TO THE FIGURE, so it lives in the figure's own
+            block rather than as the panel's second child.
+
+            It was a sibling under a 28px gap, and once the due date came off
+            the caption there was nothing between the number and the track but
+            that gap — the row of capsules read as a separate section instead
+            of as the same statement seen from the other end. *"ოდნავ აწიე ეს
+            ტრეკერი, ციფრებთან რომ შეიკრას."* 18 binds it to the figure and
+            leaves the panel's own 28 to do what it was for: separating the
+            answer from the contract's small print.
+          */}
+          {progress ? (
+            <Flex vertical gap={10} style={styles.track}>
+              <InstalmentTrack
+                paid={progress.paid}
+                total={progress.total}
+                ariaLabel={progress.ariaLabel}
+              />
+              <Typography.Text style={s.progressCaption}>
+                {progress.caption}
+              </Typography.Text>
+            </Flex>
+          ) : null}
         </Flex>
 
-        {progress ? (
-          <Flex vertical gap={10}>
-            <InstalmentTrack
-              paid={progress.paid}
-              total={progress.total}
-              ariaLabel={progress.ariaLabel}
-            />
-            <Typography.Text style={s.progressCaption}>
-              {progress.caption}
-            </Typography.Text>
-          </Flex>
-        ) : null}
 
         {facts && facts.length > 0 ? (
           <Flex vertical>

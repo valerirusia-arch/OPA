@@ -6,6 +6,9 @@ import { getFigureStyles } from "../../../shared/ui/figures.styles";
 import { LEAD_PANEL_INSET, leadPanelBody } from "../../../shared/ui/panel.styles";
 
 export const styles = {
+  /** The instalment track, bound to the figure above it — see the note at the
+   *  call site. */
+  track: { marginTop: 18 },
   /** The gap under the label belongs to the ROW now that the date shares it —
    *  left on the word, the date beside it would centre against a box 8px
    *  taller than the letters. */
