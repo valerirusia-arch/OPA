@@ -41,6 +41,20 @@ export type StatementFact = {
 };
 
 export type LoanStatementProps = {
+  /**
+   * THE CARD'S HEAD.
+   *
+   * This panel had none: it was a bare Card and its one action was pinned
+   * inside the body's top-right corner. The card BESIDE it on /loan — the
+   * virtual card — has an ordinary antd head, a title on the left and its
+   * link on the right over a hairline, so two cards sharing a row were two
+   * different shapes. *"მინდა რომ ამასაც ჰქონდეს თაითლი, როგორც მეორე
+   * ფოტოზე გვაქვს."*
+   *
+   * With a title the action moves into `extra`, where the head puts it, and
+   * the pinned slot below is not drawn.
+   */
+  title?: string;
   /** What the figure is. */
   label: string;
   /** The figure. Already formatted — this component does not do money. */
@@ -88,6 +102,7 @@ export type LoanStatementProps = {
 };
 
 export function LoanStatement({
+  title,
   label,
   value,
   caption,
@@ -113,8 +128,19 @@ export function LoanStatement({
      long one to make room for air the short one does not need. */
   const defaultSpan = facts && facts.length > 0 ? Math.floor(24 / facts.length) : 24;
 
+  /* In the head, the action is a link with its arrow — the same object the
+     virtual card's head carries, so the two heads on this row match. */
+  const headAction =
+    title && action ? (
+      <Button type="link" style={styles.headAction} onClick={action.onClick}>
+        {action.label} <ArrowRightOutlined />
+      </Button>
+    ) : undefined;
+
   return (
     <Card
+      title={title}
+      extra={headAction}
       style={fill ? { ...s.panel, ...styles.stretch } : s.panel}
       styles={{ body: fill ? { ...styles.body, ...styles.fillBody } : styles.body }}
     >
@@ -151,7 +177,7 @@ export function LoanStatement({
             ) : null}
           </Flex>
 
-          {action ? (
+          {action && !title ? (
             <div style={floats ? s.actionSlot : styles.actionBelow}>
               <Button
                 size="large"

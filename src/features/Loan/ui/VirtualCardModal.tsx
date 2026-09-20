@@ -33,7 +33,7 @@
 // Dumb: it renders what it is handed and reports that it was opened.
 
 import { Flex, Modal, Typography, theme } from "antd";
-import { CheckOutlined, CopyOutlined, LockOutlined } from "@ant-design/icons";
+import { BlockOutlined, CheckOutlined, LockOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { Logo } from "../../../shared/ui/Logo";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -111,15 +111,17 @@ export function VirtualCardModal({
          A `Typography.Text` with no children renders antd's copy button and
          nothing else, so the clipboard, the copied state and the accessible
          label all stay antd's and only the placement is ours. The glyph is
-         antd's own `CopyOutlined`, passed explicitly rather than left to the
-         default. */
+         `BlockOutlined` — two clean overlapping squares, which is the copy
+         glyph people actually recognise. antd's own `CopyOutlined` is a sheet
+         with a folded corner behind another and at 18px it reads as a
+         document, not as an action. *"აქ უკეთესი დაკოპირების აიქონი ჩასვი."* */
       action: (
         <Typography.Text
           copyable={{
             text: pan.replace(/\s/g, ""),
             tooltips: false,
             icon: [
-              <CopyOutlined key="copy" style={s.copyIcon} />,
+              <BlockOutlined key="copy" style={s.copyIcon} />,
               <CheckOutlined key="copied" style={s.copiedIcon} />,
             ],
           }}

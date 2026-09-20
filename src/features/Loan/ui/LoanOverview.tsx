@@ -267,6 +267,7 @@ export function LoanOverview({
         <Row style={styles.row}>
           <Col xs={24}>
             <LoanStatement
+              title={t("loanPage.statement")}
               label={t("loanPage.amount")}
               value={application.amount}
               caption={t("loanPage.submittedOn", { date: application.submittedOn })}
@@ -388,6 +389,7 @@ export function LoanOverview({
   const statement: LoanStatementProps =
     loan.stage === "funded"
       ? {
+          title: t("loanPage.statement"),
           label: t("loanPage.nextPayment"),
           value: loan.nextPayment,
           /* Nothing is due once the last line is paid, and a date under a
@@ -419,6 +421,7 @@ export function LoanOverview({
           ],
         }
       : {
+          title: t("loanPage.statement"),
           label: t("loanPage.loanAmount"),
           value: loan.amount,
           /* THE REDUCTION COMES FIRST, where there was one. Everything else

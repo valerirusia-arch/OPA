@@ -6,6 +6,9 @@ import { getFigureStyles } from "../../../shared/ui/figures.styles";
 import { LEAD_PANEL_INSET, leadPanelBody } from "../../../shared/ui/panel.styles";
 
 export const styles = {
+  /** In the head: no end padding, so the link aligns with the head's own
+   *  edge — the same as the virtual card's. */
+  headAction: { paddingInlineEnd: 0 },
   /**
    * The lead card's inset — 32 against the 24 every ordinary card gets.
    *

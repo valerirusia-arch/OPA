@@ -1135,6 +1135,11 @@ export const en = {
      terminology for the one object on the page that is theirs. The panel says
      whose it is and who issued it, which is what the card itself says.
      *"თაითლი იქნებოდა უკეთესი რამე სხვა — ოპას ქარდი ან რაიმე მსგავსი."* */
+  /* THE STATEMENT CARD'S HEAD, the pair to "Your OPA card" beside it. The
+     panel used to have no head at all and its action floated in the body's
+     top-right corner, which put two cards side by side with two different
+     shapes. *"მინდა რომ ამასაც ჰქონდეს თაითლი, როგორც მეორე ფოტოზე გვაქვს."* */
+  "loanPage.statement": "Your loan",
   "loanPage.card": "Your OPA card",
   "loanPage.cardBody": "USIO holds the card. OPA never sees or stores the number.",
   /* NOT "View". A link that says View asks "view what?" — and this card now
@@ -2643,6 +2648,7 @@ const es: Record<TranslationKey, string> = {
   "schedule.paid": "Pagado",
   "schedule.overdue": "Vencido",
 
+  "loanPage.statement": "Tu préstamo",
   "loanPage.card": "Tu tarjeta OPA",
   "loanPage.cardBody": "USIO custodia la tarjeta. OPA nunca ve ni guarda el número.",
   "loanPage.cardOpen": "Datos de la tarjeta",
