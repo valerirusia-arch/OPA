@@ -123,24 +123,14 @@ export const getStyles = (token: GlobalToken) => {
     plateFace: {
       aspectRatio: "1.586",
       boxSizing: "border-box",
-      padding: 14,
+      padding: 12,
       borderRadius: token.borderRadiusLG,
       background: ground,
       boxShadow: brand.shadowCard,
     },
-    /**
-     * Whose card it is, along the foot of the thumbnail.
-     *
-     * The card's NAME is not printed here. It was, at 18px, and then the
-     * dialog took the reference's arrangement — a small card, its name as a
-     * centred title directly underneath, then the list — which put the same
-     * six words twice within 40px of each other. The title says what the card
-     * is; the card says whose it is and how it stands, which is everything a
-     * thumbnail has room to say.
-     */
-    plateSub: { fontSize: 12, color: quiet, letterSpacing: "0.02em" },
-    /** The state on a thumbnail: the same pill, at the size the face can
-     *  carry without the two ends of the foot meeting. */
+    /** The state on a thumbnail: the same pill, at the size that face can
+     *  carry. It is the only thing printed on the nameplate besides the mark
+     *  — see the note at the call site. */
     platePill: { fontSize: 11, lineHeight: "18px", paddingInline: 8 },
     /** The foot's labels and values, in the finish's own ink. */
     footLabel: {

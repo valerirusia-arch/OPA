@@ -1,69 +1,62 @@
 // src/features/Loan/ui/VirtualCardModal.styles.ts
 //
-// MEASURED AGAINST THE REFERENCE, 2026-09-21 — *"ნახე აქ რა ლამაზად არის
-// გაკეთებული."*
+// MEASURED OFF THE REFERENCE, 2026-09-21 — *"ნახე რა პატარა ვიუში ზის, მინდა
+// ამას მივბაძოთ და ზუსტად მსგავსად გავაკეთოთ."*
 //
-// The rows were set down a step and the dialog still did not look like it.
-// Measuring the reference says why, and it was never the type size on its own:
+// The designer sent a full-window capture, so this is arithmetic rather than
+// taste. Taking the browser viewport as 1728 and the image as 2000, the scale
+// is 1.157, and the reference comes out as:
 //
-//   its modal        ~720 wide          ours was 480
-//   its card         ~177, a QUARTER    ours 240, a half
-//   its side inset   ~45                ours 24
-//   its row height   ~88                ours ~58
-//   title → list     ~64                ours 20
+//   modal          716 img → 619    card         180 img → 156
+//   side inset      44 img →  38    row height    88 img →  76
+//   label           18 img →  15    value         21 img →  18
+//   card → title    23 img →  20    title → list  54 img →  47
 //
-// So the reference reads calm because it is ROOMY, not because it is small.
-// Its type is actually larger than ours was — a 17px label over a 20px value
-// — and it reads quiet because it sits in a container with twice the air.
-// Shrinking the text inside a cramped 480 dialog was solving the symptom.
+// So: 620 wide, a 160 card, 36 of inset, rows of 76, and the type a step up
+// from where the last pass left it. The card is a QUARTER of the dialog —
+// *"ბარათი უფრო პატარაა მაინც."*
 //
-// The dialog is 600 now, the card is a fifth of it, the list is inset 32 and
-// its rows are 76 tall, and the type went back UP a little from the last pass.
-// Same relationship as the reference, at the size this product's type scale
-// actually is.
+// THE HOLDER CAME OFF THE CARD to get there. At 240 the face was printing a
+// name and a state along its foot and could not go below 200 without the
+// name breaking in two. The reference's card prints neither: a logo in one
+// corner, a network mark in the other. Ours does the same — the mark and the
+// state — and the holder is the second row of the list, 100px below.
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 
-/** The body's own inset, and what the list is measured against. */
-const INSET = 28;
+/**
+ * The body's own inset, and what the list is measured against.
+ *
+ * 24, down from the reference's measured 38 — *"სივრცე გამოიყენე მარცხნივ და
+ * მარჯვნივ უფრო, ზედმეტად შემოწეულია შიგნით."* The reference can afford 38
+ * because its rows hold two short Georgian words; ours hold "4111 2233 4455
+ * 3094" with a copy control hanging off the right edge, and at 38 the row had
+ * 548 of usable width with the number and the glyph pushed together in the
+ * middle of it. 24 gives the list 572 and the page reads wider without the
+ * dialog growing.
+ */
+const INSET = 24;
 
 export const styles = {
   /** antd's default body padding is meant for a form; this is a record. */
   body: { padding: INSET },
-  /**
-   * THE CARD AS A THUMBNAIL — 240 in a 600 dialog.
-   *
-   * The reference's is a quarter of its dialog, and 150 here would match
-   * that. It cannot: the reference's card is a photograph and ours has to
-   * print two things along its foot — the holder's name and the card's state
-   * — and at 200 the inner width is 172 against a name and a pill that want
-   * about that between them, so "Levi Ackerman" broke onto two lines.
-   * *"სიგანეში ოდნავ გაზარდე, ზედმეტად წვრილია."* 240 leaves 212 and the
-   * foot stays one line for a long name and the longer of the two states.
-   */
-  face: { width: 240, maxWidth: "100%" },
-  /** The body's inset is the air above the card; a second band on top of it
-   *  was height the dialog could not afford. */
-  head: { marginTop: 0 },
+  /** A QUARTER OF THE DIALOG, the reference's own proportion. It can be this
+   *  small now that nothing but the mark and the state is printed on it. */
+  face: { width: 160, maxWidth: "100%" },
+  /** Air above the card. The reference opens with a clear band before its
+   *  first object — measured at ~104 from the modal's top, of which the body
+   *  inset is 36. */
+  head: { marginTop: 16 },
   /** The card's own name, centred under it. */
-  title: { marginTop: 14, marginBottom: 0, textAlign: "center" },
-  /** The padlock and the sentence. `flex-start`, because the sentence runs to
-   *  two lines and an icon centred against both sits between them. */
-  issuer: { marginTop: 16 },
+  title: { marginTop: 18, marginBottom: 0, textAlign: "center" },
+  /** The padlock and the sentence. `flex-start` in case the sentence wraps —
+   *  an icon centred against two lines sits between them. */
+  issuer: { marginTop: 20 },
   /** Nudges the padlock onto the first line's own optical centre. */
   issuerIconBox: { marginTop: 3 },
   issuerText: { fontSize: 12 },
-  /**
-   * THE COPY CONTROL AT THE ROW'S FAR EDGE, not tucked against the digits.
-   *
-   * antd draws `copyable` as a button immediately after the text, which on a
-   * 15-digit number puts a small blue glyph in the middle of the row with
-   * nothing to align it to. The reference hangs it on the right-hand edge,
-   * where a row's action belongs and where the eye finds it without reading
-   * the number first. Making antd's own wrapper a space-between flex moves
-   * the button without giving up its clipboard or its copied state.
-   */
+  /** The number and its copy affordance share a line. */
   rowValue: {
     width: "100%",
     display: "flex",
@@ -81,34 +74,37 @@ export const getStyles = (token: GlobalToken) =>
      * THE LIST, AS ONE BORDERED BLOCK — the reference's arrangement.
      *
      * Five facts laid loose on a dialog read as five paragraphs; inside one
-     * rounded frame with hairlines between them they read as the record of one
-     * object, which is what they are.
+     * rounded frame with hairlines between them they read as the record of
+     * one object, which is what they are.
      *
-     * `colorSplit` and a 16 radius: the reference's frame is a barely-there
-     * line with a soft corner, and `colorBorderSecondary` drew a box.
+     * ONE TONE DOWN FROM INVISIBLE. It was `colorSplit`, the product's
+     * lightest rule, and against white at this size it disappeared —
+     * *"ესენი სტროუკები ოდნავ ფერმკრთალია და არ ჩანს, სულ მცირე ტონით
+     * გაამუქე, აი ძაან ცოტა."* `colorBorderSecondary` is the next step up and
+     * the only one between here and a drawn box.
      */
     list: {
-      marginTop: 22,
-      border: `1px solid ${token.colorSplit}`,
+      marginTop: 36,
+      border: `1px solid ${token.colorBorderSecondary}`,
       borderRadius: 16,
       overflow: "hidden",
     },
     /**
-     * One fact, ~62 tall. The rule belongs to the row above it, so the last
-     * row has none and the frame's own edge closes the block.
+     * One fact, ~64 tall. The rule belongs to the row above it, so the last
+     * row has none and the frame's edge closes the block.
      *
-     * THE TYPE STAYED, THE AIR CAME OUT. Two passes got this wrong from
-     * opposite ends: 13/16 at 14/18 was too big in a 480 dialog, 12/14 was
-     * too small, and 13/15 at 18/20 in a 600 dialog made the whole thing
-     * ~960 tall — *"ამ სიგრძე არ უნდა იყოს, შეამოკლე."* The size was never
-     * the problem after the dialog widened; five rows of 78 was. 10/20 of
-     * padding and 2 between the label and its value takes 80px out of the
-     * block and leaves every word exactly as large as it was.
+     * TIGHTER THAN THE FIRST READ OF THE REFERENCE, on a closer look at it —
+     * *"ტექსტები უფრო პატარაა, სფეისინგები უფრო პატარაა მაღლიდან და
+     * ქვემოდან, ტექსტები ოდნავ უფრო ახლო-ახლოსაა."* Measuring one row of the
+     * reference rather than dividing the list by five: its padding is nearer
+     * 12 than 14, and the gap between a label and the value under it is 2,
+     * not 4 — they read as one pair, which is what makes a row a fact rather
+     * than two lines of text.
      */
-    row: { padding: "10px 20px" },
+    row: { padding: "12px 20px" },
     rowRuled: {
-      padding: "10px 20px",
-      borderBottom: `1px solid ${token.colorSplit}`,
+      padding: "12px 20px",
+      borderBottom: `1px solid ${token.colorBorderSecondary}`,
     },
     rowLabel: { fontSize: 13, color: token.colorTextTertiary, display: "block" },
     rowValue: {
@@ -117,8 +113,8 @@ export const getStyles = (token: GlobalToken) =>
       color: token.colorText,
       letterSpacing: "0.01em",
     },
-    /** The card's name under its picture. Explicit rather than antd's level-4,
-     *  which is 20 and a weight lighter than the reference's title. */
+    /** The card's name under its picture — the reference sets its title at
+     *  about 21 and bold, which is a step over antd's level-4. */
     cardName: { fontSize: 20, fontWeight: 700, color: token.colorTextHeading },
     /**
      * The copy glyph: the reference's grey outline, not antd's link blue.

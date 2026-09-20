@@ -141,21 +141,25 @@ export function VirtualCardModal({
       open={open}
       onCancel={onCancel}
       destroyOnHidden
-      width={600}
+      /* CENTRED, not hung from antd's default 100px top. This dialog is tall
+         enough that the default left more air above it than below and it read
+         as having slipped down the page — *"გაასაშუალე კონტენერი, ეხლა ცოტა
+         დაბლაა თითქოს."* */
+      centered
+      width={620}
       footer={null}
       styles={{ body: styles.body }}
     >
       <Flex vertical align="center" style={styles.head}>
-        {/* The thumbnail: the mark on its tile, the holder along the foot and
-            the state where a network mark would sit — *"მარჯვნივ ეწერება ინ
-            იუს, დაბლა, მასტერქარდის მაგივრად."* */}
+        {/* The thumbnail: the mark on its tile top left, the state where a
+            network mark would sit — *"მარჯვნივ ეწერება ინ იუს, დაბლა,
+            მასტერქარდის მაგივრად."* Nothing else; see CardFace's nameplate. */}
         <div style={styles.face}>
           <CardFace
             nameplate
             label={t("loanPage.cardTypeValue")}
             status={{ label: t(used ? "loanPage.cardUsed" : "loanPage.cardUnused") }}
             number={t("payments.cardEnding", { last4 })}
-            facts={[{ key: "holder", label: t("loanPage.cardholder"), value: cardholder }]}
           />
         </div>
 

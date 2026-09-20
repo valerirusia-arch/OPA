@@ -162,18 +162,18 @@ export function CardFace({
     return (
       <Flex vertical justify="space-between" gap={12} style={s.plateFace}>
         <div style={front_.markSmall}>
-          <Logo height={20} />
+          <Logo height={18} />
         </div>
 
-        {/* WHOSE IT IS AND HOW IT STANDS, along the foot — the two things a
-            thumbnail has room for. What the card IS is the title directly
-            under it; see `plateSub`. */}
-        <Flex align="center" justify="space-between" gap={12}>
-          {facts.length > 0 ? (
-            <Typography.Text style={s.plateSub}>{facts[0].value}</Typography.Text>
-          ) : (
-            <span />
-          )}
+        {/* THE STATE, AND NOTHING ELSE. The mark top left, the state bottom
+            right — which is the reference's own arrangement, its logo in one
+            corner and its network mark in the other, and it is the only one
+            that survives at thumbnail size. The holder's name was here and
+            came off: it is the second row of the list 100px below, and
+            carrying it forced the card 60px wider than the reference's to
+            stop "Levi Ackerman" breaking in two. `facts` is accepted and not
+            printed on this face. */}
+        <Flex justify="flex-end">
           {status ? (
             <Tag variant="filled" style={{ ...pill, ...s.cutPill, ...s.platePill }}>
               {status.label}
