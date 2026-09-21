@@ -18,12 +18,16 @@
 // on an even 45° were tried in between and read as a compass rose or a sun,
 // which is the failure mode of regularity: a burst has to look thrown.
 //
-// So: ten small squares on a ring outside the disc, and the ring is the only
-// regular thing about them. Every one differs in radius, size and rotation,
-// and the angles are near-even with a few degrees of drift — enough that no
-// two read as a pair, not so much that one side of the mark ends up empty.
-// The first attempt at this failed the other way: four squares placed by
-// hand, three of which clumped and one of which collided with the disc.
+// And they are NOT on a ring. Putting them on one with a few degrees of drift
+// was the second version of the same mistake: equal distances read as a dial
+// however much the angles wander. *"პროსტა რენდომ ადგილები მიუჩინე, მიმოფანტე
+// გვერდებზე ცოტა."*
+//
+// So each square has a position of its own, from 46 to 55 out, with the wider
+// throws to the left and right where a square box has room and the shorter
+// ones above and below where it does not. The first attempt failed the other
+// way — four squares placed by hand, three clumped and one colliding with the
+// disc — so the one rule kept is that nothing may land inside r=45.
 //
 // Drawn rather than composed because antd has no illustration to compose
 // from; every colour comes from the theme.
@@ -37,24 +41,28 @@ export type RepaidMarkProps = {
 };
 
 /**
- * The confetti: ten squares on a ring outside the disc.
+ * The confetti: ten squares, each placed rather than spaced.
  *
- * `a` is the angle in degrees, `r` how far out, `w` the square's side and `t`
- * its own tilt. Written out rather than generated, because what makes this
- * read as thrown is precisely that the numbers are not a formula — a loop
- * would give it the even spacing that made the last version a sun.
+ * `x`/`y` are the square's own top-left in the 120 viewBox, `w` its side and
+ * `t` its tilt. Written as coordinates and not as angles, because an angle
+ * and a radius is how the last two versions ended up a sun and a dial: the
+ * scatter has to be in the numbers, and polar coordinates keep taking it out.
+ *
+ * Every one of these sits at least 46 from the centre, clear of the disc at
+ * 42, and the ones thrown furthest are to the left and right, where a square
+ * box has the room a circle does not.
  */
 const BITS = [
-  { a: -84, r: 52, w: 5.5, t: 18 },
-  { a: -48, r: 57, w: 4, t: -22 },
-  { a: -14, r: 51, w: 5, t: 34 },
-  { a: 22, r: 56, w: 4.5, t: -10 },
-  { a: 56, r: 50, w: 4, t: 26 },
-  { a: 92, r: 55, w: 5.5, t: -30 },
-  { a: 128, r: 51, w: 4.5, t: 14 },
-  { a: 160, r: 57, w: 4, t: -18 },
-  { a: 196, r: 50, w: 5, t: 30 },
-  { a: 232, r: 55, w: 4.5, t: -26 },
+  { x: 52, y: 6, w: 5.5, t: 18 },
+  { x: 30, y: 20, w: 4, t: -22 },
+  { x: 84, y: 16, w: 4.5, t: 34 },
+  { x: 12, y: 46, w: 5, t: -12 },
+  { x: 100, y: 38, w: 4, t: 26 },
+  { x: 6, y: 74, w: 4.5, t: -30 },
+  { x: 108, y: 66, w: 5.5, t: 14 },
+  { x: 24, y: 96, w: 4, t: -18 },
+  { x: 92, y: 100, w: 5, t: 30 },
+  { x: 58, y: 108, w: 4.5, t: -26 },
 ];
 
 export function RepaidMark({ size = 148 }: RepaidMarkProps) {
@@ -71,23 +79,18 @@ export function RepaidMark({ size = 148 }: RepaidMarkProps) {
       role="presentation"
       aria-hidden="true"
     >
-      {BITS.map((bit, index) => {
-        const rad = (bit.a * Math.PI) / 180;
-        const x = 60 + bit.r * Math.cos(rad) - bit.w / 2;
-        const y = 60 + bit.r * Math.sin(rad) - bit.w / 2;
-        return (
-          <rect
-            key={bit.a}
-            x={x}
-            y={y}
-            width={bit.w}
-            height={bit.w}
-            rx="1.2"
-            fill={colours[index % colours.length]}
-            transform={`rotate(${bit.t} ${x + bit.w / 2} ${y + bit.w / 2})`}
-          />
-        );
-      })}
+      {BITS.map((bit, index) => (
+        <rect
+          key={`${bit.x}-${bit.y}`}
+          x={bit.x}
+          y={bit.y}
+          width={bit.w}
+          height={bit.w}
+          rx="1.2"
+          fill={colours[index % colours.length]}
+          transform={`rotate(${bit.t} ${bit.x + bit.w / 2} ${bit.y + bit.w / 2})`}
+        />
+      ))}
 
       {/* The same soft green the submitted mark stands on, so the two ends of
           a borrower's story share a colour. */}
