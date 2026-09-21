@@ -27,8 +27,9 @@
 //   1. The state was a RAIL for a while — Approved ─ Signed ─ Funded ─ Repaid
 //      across the top. It is gone again on the designer's call: that overview
 //      belongs to the Dashboard, which is where they want it, and two places
-//      telling one story is how they start disagreeing. `LoanJourney` is kept
-//      for that page; here the state is the two tags beside the title.
+//      telling one story is how they start disagreeing. The Dashboard has
+//      since built that rail as its own `ApplicationProgress`; here the state
+//      is the two tags beside the title.
 //   2. The one figure the page exists for moved onto ONE COLOURED PANEL, and
 //      the four contract facts moved into its foot. They were the loudest
 //      thing on the page and the least useful — the loan amount and the

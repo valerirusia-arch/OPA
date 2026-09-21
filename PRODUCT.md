@@ -113,9 +113,17 @@ preferences and they outrank any design guidance, including this skill's.
   the rest should follow it consistently — a **clean, smooth** design language.
   Treat the existing implementation as design authority to preserve and extend,
   never as an anti-reference.
-- **Name:** OPA. No logo, wordmark or brand artwork exists yet — the app shows
-  a neutral placeholder in that slot. Nothing about a visual identity may be
-  fabricated to fill the gap.
+- **Name:** OPA — One Percent for America. The mark is the company's own teal
+  circle with a flame, `src/shared/ui/opa-symbol.png`, drawn by `Logo` inside
+  an `<svg>` so it scales and stays inside the antd-only rule's SVG exception.
+  It replaced an earlier lowercase "opa" wordmark. **The flame is a cut-out,
+  not white paint** — the file holds only `#125A70` and `#0089A1` — so on a
+  dark ground the mark needs something white behind it, which is what the
+  virtual card's tile does. Nothing beyond the supplied artwork may be
+  fabricated.
+- **Palette and type, as set in `src/theme/tokens.ts`:** teal `#146580` is
+  `colorPrimary`; burnt orange `#B85C23` is the primary Button and nothing
+  else; Playfair Display sets h2/h3 and Montserrat everything else.
 - **Voice, as already written across the product:** plain, direct, second
   person. It says what happens next and what something costs. It does not
   reassure, congratulate, or soften a refusal. Em dashes are not used in UI
@@ -123,9 +131,9 @@ preferences and they outrank any design guidance, including this skill's.
 
 ## Evidence on Hand
 
-- **WBS and estimates (the scope authority):**
-  `~/Downloads/Final WBS & Estimates - OPA LMS (with referals).xlsx - LMS (3).pdf`
-  — 51 pages. Pages 1–17 are the stories; from about page 20 a **"Comments and
+- **WBS and estimates (the scope authority):** `docs/WBS-OPA-LMS.pdf`, with a
+  searchable `docs/wbs.txt` beside it — grep that rather than re-reading the
+  PDF. 51 pages. Pages 1–17 are the stories; from about page 20 a **"Comments and
   assumptions" column** carries rules the story descriptions do not, plus the
   per-story UI/UX hour estimates, which are themselves evidence of how much
   screen a story was costed for.
@@ -133,8 +141,10 @@ preferences and they outrank any design guidance, including this skill's.
   one section per epic. Sections can look empty in metadata while their frames
   sit on the page — check geometry, not parentage.
 - **Built and reviewed so far:** Authentication and profile, Users management,
-  Loan application, Loan decisioning, Manage loan, Manage payments. Plus the
-  contact page and the email templates (7 × 2 languages).
+  Loan application (borrower and co-borrower), Loan decisioning, Manage loan,
+  Manage payments, Notifications, Reporting, Borrowers, and Acquisition
+  channels, referrals and campaigns. Plus the borrower dashboard, the contact
+  page and the email templates (7 × 2 languages).
 - **Absent, and not to be fabricated:** real borrower data, real partner or
   campaign names, testimonials, volumes, pricing beyond the 1% APR, and any
   claim about OPA's funding or legal status.
