@@ -40,7 +40,8 @@
 // Dumb: it takes a state and reports which button was pressed. It navigates
 // nowhere — ApplicationStartScreen does that.
 
-import { Button, Card, Result, theme } from "antd";
+import { Button, Card, ConfigProvider, Result, theme } from "antd";
+import { brand } from "../../../theme/tokens";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { ApplicationMark } from "./ApplicationMark";
 import { InvitationMark } from "./InvitationMark";
@@ -161,10 +162,35 @@ export function ApplicationGate({
       icon: <RepaidMark size={MARK} />,
       title: t("application.repaidTitle"),
       subTitle: t("application.repaidBody"),
+      /*
+        THE ONE GREEN BUTTON IN THE PRODUCT.
+
+        Every primary action here is the site's burnt orange, which is the
+        colour of "do the thing" — apply, sign, pay. This one is not asking
+        for anything: it acknowledges that the loan is over.
+        *"მინდა რომ ღილაკი მწვანე ფერი იყოს, ან რამე Done."*
+
+        Themed through `ConfigProvider` rather than styled with a background,
+        because a solid button needs a hover and an active state as well, and
+        antd derives all three from `colorPrimary` once it is told what green
+        means here.
+      */
       action: (
-        <Button type="primary" size="large" onClick={onCloseApplication}>
-          {t("application.closeApplication")}
-        </Button>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                colorPrimary: brand.success,
+                colorPrimaryHover: brand.successMark,
+                colorPrimaryActive: brand.successActive,
+              },
+            },
+          }}
+        >
+          <Button type="primary" size="large" onClick={onCloseApplication}>
+            {t("application.closeApplication")}
+          </Button>
+        </ConfigProvider>
       ),
     },
     /*

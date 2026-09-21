@@ -735,7 +735,10 @@ export const en = {
      ten screens being careful about money does not suddenly shout. */
   "application.repaidTitle": "Your loan is fully repaid",
   "application.repaidBody": "Every payment is made and nothing is owed. Close this application when you are ready — you can start a new one any time after that.",
-  "application.closeApplication": "Close this application",
+  /* "Done", not "Close this application". The sentence above already says
+     what closing it means and what it frees; the button only has to be the
+     full stop. *"ან რამე Done რაიმე ესეთი რომ ეწეროს."* */
+  "application.closeApplication": "Done",
   "application.startTitle": "Start your loan application",
   "application.startSubtitle":
     "We'll walk you through it step by step and show you what OPA can cover.",
@@ -2389,7 +2392,7 @@ const es: Record<TranslationKey, string> = {
   "application.title": "Solicitud",
   "application.repaidTitle": "Tu préstamo está totalmente pagado",
   "application.repaidBody": "Todos los pagos están hechos y no debes nada. Cierra esta solicitud cuando quieras: después podrás iniciar una nueva en cualquier momento.",
-  "application.closeApplication": "Cerrar esta solicitud",
+  "application.closeApplication": "Listo",
   "application.startTitle": "Inicia tu solicitud de préstamo",
   "application.startSubtitle":
     "Te guiaremos paso a paso y te mostraremos lo que OPA puede cubrir.",

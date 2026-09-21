@@ -104,6 +104,14 @@ export const brand = {
    */
   successMark: "#3E9370",
   successSoft: "#E7F1EC",
+  /**
+   * The green pressed. One button in the product wears green — "Done", on the
+   * repaid application — and antd needs three values to theme a solid button
+   * properly: the fill, a lighter hover and a darker active. `success` is the
+   * fill, `successMark` the hover, and this is the one step down that was
+   * missing.
+   */
+  successActive: "#235F41",
   danger: "#C0392B",
   warning: "#C08A2E",
 

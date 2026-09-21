@@ -1,24 +1,23 @@
 // src/features/LoanApplication/ui/RepaidMark.tsx
 //
-// The illustration for a loan that has been repaid in full.
+// The illustration for a loan that has been repaid in full — a party popper.
 //
-// Fourth of the family, and the first one where the sheet is CLOSED. The
-// other three all show the same document at a turn of the epic — part-filled
-// with a blue "+", shared with two people, handed in with a green tick — so
-// this one shows it finished and stamped, tilted the other way from the
-// submitted mark, as if it has been squared up and put on the pile.
+// IT BREAKS THE FAMILY ON PURPOSE. The other three marks in this epic are the
+// same sheet of paper at three turns of the story: part-filled with a blue
+// "+", shared with two people, handed in with a green tick. The first draft of
+// this one followed them — the sheet again, closed and sealed — and the
+// designer's answer was that it is not what the moment is:
+// *"ეს ილუსტრაცია არ მომწონს, დაახლოებით მსგვასი რაღაც მინდა"* against the
+// party-popper emoji. They are right, and the reason is worth writing down:
+// the other three are about the APPLICATION, which is a document. This one is
+// about the borrower, who has finished paying — the document has nothing more
+// to say, and drawing it again would be the fourth picture of a form on the
+// one screen that is not about a form.
 //
-//   ApplicationMark — part-filled sheet, blue "+"      → start one
-//   InvitationMark  — sheet with two people            → join somebody's
-//   SubmittedMark   — filled sheet, green check        → hand it in
-//   RepaidMark      — closed sheet, sealed, a burst    → it is over
-//
-// THE CELEBRATION IS THE BURST AND NOTHING ELSE. *"რაღაც ფერად-ფერად რაღაცებს
-// რომ ყრის ემოჯი, მაგის მსგავსი რაღაცა, ოღონდ ჩვენს სტილში."* Confetti in a
-// product that has spent ten screens being careful about money would be a
-// change of voice, so the burst is eight strokes in the brand's own three
-// colours, radiating from the seal rather than raining over the card. It
-// reads as a moment; it does not throw a party.
+// SO IT IS THE EMOJI'S IDEA IN THIS PRODUCT'S HAND. A cone, streamers and
+// confetti, but flat, geometric and in the brand's own four colours rather
+// than the emoji's gold and magenta — the same restraint every other drawing
+// here is built with. It reads as a moment; it does not throw a party.
 //
 // Drawn rather than composed because antd has no illustration to compose
 // from; every colour comes from the theme.
@@ -34,18 +33,18 @@ export type RepaidMarkProps = {
 export function RepaidMark({ size = 112 }: RepaidMarkProps) {
   const { token } = theme.useToken();
 
-  /* Eight rays, alternating the brand's two accents and its green, at the
-     angles of a compass rose. Written out rather than mapped: eight numbers
-     in a list is shorter than the loop that would generate them. */
-  const rays = [
-    { d: "M60 6v9", c: brand.successMark },
-    { d: "M98 22l-6 6", c: token.colorPrimary },
-    { d: "M114 60h-9", c: brand.orange },
-    { d: "M98 98l-6-6", c: brand.successMark },
-    { d: "M60 114v-9", c: token.colorPrimary },
-    { d: "M22 98l6-6", c: brand.orange },
-    { d: "M6 60h9", c: brand.successMark },
-    { d: "M22 22l6 6", c: token.colorPrimary },
+  /* The confetti, as four colours over eight pieces. Written out rather than
+     generated: eight positions chosen to sit in the gaps between the
+     streamers is not something a loop knows how to do. */
+  const bits = [
+    { x: 84, y: 20, r: 18, c: token.colorPrimary },
+    { x: 98, y: 38, r: -24, c: brand.orange },
+    { x: 70, y: 14, r: -12, c: brand.successMark },
+    { x: 104, y: 60, r: 36, c: brand.cyan },
+    { x: 56, y: 24, r: 44, c: brand.orange },
+    { x: 92, y: 76, r: -8, c: token.colorPrimary },
+    { x: 46, y: 16, r: 22, c: brand.cyan },
+    { x: 108, y: 22, r: -30, c: brand.successMark },
   ];
 
   return (
@@ -57,56 +56,57 @@ export function RepaidMark({ size = 112 }: RepaidMarkProps) {
       role="presentation"
       aria-hidden="true"
     >
-      {rays.map((ray) => (
-        <path
-          key={ray.d}
-          d={ray.d}
-          stroke={ray.c}
-          strokeWidth="3.4"
-          strokeLinecap="round"
-          opacity="0.75"
-        />
-      ))}
+      {/* The soft ground the whole family stands on, so this mark still
+          belongs to the set it is deliberately unlike. */}
+      <circle cx="60" cy="60" r="46" fill={token.colorSuccessBg} />
 
-      {/* Green, because the news is good — the same ground the submitted mark
-          stands on, so the two ends of the story share a colour. */}
-      <circle cx="60" cy="60" r="44" fill={token.colorSuccessBg} />
-
-      {/* Squared up and put down: the tilt is the other way from the submitted
-          sheet, which is the difference between handing something in and
-          being finished with it. */}
-      <g transform="rotate(5 60 60)">
-        <rect
-          x="41"
-          y="32"
-          width="38"
-          height="50"
-          rx="6"
-          fill={token.colorBgContainer}
-          stroke={token.colorBorderSecondary}
-        />
-        <rect x="48" y="43" width="22" height="4" rx="2" fill={token.colorPrimary} />
-        <rect x="48" y="52" width="15" height="4" rx="2" fill={token.colorPrimary} />
-        <rect x="48" y="61" width="22" height="4" rx="2" fill={token.colorPrimary} />
-      </g>
-
-      {/* The seal: paid, and nothing owed. A tick rather than a zero, because
-          the zero is on the balance card and this is the badge on the file. */}
-      <circle
-        cx="80"
-        cy="82"
-        r="15"
-        fill={brand.successMark}
-        stroke={token.colorBgContainer}
+      {/* TWO STREAMERS, curling out of the cone's mouth. Strokes rather than
+          ribbons: a filled ribbon at this size turns into a blob. */}
+      <path
+        d="M62 54c10-8 14 2 22-4s6-12 14-14"
+        stroke={brand.cyan}
         strokeWidth="3"
+        strokeLinecap="round"
       />
       <path
-        d="M73.5 82.5l4.5 4.5 8.5-9"
-        stroke={token.colorWhite}
-        strokeWidth="2.6"
+        d="M66 66c12-2 12 8 22 6s10-10 18-8"
+        stroke={brand.successMark}
+        strokeWidth="3"
         strokeLinecap="round"
-        strokeLinejoin="round"
       />
+
+      {/* THE CONE, tip at the bottom left and the mouth opening up and to the
+          right — the emoji's own angle, which is what makes a triangle read
+          as a popper rather than as an arrow. */}
+      <path d="M24 98L60 46l22 22z" fill={brand.orange} />
+      {/* Two bands across it. The emoji stripes its cone; one colour would be
+          a paper hat. */}
+      <path d="M40 76l22-22 6 6-22 22z" fill={brand.orangeSoft} opacity="0.9" />
+      <path d="M31 89l22-22 4 4-22 22z" fill={brand.orangeSoft} opacity="0.55" />
+      {/* The mouth, as the ellipse the cone is cut on. */}
+      <ellipse
+        cx="71"
+        cy="57"
+        rx="8"
+        ry="15"
+        transform="rotate(45 71 57)"
+        fill={brand.orangeSoft}
+      />
+
+      {/* THE CONFETTI. Squares, because a square at 6px still has corners and
+          a circle at 6px is a dot. */}
+      {bits.map((bit) => (
+        <rect
+          key={`${bit.x}-${bit.y}`}
+          x={bit.x}
+          y={bit.y}
+          width="7"
+          height="7"
+          rx="1.5"
+          fill={bit.c}
+          transform={`rotate(${bit.r} ${bit.x + 3.5} ${bit.y + 3.5})`}
+        />
+      ))}
     </svg>
   );
 }
