@@ -84,6 +84,17 @@ export function AdminShell({
   const compact = screens.lg === false;
   const [navOpen, setNavOpen] = useState(false);
 
+  // The group holding the current page, so a rail arrived at by URL or reload
+  // opens it and shows you where you are. Without this the selected child is
+  // hidden inside a collapsed group and the rail looks like nothing is active.
+  const activeParent = sections
+    .flatMap((section) => section.items)
+    .find((item) => item.children?.some((child) => child.key === activeKey))?.key;
+  // Seeded, not controlled, so you can still collapse the group you are in.
+  // Each screen renders its own AdminShell, so navigating remounts this and the
+  // seed is recomputed — the state never goes stale against activeKey.
+  const [openKeys, setOpenKeys] = useState<string[]>(activeParent ? [activeParent] : []);
+
   /** A count sits at the end of the row, where a rail's eye already scans. */
   const label = (item: NavItem) => {
     const text = item.to ? <Link to={item.to}>{t(item.labelKey)}</Link> : t(item.labelKey);
@@ -119,6 +130,8 @@ export function AdminShell({
       // titles. Nested entries still step in by one unit.
       inlineIndent={12}
       selectedKeys={activeKey ? [activeKey] : []}
+      openKeys={openKeys}
+      onOpenChange={setOpenKeys}
       style={navMenu}
       // In the drawer, choosing a destination should also dismiss it.
       onClick={() => setNavOpen(false)}
