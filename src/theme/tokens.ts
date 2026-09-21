@@ -185,18 +185,22 @@ export const brand = {
     where the eye looks last; at 20% and 66% across they fall either side of
     the card that stands in the middle of these pages.
 
-    THE TEAL WENT UP ONE MORE STEP after that — *"უკან არის ზედმეტად მუქი
-    მწვანე ფერი, გაბლარული; მინდა ოდნავ ღია ტონში გადაყვანა."* Blurred at
-    72px and spread across a third of the window, a mid teal stops reading as
-    teal and starts reading as a green cast over the page. The paler mix keeps
-    the hue and loses the cast; the warm blobs did not have the problem and
-    did not move.
+    THE TEAL AND THE ORANGE THEN WENT UP TWO MORE STEPS between them —
+    *"ზედმეტად მუქი მწვანე ფერი"*, then *"ამ ნარინჯისფერი და მწვანე ფერი
+    ტონი ძალიან მუქია, ოდნავ უფრო ღია ტონისკენ წავიყვანოთ."*
+
+    The reason is the blur, and it is worth stating once: a colour spread
+    across a third of the window at 72px of blur is not read as a colour, it
+    is read as a CAST over everything under it. A mid teal casts green and a
+    mid orange casts brown, at alphas that would be invisible on a small
+    shape. Only the paler mixes survive being enlarged this far — which is
+    why each step here lightens the hue and leaves the alpha alone.
   */
   cover: [
-    "radial-gradient(56% 110% at 18% 12%, rgba(146,210,224,0.26) 0%, rgba(146,210,224,0) 62%)",
+    "radial-gradient(56% 110% at 18% 12%, rgba(178,224,232,0.26) 0%, rgba(178,224,232,0) 62%)",
     "radial-gradient(48% 100% at 78% 8%, rgba(244,193,177,0.26) 0%, rgba(244,193,177,0) 60%)",
-    "radial-gradient(54% 115% at 88% 78%, rgba(168,232,237,0.22) 0%, rgba(168,232,237,0) 62%)",
-    "radial-gradient(58% 120% at 30% 96%, rgba(232,168,120,0.18) 0%, rgba(232,168,120,0) 60%)",
+    "radial-gradient(54% 115% at 88% 78%, rgba(192,240,243,0.22) 0%, rgba(192,240,243,0) 62%)",
+    "radial-gradient(58% 120% at 30% 96%, rgba(248,210,180,0.20) 0%, rgba(248,210,180,0) 60%)",
     "#FAF8F6",
   ].join(", "),
   /**
@@ -208,7 +212,7 @@ export const brand = {
    * the colour is, not how much of it there is.
    */
   coverDrift: [
-    "radial-gradient(44% 86% at 62% 24%, rgba(146,210,224,0.20) 0%, rgba(146,210,224,0) 64%)",
+    "radial-gradient(44% 86% at 62% 24%, rgba(178,224,232,0.20) 0%, rgba(178,224,232,0) 64%)",
     "radial-gradient(50% 92% at 26% 70%, rgba(244,193,177,0.20) 0%, rgba(244,193,177,0) 64%)",
   ].join(", "),
 

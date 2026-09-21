@@ -272,8 +272,12 @@ export const en = {
     "{name}'s application is with OPA. Here is where it stands.",
   "dashboard.urgent": "Running out",
   "dashboard.leadLoan": "Here is your loan, what it costs and what is coming.",
-  "dashboard.emptyBody":
-    "Once you apply, this page shows what OPA is doing, what you owe and what happens next.",
+  /* SHORTER, and it borrows the band's own head. It listed three things —
+     what OPA is doing, what you owe, what happens next — which is an accurate
+     table of contents for a page nobody is looking at yet. *"ცოტა შემოკლე ეს
+     ტექსტი რა."* "Where your loan stands" is the card that fills this space,
+     so the sentence names it rather than its parts. */
+  "dashboard.emptyBody": "Once you apply, this page shows where your loan stands.",
 
   "dashboard.tileLoan": "Loan amount",
   "dashboard.tileLoanHint": "{apr} APR",
@@ -2025,7 +2029,7 @@ const es: Record<TranslationKey, string> = {
   "dashboard.urgent": "Se acaba el plazo",
   "dashboard.leadLoan": "Aquí está tu préstamo, lo que cuesta y lo que viene.",
   "dashboard.emptyBody":
-    "Cuando solicites, esta página te mostrará qué está haciendo OPA, qué debes y qué pasa después.",
+    "Cuando solicites, esta página te mostrará cómo va tu préstamo.",
 
   "dashboard.tileLoan": "Importe del préstamo",
   "dashboard.tileLoanHint": "{apr} TAE",
