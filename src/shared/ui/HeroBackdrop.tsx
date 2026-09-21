@@ -100,7 +100,13 @@ export function HeroBackdrop({
         paddingBlock,
       }}
     >
-      {washed ? <div style={{ ...styles.wash, ...s.wash }} /> : null}
+      {washed ? (
+        <>
+          <div style={{ ...styles.wash, ...s.wash }} />
+          {/* The second layer travels against the first — see `drift`. */}
+          <div style={{ ...styles.wash, ...s.drift }} />
+        </>
+      ) : null}
       <div style={styles.content}>{children}</div>
 
     </div>

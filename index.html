@@ -95,15 +95,33 @@
           transform: translate3d(0, 0, 0) scale(1);
         }
         33% {
-          transform: translate3d(-1.5%, 1%, 0) scale(1.04);
+          transform: translate3d(-4%, 2.5%, 0) scale(1.08);
         }
         66% {
-          transform: translate3d(1.5%, -1%, 0) scale(1.02);
+          transform: translate3d(4%, -2.5%, 0) scale(1.04);
+        }
+      }
+      /*
+        The second wash layer, travelling the other way and on its own clock —
+        see `drift` in HeroBackdrop.styles.ts. Two layers crossing is what
+        makes the light move; one on its own only slides.
+      */
+      @keyframes opa-drift-b {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1.05);
+        }
+        40% {
+          transform: translate3d(6%, 3%, 0) scale(1);
+        }
+        70% {
+          transform: translate3d(-3%, -4%, 0) scale(1.1);
         }
       }
       @media (prefers-reduced-motion: reduce) {
         [style*="opa-twinkle"],
-        [style*="opa-drift"] {
+        [style*="opa-drift"],
+        [style*="opa-drift-b"] {
           animation: none !important;
         }
       }

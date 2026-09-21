@@ -53,6 +53,24 @@ export const getStyles = (token: GlobalToken) =>
       color: token.colorText,
     },
     /**
+     * THE SECOND LAYER, over the first and travelling against it.
+     *
+     * One sheet sliding under a page is a sheet sliding. Two layers at
+     * different speeds in opposite directions is light moving, and it costs
+     * one more div: the blobs pass each other, so the colour on any part of
+     * the page keeps changing without any of it going anywhere.
+     *
+     * Longer and looser than the first — 44 seconds over 6% — because it
+     * carries only two blobs and has room to travel without meeting an edge.
+     */
+    drift: {
+      inset: -WASH_BLEED,
+      filter: `blur(${WASH_BLUR}px)`,
+      background: brand.coverDrift,
+      animation: "opa-drift-b 44s ease-in-out infinite",
+      willChange: "transform",
+    },
+    /**
      * The colour, softened twice over.
      *
      * LIGHTER, because the washes were mixed for a 120px band at the top of a
@@ -72,18 +90,19 @@ export const getStyles = (token: GlobalToken) =>
       inset: -WASH_BLEED,
       filter: `blur(${WASH_BLUR}px)`,
       /*
-        AND IT MOVES, barely — *"ძალიან მსუბუქად მინდა მოძრაობდნენ."* Forty
-        seconds for one pass and never more than 1.5% of the layer's width, so
-        nothing on the page appears to shift: what a reader notices is that the
-        light is not quite where it was a minute ago.
+        AND IT MOVES — *"მინდა მოძრაობდნენ დინამიურად."* It was forty seconds
+        over 1.5%, which was so little that a reader could only tell by
+        leaving the page and coming back. 28 seconds over 4% is still slow
+        enough that nothing on the page appears to shift, and fast enough to
+        be movement rather than a rumour of it.
 
-        The layer is already grown by twice the blur radius, so a translate
-        this size cannot pull a hard edge into view. `@keyframes` has no
-        CSSProperties form, so the animation itself lives in index.html beside
-        the sparkle's, and the same file switches it off under
+        The layer is grown by twice the blur radius, so a translate of this
+        size cannot pull a hard edge into view. `@keyframes` has no
+        CSSProperties form, so the animation lives in index.html beside the
+        sparkle's, and the same file switches it off under
         `prefers-reduced-motion`.
       */
-      animation: "opa-drift 40s ease-in-out infinite",
+      animation: "opa-drift 28s ease-in-out infinite",
       willChange: "transform",
       background: [
         "linear-gradient(180deg, rgba(255,255,255,0.30) 0%," +

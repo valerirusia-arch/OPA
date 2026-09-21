@@ -171,17 +171,38 @@ export const brand = {
    * peach is the avatar's own tint, so the two read as one idea.
    */
   /*
-    LIGHTER AGAIN — *"ეს ნამეტანი მუქია უკან, ოდნავ უფრო ღია ფერები მინდა."*
-    Every alpha comes down about a third. These were mixed when the wash sat
-    behind a page with cards all over it; behind ONE card on an otherwise
-    empty screen the same strengths read as weather rather than as light.
+    LIGHTER HUES, AND MORE OF THEM — *"რომ უფრო ნათელი ფერები იყოს, ოდნავ
+    უფრო ამათ ანათონ, რომ უფრო მეტად ჩანდნენ."*
+
+    Two separate moves, and it matters that they are separate. The COLOURS
+    went up the tint ladder: the deep teal, the burnt orange and the peach all
+    give way to versions mixed toward white, so nothing in the wash is darker
+    than the page it lies on. Their ALPHAS then went up rather than down,
+    which is only possible because the hues are lighter — 0.22 of a pale teal
+    shows more and weighs less than 0.13 of a deep one.
+
+    Two of the four moved as well. They were pinned at the corners, which is
+    where the eye looks last; at 20% and 66% across they fall either side of
+    the card that stands in the middle of these pages.
   */
   cover: [
-    "radial-gradient(58% 120% at 12% 8%, rgba(30,124,151,0.13) 0%, rgba(30,124,151,0) 62%)",
-    "radial-gradient(46% 105% at 74% 4%, rgba(232,160,139,0.13) 0%, rgba(232,160,139,0) 60%)",
-    "radial-gradient(52% 120% at 92% 88%, rgba(62,201,210,0.11) 0%, rgba(62,201,210,0) 62%)",
-    "radial-gradient(60% 130% at 44% 108%, rgba(184,92,35,0.07) 0%, rgba(184,92,35,0) 60%)",
+    "radial-gradient(56% 110% at 18% 12%, rgba(96,186,205,0.26) 0%, rgba(96,186,205,0) 62%)",
+    "radial-gradient(48% 100% at 78% 8%, rgba(244,193,177,0.26) 0%, rgba(244,193,177,0) 60%)",
+    "radial-gradient(54% 115% at 88% 78%, rgba(120,216,222,0.22) 0%, rgba(120,216,222,0) 62%)",
+    "radial-gradient(58% 120% at 30% 96%, rgba(232,168,120,0.18) 0%, rgba(232,168,120,0) 60%)",
     "#FAF8F6",
+  ].join(", "),
+  /**
+   * THE SECOND WASH LAYER — two blobs that drift against the first.
+   *
+   * One sheet sliding under a page is a sheet sliding; two layers travelling
+   * at different speeds in different directions is light moving. This one is
+   * deliberately sparse: two blobs, so what it changes as it passes is where
+   * the colour is, not how much of it there is.
+   */
+  coverDrift: [
+    "radial-gradient(44% 86% at 62% 24%, rgba(96,186,205,0.20) 0%, rgba(96,186,205,0) 64%)",
+    "radial-gradient(50% 92% at 26% 70%, rgba(244,193,177,0.20) 0%, rgba(244,193,177,0) 64%)",
   ].join(", "),
 
 
