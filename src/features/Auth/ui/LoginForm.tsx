@@ -11,6 +11,7 @@ import { Alert, Button, Checkbox, Flex, Form, Input, Typography } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { useAuthRules } from "./validation";
 import { styles } from "./LoginForm.styles";
+import { passwordField } from "./passwordField.styles";
 
 export type LoginValues = {
   email: string;
@@ -72,6 +73,7 @@ export function LoginForm({
         style={styles.optionsRow}
       >
         <Input.Password
+          styles={{ input: passwordField }}
           placeholder={t("field.passwordPlaceholder")}
           autoComplete="current-password"
           size="large"

@@ -28,6 +28,7 @@ import {
   AppstoreOutlined, CommentOutlined, CustomerServiceOutlined, HomeOutlined,
   MailOutlined, SettingOutlined, StarOutlined, UploadOutlined, UserOutlined,
 } from "@ant-design/icons";
+import { passwordField } from "../features/Auth/ui/passwordField.styles";
 
 const { Title, Text, Link, Paragraph } = Typography;
 const { RangePicker } = DatePicker;
@@ -137,7 +138,7 @@ function ShowcaseInner() {
 
       <Section title="Data Entry — Inputs, Number, Select, AutoComplete, Cascader, TreeSelect, Mentions">
         <Input placeholder="Input" style={{ width: 200 }} />
-        <Input.Password placeholder="Password" style={{ width: 200 }} />
+        <Input.Password placeholder="Password" styles={{ input: passwordField }} style={{ width: 200 }} />
         <Input.Search placeholder="Search" enterButton style={{ width: 220 }} />
         <Input.TextArea placeholder="Textarea" style={{ width: 220 }} rows={2} />
         <InputNumber defaultValue={10} />

@@ -14,6 +14,7 @@ import { useT } from "../../shared/ui/i18n/useT";
 import { AuthLayout } from "../../features/Auth/ui/AuthLayout";
 import { useAuthRules } from "../../features/Auth/ui/validation";
 import { getStyles, styles } from "./ResetPasswordScreen.styles";
+import { passwordField } from "../../features/Auth/ui/passwordField.styles";
 
 type ResetValues = { password: string; confirmPassword: string };
 
@@ -88,6 +89,7 @@ export default function ResetPasswordScreen() {
           rules={rules.password}
         >
           <Input.Password
+            styles={{ input: passwordField }}
             placeholder={t("reset.newPasswordPlaceholder")}
             autoComplete="new-password"
             size="large"
@@ -101,6 +103,7 @@ export default function ResetPasswordScreen() {
           rules={rules.confirmPassword("password")}
         >
           <Input.Password
+            styles={{ input: passwordField }}
             placeholder={t("reset.confirmPasswordPlaceholder")}
             autoComplete="new-password"
             size="large"

@@ -11,6 +11,7 @@ import { Alert, Button, Divider, Form, Input, Modal, Typography } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { useAuthRules } from "../../Auth/ui/validation";
 import { styles } from "./ChangePasswordModal.styles";
+import { passwordField } from "../../Auth/ui/passwordField.styles";
 
 export type ChangePasswordValues = {
   currentPassword: string;
@@ -64,7 +65,7 @@ export function ChangePasswordModal({
           name="currentPassword"
           rules={[rules.required(t("validation.currentPassword"))]}
         >
-          <Input.Password autoComplete="current-password" />
+          <Input.Password styles={{ input: passwordField }} autoComplete="current-password" />
         </Form.Item>
 
         <Divider style={styles.divider} />
@@ -75,6 +76,7 @@ export function ChangePasswordModal({
           rules={rules.password}
         >
           <Input.Password
+            styles={{ input: passwordField }}
             placeholder={t("reset.newPasswordPlaceholder")}
             autoComplete="new-password"
           />
@@ -87,6 +89,7 @@ export function ChangePasswordModal({
           rules={rules.confirmPassword("password")}
         >
           <Input.Password
+            styles={{ input: passwordField }}
             placeholder={t("reset.confirmPasswordPlaceholder")}
             autoComplete="new-password"
           />
