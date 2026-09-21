@@ -729,6 +729,13 @@ export const en = {
   // Entry. WBS story 2: one active application per borrower, and a borrower on
   // the DO NOT LOAN list may not start one.
   "application.title": "Application",
+  /* THE END OF THE STORY. Plain and short: the loan is over, the file can be
+     closed, and closing it is what lets them come back. No exclamation mark —
+     the burst on the drawing is the celebration, and a product that has spent
+     ten screens being careful about money does not suddenly shout. */
+  "application.repaidTitle": "Your loan is fully repaid",
+  "application.repaidBody": "Every payment is made and nothing is owed. Close this application when you are ready — you can start a new one any time after that.",
+  "application.closeApplication": "Close this application",
   "application.startTitle": "Start your loan application",
   "application.startSubtitle":
     "We'll walk you through it step by step and show you what OPA can cover.",
@@ -1630,6 +1637,11 @@ export const en = {
   "payments.savedCard": "Saved payment card",
   "payments.filterByBorrower": "Filter by borrower",
 
+  /* THE SCHEDULE TAB WHEN THERE IS NOTHING LEFT ON IT. Not "no data": the
+     list is empty because the borrower finished, which is the opposite news.
+     */
+  "payments.settledTitle": "Every payment is made",
+  "payments.settledBody": "There is nothing left to schedule. The Payment history tab has the record of all twelve.",
   "payments.noneTitle": "There is nothing to repay yet",
   "payments.noneBody": "Your repayment schedule is created when the loan is paid out. It will appear here with every payment due date.",
   "payments.viewLoan": "Go to my loan",
@@ -1663,6 +1675,10 @@ export const en = {
   "payments.feesApplied": "Fees applied",
   "payments.payoffToday": "Pay off today",
   "payments.maturity": "Final payment due",
+  /* What the strip says instead, once there is nothing owed — see `settled`
+     in BalanceSummary. */
+  "payments.totalRepaid": "Total repaid",
+  "payments.closedOn": "Loan closed",
 
   // WBS story 9's three consequences, in the borrower's words. Nothing here is
   // softened: at 96 days past due somebody is a month from owing the lot.
@@ -2371,6 +2387,9 @@ const es: Record<TranslationKey, string> = {
     "Tu cuenta de OPA está lista. Inicia sesión con tu correo y tu contraseña nueva.",
 
   "application.title": "Solicitud",
+  "application.repaidTitle": "Tu préstamo está totalmente pagado",
+  "application.repaidBody": "Todos los pagos están hechos y no debes nada. Cierra esta solicitud cuando quieras: después podrás iniciar una nueva en cualquier momento.",
+  "application.closeApplication": "Cerrar esta solicitud",
   "application.startTitle": "Inicia tu solicitud de préstamo",
   "application.startSubtitle":
     "Te guiaremos paso a paso y te mostraremos lo que OPA puede cubrir.",
@@ -3087,6 +3106,8 @@ const es: Record<TranslationKey, string> = {
   "payments.savedCard": "Tarjeta guardada",
   "payments.filterByBorrower": "Filtrar por titular",
 
+  "payments.settledTitle": "Todos los pagos están hechos",
+  "payments.settledBody": "No queda nada por programar. La pestaña Historial de pagos tiene el registro de los doce.",
   "payments.noneTitle": "Todavía no hay nada que pagar",
   "payments.noneBody": "Tu calendario de pagos se crea cuando se desembolsa el préstamo. Aparecerá aquí con cada fecha de vencimiento.",
   "payments.viewLoan": "Ir a mi préstamo",
@@ -3103,6 +3124,8 @@ const es: Record<TranslationKey, string> = {
   "payments.feesApplied": "Recargos",
   "payments.payoffToday": "Liquidar hoy",
   "payments.maturity": "Último pago",
+  "payments.totalRepaid": "Total pagado",
+  "payments.closedOn": "Préstamo cerrado",
 
   "payments.overdueTitle": "Hay un pago con {days} días de retraso",
   "payments.overdueBody": "Tienes {pastDue} vencidos. El recargo por mora se cobra el día 16 después del vencimiento y es de $5.00 o el 5% del pago no realizado, la cantidad que sea menor. Solo se cobra un recargo por cada pago omitido.",

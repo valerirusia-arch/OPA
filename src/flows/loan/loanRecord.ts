@@ -157,6 +157,10 @@ const APPLICATION_STAGES: BorrowerStage[] = [
   "review",
   "coBorrower",
   "needsInfo",
+  /* AND THE ONE STAGE THAT IS NOT A COLLAPSE. `paidOff` is the only funded
+     stage this page draws differently from the other four: it is the state
+     that offers to close the file, so it has to be walkable from here. */
+  "paidOff",
 ];
 
 const LOAN_STAGES: BorrowerStage[] = [
@@ -679,8 +683,29 @@ export const usePaymentsRecord = () => useSyncExternalStore(subscribe, getPaymen
 export const hasOpenApplication = (record: ApplicationSummary | undefined) =>
   record !== undefined && record.loan?.stage !== "cancelled";
 
+/**
+ * EVERY INSTALMENT PAID, on a loan that was funded.
+ *
+ * Derived rather than stored: there is no "repaid" LoanStage, because the WBS
+ * has no story that sets one — it defines the four stages that end at
+ * `funded` and `cancelled` and says nothing about what a loan becomes when it
+ * is settled. What the product does have is the schedule, and a schedule with
+ * nothing left on it is the same fact by another route.
+ */
+export const isRepaid = (record: ApplicationSummary | undefined) =>
+  record?.loan?.stage === "funded" &&
+  record.loan.schedule !== undefined &&
+  record.loan.schedule.length > 0 &&
+  record.loan.schedule.every((row) => row.status === "paid");
+
 export const gateFor = (record: ApplicationSummary | undefined) => {
   if (!record) return "open" as const;
+  /* SETTLED, AND THE FILE CAN BE CLOSED. Before `hasActive`, which is what
+     this would otherwise be: a repaid loan still counts as an open one to
+     the WBS's own check ("an open application OR LOAN"), and that is exactly
+     the state this page now offers a way out of. See `repaid` on
+     ApplicationGateState. */
+  if (isRepaid(record)) return "repaid" as const;
   /* A cancelled loan closes the application with it — the record is history,
      not something to resume, so the page offers a new one. */
   if (record.loan?.stage === "cancelled") return "open" as const;

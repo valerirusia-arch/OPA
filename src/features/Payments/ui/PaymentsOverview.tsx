@@ -44,6 +44,7 @@ import {
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { NoScheduleMark } from "./NoScheduleMark";
 import { stageCopy } from "./delinquency";
+import { formatAmount, toAmount } from "./money";
 import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { leadPanelBody } from "../../../shared/ui/panel.styles";
@@ -139,6 +140,16 @@ export function PaymentsOverview({
    */
   const next = record.schedule.find((row) => row.status !== "paid");
 
+  /* WHAT IT COST AND WHEN IT ENDED. Only read once there is nothing owed. The
+     sum goes through the same helper the rest of this epic formats money
+     with, so it is the schedule's own arithmetic rather than a second
+     opinion; the date is the newest successful transaction, which is the day
+     the loan closed by definition. */
+  const totalRepaid = formatAmount(
+    record.schedule.reduce((sum, row) => sum + toAmount(row.amount), 0)
+  );
+  const closedOn = record.history.find((row) => row.status === "succeeded")?.on;
+
   const notice = stageCopy[record.balance.stage];
 
   return (
@@ -217,7 +228,16 @@ export function PaymentsOverview({
             it, so WBS story 6's payoff and story 10's applied fees belong
             beside the schedule they explain as much as they belong on the
             summary. */}
-        <BalanceSummary balance={record.balance} next={next} />
+        <BalanceSummary
+          balance={record.balance}
+          next={next}
+          /* THE TWO FACTS A SETTLED STRIP SHOWS INSTEAD — see `settled` in
+             BalanceSummary. Both are read off the record this page already
+             has: the schedule's own sum, and the day the last successful
+             payment landed. */
+          totalRepaid={totalRepaid}
+          closedOn={closedOn}
+        />
       </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an
@@ -235,7 +255,30 @@ export function PaymentsOverview({
             {
               key: "schedule",
               label: t("loanPage.schedule"),
-              children: (
+              children: next === undefined ? (
+                /*
+                  NOTHING LEFT TO SCHEDULE.
+
+                  The tab was an empty antd table — a header band, "No data",
+                  and the fee rules underneath — which reads as a list that
+                  failed to load rather than as a loan that is finished.
+                  *"რეფეიმენთზე იქნება ილუსტრაცია რომელიც ეტყვის ყველაფერი
+                  გადახდილია."*
+
+                  The same `Result` the page's own empty states use, with the
+                  third mark of that family, so "there is nothing here" looks
+                  the same whether the reason is that nothing has started yet
+                  or that everything is done. The rules block goes with the
+                  table: late fees explain a schedule, and there is none.
+                */
+                <div style={styles.settled}>
+                  <Result
+                    icon={<NoScheduleMark muted />}
+                    title={t("payments.settledTitle")}
+                    subTitle={t("payments.settledBody")}
+                  />
+                </div>
+              ) : (
                 <>
                   {/* WBS story 2, with story 5's Pay now on each payable line.
                       ONLY WHAT IS STILL OWED. A paid instalment drops off the

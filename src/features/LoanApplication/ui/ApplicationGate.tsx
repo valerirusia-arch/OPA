@@ -44,6 +44,7 @@ import { Button, Card, Result, theme } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { ApplicationMark } from "./ApplicationMark";
 import { InvitationMark } from "./InvitationMark";
+import { RepaidMark } from "./RepaidMark";
 import { SubmittedMark } from "./SubmittedMark";
 import { getStyles, styles } from "./ApplicationGate.styles";
 
@@ -53,6 +54,24 @@ export type ApplicationGateState =
   | "invited"
   | "assignedDone"
   | "hasActive"
+  /**
+   * THE LOAN IS REPAID AND THE FILE CAN BE CLOSED.
+   *
+   * NOT IN THE WBS, and it should be read as a proposal rather than a
+   * requirement. What the WBS has is the rule this state exists because of:
+   * "One active application per borrower is assumed... If a user already has
+   * a loan application, the new application should not be allowed", and the
+   * check that enforces it looks for "an open application OR LOAN". It never
+   * says what makes a repaid loan stop counting as one — so as written, a
+   * borrower who has paid OPA back in full can never apply again, which for
+   * a filing-fee lender whose customers file more than one petition cannot be
+   * what is meant.
+   *
+   * So this state offers the closing act the rule implies and the document
+   * omits: the loan is settled, the application can be closed, and closing it
+   * is what frees the next one. OPA has to confirm it.
+   */
+  | "repaid"
   | "notEligible"
   | "needsInfo"
   | "coBorrowerNeeded"
@@ -82,6 +101,9 @@ export type ApplicationGateProps = {
   onSendInformation?: () => void;
   onInviteCoBorrower?: () => void;
   onProfile?: () => void;
+  /** WBS-adjacent — see `repaid` on ApplicationGateState. Closing the file is
+   *  what lets the borrower start another application. */
+  onCloseApplication?: () => void;
 };
 
 export function ApplicationGate({
@@ -95,6 +117,7 @@ export function ApplicationGate({
   onSendInformation,
   onInviteCoBorrower,
   onProfile,
+  onCloseApplication,
 }: ApplicationGateProps) {
   const t = useT();
   const { token } = theme.useToken();
@@ -126,6 +149,21 @@ export function ApplicationGate({
       action: (
         <Button type="primary" size="large" onClick={onStart}>
           {t("application.start")}
+        </Button>
+      ),
+    },
+    /*
+      REPAID. The one state on this page that is an ending rather than a
+      waiting room — so it is the one that gets a burst, and the only action
+      is to close the file behind it.
+    */
+    repaid: {
+      icon: <RepaidMark size={MARK} />,
+      title: t("application.repaidTitle"),
+      subTitle: t("application.repaidBody"),
+      action: (
+        <Button type="primary" size="large" onClick={onCloseApplication}>
+          {t("application.closeApplication")}
         </Button>
       ),
     },

@@ -95,6 +95,14 @@ export type BalanceSummaryProps = {
   /** The next thing owed, taken from the schedule by the screen. */
   next?: Installment;
   /**
+   * What the loan cost in the end, and the day it ended — the two facts that
+   * replace the payoff and the maturity date once there is nothing owed. Both
+   * come from the record the screen already has: the schedule's own sum and
+   * the last successful transaction. See `settled`.
+   */
+  totalRepaid?: string;
+  closedOn?: string;
+  /**
    * Fill the card and push the detail row to its foot.
    *
    * Only true where this card shares a row with another and has a height to
@@ -111,6 +119,8 @@ export function BalanceSummary({
   progress,
   showDetails = true,
   showLabel = true,
+  totalRepaid,
+  closedOn,
   hero = false,
   next,
   fill = false,
@@ -151,7 +161,38 @@ export function BalanceSummary({
     it takes the error ink for the same reason. The other three are the WBS's
     own entitlements — story 10's applied fees, story 6's payoff and maturity.
   */
-  const details = [
+  /*
+    SETTLED IS A DIFFERENT THREE FACTS, not the same three at zero.
+
+    "Pay off today $0.00" is an offer to do something that cannot be done, and
+    "Final payment due Sep 01, 2027" bills a closed loan for next September —
+    both were TRUE of the record and false as statements. What a borrower who
+    has finished wants from this strip is what it cost and when it ended.
+    *"ინფოც შესაბამისი იქნება."*
+
+    `settled` comes from the schedule via `next`: the screen hands this card
+    the earliest unpaid line, so no line means nothing is owed. Nothing here
+    reads a status the WBS does not define.
+  */
+  const settled = showDetails && next === undefined;
+
+  const details = settled
+    ? [
+        { key: "fees", label: t("payments.feesApplied"), value: balance.fees, alarm: false },
+        {
+          key: "repaid",
+          label: t("payments.totalRepaid"),
+          value: totalRepaid ?? balance.outstanding,
+          alarm: false,
+        },
+        {
+          key: "closed",
+          label: t("payments.closedOn"),
+          value: closedOn ?? balance.maturityOn,
+          alarm: false,
+        },
+      ]
+    : [
     ...(pastDue
       ? [{ key: "past", label: t("payments.pastDueLabel"), value: pastDue, alarm: true }]
       : []),

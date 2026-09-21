@@ -35,6 +35,9 @@ export const styles = {
   tableCard: { overflow: "hidden" },
   tableCardBody: { padding: 0 },
   tabBar: { paddingInline: CARD_INSET, marginBottom: 0 },
+  /** The settled schedule's own state, on the card's margin like the rules
+   *  block it replaces. */
+  settled: { padding: CARD_INSET },
   /** The late-fee rules, under the schedule and back on the card's margin. */
   rulesBlock: { padding: CARD_INSET, paddingTop: 8 },
 } satisfies Record<string, CSSProperties>;

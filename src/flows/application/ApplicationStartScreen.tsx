@@ -27,7 +27,7 @@ import {
 } from "../../features/LoanApplication/ui/ApplicationGate";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
-import { gateFor, useLoanRecord } from "../loan/loanRecord";
+import { gateFor, setStage, useLoanRecord } from "../loan/loanRecord";
 import { styles } from "./ApplicationStartScreen.styles";
 
 /** Kept as the screen's own name for the prop Dev will feed. */
@@ -124,6 +124,21 @@ export default function ApplicationStartScreen({
                the thing they came to do is three fields. */
             onInviteCoBorrower={() => navigate({ to: "/application/co-borrower" })}
             onProfile={() => navigate({ to: "/profile" })}
+            /*
+              CLOSING THE FILE IS WHAT LETS THEM COME BACK.
+
+              In the product this is a record being closed. In the prototype
+              it is the same thing: the staged record goes back to "no
+              application", which is what every page reads, so /loan,
+              /payments and this one all return to their empty states
+              together — *"თუ დააწვები, უბრალოდ გაქრება ეს ყველაფერი და
+              დაბრუნდები ისევ იმ სქრინზე სადაც ყველგან ემფთი სტეიტებია."*
+
+              NOT a dev control dressed as a product one: what the borrower
+              presses is the same door Dev will wire to the real close. It
+              stays in /flows because the record it moves is /flows' own mock.
+            */
+            onCloseApplication={() => setStage("none")}
           />
         </div>
       </HeroBackdrop>

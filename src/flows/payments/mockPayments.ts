@@ -49,9 +49,19 @@ const MONTHS = [
   "Sep 01, 2027",
 ];
 
-/** $1,440.00 at 1% APR over 12 months. The last line carries the rounding. */
+/**
+ * $1,440.00 at 1% APR over 12 months.
+ *
+ * TWELVE EQUAL LINES, and that is a correction. The last one was $120.60 —
+ * "the last line carries the rounding", which is how a real schedule works —
+ * and it made the twelve add up to $1,447.75 against a balance this file
+ * states as $1,447.80 everywhere else. Five cents, wrong for two years, and
+ * invisible until /payments started printing "Total repaid" off the
+ * schedule's own sum. Twelve at $120.65 is $1,447.80 exactly, which is the
+ * number every other screen already shows.
+ */
 const INSTALLMENT = "$120.65";
-const LAST_INSTALLMENT = "$120.60";
+const LAST_INSTALLMENT = INSTALLMENT;
 
 /**
  * The schedule, with the first `paid` lines marked and `overdue` ones flagged.
@@ -150,7 +160,7 @@ export const mockCurrent: PaymentsRecord = {
  * behind you.
  *
  * The figures are the WBS's own arithmetic: twelve instalments of $120.65
- * (the last $120.60) against a $1,440 loan at 1% APR, so $1,447.80 outstanding
+ * against a $1,440 loan at 1% APR, so $1,447.80 outstanding
  * and $1,440.00 to close it today — the interest is what early settlement
  * saves.
  */
