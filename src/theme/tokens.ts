@@ -170,11 +170,17 @@ export const brand = {
    * The profile cover — teal and warm washes bleeding into a pale ground. The
    * peach is the avatar's own tint, so the two read as one idea.
    */
+  /*
+    LIGHTER AGAIN — *"ეს ნამეტანი მუქია უკან, ოდნავ უფრო ღია ფერები მინდა."*
+    Every alpha comes down about a third. These were mixed when the wash sat
+    behind a page with cards all over it; behind ONE card on an otherwise
+    empty screen the same strengths read as weather rather than as light.
+  */
   cover: [
-    "radial-gradient(58% 120% at 12% 8%, rgba(30,124,151,0.20) 0%, rgba(30,124,151,0) 62%)",
-    "radial-gradient(46% 105% at 74% 4%, rgba(232,160,139,0.20) 0%, rgba(232,160,139,0) 60%)",
-    "radial-gradient(52% 120% at 92% 88%, rgba(62,201,210,0.17) 0%, rgba(62,201,210,0) 62%)",
-    "radial-gradient(60% 130% at 44% 108%, rgba(184,92,35,0.11) 0%, rgba(184,92,35,0) 60%)",
+    "radial-gradient(58% 120% at 12% 8%, rgba(30,124,151,0.13) 0%, rgba(30,124,151,0) 62%)",
+    "radial-gradient(46% 105% at 74% 4%, rgba(232,160,139,0.13) 0%, rgba(232,160,139,0) 60%)",
+    "radial-gradient(52% 120% at 92% 88%, rgba(62,201,210,0.11) 0%, rgba(62,201,210,0) 62%)",
+    "radial-gradient(60% 130% at 44% 108%, rgba(184,92,35,0.07) 0%, rgba(184,92,35,0) 60%)",
     "#FAF8F6",
   ].join(", "),
 

@@ -45,7 +45,7 @@ import { brand } from "../../../theme/tokens";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { ApplicationMark } from "./ApplicationMark";
 import { InvitationMark } from "./InvitationMark";
-import { RepaidMark } from "./RepaidMark";
+import { RepaidTrackMark } from "../../Payments/ui/RepaidTrackMark";
 import { SubmittedMark } from "./SubmittedMark";
 import { getStyles, styles } from "./ApplicationGate.styles";
 
@@ -155,11 +155,13 @@ export function ApplicationGate({
     },
     /*
       REPAID. The one state on this page that is an ending rather than a
-      waiting room — so it is the one that gets a burst, and the only action
-      is to close the file behind it.
+      waiting room, and the only one whose drawing is not this epic's sheet of
+      paper: it borrows /payments' completed instalment ring, because what is
+      being marked is twelve payments made and not a document filed. See
+      RepaidTrackMark.
     */
     repaid: {
-      icon: <RepaidMark size={MARK} />,
+      icon: <RepaidTrackMark size={MARK} />,
       title: t("application.repaidTitle"),
       subTitle: t("application.repaidBody"),
       /*

@@ -42,7 +42,9 @@ import {
   Button, Card, Collapse, Flex, Result, Tabs, Typography, theme,
 } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { EmptyState } from "../../../shared/ui/EmptyState";
 import { NoScheduleMark } from "./NoScheduleMark";
+import { RepaidTrackMark } from "./RepaidTrackMark";
 import { stageCopy } from "./delinquency";
 import { formatAmount, toAmount } from "./money";
 import { PageNotice } from "../../../shared/ui/PageNotice";
@@ -265,17 +267,18 @@ export function PaymentsOverview({
                   *"რეფეიმენთზე იქნება ილუსტრაცია რომელიც ეტყვის ყველაფერი
                   გადახდილია."*
 
-                  The same `Result` the page's own empty states use, with the
-                  third mark of that family, so "there is nothing here" looks
-                  the same whether the reason is that nothing has started yet
-                  or that everything is done. The rules block goes with the
-                  table: late fees explain a schedule, and there is none.
+                  It is the TABLE's empty state, not the page's: `EmptyState`
+                  at the size the history tab's own empty uses, rather than a
+                  page-sized `Result` — *"ეს ილუსტრაცია აქ ძალიან დიდია,
+                  დეშბორდზე თებლში როგორც არის, ეგ ზომა მომწონს."* The rules
+                  block goes with the table: late fees explain a schedule, and
+                  there is none.
                 */
                 <div style={styles.settled}>
-                  <Result
-                    icon={<NoScheduleMark muted />}
+                  <EmptyState
+                    image={<RepaidTrackMark />}
                     title={t("payments.settledTitle")}
-                    subTitle={t("payments.settledBody")}
+                    description={t("payments.settledBody")}
                   />
                 </div>
               ) : (

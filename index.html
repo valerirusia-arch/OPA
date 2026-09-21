@@ -82,8 +82,28 @@
           transform: scale(0.8);
         }
       }
+      /*
+        The page backdrop's drift. Referenced by name from
+        HeroBackdrop.styles.ts, for the same reason the twinkle is here.
+        Forty seconds, and never more than 1.5% in any direction: the wash is
+        blurred at 72px and grown by twice that, so this moves light rather
+        than anything with an edge.
+      */
+      @keyframes opa-drift {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        33% {
+          transform: translate3d(-1.5%, 1%, 0) scale(1.04);
+        }
+        66% {
+          transform: translate3d(1.5%, -1%, 0) scale(1.02);
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
-        [style*="opa-twinkle"] {
+        [style*="opa-twinkle"],
+        [style*="opa-drift"] {
           animation: none !important;
         }
       }

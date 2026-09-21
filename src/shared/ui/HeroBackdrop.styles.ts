@@ -71,6 +71,20 @@ export const getStyles = (token: GlobalToken) =>
     wash: {
       inset: -WASH_BLEED,
       filter: `blur(${WASH_BLUR}px)`,
+      /*
+        AND IT MOVES, barely — *"ძალიან მსუბუქად მინდა მოძრაობდნენ."* Forty
+        seconds for one pass and never more than 1.5% of the layer's width, so
+        nothing on the page appears to shift: what a reader notices is that the
+        light is not quite where it was a minute ago.
+
+        The layer is already grown by twice the blur radius, so a translate
+        this size cannot pull a hard edge into view. `@keyframes` has no
+        CSSProperties form, so the animation itself lives in index.html beside
+        the sparkle's, and the same file switches it off under
+        `prefers-reduced-motion`.
+      */
+      animation: "opa-drift 40s ease-in-out infinite",
+      willChange: "transform",
       background: [
         "linear-gradient(180deg, rgba(255,255,255,0.30) 0%," +
           " rgba(255,255,255,0.74) 58%, rgba(255,255,255,0.98) 86%," +
