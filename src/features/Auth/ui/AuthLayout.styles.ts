@@ -7,8 +7,13 @@ import type { GlobalToken } from "antd";
 const CONTENT_WIDTH = 530;
 /** Distance from the window edge to the form, and from the form to the image. */
 const PAGE_GUTTER = 104;
-/** The inset that makes the hero panel read as a floating card. */
-const ASIDE_MARGIN = 20;
+/**
+ * The hero panel is full-bleed: it runs to the window's top, bottom and right
+ * edge, so the photo is the page's right half rather than a card sitting on it.
+ * Kept as a named zero because the pane's own width and right padding are
+ * derived from it — the gap between form and photo stays where it was.
+ */
+const ASIDE_MARGIN = 0;
 /** Pulls the panel's left edge back so the image does not dominate the page. */
 const ASIDE_TRIM = 24;
 /**
@@ -49,15 +54,15 @@ export const getStyles = (token: GlobalToken, hasAside: boolean, compact = false
           minWidth: 0,
           padding: compact ? "32px 24px" : `40px ${PAGE_GUTTER}px`,
         },
-    /** The hero panel — the brand family photo, covering the panel and clipped
-     *  to its rounded corners. A background image on a div rather than an <img>,
-     *  which the antd-only rule forbids in presentation. The fill shows while
-     *  the photo loads. */
+    /** The hero panel — the brand family photo, full-bleed to the window's top,
+     *  bottom and right edge, so there is no frame and no rounded corner to cut
+     *  it off. A background image on a div rather than an <img>, which the
+     *  antd-only rule forbids in presentation. The fill shows while the photo
+     *  loads. */
     aside: {
       flex: 1,
       minWidth: 0,
       margin: ASIDE_MARGIN,
-      borderRadius: token.borderRadius,
       backgroundColor: token.colorFill,
       backgroundImage: "url(/auth-hero.jpg)",
       backgroundSize: "cover",
