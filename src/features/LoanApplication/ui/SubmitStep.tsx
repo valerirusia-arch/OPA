@@ -90,8 +90,22 @@ export function SubmitStep({
             rules={[rules.requiredValue()]}
             required
           >
-            {/* Same field, counting people instead of dollars: no prefix, a
-                closed scale, and whole steps. */}
+            {/* Same field, counting people instead of dollars: no prefix and
+                whole steps.
+
+                THE SCALE ENDS "10+", NOT "10". The field contradicted itself:
+                the slider was drawn as a closed scale topping out at ten while
+                the box underneath accepted any number typed into it (see the
+                note on `max` in RangeField). Households of twelve exist, and
+                the answer to one was both allowed and told it was off the
+                scale.
+
+                TEN IS OURS, NOT THE WBS'S. Its whole sentence on this is
+                "provide their household info (income, size)" — no range, no
+                maximum, no minimum. So ten is a sensible place to stop drawing
+                a slider, not a limit anybody asked for, and the "+" is what
+                keeps it from reading as one. Provisional until OPA answers
+                whether a ceiling exists at all. */}
             <RangeField
               compact
               prefix=""
@@ -99,7 +113,6 @@ export function SubmitStep({
               max={10}
               step={1}
               placeholder="1"
-              openEnded={false}
               formatScale={(size) => String(size)}
             />
           </Form.Item>
