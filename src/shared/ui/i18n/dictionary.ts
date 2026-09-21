@@ -756,6 +756,15 @@ export const en = {
   "application.assignedDoneBody":
     "OPA is reviewing the application now. You can follow where it has got to on your loan page.",
   "application.assignedDoneAction": "See the application",
+  /* The co-borrower's side of story 14's reset. No decision, no reason, no
+     "you did not qualify": OPA telling somebody it turned them down for credit
+     is an adverse action with its own legal handling, and the epic's own
+     notification for this is the borrower's alone. What is theirs to know is
+     that the invitation is over and nothing is waiting on them. */
+  "application.invitationClosedTitle": "This invitation is no longer active",
+  "application.invitationClosedBody":
+    "There is nothing left for you to do here. If you have questions about it, the person who invited you can explain, or you can reach us.",
+  "application.invitationClosedAction": "Contact us",
   /* Two reasons, one state: the WBS blocks a new application when there is
      "an open application or loan". */
   /* The news, not the refusal — see the note on `hasActive` in
@@ -2424,6 +2433,10 @@ const es: Record<TranslationKey, string> = {
   "application.assignedDoneBody":
     "OPA está revisando la solicitud. Puedes seguir su avance en la página de tu préstamo.",
   "application.assignedDoneAction": "Ver la solicitud",
+  "application.invitationClosedTitle": "Esta invitación ya no está activa",
+  "application.invitationClosedBody":
+    "Aquí no queda nada por hacer. Si tienes dudas, la persona que te invitó puede explicártelo, o puedes escribirnos.",
+  "application.invitationClosedAction": "Contacta con nosotros",
   "application.blockedActiveTitle": "Tu solicitud está en OPA",
   "application.blockedActiveBody":
     "OPA está revisando tu solicitud. Puedes seguir su avance en la página de tu préstamo.",

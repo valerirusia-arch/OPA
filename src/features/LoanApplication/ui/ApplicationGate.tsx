@@ -77,6 +77,18 @@ export type ApplicationGateState =
   | "needsInfo"
   | "coBorrowerNeeded"
   | "coBorrowerFailed"
+  /**
+   * THE CO-BORROWER'S SIDE of the same reset.
+   *
+   * It says the invitation is over and nothing else. The WBS gives the
+   * co-borrower no story here — the "did not pass underwriting" notification
+   * is the BORROWER's, and this feed already treats it as borrower-only — and
+   * a lender telling somebody it turned them down for credit is an adverse
+   * action with its own legal handling, not a line of UI copy to invent. So
+   * this states the fact they need (there is nothing left for you to do) and
+   * points at the two people who may explain it.
+   */
+  | "invitationClosed"
   | "checkPaused"
   | "stopped";
 
@@ -339,6 +351,16 @@ export function ApplicationGate({
       action: (
         <Button type="primary" size="large" onClick={onInviteCoBorrower}>
           {t("application.coBorrowerFailedAction")}
+        </Button>
+      ),
+    },
+    invitationClosed: {
+      icon: <InvitationMark size={MARK} />,
+      title: t("application.invitationClosedTitle"),
+      subTitle: t("application.invitationClosedBody"),
+      action: (
+        <Button size="large" onClick={onContact}>
+          {t("application.invitationClosedAction")}
         </Button>
       ),
     },

@@ -79,11 +79,18 @@ export default function ApplicationStartScreen({
   const state =
     gate ??
     (viewer.role === "coBorrower" && record
-      ? record.status === "coBorrower"
-        ? "invited"
-        : record.status === "pendingAction"
-          ? "needsInfo"
-          : "assignedDone"
+      ? /* BEFORE the invited branch. Story 14's reset leaves the status at
+           `coBorrower` with no invitation on the record, so this person was
+           being shown "{name} asked you to join their application… the
+           invitation expires on ." — both values blank, and a "Start my part"
+           button for an application that has moved on without them. */
+        record.coBorrowerFailed
+        ? "invitationClosed"
+        : record.status === "coBorrower"
+          ? "invited"
+          : record.status === "pendingAction"
+            ? "needsInfo"
+            : "assignedDone"
       : gateFor(record));
   const person = userName ?? viewer.name;
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
