@@ -44,7 +44,7 @@ import {
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { NoScheduleMark } from "./NoScheduleMark";
-import { RepaidTrackMark } from "./RepaidTrackMark";
+import { RepaidMark } from "./RepaidMark";
 import { stageCopy } from "./delinquency";
 import { formatAmount, toAmount } from "./money";
 import { PageNotice } from "../../../shared/ui/PageNotice";
@@ -276,7 +276,7 @@ export function PaymentsOverview({
                 */
                 <div style={styles.settled}>
                   <EmptyState
-                    image={<RepaidTrackMark />}
+                    image={<RepaidMark />}
                     title={t("payments.settledTitle")}
                     description={t("payments.settledBody")}
                   />
