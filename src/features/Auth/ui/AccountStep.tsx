@@ -23,7 +23,7 @@ import { useT } from "../../../shared/ui/i18n/useT";
 import { useAuthRules } from "./validation";
 import { WizardActions } from "./WizardActions";
 import { styles } from "./WizardStep.styles";
-import { passwordField } from "./passwordField.styles";
+import { PasswordField } from "./PasswordField";
 
 export type AccountValues = {
   email: string;
@@ -101,8 +101,7 @@ export function AccountStep({
         name="password"
         rules={rules.password}
       >
-        <Input.Password
-          styles={{ input: passwordField }}
+        <PasswordField
           placeholder={t("reset.newPasswordPlaceholder")}
           autoComplete="new-password"
           size="large"
@@ -115,8 +114,7 @@ export function AccountStep({
         dependencies={["password"]}
         rules={rules.confirmPassword("password")}
       >
-        <Input.Password
-          styles={{ input: passwordField }}
+        <PasswordField
           placeholder={t("reset.confirmPasswordPlaceholder")}
           autoComplete="new-password"
           size="large"

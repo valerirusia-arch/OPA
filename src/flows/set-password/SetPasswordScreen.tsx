@@ -12,14 +12,14 @@
 // used invitation is a server answer Dev feeds in during integration.
 
 import { useState } from "react";
-import { Avatar, Button, Card, Form, Input, Result, Typography, theme } from "antd";
+import { Avatar, Button, Card, Form, Result, Typography, theme } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useT } from "../../shared/ui/i18n/useT";
 import { AuthLayout } from "../../features/Auth/ui/AuthLayout";
 import { useAuthRules } from "../../features/Auth/ui/validation";
 import { getStyles, styles } from "./SetPasswordScreen.styles";
-import { passwordField } from "../../features/Auth/ui/passwordField.styles";
+import { PasswordField } from "../../features/Auth/ui/PasswordField";
 
 type SetPasswordValues = { password: string; confirmPassword: string };
 
@@ -86,9 +86,8 @@ export default function SetPasswordScreen({
         }}
       >
         <Form.Item label={t("reset.newPassword")} name="password" rules={rules.password}>
-          <Input.Password
-            styles={{ input: passwordField }}
-            placeholder={t("reset.newPasswordPlaceholder")}
+          <PasswordField
+              placeholder={t("reset.newPasswordPlaceholder")}
             autoComplete="new-password"
             size="large"
           />
@@ -100,9 +99,8 @@ export default function SetPasswordScreen({
           dependencies={["password"]}
           rules={rules.confirmPassword("password")}
         >
-          <Input.Password
-            styles={{ input: passwordField }}
-            placeholder={t("reset.confirmPasswordPlaceholder")}
+          <PasswordField
+              placeholder={t("reset.confirmPasswordPlaceholder")}
             autoComplete="new-password"
             size="large"
           />

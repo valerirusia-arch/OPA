@@ -7,11 +7,11 @@
 //
 // Dumb: the modal owns the form, the caller owns what "save" means.
 
-import { Alert, Button, Divider, Form, Input, Modal, Typography } from "antd";
+import { Alert, Button, Divider, Form, Modal, Typography } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { useAuthRules } from "../../Auth/ui/validation";
 import { styles } from "./ChangePasswordModal.styles";
-import { passwordField } from "../../Auth/ui/passwordField.styles";
+import { PasswordField } from "../../Auth/ui/PasswordField";
 
 export type ChangePasswordValues = {
   currentPassword: string;
@@ -65,7 +65,7 @@ export function ChangePasswordModal({
           name="currentPassword"
           rules={[rules.required(t("validation.currentPassword"))]}
         >
-          <Input.Password styles={{ input: passwordField }} autoComplete="current-password" />
+          <PasswordField autoComplete="current-password" />
         </Form.Item>
 
         <Divider style={styles.divider} />
@@ -75,9 +75,8 @@ export function ChangePasswordModal({
           name="password"
           rules={rules.password}
         >
-          <Input.Password
-            styles={{ input: passwordField }}
-            placeholder={t("reset.newPasswordPlaceholder")}
+          <PasswordField
+              placeholder={t("reset.newPasswordPlaceholder")}
             autoComplete="new-password"
           />
         </Form.Item>
@@ -88,9 +87,8 @@ export function ChangePasswordModal({
           dependencies={["password"]}
           rules={rules.confirmPassword("password")}
         >
-          <Input.Password
-            styles={{ input: passwordField }}
-            placeholder={t("reset.confirmPasswordPlaceholder")}
+          <PasswordField
+              placeholder={t("reset.confirmPasswordPlaceholder")}
             autoComplete="new-password"
           />
         </Form.Item>
