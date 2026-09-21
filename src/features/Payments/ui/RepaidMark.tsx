@@ -11,14 +11,19 @@
 // did not: *"გარედან უბრალოდ ეს მწვანე დეშები მოაშორე."*
 //
 // What was left both times was the tick — *"მომწონს ეს მარტივი პწიჩკა"* — so
-// the tick is the mark. A stroke on a soft green disc, at the size the
-// product's other table empties are drawn at, and nothing else on it.
+// the tick is the mark: a stroke on a soft green disc, at the size the
+// product's other table empties are drawn at.
 //
-// It is the plainest possible answer and that is the point: this is the one
-// screen in the product where nothing is being asked of the reader. Every
-// other illustration here has a job — the packet that says start one, the
-// sheet with two people, the clock on an empty schedule. This one only has to
-// agree with them.
+// AND A BURST AROUND IT — *"მინდა რომ გარედან ეს ფეიერვერკების ნაწილაკები
+// ჰქონდეს, ფერადი."* Eight rays on an even 45°, in the brand's four colours,
+// starting clear of the disc and pointing out of it. Even spacing is what
+// makes the difference between a firework and litter: the confetti squares
+// that were here before fell wherever there was room, so three of them read
+// as scattered and the fourth as a collision. A ray that leaves the centre at
+// the same angle as its neighbours reads as one event.
+//
+// The lengths alternate long-short, which is the only irregularity in it. A
+// burst with eight identical rays is a compass rose.
 //
 // Drawn rather than composed because antd has no illustration to compose
 // from; every colour comes from the theme.
@@ -31,8 +36,17 @@ export type RepaidMarkProps = {
   size?: number;
 };
 
+/**
+ * The burst: eight rays on an even 45°, alternating the brand's four colours
+ * and two lengths. `INNER` clears the disc by 6, so nothing touches it.
+ */
+const INNER = 48;
+const RAYS = [0, 45, 90, 135, 180, 225, 270, 315];
+
 export function RepaidMark({ size = 148 }: RepaidMarkProps) {
   const { token } = theme.useToken();
+
+  const colours = [brand.cyan, brand.orange, token.colorPrimary, brand.successMark];
 
   return (
     <svg
@@ -43,6 +57,23 @@ export function RepaidMark({ size = 148 }: RepaidMarkProps) {
       role="presentation"
       aria-hidden="true"
     >
+      {RAYS.map((angle, index) => {
+        const rad = (angle * Math.PI) / 180;
+        const outer = INNER + (index % 2 === 0 ? 9 : 6);
+        return (
+          <path
+            key={angle}
+            d={
+              `M${60 + INNER * Math.cos(rad)} ${60 + INNER * Math.sin(rad)}` +
+              `L${60 + outer * Math.cos(rad)} ${60 + outer * Math.sin(rad)}`
+            }
+            stroke={colours[index % colours.length]}
+            strokeWidth="3.6"
+            strokeLinecap="round"
+          />
+        );
+      })}
+
       {/* The same soft green the submitted mark stands on, so the two ends of
           a borrower's story share a colour. */}
       <circle cx="60" cy="60" r="42" fill={token.colorSuccessBg} />

@@ -324,13 +324,17 @@ export const brand = {
    * value. *"ნოთ იუზდ და ეს ლოგოც უკან მსგავსი გამჭვირვალობა ჰქონდეთ, ოღონდ
    * იყოს თეთრისკენ."*
    *
-   * White works now because the skin changed under it: one teal-blue ramp,
-   * no bright corner, and both things sit in its lower half. 20% over the
-   * ramp's 62% stop composites to about #527483, where white text measures
-   * 4.9:1 — clear of AA — and the mark's dark disc and white flame both have
-   * a mid ground to read against.
+   * White works now because the skin changed under it: one teal-blue ramp, no
+   * bright corner, and both things sit in its lower half.
+   *
+   * 10%, DOWN FROM 20 — *"მაგის ბექგრაუნდები მინდა უფრო ჩაუწიო, ცოტა, 10%
+   * ცადე."* Halving it costs nothing legible and gains the opposite of what
+   * you would expect: less white over a dark ground means a DARKER pill, so
+   * white text on it goes from about 4.9:1 to 6.4:1. What it changes is the
+   * card — at 20 the tile and the pill were two pale patches a reader saw
+   * before the type on them.
    */
-  cardDarkPill: "rgba(255, 255, 255, 0.20)",
+  cardDarkPill: "rgba(255, 255, 255, 0.10)",
   cardDarkInk: "#FFFFFF",
   cardDarkQuiet: "rgba(255, 255, 255, 0.68)",
   cardLightEdge: "rgba(38, 36, 35, 0.08)",
