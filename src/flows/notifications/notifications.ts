@@ -53,6 +53,30 @@ const SENT: Record<BorrowerStage, NotificationItem[]> = {
     },
   ],
 
+  /* WBS story 14 says the notification in as many words: "The system should
+     notify the borrower that there are issues with co-borrowers (covered in
+     Notifications epic)", and the epic's own story is "Receive notification
+     that the co-borrower did not pass underwriting". The kind and its copy
+     already existed here; no stage reached them, so nothing ever sent it.
+
+     AND ONLY THIS ONE. The `coBorrower` stage's notice is not history, it is a
+     live status — "{coBorrower} was invited and has not finished yet. The
+     invitation expires {expiresOn}." Carried into this stage it read "was
+     invited and has not finished yet. The invitation expires ." with both
+     values blank, because the invitation it quotes is spent and gone from the
+     record. A stage lists what is still true, not every row it ever had. */
+  coBorrowerFailed: [
+    {
+      id: "n-cb-declined",
+      kind: "coBorrowerDeclined",
+      title: "notify.coBorrowerDeclinedTitle",
+      body: "notify.coBorrowerDeclinedBody",
+      tone: "warning",
+      on: "Sep 18, 2026",
+      to: "/application",
+    },
+  ],
+
   needsInfo: [
     {
       id: "n-more-info",
@@ -385,7 +409,11 @@ export const useNotificationValues = (): Record<string, string> => {
   const lastPaid = [...(payments?.schedule ?? [])].reverse().find((row) => row.status === "paid");
   return {
     amount: record?.amount ?? "",
-    coBorrower: record?.invitation?.invitee ?? record?.coBorrower ?? "",
+    /* …and once underwriting has turned somebody down, THEY are the
+       co-borrower the copy means: the invitation is spent and there is no
+       accepted co-borrower, so without this the name goes blank. */
+    coBorrower:
+      record?.invitation?.invitee ?? record?.coBorrower ?? record?.coBorrowerFailed ?? "",
     expiresOn: record?.invitation?.expiresOn ?? "",
     nextAmount: next?.amount ?? "",
     nextDue: next?.due ?? "",

@@ -76,6 +76,7 @@ export type ApplicationGateState =
   | "notEligible"
   | "needsInfo"
   | "coBorrowerNeeded"
+  | "coBorrowerFailed"
   | "checkPaused"
   | "stopped";
 
@@ -101,6 +102,12 @@ export type ApplicationGateProps = {
   onContact?: () => void;
   onSendInformation?: () => void;
   onInviteCoBorrower?: () => void;
+  /**
+   * The co-borrower underwriting turned down, for the `coBorrowerFailed`
+   * state. Named, because "somebody did not qualify" is not something to make
+   * the borrower guess at when they invited the person themselves.
+   */
+  coBorrowerFailed?: string;
   onProfile?: () => void;
   /** WBS-adjacent — see `repaid` on ApplicationGateState. Closing the file is
    *  what lets the borrower start another application. */
@@ -113,6 +120,7 @@ export function ApplicationGate({
   onOpenInvitation,
   onViewStatus,
   invitation,
+  coBorrowerFailed,
   onResume,
   onContact,
   onSendInformation,
@@ -304,6 +312,36 @@ export function ApplicationGate({
             </Button>
           ),
         },
+    /*
+      STORY 14, THE STATE THE BORROWER COMES BACK TO.
+
+      "IF the co-borrower fails to meet underwriting requirements, system will
+      be able to reset borrower application and allow new co-borrower to
+      receive an invitation to apply."
+
+      It is `coBorrowerNeeded` again in every mechanical sense, and it is a
+      different message to receive. The person they picked was turned down,
+      the application did not die with them, and the way on is somebody else.
+      All three have to be said, because a borrower who is only told "invite a
+      co-borrower" will reasonably think the first invitation failed to send.
+
+      WHAT THE WBS DOES NOT SAY is how far the reset goes — whether the rest
+      of the application survives. The wording below assumes it does, on the
+      strength of the neighbouring story ("they should be able to return to
+      the PREVIOUS STEPS of their application process") and because resetting
+      a borrower's whole file over somebody else's credit would punish the
+      wrong person. OPA has to confirm it.
+    */
+    coBorrowerFailed: {
+      icon: <InvitationMark size={MARK} />,
+      title: t("application.coBorrowerFailedTitle"),
+      subTitle: t("application.coBorrowerFailedBody", { name: coBorrowerFailed ?? "" }),
+      action: (
+        <Button type="primary" size="large" onClick={onInviteCoBorrower}>
+          {t("application.coBorrowerFailedAction")}
+        </Button>
+      ),
+    },
     /* A check did not answer. The WBS is explicit that this is not a refusal,
        so the screen says so and offers nothing to do about it: there is
        nothing the borrower can do, and a button that pretends otherwise would

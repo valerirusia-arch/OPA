@@ -43,6 +43,7 @@ import {
   mockAwaitingSignature,
   mockCancelled,
   mockCardUsed,
+  mockCoBorrowerFailed,
   mockCoBorrowerNeeded,
   mockDeclined,
   mockFunded,
@@ -68,6 +69,7 @@ export type BorrowerStage =
   | "none"
   | "review"
   | "coBorrower"
+  | "coBorrowerFailed"
   | "needsInfo"
   | "declined"
   | "approved"
@@ -99,6 +101,9 @@ const STAGES: Record<
   none: { label: "No application" },
   review: { label: "Submitted · under review", loan: mockUnderReview },
   coBorrower: { label: "Waiting on the co-borrower", loan: mockCoBorrowerNeeded },
+  /* WBS story 14: the co-borrower failed underwriting, so the system reset
+     the application and it is waiting on a different one. */
+  coBorrowerFailed: { label: "Co-borrower did not qualify", loan: mockCoBorrowerFailed },
   needsInfo: { label: "More information needed", loan: mockNeedsInfo },
   declined: { label: "Declined", loan: mockDeclined },
   approved: { label: "Approved · to sign", loan: mockAwaitingSignature },
@@ -118,7 +123,10 @@ const STAGES: Record<
 
 /** How the switcher lists them: the story in the order the WBS tells it. */
 export const STAGE_GROUPS: { group: string; stages: BorrowerStage[] }[] = [
-  { group: "Application", stages: ["none", "review", "coBorrower", "needsInfo", "declined"] },
+  {
+    group: "Application",
+    stages: ["none", "review", "coBorrower", "coBorrowerFailed", "needsInfo", "declined"],
+  },
   { group: "Loan", stages: ["approved", "funding", "funded", "cardUsed"] },
   { group: "Repayment", stages: ["overdue", "default", "accelerated", "paidOff"] },
   { group: "Ended", stages: ["cancelled"] },
@@ -156,6 +164,7 @@ const APPLICATION_STAGES: BorrowerStage[] = [
   "none",
   "review",
   "coBorrower",
+  "coBorrowerFailed",
   "needsInfo",
   /* AND THE ONE STAGE THAT IS NOT A COLLAPSE. `paidOff` is the only funded
      stage this page draws differently from the other four: it is the state
@@ -167,6 +176,7 @@ const LOAN_STAGES: BorrowerStage[] = [
   "none",
   "review",
   "coBorrower",
+  "coBorrowerFailed",
   "needsInfo",
   "declined",
   "approved",
@@ -710,6 +720,11 @@ export const gateFor = (record: ApplicationSummary | undefined) => {
      not something to resume, so the page offers a new one. */
   if (record.loan?.stage === "cancelled") return "open" as const;
   if (record.status === "pendingAction") return "needsInfo" as const;
+  /* BEFORE the plain co-borrower check, because it is the same status with a
+     different thing to say. WBS story 14: a reset application is waiting on a
+     co-borrower again, but the borrower is owed the reason — and the action is
+     "invite a DIFFERENT one", not "invite one". */
+  if (record.coBorrowerFailed) return "coBorrowerFailed" as const;
   if (record.status === "coBorrower") return "coBorrowerNeeded" as const;
   /* Declined is over, and nothing in the WBS stops them applying again. */
   if (record.status === "declined") return "open" as const;

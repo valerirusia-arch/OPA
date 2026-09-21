@@ -115,6 +115,7 @@ export default function ApplicationStartScreen({
                them back into an empty wizard would be offering to start the
                thing they were just told they cannot start. */
             invitation={record?.invitation}
+            coBorrowerFailed={record?.coBorrowerFailed}
             onOpenInvitation={() => navigate({ to: "/co-application" })}
             onViewStatus={() => navigate({ to: "/loan" })}
             onResume={() => navigate({ to: "/loan" })}

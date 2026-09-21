@@ -186,6 +186,24 @@ export type ApplicationSummary = {
    * Absent means this is a one-person loan and one signature finishes it.
    */
   coBorrower?: string;
+  /**
+   * The co-borrower who did NOT qualify, named, once underwriting has said so.
+   *
+   * WBS story 14: "IF the co-borrower fails to meet underwriting requirements,
+   * system will be able to reset borrower application and allow new co-borrower
+   * to receive an invitation to apply."
+   *
+   * NOT a new `status`. The WBS names the statuses it wants — "Submitted, Under
+   * Review, Pending action, Approved, declined" — and a reset application is
+   * back to waiting on a co-borrower, which `status: "coBorrower"` already
+   * says. What is new is the REASON, and the reason is what the borrower has
+   * to be told, because "invite a co-borrower" and "invite a DIFFERENT
+   * co-borrower" are different sentences to receive.
+   *
+   * Set alongside no outstanding `invitation`: the failed one is spent, which
+   * is why there is somebody to invite in the first place.
+   */
+  coBorrowerFailed?: string;
   /** Whose application it is. Named, because the co-borrower waits on them. */
   applicant?: string;
   loan?: LoanRecord;

@@ -127,6 +127,19 @@ export const mockCoBorrowerNeeded: ApplicationSummary = {
   },
 };
 
+/**
+ * The co-borrower was reviewed and did not qualify, so the application has been
+ * reset and is waiting on a different one. WBS story 14.
+ *
+ * The spent invitation is gone on purpose — leaving it would have the page say
+ * "we are waiting on Daniel" and "Daniel did not qualify" at the same time.
+ */
+export const mockCoBorrowerFailed: ApplicationSummary = {
+  ...mockUnderReview,
+  status: "coBorrower",
+  coBorrowerFailed: "Daniel Okafor",
+};
+
 /** Approved and waiting on a signature. WBS story 2. */
 export const mockAwaitingSignature: ApplicationSummary = {
   ...mockUnderReview,

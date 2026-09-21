@@ -814,6 +814,15 @@ export const en = {
   "application.coBorrowerWaitingTitle": "Waiting on your co-borrower",
   "application.coBorrowerWaitingBody":
     "{name} has been invited and their part is not finished yet. The invitation expires on {date}; you can invite somebody else instead.",
+  /* WBS story 14, the reset. Three things at once, because a borrower who is
+     only told "invite a co-borrower" will think the first invite failed to
+     send: who was turned down, that the application survived them, and that
+     the way on is a different person. Nothing about WHY they did not qualify —
+     that is somebody else's credit file, not this borrower's to read. */
+  "application.coBorrowerFailedTitle": "Your co-borrower didn't qualify",
+  "application.coBorrowerFailedBody":
+    "{name} was reviewed and didn't meet the requirements. Nothing you filled in is lost — invite a different co-borrower and your application carries on from there.",
+  "application.coBorrowerFailedAction": "Invite a different co-borrower",
   "inviteCoBorrower.title": "Invite a co-borrower",
   "inviteCoBorrower.subtitle":
     "Your application waits here until they accept and finish their part. We email them the invitation; they have five days to use it.",
@@ -2453,6 +2462,10 @@ const es: Record<TranslationKey, string> = {
   "application.coBorrowerWaitingTitle": "Esperando a tu coprestatario",
   "application.coBorrowerWaitingBody":
     "{name} ha sido invitado y su parte todavía no está lista. La invitación caduca el {date}; puedes invitar a otra persona.",
+  "application.coBorrowerFailedTitle": "Tu coprestatario no cumple los requisitos",
+  "application.coBorrowerFailedBody":
+    "Hemos revisado a {name} y no cumple los requisitos. No se pierde nada de lo que rellenaste: invita a otro coprestatario y tu solicitud sigue desde ahí.",
+  "application.coBorrowerFailedAction": "Invitar a otro coprestatario",
   "inviteCoBorrower.title": "Invitar a un coprestatario",
   "inviteCoBorrower.subtitle":
     "Tu solicitud espera aquí hasta que acepten y completen su parte. Les enviamos la invitación por correo y tienen cinco días para usarla.",
