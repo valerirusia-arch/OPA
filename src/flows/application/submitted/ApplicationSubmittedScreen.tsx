@@ -53,8 +53,8 @@ export type ApplicationSubmittedScreenProps = {
 export default function ApplicationSubmittedScreen({
   userName,
   waitingOnCoBorrower,
-  coBorrowerFailed = false,
-  coBorrowerName = "Daniel Okafor",
+  coBorrowerFailed,
+  coBorrowerName,
 }: ApplicationSubmittedScreenProps) {
   const navigate = useNavigate();
   // Whoever the DevBar is pointed at, unless the caller names someone.
@@ -76,7 +76,15 @@ export default function ApplicationSubmittedScreen({
    * A prop still wins, for Storybook.
    */
   const record = useLoanRecord();
+  /* THIS SCREEN'S STORY-14 STATE WAS UNREACHABLE. `coBorrowerFailed` defaulted
+     to false and this is a route component, so no caller ever set it — the
+     variant below was written, translated, and could not be walked to. It
+     reads the record now, like `waiting` beside it and like /application's own
+     gate, so one fact drives every screen that mentions it. A prop still wins,
+     for Storybook. */
   const waiting = waitingOnCoBorrower ?? record?.status === "coBorrower";
+  const failed = coBorrowerFailed ?? Boolean(record?.coBorrowerFailed);
+  const failedName = coBorrowerName ?? record?.coBorrowerFailed ?? "";
 
   return (
     <>
@@ -96,13 +104,13 @@ export default function ApplicationSubmittedScreen({
       <div style={s.page}>
         <div style={styles.column}>
           <Card style={s.card}>
-            {coBorrowerFailed ? (
+            {failed ? (
               <Result
                 style={styles.result}
                 icon={<InvitationMark />}
                 title={t("submitted.coBorrowerFailedTitle")}
                 subTitle={t("submitted.coBorrowerFailedBody", {
-                  name: coBorrowerName,
+                  name: failedName,
                 })}
                 styles={{ title: s.title, subTitle: s.subTitle, extra: s.extra }}
                 extra={

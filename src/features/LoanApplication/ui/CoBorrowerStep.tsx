@@ -70,6 +70,16 @@ export type CoBorrowerStepProps = {
    * Loan Decisioning, which weighs the credit score. It is never decided here.
    */
   required?: boolean;
+  /**
+   * The co-borrower underwriting turned down, when this step is being redone
+   * because of story 14's reset.
+   *
+   * `required` alone cannot say this. Its note gives a reason, and after a
+   * rejection that reason is out of date: the borrower has just been told
+   * somebody did not qualify, and would arrive here reading a different
+   * explanation for why they are standing in front of this form again.
+   */
+  replacing?: string;
   onSend?: (values: Required<Omit<CoBorrowerFormValues, "wantsCoBorrower">>) => void;
   onReplace?: () => void;
   /**
@@ -99,6 +109,7 @@ export function CoBorrowerStep({
   invitation,
   sendError,
   required = false,
+  replacing,
   onSend,
   onReplace,
   onSubmit,
@@ -132,7 +143,9 @@ export function CoBorrowerStep({
         <Flex gap={8} style={{ ...sharedStyles.hint, ...styles.optIn }}>
           <InfoCircleOutlined style={sharedStyles.hintIcon} />
           <Typography.Text type="secondary" style={shared.note}>
-            {t("coBorrowerStep.requiredNote")}
+            {replacing
+              ? t("coBorrowerStep.replacingNote", { name: replacing })
+              : t("coBorrowerStep.requiredNote")}
           </Typography.Text>
         </Flex>
       ) : (

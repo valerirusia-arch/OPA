@@ -130,6 +130,10 @@ export default function InviteCoBorrowerScreen({
                 not a choice at this point. */}
             <CoBorrowerStep
               required
+              /* Story 14: when this step is being redone because somebody was
+                 turned down, the note says so instead of giving the reason the
+                 first invitation had. */
+              replacing={record?.coBorrowerFailed}
               invitation={invitation}
               labels={{
                 backLabel: t("common.back"),

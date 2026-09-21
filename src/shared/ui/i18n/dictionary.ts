@@ -832,6 +832,12 @@ export const en = {
     "Someone who applies alongside you and shares responsibility for the loan.",
   "coBorrowerStep.requiredNote":
     "Your application needs a co-borrower, because your income was not verified.",
+  /* WBS story 14: the same form, reached because the last co-borrower was
+     turned down. No reason WHY they were — that is their credit file, and the
+     epic's own notification "does not disclose confidential underwriting
+     details". */
+  "coBorrowerStep.replacingNote":
+    "{name} didn't qualify, so your application needs a different co-borrower.",
   "coBorrowerStep.optIn": "I'd like to add a co-borrower",
   "coBorrowerStep.send": "Send invitation",
   "coBorrowerStep.resend": "Send a new invitation",
@@ -2475,6 +2481,8 @@ const es: Record<TranslationKey, string> = {
     "Alguien que solicita junto a ti y comparte la responsabilidad del préstamo.",
   "coBorrowerStep.requiredNote":
     "Tu solicitud necesita un coprestatario porque no se verificaron tus ingresos.",
+  "coBorrowerStep.replacingNote":
+    "{name} no cumple los requisitos, así que tu solicitud necesita otro coprestatario.",
   "coBorrowerStep.optIn": "Quiero añadir un coprestatario",
   "coBorrowerStep.send": "Enviar la invitación",
   "coBorrowerStep.resend": "Enviar una invitación nueva",
