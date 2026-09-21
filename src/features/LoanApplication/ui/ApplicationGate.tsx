@@ -337,12 +337,16 @@ export function ApplicationGate({
       All three have to be said, because a borrower who is only told "invite a
       co-borrower" will reasonably think the first invitation failed to send.
 
-      WHAT THE WBS DOES NOT SAY is how far the reset goes — whether the rest
-      of the application survives. The wording below assumes it does, on the
-      strength of the neighbouring story ("they should be able to return to
-      the PREVIOUS STEPS of their application process") and because resetting
-      a borrower's whole file over somebody else's credit would punish the
-      wrong person. OPA has to confirm it.
+      HOW FAR THE RESET GOES IS SETTLED, and not by the WBS, which says only
+      "reset borrower application" and stops. The rest of the application
+      survives; the co-borrower step is the only part redone. Confirmed on the
+      project by the designer, and it is what the neighbouring story points at
+      anyway ("they should be able to return to the PREVIOUS STEPS of their
+      application process") — resetting a borrower's whole file over somebody
+      else's credit would punish the wrong person.
+
+      Recorded here because the document still does not say it: anybody reading
+      the WBS alone will not find this, and the copy below depends on it.
     */
     coBorrowerFailed: {
       icon: <InvitationMark size={MARK} />,
