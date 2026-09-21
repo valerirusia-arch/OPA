@@ -184,11 +184,18 @@ export const brand = {
     Two of the four moved as well. They were pinned at the corners, which is
     where the eye looks last; at 20% and 66% across they fall either side of
     the card that stands in the middle of these pages.
+
+    THE TEAL WENT UP ONE MORE STEP after that — *"უკან არის ზედმეტად მუქი
+    მწვანე ფერი, გაბლარული; მინდა ოდნავ ღია ტონში გადაყვანა."* Blurred at
+    72px and spread across a third of the window, a mid teal stops reading as
+    teal and starts reading as a green cast over the page. The paler mix keeps
+    the hue and loses the cast; the warm blobs did not have the problem and
+    did not move.
   */
   cover: [
-    "radial-gradient(56% 110% at 18% 12%, rgba(96,186,205,0.26) 0%, rgba(96,186,205,0) 62%)",
+    "radial-gradient(56% 110% at 18% 12%, rgba(146,210,224,0.26) 0%, rgba(146,210,224,0) 62%)",
     "radial-gradient(48% 100% at 78% 8%, rgba(244,193,177,0.26) 0%, rgba(244,193,177,0) 60%)",
-    "radial-gradient(54% 115% at 88% 78%, rgba(120,216,222,0.22) 0%, rgba(120,216,222,0) 62%)",
+    "radial-gradient(54% 115% at 88% 78%, rgba(168,232,237,0.22) 0%, rgba(168,232,237,0) 62%)",
     "radial-gradient(58% 120% at 30% 96%, rgba(232,168,120,0.18) 0%, rgba(232,168,120,0) 60%)",
     "#FAF8F6",
   ].join(", "),
@@ -201,7 +208,7 @@ export const brand = {
    * the colour is, not how much of it there is.
    */
   coverDrift: [
-    "radial-gradient(44% 86% at 62% 24%, rgba(96,186,205,0.20) 0%, rgba(96,186,205,0) 64%)",
+    "radial-gradient(44% 86% at 62% 24%, rgba(146,210,224,0.20) 0%, rgba(146,210,224,0) 64%)",
     "radial-gradient(50% 92% at 26% 70%, rgba(244,193,177,0.20) 0%, rgba(244,193,177,0) 64%)",
   ].join(", "),
 
