@@ -14,16 +14,16 @@
 // the tick is the mark: a stroke on a soft green disc, at the size the
 // product's other table empties are drawn at.
 //
-// AND A BURST AROUND IT — *"მინდა რომ გარედან ეს ფეიერვერკების ნაწილაკები
-// ჰქონდეს, ფერადი."* Eight rays on an even 45°, in the brand's four colours,
-// starting clear of the disc and pointing out of it. Even spacing is what
-// makes the difference between a firework and litter: the confetti squares
-// that were here before fell wherever there was room, so three of them read
-// as scattered and the fourth as a collision. A ray that leaves the centre at
-// the same angle as its neighbours reads as one event.
+// AND CONFETTI AROUND IT — *"ალაგ-ალაგ ოთხკუთხედები, პატარა."* Eight rays
+// on an even 45° were tried in between and read as a compass rose or a sun,
+// which is the failure mode of regularity: a burst has to look thrown.
 //
-// The lengths alternate long-short, which is the only irregularity in it. A
-// burst with eight identical rays is a compass rose.
+// So: ten small squares on a ring outside the disc, and the ring is the only
+// regular thing about them. Every one differs in radius, size and rotation,
+// and the angles are near-even with a few degrees of drift — enough that no
+// two read as a pair, not so much that one side of the mark ends up empty.
+// The first attempt at this failed the other way: four squares placed by
+// hand, three of which clumped and one of which collided with the disc.
 //
 // Drawn rather than composed because antd has no illustration to compose
 // from; every colour comes from the theme.
@@ -37,11 +37,25 @@ export type RepaidMarkProps = {
 };
 
 /**
- * The burst: eight rays on an even 45°, alternating the brand's four colours
- * and two lengths. `INNER` clears the disc by 6, so nothing touches it.
+ * The confetti: ten squares on a ring outside the disc.
+ *
+ * `a` is the angle in degrees, `r` how far out, `w` the square's side and `t`
+ * its own tilt. Written out rather than generated, because what makes this
+ * read as thrown is precisely that the numbers are not a formula — a loop
+ * would give it the even spacing that made the last version a sun.
  */
-const INNER = 48;
-const RAYS = [0, 45, 90, 135, 180, 225, 270, 315];
+const BITS = [
+  { a: -84, r: 52, w: 5.5, t: 18 },
+  { a: -48, r: 57, w: 4, t: -22 },
+  { a: -14, r: 51, w: 5, t: 34 },
+  { a: 22, r: 56, w: 4.5, t: -10 },
+  { a: 56, r: 50, w: 4, t: 26 },
+  { a: 92, r: 55, w: 5.5, t: -30 },
+  { a: 128, r: 51, w: 4.5, t: 14 },
+  { a: 160, r: 57, w: 4, t: -18 },
+  { a: 196, r: 50, w: 5, t: 30 },
+  { a: 232, r: 55, w: 4.5, t: -26 },
+];
 
 export function RepaidMark({ size = 148 }: RepaidMarkProps) {
   const { token } = theme.useToken();
@@ -57,19 +71,20 @@ export function RepaidMark({ size = 148 }: RepaidMarkProps) {
       role="presentation"
       aria-hidden="true"
     >
-      {RAYS.map((angle, index) => {
-        const rad = (angle * Math.PI) / 180;
-        const outer = INNER + (index % 2 === 0 ? 9 : 6);
+      {BITS.map((bit, index) => {
+        const rad = (bit.a * Math.PI) / 180;
+        const x = 60 + bit.r * Math.cos(rad) - bit.w / 2;
+        const y = 60 + bit.r * Math.sin(rad) - bit.w / 2;
         return (
-          <path
-            key={angle}
-            d={
-              `M${60 + INNER * Math.cos(rad)} ${60 + INNER * Math.sin(rad)}` +
-              `L${60 + outer * Math.cos(rad)} ${60 + outer * Math.sin(rad)}`
-            }
-            stroke={colours[index % colours.length]}
-            strokeWidth="3.6"
-            strokeLinecap="round"
+          <rect
+            key={bit.a}
+            x={x}
+            y={y}
+            width={bit.w}
+            height={bit.w}
+            rx="1.2"
+            fill={colours[index % colours.length]}
+            transform={`rotate(${bit.t} ${x + bit.w / 2} ${y + bit.w / 2})`}
           />
         );
       })}

@@ -327,14 +327,19 @@ export const brand = {
    * White works now because the skin changed under it: one teal-blue ramp, no
    * bright corner, and both things sit in its lower half.
    *
-   * 10%, DOWN FROM 20 — *"მაგის ბექგრაუნდები მინდა უფრო ჩაუწიო, ცოტა, 10%
-   * ცადე."* Halving it costs nothing legible and gains the opposite of what
-   * you would expect: less white over a dark ground means a DARKER pill, so
-   * white text on it goes from about 4.9:1 to 6.4:1. What it changes is the
-   * card — at 20 the tile and the pill were two pale patches a reader saw
-   * before the type on them.
+   * 5%, down from 20 and then 10 — *"მოდი აქ 5% ჩაუწიე რა."* Each step costs
+   * nothing legible and gains the opposite of what you would expect: less
+   * white over a dark ground means a DARKER pill, so white text on it goes
+   * from about 4.9:1 at 20% to 6.4:1 at 10% and 7.3:1 here. What changes is
+   * the card — at 20 the mark's tile and the state pill were two pale patches
+   * a reader saw before the type on them, and at 5 they are the edge of a
+   * shape rather than a shape.
+   *
+   * This is the floor. Below 5 the tile stops separating the mark from the
+   * ramp at all, and the mark is the one thing on this face that cannot be
+   * left to the ground behind it — see `markDisc` in CardFace.styles.
    */
-  cardDarkPill: "rgba(255, 255, 255, 0.10)",
+  cardDarkPill: "rgba(255, 255, 255, 0.05)",
   cardDarkInk: "#FFFFFF",
   cardDarkQuiet: "rgba(255, 255, 255, 0.68)",
   cardLightEdge: "rgba(38, 36, 35, 0.08)",
