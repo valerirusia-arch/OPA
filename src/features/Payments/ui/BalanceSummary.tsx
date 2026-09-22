@@ -37,7 +37,7 @@
 //
 // Dumb: it renders a balance and reports that the button was pressed.
 
-import { Button, Col, Divider, Flex, Grid, Row, Typography, theme } from "antd";
+import { Button, Flex, Grid, Typography, theme } from "antd";
 import { InstalmentTrack } from "../../../shared/ui/InstalmentTrack";
 import { StatusPill } from "../../../shared/ui/StatusPill";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -200,7 +200,6 @@ export function BalanceSummary({
     { key: "payoff", label: t("payments.payoffToday"), value: balance.payoff, alarm: false },
     { key: "maturity", label: t("payments.maturity"), value: balance.maturityOn, alarm: false },
   ];
-  const span = 24 / details.length;
 
   /* One definition, two arrangements — see the note at the figure row. */
   const detailItem = (detail: (typeof details)[number]) => (
@@ -395,7 +394,34 @@ export function BalanceSummary({
           <Flex vertical gap={stacked && action ? 16 : 0}>
             <Flex vertical>
               {figure}
-              {caption}
+              {/*
+                THE SMALL PRINT SHARES THE CAPTION'S LINE, pushed right.
+
+                It used to be a full-width row of three under its own rule at
+                the foot of the card: an even third each, spread over the whole
+                width, on a storey of their own. That put the card's quietest
+                facts on the same footing as its loudest and left a band of air
+                under them — *"ესენი მაღლა აწიე, მარჯვენა კუთხეში უფრო,
+                მიაახლოვე ერთმანეთს... და ქვემოთ სფეისიც მოაკლდება."*
+
+                So they come up beside the next-payment line, grouped rather
+                than spread, and the rule and the storey both go with them.
+                `flex-end`, because a two-line pair and a one-line caption have
+                no shared baseline — a common bottom edge is what makes the row
+                read as one band.
+
+                `wrap` matters: on a phone the caption and the group cannot
+                share 295px, so the group drops under it and keeps its own
+                tight spacing rather than stretching to the card's width.
+              */}
+              <Flex align="flex-end" justify="space-between" gap={24} wrap>
+                {caption}
+                {showDetails ? (
+                  <Flex gap={28} wrap>
+                    {details.map(detailItem)}
+                  </Flex>
+                ) : null}
+              </Flex>
             </Flex>
             {stacked ? action : null}
           </Flex>
@@ -442,22 +468,6 @@ export function BalanceSummary({
           spreads them over the width they have, which is also exactly what
           the loan page's statement does with its four. Two money pages, one
           way of setting out the small print. */}
-      {showDetails && !inline ? (
-      <Flex vertical>
-        <Divider style={styles.rule} />
-        <Row gutter={[24, 20]}>
-          {details.map((detail) => (
-            /* THREE OR FOUR, SHARING THE WIDTH EITHER WAY. An `sm={8}` third
-               kept for the healthy account and a quarter once the past-due
-               figure joins, so the strip fills the card in both states rather
-               than leaving a column of air where a fourth fact will land. */
-            <Col key={detail.key} xs={24} sm={details.length > 3 ? 12 : 8} lg={span}>
-              {detailItem(detail)}
-            </Col>
-          ))}
-        </Row>
-      </Flex>
-      ) : null}
     </Flex>
   );
 }
