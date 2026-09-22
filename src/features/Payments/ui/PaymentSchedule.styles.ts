@@ -11,12 +11,17 @@ export const styles = {
 export const getStyles = (token: GlobalToken) =>
   ({
     /**
-     * The next line owed.
+     * The next line owed — MARKED IN THE MARGIN, NOT WASHED IN COLOUR.
      *
-     * `colorPrimaryBg` is the palest tint antd derives from the primary — the
-     * same one behind a selected menu item and inside the illustration
-     * grounds. Strong enough to find at a glance in twelve rows, light enough
-     * that the row's own text keeps its contrast.
+     * It was a full-row tint from `colorPrimaryBg`. Across a row that runs the
+     * width of the card that is a lot of colour to say "this one", and it made
+     * the table's quietest row its loudest object: *"ამხელაზე გალურჯება არ
+     * არის საჭირო, რამე ესეთი სტოუკივით რომ ჩავუსვათ თებლებში მარცხნიდან."*
+     *
+     * So a 3px stroke down the left edge instead. It is `inset` box-shadow
+     * rather than `borderLeft` on purpose: a real border would push every cell
+     * in the marked row 3px right of the rows above and below it, and a
+     * marker that moves the thing it marks is worse than no marker.
      */
-    nextRow: { background: token.colorPrimaryBg },
+    nextRow: { boxShadow: `inset 3px 0 0 ${token.colorPrimary}` },
   }) satisfies Record<string, CSSProperties>;
