@@ -25,7 +25,9 @@ export const styles = {
   detail: { width: "100%" },
   /** `minWidth: 0` so the sentence wraps inside its own column instead of
    *  widening the row and pushing the button off the card. */
-  copyBlock: { minWidth: 0 },
+  /* The basis is what makes the row wrap rather than crush: below it the
+     sentence takes a line of its own and the action drops under it. */
+  copyBlock: { minWidth: 0, flex: "1 1 260px" },
   /* 500, not antd's 600 Title. The step's name — Review, Signing, Funding — is
      a heading on a card that already leads with the track and its own copy; at
      600 it reads as a second heavy thing. Matches StageFoot's title, so the

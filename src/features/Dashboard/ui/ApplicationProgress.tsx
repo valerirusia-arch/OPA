@@ -109,10 +109,18 @@ export function ApplicationProgress({
           statement's both stop at the card's own inset. */}
       <div style={s.rule} />
 
+      {/* `wrap`, and a real basis on the copy block below.
+
+          Without them this row only ever shrank: the link keeps its width, so
+          at 375px the sentence was squeezed into the ~135px left over and came
+          out eight lines tall in a column half the card wide, with the other
+          half empty beside it. Wrapping puts the link under the sentence
+          instead, and the sentence gets the card. */}
       <Flex
         align="flex-start"
         justify="space-between"
         gap={32}
+        wrap
         style={styles.detail}
       >
         <Flex vertical gap={8} style={styles.copyBlock}>
