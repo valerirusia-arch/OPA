@@ -30,6 +30,7 @@ import { Button, Card, Col, Divider, Flex, Grid, Row, Typography, theme } from "
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { InstalmentTrack } from "../../../shared/ui/InstalmentTrack";
 import { getStyles, styles } from "./LoanStatement.styles";
+import { cardHeadTitle } from "../../../shared/ui/cardHead.styles";
 
 /** A label over a value, along the panel's foot. */
 export type StatementFact = {
@@ -168,7 +169,10 @@ export function LoanStatement({
       title={title}
       extra={headAction}
       style={fill ? { ...s.panel, ...styles.stretch } : s.panel}
-      styles={{ body: fill ? { ...styles.body, ...styles.fillBody } : styles.body }}
+      styles={{
+        title: cardHeadTitle,
+        body: fill ? { ...styles.body, ...styles.fillBody } : styles.body,
+      }}
     >
       {/* Sharing a row, the blocks spread over the height instead of bunching
           at the top and leaving the foot of the panel empty. */}

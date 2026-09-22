@@ -30,6 +30,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { styles } from "./VirtualCardPanel.styles";
+import { cardHeadTitle } from "../../../shared/ui/cardHead.styles";
 
 export type VirtualCardPanelProps = {
   /** The card's heading. The screen supplies it; the head lives here. */
@@ -66,7 +67,9 @@ export function VirtualCardPanel({
     <Card
       title={title}
       style={fill ? styles.card : undefined}
-      styles={fill ? { body: styles.fillBody } : undefined}
+      styles={
+        fill ? { title: cardHeadTitle, body: styles.fillBody } : { title: cardHeadTitle }
+      }
       /* The only control OPA can offer: a way out to the people who actually
          hold the card. In the head, as a link, exactly like "Update" on the
          saved card — a hand-off is not a primary action. */

@@ -63,6 +63,7 @@ import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
 import { stageCopy } from "../../features/Payments/ui/delinquency";
 import { hasOpenApplication, useLoanRecord, usePaymentsRecord } from "../loan/loanRecord";
 import { BorrowerInbox } from "../notifications/BorrowerInbox";
+import { cardHeadTitle } from "../../shared/ui/cardHead.styles";
 import { useUnreadCount } from "../notifications/notifications";
 import { applicationTrack } from "./applicationTrack";
 import { leadPanelBody } from "../../shared/ui/panel.styles";
@@ -235,7 +236,7 @@ export default function DashboardScreen({
                   ) : undefined
                 }
                 style={styles.band}
-                styles={{ body: leadPanelBody }}
+                styles={{ title: cardHeadTitle, body: leadPanelBody }}
               >
                 <BalanceSummary
                   balance={payments.balance}
@@ -400,7 +401,11 @@ export default function DashboardScreen({
                 /* `overflow: hidden` so the table's own square corners are cut
                    by the card's radius; only where the body's padding is 0. */
                 style={recent.length > 0 ? styles.tableCard : styles.band}
-                styles={recent.length > 0 ? { body: styles.tableBody } : undefined}
+                styles={
+                  recent.length > 0
+                    ? { title: cardHeadTitle, body: styles.tableBody }
+                    : { title: cardHeadTitle }
+                }
                 extra={
                   <Button
                     type="link"

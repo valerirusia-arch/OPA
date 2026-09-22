@@ -54,6 +54,7 @@ import { BalanceSummary } from "./BalanceSummary";
 import { PaymentHistory } from "./PaymentHistory";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { getStyles, styles } from "./PaymentsOverview.styles";
+import { cardHeadTitle } from "../../../shared/ui/cardHead.styles";
 import type {
   Installment,
   PaymentTransaction,
@@ -219,7 +220,7 @@ export function PaymentsOverview({
           ) : undefined
         }
         style={styles.card}
-        styles={{ body: leadPanelBody }}
+        styles={{ title: cardHeadTitle, body: leadPanelBody }}
       >
         {/* `onPay` is withheld on purpose: the head carries the action now,
             and the panel's own button would be the same door twice. */}
