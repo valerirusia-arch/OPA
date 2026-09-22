@@ -141,6 +141,12 @@ export function VerificationList({ results }: VerificationListProps) {
               align="flex-start"
               justify="space-between"
               gap={24}
+              /* `wrap`, and a real basis on `name` below. Without them the row
+                 could only shrink: the verdict keeps its width, so at 375px
+                 the check's explanation was squeezed into 137px of a 309px
+                 card — six short lines against a right half holding two
+                 words. The conclusion panel under this list already wraps. */
+              wrap
               style={index > 0 ? s.row : styles.rowFirst}
             >
               <Flex vertical gap={2} style={styles.name}>

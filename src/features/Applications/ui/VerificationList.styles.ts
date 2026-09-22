@@ -19,7 +19,9 @@ export const styles = {
   /** The left column: the check's name over the line saying what it looked at.
    *  It takes the row and may shrink so the outcome on the right keeps its
    *  place. */
-  name: { minWidth: 0, flex: "1 1 auto" },
+  /* The basis is what makes the row wrap rather than crush the explanation:
+     below it the verdict drops under the name and the text gets the card. */
+  name: { minWidth: 0, flex: "1 1 240px" },
   /**
    * The check's name, a half-step firmer than the line under it.
    *
