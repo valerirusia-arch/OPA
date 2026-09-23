@@ -340,37 +340,41 @@ export const brand = {
     light goes, and the only thing up there is the mark, which now sits on a
     white tile of its own and no longer needs the ground to be dark.
   */
-  cardSkin: [
-    /* The CTA orange along the foot, in two blooms so the warmth runs the
-       whole hem rather than sitting in one corner — *"ეს ნარინჯისფერი ლოგოს
-       მხრიდანაც უქენი."* The right one leads, the left answers it quieter.
-       Both centres sit just inside the card: pushed to 106% most of each
-       bloom fell off the bottom edge and only its faintest tail showed. */
-    "radial-gradient(84% 70% at 84% 102%, rgba(184,92,35,0.58) 0%," +
-      " rgba(184,92,35,0.26) 44%, rgba(184,92,35,0) 78%)",
-    "radial-gradient(70% 62% at 8% 100%, rgba(184,92,35,0.42) 0%," +
-      " rgba(184,92,35,0.18) 46%, rgba(184,92,35,0) 80%)",
-    /* ONE HUE, TOP TO BOTTOM.
-       There were three over this ramp — cyan into the top left, a warm peach
-       across the top right, the orange at the foot — and together they made
-       the face read as a swatch rather than as a card: *"აქ ბევრი ფერია ხომ
-       ხედავ."* The washes are gone; the orange at the foot is the only second
-       colour left, which is the brand's own pair and nothing more.
+  /*
+    ONE RAMP, TOP TO BOTTOM — sampled from the designer's own reference.
 
-       AND THE HUE IS THE DESIGNER'S OWN SWATCH, #30647D, sampled from the
-       chip they sent. It is a true blue no longer: at H 199°, S 45%, L 34%
-       it is the BRAND TEAL family, four degrees off `primary` (#146580) and
-       a good deal quieter — so the card now belongs to the same colour as
-       the product's chrome instead of sitting beside it in a blue of its
-       own. The six stops are that one swatch at six lightnesses, 54% down to
-       16%, with the swatch itself sitting at 42% where the face is widest.
+    IT WAS THREE LAYERS: a blue linear with two orange radials bloomed over its
+    foot. That is what made the middle dirty. Orange at a middling alpha over a
+    dark teal does not read as warm, it reads as GREY — measured, #B85C23 at
+    25% over #275164 comes out #4B5454 — so the card had a band of mud between
+    a blue half and an orange hem: *"შუაში ვხედავ ბინძურ არეას."*
 
-       THE FOOT STAYS THE DEEPEST PART, which is doing work rather than
-       taste: everything printed on this card is white and all of it sits in
-       the lower half. */
-    "linear-gradient(158deg, #569CBE 0%, #4085A6 20%, #30647D 42%," +
-      " #275164 62%, #1E3F4E 80%, #17303C 100%)",
-  ].join(", "),
+    No overlay can be smooth across that crossing, because the crossing is two
+    hues cancelling. So there is no overlay: one gradient, and every stop on it
+    is a colour in its own right.
+
+    The stops are READ OFF THE REFERENCE the designer sent, sampled down its
+    centre column at 5% intervals (an 11-point read of a 364px-tall card). The
+    hue walks from a light blue through a true neutral at about three quarters
+    down and into a warm brown at the hem — which is why it never muddies: the
+    grey in the middle is a STOP, arrived at, not an accident of two layers
+    fighting.
+
+    AND THE FOOT IS NO LONGER THE DARKEST PART. The reference stays mid-toned
+    and only turns warm, where the old ramp fell to #17303C. Everything printed
+    on this card is white and sits in the lower half, so that was checked
+    rather than assumed: white on the hem measures 7.75:1, and every stop from
+    20% down is past 4.5:1. The top is the lightest at 3.98:1 and carries no
+    type — only the mark, which has a white tile of its own.
+  */
+  cardSkin:
+    "linear-gradient(180deg," +
+    " #5A859D 0%, #57829A 5%, #558097 10%, #527E94 15%," +
+    " #507B91 20%, #4E788F 25%, #4C768B 30%, #4A7389 35%," +
+    " #487086 40%, #466E83 45%, #476B7E 50%, #4A6979 55%," +
+    " #4E6674 60%, #516470 65%, #54616A 70%, #575E61 75%," +
+    " #5C5A59 80%, #605550 85%, #635248 90%, #674E3F 95%," +
+    " #6A4A3A 100%)",
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
   cardLight: "#E7F1F4",
