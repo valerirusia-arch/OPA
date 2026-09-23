@@ -192,6 +192,7 @@ export default function AcquisitionCampaignsScreen({
     >
       <AdminPage
         title={t("acq.campaign.title")}
+        subtitle={t("acq.campaign.lead")}
         extra={
           canManage ? (
             <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreating(true)}>

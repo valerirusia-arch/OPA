@@ -34,6 +34,14 @@ export const styles = {
   /** The heading sits on the same line as whatever acts on the page. */
   titleRow: { marginBottom: 24 },
   /**
+   * The subtitle under the title. Pulled up under the heading (the title row
+   * already keeps 24 below it, so -16 leaves an 8px gap), and capped at a
+   * readable measure so a one-line description does not run the page's width.
+   * The value matches the hand-rolled `lead` that Reporting and Acquisition
+   * carried before this prop existed, so the look is unchanged.
+   */
+  subtitle: { display: "block", marginTop: -16, marginBottom: 20, maxWidth: 640 },
+  /**
    * 26, not antd's 30 for a level-2 heading.
    *
    * The back office is a workspace: the page's name is a signpost above a

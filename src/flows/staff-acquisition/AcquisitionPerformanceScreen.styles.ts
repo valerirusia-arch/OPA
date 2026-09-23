@@ -6,7 +6,6 @@ export const styles = {
   /* The description is a subtitle of the page title, so it sits close under it:
      the title row already keeps 24px below itself, which is too much for a
      subtitle — pull it up so the gap reads as ~8px, not a full block. */
-  lead: { display: "block", marginTop: -16, marginBottom: 20, maxWidth: 640 },
   /** The controls share a row and wrap on a phone. */
   controls: { rowGap: 16 },
   /** The select fills its column, so the three spread evenly across the whole

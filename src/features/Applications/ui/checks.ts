@@ -101,5 +101,12 @@ export const checkAboutKeys: Partial<Record<CheckKey, TranslationKey>> = {
  * and links straight through, which is where "Override automated decision"
  * starts from.
  */
-export const awaitsReview = (application: { decision?: unknown }) =>
-  application.decision === undefined;
+export const awaitsReview = (application: {
+  decision?: { source?: string };
+}) =>
+  // Needs an underwriter's attention: either the system could not decide it
+  // (no decision → Approve/Decline), OR the system decided it AUTOMATICALLY and
+  // a human has not confirmed it yet (→ Override). A decision a person already
+  // made (manual/override) is final and leaves the queue.
+  application.decision === undefined ||
+  application.decision.source === "automated";

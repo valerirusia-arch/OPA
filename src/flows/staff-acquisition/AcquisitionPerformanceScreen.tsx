@@ -174,13 +174,12 @@ export default function AcquisitionPerformanceScreen({
         navigate({ to: "/" });
       }}
     >
-      <AdminPage title={t("acq.perf.title")}>
+      <AdminPage
+        title={t("acq.perf.title")}
+        subtitle={canView ? t("acq.perf.lead") : undefined}
+      >
         {canView ? (
           <>
-            <Typography.Text type="secondary" style={styles.lead}>
-              {t("acq.perf.lead")}
-            </Typography.Text>
-
             <Card>
               <Row gutter={16} style={styles.controls}>
                 <Col xs={24} md={8} style={styles.field}>

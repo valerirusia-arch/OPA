@@ -268,7 +268,9 @@ export const getMarkStyles = () => {
     width: "12cqw",
     height: "12cqw",
     padding: "1.6cqw",
-    borderRadius: "3cqw",
+    // A circle, not a squircle — *"წრე გავაკეთოთ ოთხკუთხედის ნაცვლად."* It
+    // holds the round flame disc, so a round tile is concentric with it.
+    borderRadius: "50%",
     background: brand.cardDarkPill,
     display: "flex",
   };

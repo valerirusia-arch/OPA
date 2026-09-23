@@ -104,11 +104,7 @@ export default function StaffReportingScreen({
         navigate({ to: "/" });
       }}
     >
-      <AdminPage title={t("reporting.title")}>
-        <Typography.Text type="secondary" style={styles.lead}>
-          {t("reporting.lead")}
-        </Typography.Text>
-
+      <AdminPage title={t("reporting.title")} subtitle={t("reporting.lead")}>
         <Card>
           {available.map((report, index) => (
             <div key={report.key}>

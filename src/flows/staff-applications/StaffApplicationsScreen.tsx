@@ -60,6 +60,7 @@ import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
 import { decorateColumns, TABLE_NAME_WIDTH } from "../../shared/ui/tableColumns";
 import { NameCell } from "../../shared/ui/NameCell";
+import { StatusPill } from "../../shared/ui/StatusPill";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
@@ -172,11 +173,24 @@ export default function StaffApplicationsScreen({
       title: t("queue.col.source"),
       key: "source",
       width: 190,
-      render: (_value, row) => (
-        <Typography.Text style={s.routedBy}>
-          <CheckNameTag check={row.routedBy} />
-        </Typography.Text>
-      ),
+      /* An application the system decided automatically shows its decision here
+         instead of a routing step — it was not routed by a check, it was decided
+         and is waiting for a human to confirm or override it. This is also what
+         keeps the column from showing a dash on those rows. */
+      render: (_value, row) =>
+        row.decision?.source === "automated" ? (
+          <StatusPill color={row.decision.outcome === "approved" ? "success" : "error"}>
+            {t(
+              row.decision.outcome === "approved"
+                ? "queue.autoApproved"
+                : "queue.autoDeclined"
+            )}
+          </StatusPill>
+        ) : (
+          <Typography.Text style={s.routedBy}>
+            <CheckNameTag check={row.routedBy} />
+          </Typography.Text>
+        ),
     },
     {
       title: t("queue.col.amount"),

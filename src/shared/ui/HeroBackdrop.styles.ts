@@ -13,7 +13,12 @@ import { brand } from "../../theme/tokens";
  * falls outside the section entirely.
  */
 const WASH_BLUR = 72;
-const WASH_BLEED = WASH_BLUR * 2;
+/**
+ * Three times the blur, not two: the wash now drifts further (a slow, visible
+ * flow the designer asked for), so the solid ground under it has to extend
+ * further past the viewport or a translate could pull the layer's own edge in.
+ */
+const WASH_BLEED = WASH_BLUR * 3;
 
 export const styles = {
   /**
@@ -60,14 +65,14 @@ export const getStyles = (token: GlobalToken) =>
      * one more div: the blobs pass each other, so the colour on any part of
      * the page keeps changing without any of it going anywhere.
      *
-     * Longer and looser than the first — 44 seconds over 6% — because it
-     * carries only two blobs and has room to travel without meeting an edge.
+     * Longer and looser than the first — 96 seconds — because it carries only
+     * two blobs and has room to travel without meeting an edge.
      */
     drift: {
       inset: -WASH_BLEED,
       filter: `blur(${WASH_BLUR}px)`,
       background: brand.coverDrift,
-      animation: "opa-drift-b 44s ease-in-out infinite",
+      animation: "opa-drift-b 96s ease-in-out infinite",
       willChange: "transform",
     },
     /**
@@ -90,25 +95,23 @@ export const getStyles = (token: GlobalToken) =>
       inset: -WASH_BLEED,
       filter: `blur(${WASH_BLUR}px)`,
       /*
-        AND IT MOVES — *"მინდა მოძრაობდნენ დინამიურად."* It was forty seconds
-        over 1.5%, which was so little that a reader could only tell by
-        leaving the page and coming back. 28 seconds over 4% is still slow
-        enough that nothing on the page appears to shift, and fast enough to
-        be movement rather than a rumour of it.
+        A SLOW, VISIBLE DRIFT — *"მინდა რომ ეს მოძრაობდეს... ოღონდ ძალიან ნელა
+        მშვიდად... სანდოობა, არ ვჩქარობთ."* The bloom should be seen to flow,
+        the way the reference does, but at a pace that reads as unhurried. So
+        the travel is generous (see the keyframes) and the clock is long — 64
+        seconds here, 96 on the second layer: large movement over a long time
+        is slow movement you can still watch.
 
-        The layer is grown by twice the blur radius, so a translate of this
-        size cannot pull a hard edge into view. `@keyframes` has no
+        The layer is grown by three times the blur radius, so a translate of
+        this size cannot pull a hard edge into view. `@keyframes` has no
         CSSProperties form, so the animation lives in index.html beside the
         sparkle's, and the same file switches it off under
         `prefers-reduced-motion`.
       */
-      animation: "opa-drift 28s ease-in-out infinite",
+      animation: "opa-drift 64s ease-in-out infinite",
       willChange: "transform",
-      background: [
-        "linear-gradient(180deg, rgba(255,255,255,0.30) 0%," +
-          " rgba(255,255,255,0.74) 58%, rgba(255,255,255,0.98) 86%," +
-          " rgba(255,255,255,1) 100%)",
-        brand.cover,
-      ].join(", "),
+      // No white veil over it: the reference wash carries its pastel colour
+      // edge to edge, and a card on it stays legible on its own shadow.
+      background: brand.cover,
     },
   }) satisfies Record<string, CSSProperties>;

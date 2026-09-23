@@ -277,7 +277,7 @@ export function PaymentsOverview({
                 */
                 <div style={styles.settled}>
                   <EmptyState
-                    image={<RepaidMark />}
+                    image={<RepaidMark confetti={false} />}
                     title={t("payments.settledTitle")}
                     description={t("payments.settledBody")}
                   />

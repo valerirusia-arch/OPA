@@ -16,6 +16,13 @@ import { styles, toolbarTheme } from "./AdminPage.styles";
 
 export type AdminPageProps = {
   title: ReactNode;
+  /**
+   * A quiet line under the title, spanning the page, that says what the page is
+   * for. Optional: a list whose columns already name themselves needs none, but
+   * a page whose purpose is not obvious from the table (Reporting, Acquisition)
+   * earns one. Rendered once here so every page's subtitle sits the same.
+   */
+  subtitle?: ReactNode;
   /** Sits to the right of the heading: search, filters, the primary action. */
   extra?: ReactNode;
   /**
@@ -51,6 +58,7 @@ export type AdminPageProps = {
 
 export function AdminPage({
   title,
+  subtitle,
   extra,
   toolbarBelow,
   titleAfter,
@@ -110,6 +118,11 @@ export function AdminPage({
           </ConfigProvider>
         ) : null}
       </Flex>
+      {subtitle ? (
+        <Typography.Text type="secondary" style={styles.subtitle}>
+          {subtitle}
+        </Typography.Text>
+      ) : null}
       {toolbarBelow}
       {children}
     </div>

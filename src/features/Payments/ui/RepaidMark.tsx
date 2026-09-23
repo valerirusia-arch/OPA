@@ -45,6 +45,13 @@ import { brand } from "../../../theme/tokens";
 export type RepaidMarkProps = {
   /** Rendered square. The artwork scales from a 120-unit viewBox. */
   size?: number;
+  /**
+   * The scattered confetti squares around the disc. On by default — the gate
+   * that celebrates a fully repaid loan wants them. The repayment-schedule
+   * table's "nothing left" state turns them OFF: inside a table the burst reads
+   * as noise, and the tick alone says it — *"ამ თეიბლში წინწკლები არ გვინდა."*
+   */
+  confetti?: boolean;
 };
 
 /**
@@ -74,7 +81,7 @@ const BITS = [
   { x: 76, y: 114, w: 4.5, t: -28 },
 ];
 
-export function RepaidMark({ size = 148 }: RepaidMarkProps) {
+export function RepaidMark({ size = 148, confetti = true }: RepaidMarkProps) {
   const { token } = theme.useToken();
 
   const colours = [brand.cyan, brand.orange, token.colorPrimary, brand.successMark];
@@ -88,18 +95,20 @@ export function RepaidMark({ size = 148 }: RepaidMarkProps) {
       role="presentation"
       aria-hidden="true"
     >
-      {BITS.map((bit, index) => (
-        <rect
-          key={`${bit.x}-${bit.y}`}
-          x={bit.x}
-          y={bit.y}
-          width={bit.w}
-          height={bit.w}
-          rx="1.2"
-          fill={colours[index % colours.length]}
-          transform={`rotate(${bit.t} ${bit.x + bit.w / 2} ${bit.y + bit.w / 2})`}
-        />
-      ))}
+      {confetti
+        ? BITS.map((bit, index) => (
+            <rect
+              key={`${bit.x}-${bit.y}`}
+              x={bit.x}
+              y={bit.y}
+              width={bit.w}
+              height={bit.w}
+              rx="1.2"
+              fill={colours[index % colours.length]}
+              transform={`rotate(${bit.t} ${bit.x + bit.w / 2} ${bit.y + bit.w / 2})`}
+            />
+          ))
+        : null}
 
       {/* The same soft green the submitted mark stands on, so the two ends of
           a borrower's story share a colour. */}
