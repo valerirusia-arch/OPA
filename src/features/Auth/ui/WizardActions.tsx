@@ -15,9 +15,8 @@
 // travel between them. Right-aligned and self-sized is what the loan
 // application wizard does, and the two wizards should not disagree.
 
-import { Button, Flex, theme } from "antd";
+import { Button, Flex } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { getStyles } from "./WizardStep.styles";
 
 export type WizardActionsProps = {
   /** Overridden when the step opens in a dialog, where Back means Cancel. */
@@ -38,8 +37,6 @@ export function WizardActions({
   submitLabel,
 }: WizardActionsProps) {
   const t = useT();
-  const { token } = theme.useToken();
-  const styles = getStyles(token);
 
   return (
     <Flex gap={12} justify="flex-end">
@@ -54,7 +51,6 @@ export function WizardActions({
         size="large"
         loading={submitting}
         disabled={disabled}
-        style={disabled ? styles.submitIdle : undefined}
       >
         {submitLabel ?? t("common.continue")}
       </Button>

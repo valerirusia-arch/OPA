@@ -33,6 +33,17 @@ import { maskedText } from "./PasswordField.styles";
 export function PasswordField({ visibilityToggle, ...rest }: Omit<PasswordProps, "styles">) {
   const [visible, setVisible] = useState(false);
 
+  /*
+    ONLY WHEN THERE ARE DISCS TO ENLARGE.
+    
+    The masked size is on the input, and a placeholder is drawn by the input —
+    so an EMPTY field rendered "Enter new password" at 18px with 2px between
+    the letters, three sizes up from every other placeholder on the form.
+    Nothing was being masked at that moment; there was nothing to help read.
+    The value arrives from Form.Item, which is what makes this knowable here.
+  */
+  const hasValue = Boolean((rest as { value?: unknown }).value);
+
   return (
     <Input.Password
       {...rest}
@@ -55,8 +66,8 @@ export function PasswordField({ visibilityToggle, ...rest }: Omit<PasswordProps,
               },
             }
       }
-      /* Revealed, it is ordinary text and takes the form's ordinary size. */
-      styles={{ input: visible ? undefined : maskedText }}
+      /* Revealed — or empty — it is ordinary text at the form's ordinary size. */
+      styles={{ input: !visible && hasValue ? maskedText : undefined }}
     />
   );
 }

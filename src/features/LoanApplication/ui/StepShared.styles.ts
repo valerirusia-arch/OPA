@@ -5,7 +5,6 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
-import { getStyles as getButtonStates } from "../../../shared/ui/buttonStates.styles";
 
 export const styles = {
   form: { width: "100%" },
@@ -30,5 +29,4 @@ export const getStyles = (token: GlobalToken) =>
      */
     hint: { display: "flex", gap: 8, color: token.colorTextSecondary },
     hintIcon: { color: token.colorTextTertiary, marginTop: 3 },
-    submitIdle: getButtonStates(token).idlePrimary,
   }) satisfies Record<string, CSSProperties>;

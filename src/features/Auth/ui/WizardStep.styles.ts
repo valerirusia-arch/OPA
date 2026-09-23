@@ -5,7 +5,6 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
-import { getStyles as getButtonStates } from "../../../shared/ui/buttonStates.styles";
 
 /** Balanced lines: no sentence leaves a single word stranded on the last. */
 const description: CSSProperties = {
@@ -33,5 +32,4 @@ export const getStyles = (token: GlobalToken) =>
   ({
     /** The "why do you need this?" marker inside a field. */
     hintIcon: { color: token.colorTextTertiary },
-    submitIdle: getButtonStates(token).idlePrimary,
   }) satisfies Record<string, CSSProperties>;

@@ -12,7 +12,6 @@ import { Button, Checkbox, Flex, Typography, theme } from "antd";
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { getStyles, styles } from "./TermsStep.styles";
-import { getStyles as getWizardStyles } from "./WizardStep.styles";
 
 const TERMS_POINTS: TranslationKey[] = [
   "terms.termsPoint1",
@@ -44,7 +43,6 @@ export function TermsStep({
   const t = useT();
   const { token } = theme.useToken();
   const s = getStyles(token);
-  const wizard = getWizardStyles(token);
   const [terms, setTerms] = useState(false);
   const [privacy, setPrivacy] = useState(false);
 
@@ -110,7 +108,7 @@ export function TermsStep({
         type="primary"
         size="large"
         block
-        style={terms && privacy ? styles.submit : { ...styles.submit, ...wizard.submitIdle }}
+        style={styles.submit}
         loading={submitting}
         disabled={!terms || !privacy}
         onClick={onAccept}

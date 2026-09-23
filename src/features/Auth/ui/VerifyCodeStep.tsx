@@ -102,14 +102,22 @@ export function VerifyCodeStep({
         {t("verify.submit")}
       </Button>
 
-      <Flex justify="space-between" align="center" style={styles.actions}>
+      {/*
+        STACKED UNDER THE BUTTON, CENTRED ON IT — *"ღილაკის ქვემოთ ჩაშალო, რომ
+        იყოს ერთმანეთის ქვემოთ, აი ამ ღილაკს გაუცენტრე."* Side by side they sat
+        at the two far edges of a 480px card, which reads as two unrelated
+        controls rather than as the two ways out of one screen. In a column
+        under the thing they are alternatives to, they are one short list.
+
+        Change email first: it is the one somebody reaches for when the code is
+        not coming at all, and resending to a wrong address never helps.
+      */}
+      <Flex vertical align="center" gap={4} style={styles.actions}>
         {onBack ? (
           <Button type="link" onClick={onBack}>
             {channel === "email" ? t("verify.changeEmail") : t("verify.changeNumber")}
           </Button>
-        ) : (
-          <span />
-        )}
+        ) : null}
         <Button type="link" disabled={secondsLeft > 0} onClick={handleResend}>
           {secondsLeft > 0
             ? t("verify.resendIn", { seconds: secondsLeft })
