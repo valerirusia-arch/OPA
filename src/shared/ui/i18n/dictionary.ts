@@ -1294,6 +1294,8 @@ export const en = {
   "loanAdmin.commentPlaceholder": "What should the next person reading this loan know?",
   "loanAdmin.save": "Save",
   "loanAdmin.funding": "Funding status",
+  /* The loan's own reference, as a labelled fact on its record. */
+  "loanAdmin.loanIdLabel": "Loan ID",
 
   // Epic 4 — what the borrower sees while the decisioning runs. Each of these
   // is a WBS story with UI/UX hours against it, and each is a state of the
@@ -2848,6 +2850,7 @@ const es: Record<TranslationKey, string> = {
   "loanAdmin.commentPlaceholder": "¿Qué debería saber la próxima persona que lea este préstamo?",
   "loanAdmin.save": "Guardar",
   "loanAdmin.funding": "Estado del desembolso",
+  "loanAdmin.loanIdLabel": "ID del préstamo",
 
   "application.needsInfoTitle": "Nos falta una cosa",
   "application.needsInfoBody": "La persona que revisa tu solicitud ha pedido algo. Tu solicitud espera aquí hasta que llegue.",

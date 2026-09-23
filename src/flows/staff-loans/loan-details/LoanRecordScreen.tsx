@@ -25,7 +25,7 @@
 
 import { useState } from "react";
 import dayjs from "dayjs";
-import { App, Button, Card, Flex, Result, Typography } from "antd";
+import { App, Button, Card, Flex, Result } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
@@ -127,9 +127,16 @@ export default function LoanRecordScreen({
     { key: "rate", label: t("loanPage.interestRate"), value: loan.rate },
     { key: "terms", label: t("loanAdmin.repaymentTerms"), value: loan.repaymentTerms },
     {
-      key: "funding",
-      label: t("loanAdmin.funding"),
-      value: <LoanStatusTag status={loan.status} />,
+      /* THE REFERENCE, NOT THE STATUS. The status was here AND in the page's
+         own heading, two inches apart — and the heading is where a status
+         belongs, because it describes the whole page. The reference had been
+         crowded in beside the borrower's name instead: *"ეს სტატუსი ამოიღე
+         კონტეინერიდან... და ეგ აიდი ჩასვი მაგ სტატუსის ნაცვლად."* So they
+         swap. The name now carries the status alone, and the loan's own id
+         sits with the rest of its facts, where a fact goes. */
+      key: "reference",
+      label: t("loanAdmin.loanIdLabel"),
+      value: loan.loanId,
     },
     {
       key: "card",
@@ -167,11 +174,6 @@ export default function LoanRecordScreen({
         }}
         titleAfter={
           <Flex align="center" gap={12}>
-            {/* The loan's own reference beside the borrower's name: support is
-                asked about one or the other, never about "the loan". */}
-            <Typography.Text type="secondary">
-              {t("loanAdmin.loanId", { id: loan.loanId })}
-            </Typography.Text>
             {/* THE PRODUCT'S OWN STATUS COMPONENT, not a bare Tag.
                 It was `<Tag variant="filled">` with no colour — which antd
                 draws as the neutral grey lozenge, so "Funded" arrived here
