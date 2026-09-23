@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
+import { brand } from "../../../theme/tokens";
 
 /** The FICO range the gauge spans, and the band edges on it. */
 export const SCORE_MIN = 300;
@@ -49,16 +50,33 @@ export const getStyles = (token: GlobalToken) => {
       marginTop: 16,
       background: `linear-gradient(90deg, ${red} 0 ${redEnd}%, ${amber} ${redEnd}% ${amberEnd}%, ${green} ${amberEnd}% 100%)`,
     },
-    /** The "you are here" needle — a white bar with a knob, over the zones. */
+    /**
+     * "YOU ARE HERE" — THE SLIDER'S OWN HANDLE.
+     *
+     * It was a 4px white bar ringed in near-black, and against a product with
+     * no hard outlines anywhere it read as borrowed from somewhere else:
+     * *"ეს თითქოს სტილიდან ამოვარდნილია."*
+     *
+     * The product already HAS a control for a position on a track — the
+     * amount sliders — so this is that handle: a white disc with a 2px ring in
+     * the soft teal, measured off `.ant-slider-handle` rather than guessed.
+     * One idiom for one idea.
+     *
+     * 16 rather than the slider's 12, because it sits on a 10px band instead
+     * of a 4px rail and has to stand proud of it by the same margin. The drop
+     * shadow is what lifts it off whichever zone it lands on — red, amber or
+     * green — where a single flat ring reads differently against each.
+     */
     marker: {
       position: "absolute",
-      top: -4,
-      bottom: -4,
-      width: 4,
-      marginLeft: -2,
-      borderRadius: 2,
+      top: "50%",
+      width: 16,
+      height: 16,
+      marginLeft: -8,
+      marginTop: -8,
+      borderRadius: "50%",
       background: token.colorBgContainer,
-      boxShadow: `0 0 0 1.5px ${token.colorText}`,
+      boxShadow: `0 0 0 2px ${brand.primarySoft}, 0 1px 4px rgba(38, 36, 35, 0.22)`,
     },
     endsQuiet: { color: token.colorTextTertiary },
   }) satisfies Record<string, CSSProperties>;
