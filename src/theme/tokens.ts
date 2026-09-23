@@ -74,7 +74,6 @@ export const brand = {
    * what these borrow is its hue at 92–98% lightness, which is a warm off-white
    * rather than a colour.
    */
-  warmTintHover: "#FAF8F6",
   warmTint: "#F6F3F2",
   warmTintStrong: "#EFE9E5",
   /** antd's own table header grey (#FBFBFB), warmed to match the three above. */
@@ -608,7 +607,11 @@ export const tokens: ThemeConfig = {
       // The row hover was a heavy grey; the light cyan reads as a highlight,
       // not a slab. Selected rows take the same family a step firmer.
       headerBg: brand.warmHeader,
-      rowHoverBg: brand.warmTintHover,
+      /* THE HOVER IS THE HEADER'S OWN TONE — *"შეგვიძლია ეს ჰოვერი იგივე
+         ფერი იყოს, რაც აი თეიბლს მივეცით?"* One warm off-white for the two
+         things the table tints, rather than two that are nearly but not quite
+         the same. */
+      rowHoverBg: brand.warmHeader,
       rowSelectedBg: brand.warmTint,
       rowSelectedHoverBg: brand.warmTintStrong,
     },
