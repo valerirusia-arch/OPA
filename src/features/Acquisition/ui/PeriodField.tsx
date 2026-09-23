@@ -24,6 +24,16 @@
 //   · opening the end picker lands on the start's own month rather than on
 //     today, which is where the next date is.
 //
+// IT DROPS DOWN, NOT UP. antd picks a side by itself and, left to it, put the
+// panel over the form the reader had just filled in — *"ქვემოთ ჩამოწიე, ზემოთ
+// რატომ აგაქ."* `placement="bottomLeft"` puts it under the field, where the
+// two dates and everything above them stay in view.
+//
+// It still flips up when the window is genuinely too short for it — measured,
+// under about 890px of window — and that fallback is antd's overflow guard
+// doing its job: above the field is worse than below it, and both are better
+// than half a calendar off the bottom of the screen.
+//
 // NO "Today" FOOTER, and that is a measurement rather than a preference. The
 // dialog sits 100px down a 768px window and the field lands at y=458, so a
 // 448px panel has room neither below it nor above: it opened at top=-19 with
@@ -82,6 +92,7 @@ export function PeriodField({ value, onChange }: PeriodFieldProps) {
             format={FORMAT}
             value={from}
             showToday={false}
+            placement="bottomLeft"
             placeholder={t("acq.campaign.starts")}
             disabledDate={(day) => (to ? day.isAfter(to, "day") : false)}
             onChange={(next) => set(next || to ? [next, to] : null)}
@@ -95,6 +106,7 @@ export function PeriodField({ value, onChange }: PeriodFieldProps) {
             format={FORMAT}
             value={to}
             showToday={false}
+            placement="bottomLeft"
             placeholder={t("acq.campaign.ends")}
             /* Opens where the next date is, not on today. */
             defaultPickerValue={from ?? undefined}
