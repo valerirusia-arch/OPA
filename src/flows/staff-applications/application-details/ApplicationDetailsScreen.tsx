@@ -35,7 +35,7 @@
 import { useState } from "react";
 import dayjs from "dayjs";
 import { App, Alert, Button, Card, Col, Flex, Result, Row, Tabs, Tag, Typography, theme } from "antd";
-import { FileTextOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, FileTextOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
 import { AdminPage } from "../../../shared/ui/AdminPage";
@@ -56,6 +56,7 @@ import {
   ApproveModal,
   DeclineModal,
   OverrideModal,
+  RequestInfoModal,
 } from "../../../features/Applications/ui/DecisionModals";
 import { UnderwritingActions } from "../../../features/Applications/ui/UnderwritingActions";
 import type {
@@ -103,6 +104,10 @@ export default function ApplicationDetailsScreen({
    * while reading the application a modal would cover.
    */
   const [action, setAction] = useState<"approve" | "decline" | "override">();
+  /* Open when the underwriter is asking for a different co-borrower. Its own
+     flag rather than a fourth `action`: those three are DECISIONS on the
+     application, and this is a request to the borrower. */
+  const [askingCoBorrower, setAskingCoBorrower] = useState(false);
   const close = () => setAction(undefined);
 
   /**
@@ -156,6 +161,28 @@ export default function ApplicationDetailsScreen({
    */
   /** One stamp format for everything this page records. */
   const stampNow = () => dayjs().format("MMM DD, YYYY HH:mm");
+
+  /*
+    WBS "Request additional information": the note joins the list, the trail
+    records it, and the application becomes "Pending action" — the WBS's own
+    word for waiting on the borrower. Written once because two controls reach
+    it now: the Underwriting actions panel, and the co-borrower card's own
+    button.
+  */
+  const sendRequest = (note: string) => {
+    console.log("request information", record?.id, note);
+    const on = stampNow();
+    setRequests((prev) => [
+      ...prev,
+      { id: `r${prev.length + 1}`, askedOn: on, askedBy: name, note },
+    ]);
+    setAudit((prev) => [
+      ...prev,
+      { id: `ri${prev.length + 1}`, on, by: name, action: "audit.infoRequested", reason: note },
+    ]);
+    setStatus("pendingAction");
+    message.success(t("requestModal.send"));
+  };
 
   const settle = (
     outcome: "approved" | "declined",
@@ -276,8 +303,8 @@ export default function ApplicationDetailsScreen({
     </Card>
   );
 
-  const attachedPerson = (heading: string, who: ApplicationPerson) => (
-    <Card key={heading} title={heading} style={styles.card}>
+  const attachedPerson = (heading: string, who: ApplicationPerson, extra?: React.ReactNode) => (
+    <Card key={heading} title={heading} extra={extra} style={styles.card}>
       <PersonPanel
         name={who.name}
         meta={`${who.email} · ${who.phone} · ${who.state}`}
@@ -532,7 +559,40 @@ export default function ApplicationDetailsScreen({
       {person(t("appDetail.borrower"), record.borrower)}
 
       {record.coBorrower ? (
-        attachedPerson(t("appDetail.coBorrower"), record.coBorrower)
+        attachedPerson(
+          t("appDetail.coBorrower"),
+          record.coBorrower,
+          /*
+            THE ONE THING AN UNDERWRITER CAN DO ABOUT A CO-BORROWER.
+
+            The epic gives this role no way to turn one down: Approve, Decline,
+            Override, Update amount, Request additional information, and
+            nothing in between. So a human who reads the file and finds the
+            co-borrower inadequate has only Decline — which kills the whole
+            application, including a borrower who may be fine — or a free-text
+            note the borrower cannot act on from where it lands.
+
+            This is the request story, worded. It is NOT a decision about the
+            co-borrower: telling somebody they were refused credit is an
+            adverse action with its own handling, and the WBS gives that to
+            the system's own checks. What the underwriter does here is ask the
+            BORROWER to invite somebody else — which is exactly story 14's
+            own trigger, "the co-borrower does not satisfy the underwriting
+            requirements".
+
+            Only while the application is still open: once a decision is
+            recorded there is nothing left to ask for.
+          */
+          decision === undefined && canDecide ? (
+            <Button
+              type="link"
+              style={styles.headAction}
+              onClick={() => setAskingCoBorrower(true)}
+            >
+              {t("appDetail.askDifferentCoBorrower")} <ArrowRightOutlined />
+            </Button>
+          ) : undefined
+        )
       ) : (
         <Card title={t("appDetail.coBorrower")} style={styles.card}>
           <Typography.Text type="secondary">{t("appDetail.noCoBorrower")}</Typography.Text>
@@ -672,35 +732,7 @@ export default function ApplicationDetailsScreen({
                 /* WBS: the amount may be adjusted "before the final approval
                    decision", so the panel closes once there is one. */
                 canChangeAmount={decision === undefined}
-                onRequestInfo={(note) => {
-                  console.log("request information", record.id, note);
-                  /*
-                    WBS: "Underwriter shall be able to request additional
-                    documents or information from the borrower", and the
-                    borrower's own story answers it — so the application is now
-                    WAITING ON THEM. Three things follow from one action: the
-                    request joins the list below, the trail records it, and the
-                    status becomes "Pending action", which is the word the WBS
-                    uses for exactly this state.
-                  */
-                  const on = stampNow();
-                  setRequests((prev) => [
-                    ...prev,
-                    { id: `r${prev.length + 1}`, askedOn: on, askedBy: name, note },
-                  ]);
-                  setAudit((prev) => [
-                    ...prev,
-                    {
-                      id: `ri${prev.length + 1}`,
-                      on,
-                      by: name,
-                      action: "audit.infoRequested",
-                      reason: note,
-                    },
-                  ]);
-                  setStatus("pendingAction");
-                  message.success(t("requestModal.send"));
-                }}
+                onRequestInfo={sendRequest}
                 onChangeAmount={({ amount, reason }) => {
                   console.log("update approved amount", record.id, amount, reason);
                   const previous = approvedAmount ?? record.requestedAmount;
@@ -732,6 +764,22 @@ export default function ApplicationDetailsScreen({
           </Col>
         ) : null}
       </Row>
+
+      {/* The co-borrower request, opened from that card's own head. It is the
+          same dialog the Underwriting actions panel uses, arriving with the
+          sentence already written — the underwriter edits or sends it. */}
+      <RequestInfoModal
+        open={askingCoBorrower}
+        title={t("appDetail.askDifferentCoBorrower")}
+        initialNote={t("appDetail.askCoBorrowerNote", {
+          name: record.coBorrower?.name ?? "",
+        })}
+        onCancel={() => setAskingCoBorrower(false)}
+        onRequest={(note) => {
+          sendRequest(note);
+          setAskingCoBorrower(false);
+        }}
+      />
 
       <ApproveModal
         open={action === "approve"}

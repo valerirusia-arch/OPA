@@ -1326,6 +1326,13 @@ export const en = {
   "moreInfo.title": "Send what was asked for",
   "moreInfo.subtitle": "Your application goes back for review as soon as you send this.",
   "moreInfo.requested": "What was asked for",
+  /* A door, not an instruction: the page cannot read the underwriter's note, so
+     it offers the route and lets the borrower decide if it is the one they were
+     asked for. Pressing it does not resubmit the application — inviting
+     somebody is its own act, and the application waits for them. */
+  "moreInfo.coBorrowerTitle": "If the request is about your co-borrower",
+  "moreInfo.coBorrowerBody":
+    "You can invite somebody else instead. Everything else on your application stays as it is.",
   "moreInfo.askedBy": "{name} asked on {date}",
   "moreInfo.upload": "Documents",
   "moreInfo.uploadHelp": "PDF, JPG or PNG. Underwriting reads these, so they have to be legible.",
@@ -1535,6 +1542,11 @@ export const en = {
   "appDetail.notFound": "No application with that number",
   "appDetail.borrower": "Borrower",
   "appDetail.coBorrower": "Co-borrower",
+  /* The underwriter's one lever on a co-borrower — a REQUEST to the borrower,
+     never a decision about the co-borrower. See the note on the card. */
+  "appDetail.askDifferentCoBorrower": "Ask for a different co-borrower",
+  "appDetail.askCoBorrowerNote":
+    "{name} does not meet our underwriting requirements for this application. Please invite a different co-borrower so we can carry on.",
   "appDetail.checks": "Verification results",
   "appDetail.application": "Application",
   "appDetail.documents": "Documents",
@@ -2853,6 +2865,9 @@ const es: Record<TranslationKey, string> = {
   "moreInfo.title": "Envía lo que se te pidió",
   "moreInfo.subtitle": "Tu solicitud vuelve a revisión en cuanto envíes esto.",
   "moreInfo.requested": "Qué se pidió",
+  "moreInfo.coBorrowerTitle": "Si la petición es sobre tu coprestatario",
+  "moreInfo.coBorrowerBody":
+    "Puedes invitar a otra persona. Todo lo demás de tu solicitud se queda como está.",
   "moreInfo.askedBy": "{name} lo pidió el {date}",
   "moreInfo.upload": "Documentos",
   "moreInfo.uploadHelp": "PDF, JPG o PNG. El equipo de suscripción los lee, así que deben ser legibles.",
@@ -3039,6 +3054,9 @@ const es: Record<TranslationKey, string> = {
   "appDetail.notFound": "No hay ninguna solicitud con ese número",
   "appDetail.borrower": "Prestatario",
   "appDetail.coBorrower": "Coprestatario",
+  "appDetail.askDifferentCoBorrower": "Pedir otro coprestatario",
+  "appDetail.askCoBorrowerNote":
+    "{name} no cumple nuestros requisitos para esta solicitud. Invita a otro coprestatario para poder continuar.",
   "appDetail.checks": "Resultados de verificación",
   "appDetail.application": "Solicitud",
   "appDetail.documents": "Documentos",

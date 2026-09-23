@@ -35,7 +35,7 @@ import { useT } from "../../../shared/ui/i18n/useT";
 import { useCustomerViewer } from "../../../shared/ui/viewerRole";
 import { SessionTimeoutModal } from "../../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../../features/Auth/ui/useIdleTimer";
-import { setStage } from "../../loan/loanRecord";
+import { setStage, useLoanRecord } from "../../loan/loanRecord";
 import { getStyles, styles } from "./AdditionalInformationScreen.styles";
 
 type FormValues = { documents?: { name: string }[]; note?: string };
@@ -67,6 +67,28 @@ export default function AdditionalInformationScreen({
   const { message } = App.useApp();
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
   const [form] = Form.useForm<FormValues>();
+
+  /*
+    THE ONE REQUEST THIS FORM CANNOT ANSWER.
+
+    WBS gives the underwriter a single lever here — "request additional
+    documents or information from the borrower… a text note with the required
+    details" — and it is also the one they reach for when what is wrong is the
+    CO-BORROWER, because the epic gives them no way to turn one down. The
+    application screen now has a button that sends exactly that request.
+
+    So a request can read "please invite a different co-borrower", and the
+    borrower answering it had a file picker and a text box. Neither invites
+    anybody, and they were left to work out on their own that the way to do it
+    was another page.
+
+    Shown only when there IS a co-borrower to change, and worded as a door
+    rather than an instruction: this page cannot read the note, so it offers
+    the route and lets the borrower decide whether it is the one they were
+    asked for.
+  */
+  const record = useLoanRecord();
+  const hasCoBorrower = Boolean(record?.coBorrower ?? record?.invitation);
 
   // Watched rather than validated per field: the requirement is "send
   // something", which no single field can express.
@@ -167,6 +189,16 @@ export default function AdditionalInformationScreen({
                 </Flex>
               </Form.Item>
             </Form>
+
+            {hasCoBorrower ? (
+              <Flex vertical align="flex-start" gap={8} style={s.aside}>
+                <Typography.Text strong>{t("moreInfo.coBorrowerTitle")}</Typography.Text>
+                <Typography.Text type="secondary">{t("moreInfo.coBorrowerBody")}</Typography.Text>
+                <Button onClick={() => navigate({ to: "/application/co-borrower" })}>
+                  {t("application.coBorrowerFailedAction")}
+                </Button>
+              </Flex>
+            ) : null}
           </Card>
         </div>
       </div>

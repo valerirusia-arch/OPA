@@ -21,6 +21,9 @@ export const styles = {
   /** A link button with antd's own padding taken off, so it ends the panel's
    *  row rather than floating in from its edge. */
   recordLink: { paddingInline: 0, height: "auto" },
+  /* The card head's own action, the shape every other head in the product
+     uses: a link with its arrow, flush to the card's right edge. */
+  headAction: { paddingInlineEnd: 0 },
   /** The cards down the page, all on one rhythm. */
   card: { marginBottom: 24 },
   /** The decision banner sits above everything, before the record itself. */

@@ -301,6 +301,10 @@ export const mockCancelled: ApplicationSummary = cancel(mockFunded);
 export const mockNeedsInfo: ApplicationSummary = {
   ...mockUnderReview,
   status: "pendingAction",
+  /* There is a co-borrower on this application, which is what an underwriter's
+     "ask for a different co-borrower" request is about and what makes the door
+     on the answering screen appear. */
+  coBorrower: "Daniel Okafor",
 };
 
 /**

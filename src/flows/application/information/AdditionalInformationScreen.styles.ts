@@ -46,5 +46,16 @@ export const getStyles = (token: GlobalToken) => {
       display: "block",
       marginBottom: 4,
     },
+    /**
+     * The co-borrower door, under a rule rather than inside the form.
+     *
+     * It is not an answer to the request — pressing it does not resubmit
+     * anything — so it must not read as another field of the thing above it.
+     */
+    aside: {
+      marginTop: 24,
+      paddingTop: 20,
+      borderTop: `1px solid ${token.colorSplit}`,
+    },
   }) satisfies Record<string, CSSProperties>;
 };

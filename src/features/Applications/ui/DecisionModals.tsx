@@ -37,6 +37,8 @@ type ShellProps = {
   onCancel?: () => void;
   children?: React.ReactNode;
   onFinish: (values: Record<string, unknown>) => void;
+  /** Pre-filled fields, for a request the screen already knows the shape of. */
+  initialValues?: Record<string, unknown>;
 };
 
 function ActionModal({
@@ -48,6 +50,7 @@ function ActionModal({
   onCancel,
   children,
   onFinish,
+  initialValues,
 }: ShellProps) {
   const [form] = Form.useForm();
 
@@ -71,6 +74,7 @@ function ActionModal({
         layout="vertical"
         validateTrigger={["onBlur", "onChange"]}
         onFinish={onFinish}
+        initialValues={initialValues}
         style={styles.form}
       >
         {children}
@@ -202,22 +206,39 @@ export function OverrideModal({
 
 export type RequestInfoModalProps = {
   open: boolean;
+  /**
+   * A note the screen has written for the underwriter to edit or send.
+   *
+   * WBS gives this story one field — "a text note with the required details" —
+   * and leaves what it says to the person writing it. A request the product
+   * can word itself (asking for a different co-borrower) arrives written, and
+   * stays editable, because the underwriter is the one who read the file.
+   */
+  initialNote?: string;
+  title?: string;
   onCancel?: () => void;
   onRequest?: (note: string) => void;
 };
 
-export function RequestInfoModal({ open, onCancel, onRequest }: RequestInfoModalProps) {
+export function RequestInfoModal({
+  open,
+  initialNote,
+  title,
+  onCancel,
+  onRequest,
+}: RequestInfoModalProps) {
   const t = useT();
   const rules = useAuthRules();
 
   return (
     <ActionModal
       open={open}
-      title={t("requestModal.title")}
+      title={title ?? t("requestModal.title")}
       body={t("requestModal.body")}
       submitLabel={t("requestModal.send")}
       onCancel={onCancel}
       onFinish={(values) => onRequest?.(values.note as string)}
+      initialValues={initialNote ? { note: initialNote } : undefined}
     >
       <Form.Item
         label={t("requestModal.note")}
