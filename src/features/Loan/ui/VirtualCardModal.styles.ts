@@ -114,6 +114,9 @@ export const getStyles = (token: GlobalToken) =>
      * it sits in, and grey is what the rest of the product gives those.
      */
     copyIcon: { color: token.colorTextSecondary, fontSize: 18 },
+    /** The eye, sized and weighted like the copy control beside it so the two
+     *  read as one pair of row actions rather than as a button and a glyph. */
+    revealButton: { width: 24, height: 24, padding: 0 },
     /** The moment after. Green, and the only time this control has a colour. */
     copiedIcon: { color: token.colorSuccess, fontSize: 18 },
     /** The mark beside "OPA Virtual Card" in the type row — the reference puts

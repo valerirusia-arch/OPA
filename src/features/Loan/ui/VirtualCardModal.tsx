@@ -32,8 +32,15 @@
 //
 // Dumb: it renders what it is handed and reports that it was opened.
 
-import { Flex, Modal, Typography, theme } from "antd";
-import { BlockOutlined, CheckOutlined, LockOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { Button, Flex, Modal, Typography, theme } from "antd";
+import {
+  BlockOutlined,
+  CheckOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  LockOutlined,
+} from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { Logo } from "../../../shared/ui/Logo";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -70,7 +77,38 @@ export function VirtualCardModal({
   const { token } = theme.useToken();
   const s = getStyles(token);
 
+  /*
+    THE NUMBER AND THE CVV ARE COVERED UNTIL ASKED FOR, and separately.
+
+    This dialog is opened in the places a card gets used — a desk, a phone on a
+    table — and its own footer already says so: anyone looking at the screen can
+    read them. Two secrets, two switches: *"ეს ორი უნდა იყოს დაფარული, ორივეგან
+    უნდა იყოს თვალის აიქონი, ანუ ცალ-ცალკე უნდა შემეძლოს ინფოს ნახვა."*
+
+    Revealing one does not reveal the other, so the CVV — the part that turns a
+    number somebody glimpsed into a usable card — can stay hidden while the
+    number is read out.
+  */
+  const [showPan, setShowPan] = useState(false);
+  const [showCvv, setShowCvv] = useState(false);
+
   const pan = `${MOCK_PAN} ${last4}`;
+  /* Masked in the card's own grouping, so the covered value occupies the line
+     the real one will — the row does not jump when the eye is pressed. */
+  const panMasked = "•••• •••• •••• " + last4;
+  const cvvMasked = "•••";
+
+  /** The eye, in the row's action slot beside the copy control. */
+  const reveal = (shown: boolean, onToggle: () => void, label: string) => (
+    <Button
+      type="text"
+      size="small"
+      aria-label={label}
+      style={s.revealButton}
+      icon={shown ? <EyeOutlined style={s.copyIcon} /> : <EyeInvisibleOutlined style={s.copyIcon} />}
+      onClick={onToggle}
+    />
+  );
 
   /**
    * The record of the card, in the order the reference reads it: what it is,
@@ -100,7 +138,9 @@ export function VirtualCardModal({
     {
       key: "number",
       label: t("loanPage.cardNumber"),
-      value: <Typography.Text style={s.rowValue}>{pan}</Typography.Text>,
+      value: (
+        <Typography.Text style={s.rowValue}>{showPan ? pan : panMasked}</Typography.Text>
+      ),
       /* THE ONE ROW WORTH COPYING — a card number is read off a screen and
          typed into a form, and this is the form's way of not being retyped.
          It is the ROW's action, so it is centred against the whole row rather
@@ -116,22 +156,30 @@ export function VirtualCardModal({
          with a folded corner behind another and at 18px it reads as a
          document, not as an action. *"აქ უკეთესი დაკოპირების აიქონი ჩასვი."* */
       action: (
-        <Typography.Text
-          copyable={{
-            text: pan.replace(/\s/g, ""),
-            tooltips: false,
-            icon: [
-              <BlockOutlined key="copy" style={s.copyIcon} />,
-              <CheckOutlined key="copied" style={s.copiedIcon} />,
-            ],
-          }}
-        />
+        <Flex align="center" gap={4}>
+          {reveal(showPan, () => setShowPan((v) => !v), t("loanPage.cardNumber"))}
+          {/* Copy stays available while the number is covered: copying does not
+              put it on the screen, which is the thing being guarded. */}
+          <Typography.Text
+            copyable={{
+              text: pan.replace(/\s/g, ""),
+              tooltips: false,
+              icon: [
+                <BlockOutlined key="copy" style={s.copyIcon} />,
+                <CheckOutlined key="copied" style={s.copiedIcon} />,
+              ],
+            }}
+          />
+        </Flex>
       ),
     },
     {
       key: "cvv",
       label: t("loanPage.cardCvv"),
-      value: <Typography.Text style={s.rowValue}>{MOCK_CVV}</Typography.Text>,
+      value: (
+        <Typography.Text style={s.rowValue}>{showCvv ? MOCK_CVV : cvvMasked}</Typography.Text>
+      ),
+      action: reveal(showCvv, () => setShowCvv((v) => !v), t("loanPage.cardCvv")),
     },
     {
       key: "expiry",
@@ -176,9 +224,10 @@ export function VirtualCardModal({
           />
         </div>
 
-        <Typography.Text style={{ ...s.cardName, ...styles.title }}>
-          {t("loanPage.cardTypeValue")}
-        </Typography.Text>
+        {/* NO NAME UNDER THE THUMBNAIL. It read "OPA Virtual Card" directly
+            above a "Card type" row saying the same words, with the card itself
+            printing them a third time: *"ეს თაითლი ამოვიღოთ, ქვემოთ ისედაც
+            გვიწერია და განმეორებადი ინფოა."* */}
       </Flex>
 
       <div style={s.list}>
