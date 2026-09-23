@@ -112,7 +112,12 @@ export default function ApplicationStartScreen({
 
       {/* One card on an otherwise empty page — the same ground the contact
           page stands on, and centred rather than dropped at the top. */}
-      <HeroBackdrop center paddingBlock={64}>
+      {/* `plain`: the same ground every other borrower page stands on. The
+          coloured wash was this page's alone, and one screen with its own
+          background reads as a different product rather than a different page.
+          `center` stays — the card is still placed in the window, not dropped
+          at the top of it. */}
+      <HeroBackdrop tone="plain" center paddingBlock={64}>
         <div style={{ ...styles.column, ...styles.lift }}>
           <ApplicationGate
             state={state}
