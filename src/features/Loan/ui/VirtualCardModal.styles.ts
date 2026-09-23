@@ -43,7 +43,8 @@ export const styles = {
   body: { padding: INSET },
   /** A QUARTER OF THE DIALOG, the reference's own proportion. It can be this
    *  small now that nothing but the mark and the state is printed on it. */
-  face: { width: 160, maxWidth: "100%" },
+  /* A step up from 160 — *"სულ ოდნავ შეგიძლია აქ ეს ბარათი გაზარდო."* */
+  face: { width: 190, maxWidth: "100%" },
   /** Air above the card. The reference opens with a clear band before its
    *  first object — measured at ~104 from the modal's top, of which the body
    *  inset is 36. */
@@ -114,9 +115,14 @@ export const getStyles = (token: GlobalToken) =>
      * it sits in, and grey is what the rest of the product gives those.
      */
     copyIcon: { color: token.colorTextSecondary, fontSize: 18 },
-    /** The eye, sized and weighted like the copy control beside it so the two
-     *  read as one pair of row actions rather than as a button and a glyph. */
-    revealButton: { width: 24, height: 24, padding: 0 },
+    /**
+     * The eye. 32 square around an 18px glyph, so its hover has 7px of air on
+     * every side — at 24 the tint sat hard against the icon and read as a
+     * smudge rather than as a button: *"ჰოვერზე ძალიან ცუდად ჩანს, მედი
+     * პადინგები სჭირდება, რომ ცოტა მეტად სუნთქავდეს."* It is also the touch
+     * target, and 24 was under any of the usual floors for one.
+     */
+    revealButton: { width: 32, height: 32, padding: 0 },
     /** The moment after. Green, and the only time this control has a colour. */
     copiedIcon: { color: token.colorSuccess, fontSize: 18 },
     /** The mark beside "OPA Virtual Card" in the type row — the reference puts

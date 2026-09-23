@@ -85,18 +85,21 @@ export function VirtualCardModal({
     read them. Two secrets, two switches: *"ეს ორი უნდა იყოს დაფარული, ორივეგან
     უნდა იყოს თვალის აიქონი, ანუ ცალ-ცალკე უნდა შემეძლოს ინფოს ნახვა."*
 
-    Revealing one does not reveal the other, so the CVV — the part that turns a
-    number somebody glimpsed into a usable card — can stay hidden while the
-    number is read out.
+    THE NUMBER IS NOT ONE OF THEM. It is the field this dialog is opened to
+    read out and type into a form, and covering it would put a switch in front
+    of the one thing the reader came for. What a number alone cannot do is make
+    a payment: the expiry and the CVV are the two that complete it, so they are
+    the two that wait to be asked for — and separately, so one can be read
+    aloud while the other stays covered.
   */
-  const [showPan, setShowPan] = useState(false);
   const [showCvv, setShowCvv] = useState(false);
+  const [showExpiry, setShowExpiry] = useState(false);
 
   const pan = `${MOCK_PAN} ${last4}`;
-  /* Masked in the card's own grouping, so the covered value occupies the line
-     the real one will — the row does not jump when the eye is pressed. */
-  const panMasked = "•••• •••• •••• " + last4;
+  /* Masked to the same shape as the value they cover, so the row does not jump
+     when the eye is pressed. */
   const cvvMasked = "•••";
+  const expiryMasked = "••/••";
 
   /** The eye, in the row's action slot beside the copy control. */
   const reveal = (shown: boolean, onToggle: () => void, label: string) => (
@@ -138,9 +141,7 @@ export function VirtualCardModal({
     {
       key: "number",
       label: t("loanPage.cardNumber"),
-      value: (
-        <Typography.Text style={s.rowValue}>{showPan ? pan : panMasked}</Typography.Text>
-      ),
+      value: <Typography.Text style={s.rowValue}>{pan}</Typography.Text>,
       /* THE ONE ROW WORTH COPYING — a card number is read off a screen and
          typed into a form, and this is the form's way of not being retyped.
          It is the ROW's action, so it is centred against the whole row rather
@@ -156,11 +157,7 @@ export function VirtualCardModal({
          with a folded corner behind another and at 18px it reads as a
          document, not as an action. *"აქ უკეთესი დაკოპირების აიქონი ჩასვი."* */
       action: (
-        <Flex align="center" gap={4}>
-          {reveal(showPan, () => setShowPan((v) => !v), t("loanPage.cardNumber"))}
-          {/* Copy stays available while the number is covered: copying does not
-              put it on the screen, which is the thing being guarded. */}
-          <Typography.Text
+        <Typography.Text
             copyable={{
               text: pan.replace(/\s/g, ""),
               tooltips: false,
@@ -168,9 +165,8 @@ export function VirtualCardModal({
                 <BlockOutlined key="copy" style={s.copyIcon} />,
                 <CheckOutlined key="copied" style={s.copiedIcon} />,
               ],
-            }}
-          />
-        </Flex>
+          }}
+        />
       ),
     },
     {
@@ -184,7 +180,12 @@ export function VirtualCardModal({
     {
       key: "expiry",
       label: t("loanPage.cardExpires"),
-      value: <Typography.Text style={s.rowValue}>{expiry}</Typography.Text>,
+      value: (
+        <Typography.Text style={s.rowValue}>
+          {showExpiry ? expiry : expiryMasked}
+        </Typography.Text>
+      ),
+      action: reveal(showExpiry, () => setShowExpiry((v) => !v), t("loanPage.cardExpires")),
     },
   ];
 
