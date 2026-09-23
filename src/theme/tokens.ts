@@ -59,6 +59,12 @@ export const brand = {
    * its place: #F4F8FC and #FCF7F4 are the same L, and so on down the three.
    * Nothing got darker or lighter — only warmer.
    *
+   * GREYER THAN THE FIRST ATTEMPT. Mirroring the blues' saturation as well as
+   * their lightness came out pink — *"ზედმეტად არ მომწონს, ძალიან ერთნაირი
+   * ფერებია... უფრო ნაცრისფრისკენ წაიყვანე."* The hue and the lightness are
+   * unchanged; the saturation is down from ~0.60 to 0.22, which is a grey with
+   * the orange in it rather than a colour in its own right.
+   *
    * SEPARATE FROM `tint` RATHER THAN REPLACING IT, because those three are
    * spent all over the theme — Select's hover, the rail's, the illustration
    * grounds — and the question asked was about tables. Applied in the Table
@@ -68,11 +74,11 @@ export const brand = {
    * what these borrow is its hue at 92–98% lightness, which is a warm off-white
    * rather than a colour.
    */
-  warmTintHover: "#FCF7F4",
-  warmTint: "#FBF2ED",
-  warmTintStrong: "#F7E7DD",
+  warmTintHover: "#FAF8F6",
+  warmTint: "#F6F3F2",
+  warmTintStrong: "#EFE9E5",
   /** antd's own table header grey (#FBFBFB), warmed to match the three above. */
-  warmHeader: "#FDFAF8",
+  warmHeader: "#FBFAFA",
   /**
    * THE LOGO'S DEEP TEAL, and the heading colour. The site sets its H1 at
    * #125A71; headings in the product take a shade deeper for contrast.
