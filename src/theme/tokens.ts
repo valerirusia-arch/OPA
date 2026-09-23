@@ -77,7 +77,7 @@ export const brand = {
   warmTint: "#F6F3F2",
   warmTintStrong: "#EFE9E5",
   /** antd's own table header grey (#FBFBFB), warmed to match the three above. */
-  warmHeader: "#FBFAFA",
+  warmHeader: "#F9F7F6",
   /**
    * THE LOGO'S DEEP TEAL, and the heading colour. The site sets its H1 at
    * #125A71; headings in the product take a shade deeper for contrast.

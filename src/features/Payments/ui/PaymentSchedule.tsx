@@ -26,6 +26,7 @@
 
 import { Flex, Table, Typography, theme } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import type { CSSProperties } from "react";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { decorateColumns } from "../../../shared/ui/tableColumns";
 import { getStyles as getPageStyles } from "../../../shared/ui/AdminPage.styles";
@@ -57,7 +58,7 @@ export function PaymentSchedule({
   const t = useT();
   const { token } = theme.useToken();
   const page = getPageStyles(token);
-  const s = getStyles(token);
+  const s = getStyles();
 
   /** WBS story 9: "only one late fee will be charged for each missed payment",
    *  so most schedules have none and the column would be a stripe of dashes. */
@@ -179,12 +180,52 @@ export function PaymentSchedule({
       : []),
   ];
 
+  /*
+    THE ROW THAT MATTERS DOES NOT REACT TO THE POINTER.
+
+    It is already marked, so a hover state on top of that is a second answer to
+    a question nobody asked — and because the hover tint is LIGHTER than the
+    marked one, passing over it made the row fade: *"ეს რომ ჰოვერდება,
+    ღიავდება და არ უნდა დაჰოვერდეს წესით — ჩატლე, ისედაც ეგრეა რა."*
+
+    It has to be fought on the CELLS. antd paints `rowHoverBg` on every `td`,
+    and a cell's own background covers whatever the row drew beneath it — so
+    the marked colour goes on the cells as well, where nothing can paint over
+    it. The row keeps it too, for the gap between cells.
+  */
+  /* Null-safe: antd calls `onCell` during measurement passes where there is no
+     record yet, and an unguarded read threw on the first paint. */
+  const marked = (row?: Installment) =>
+    Boolean(row && row.id === next?.id && row.status !== "overdue");
+
+  /*
+    AFTER `decorateColumns`, NOT BEFORE — it calls a column's own `onCell()`
+    ONCE, with no record, and bakes the result in as one style for every row.
+    A per-row `onCell` handed to it is therefore run against `undefined` and
+    flattened; wrapping its output instead keeps the padding it sets and adds
+    the marked background on top, per row.
+  */
+  const holdMarkedRow = (cols: ColumnsType<Installment>): ColumnsType<Installment> =>
+    cols.map((col) => {
+      const decorated = col as { onCell?: () => { style?: CSSProperties } };
+      const base = decorated.onCell;
+      return {
+        ...col,
+        onCell: (row?: Installment) => {
+          const cell = base?.() ?? {};
+          return marked(row)
+            ? { ...cell, style: { ...cell.style, ...s.nextRow } }
+            : cell;
+        },
+      };
+    });
+
   return (
     <Table<Installment>
       rowKey="id"
       size="small"
       tableLayout="fixed"
-      columns={decorateColumns(columns)}
+      columns={holdMarkedRow(decorateColumns(columns))}
       dataSource={installments}
       /*
        * The next line owed is tinted.
@@ -196,11 +237,7 @@ export function PaymentSchedule({
        * alone: their status pill is already red, and tinting those as well
        * would mean three kinds of emphasis arguing.
        */
-      onRow={(row) =>
-        row.id === next?.id && row.status !== "overdue"
-          ? { style: s.nextRow }
-          : {}
-      }
+      onRow={(row) => (marked(row) ? { style: s.nextRow } : {})}
       pagination={
         pageSize
           ? { pageSize, showSizeChanger: false, style: page.pagination }
