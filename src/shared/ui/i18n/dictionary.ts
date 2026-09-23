@@ -1467,6 +1467,14 @@ export const en = {
   "acq.campaign.name": "Name",
   "acq.campaign.source": "Source",
   "acq.campaign.period": "Validity period",
+  /* The two ends of the validity period, each named — see PeriodField for why
+     it is two calendars and not a range. */
+  "acq.campaign.periodBoth": "Give both a start and an end date",
+  "acq.campaign.starts": "Starts",
+  "acq.campaign.ends": "Ends",
+  /* Counted for the reader once both ends are set: a campaign is bought in
+     weeks, and "Mar 01 – May 31" is otherwise a sum done on fingers. */
+  "acq.campaign.runsFor": "Runs for {days} days",
   "acq.campaign.empty": "No campaigns yet",
   "acq.campaign.emptyHint": "Create one to track a marketing push.",
   "acq.perf.title": "Lending performance",
@@ -2961,6 +2969,10 @@ const es: Record<TranslationKey, string> = {
   "acq.campaign.name": "Nombre",
   "acq.campaign.source": "Fuente",
   "acq.campaign.period": "Periodo de validez",
+  "acq.campaign.periodBoth": "Indica una fecha de inicio y una de fin",
+  "acq.campaign.starts": "Empieza",
+  "acq.campaign.ends": "Termina",
+  "acq.campaign.runsFor": "Dura {days} días",
   "acq.campaign.empty": "Aún no hay campañas",
   "acq.campaign.emptyHint": "Crea una para hacer seguimiento de una acción de marketing.",
   "acq.perf.title": "Rendimiento de préstamos",

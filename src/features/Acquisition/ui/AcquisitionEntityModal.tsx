@@ -9,11 +9,12 @@
 // Dumb: it renders the fields it is handed and hands the values back.
 
 import { useEffect, type ReactNode } from "react";
-import { Button, DatePicker, Flex, Form, Input, Modal, Select, Typography } from "antd";
+import { Button, Flex, Form, Input, Modal, Select, Typography } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { useAuthRules } from "../../Auth/ui/validation";
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
 import { styles } from "./AcquisitionSourceModal.styles";
+import { PeriodField } from "./PeriodField";
 
 /** One field in the form. `select` needs options; `dateRange` collects a
  *  validity period (a pair of dates). */
@@ -56,6 +57,39 @@ export function AcquisitionEntityModal({
     if (initialValues) form.setFieldsValue(initialValues);
   }, [open, initialValues, form]);
 
+  /*
+   * WHY THE DATE FIELD CANNOT USE `rules.required()`.
+   *
+   * That rule is `{ required: true, message }` with no `type`, and
+   * async-validator defaults an untyped rule to `string`. So after the
+   * required check passes it runs the STRING check, which a `[Dayjs, Dayjs]`
+   * pair fails — and because the rule carries its own `message`, that type
+   * failure is reported in the required rule's words. The period read
+   * "Required field" with both dates filled in and the form would not submit.
+   *
+   * It predates the two-picker field; the RangePicker that was here had it
+   * too, which is why it was never caught: nobody had submitted the dialog.
+   *
+   * So the period gets a validator of its own, and it asks the question that
+   * actually matters — are BOTH ends set. `requiredValue` would not do either:
+   * it only rejects an empty array, and a period with a start and no end is a
+   * two-element array.
+   */
+  const ruleFor = (field: EntityField) => {
+    if (field.optional) return undefined;
+    if (field.kind !== "dateRange") return [rules.required()];
+    return [
+      {
+        validator: (_rule: unknown, value: unknown) => {
+          const [from, to] = Array.isArray(value) ? value : [null, null];
+          return from && to
+            ? Promise.resolve()
+            : Promise.reject(new Error(t("acq.campaign.periodBoth")));
+        },
+      },
+    ];
+  };
+
   const control = (field: EntityField): ReactNode => {
     if (field.kind === "select") {
       return (
@@ -63,7 +97,7 @@ export function AcquisitionEntityModal({
       );
     }
     if (field.kind === "dateRange") {
-      return <DatePicker.RangePicker size="large" style={styles.fullWidth} />;
+      return <PeriodField />;
     }
     return (
       <Input
@@ -91,7 +125,7 @@ export function AcquisitionEntityModal({
             key={field.name}
             label={t(field.labelKey)}
             name={field.name}
-            rules={field.optional ? undefined : [rules.required()]}
+            rules={ruleFor(field)}
             required={!field.optional}
           >
             {control(field)}
