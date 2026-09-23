@@ -51,6 +51,7 @@ import { PageNotice } from "../../../shared/ui/PageNotice";
 import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { ApplicationStatusTag } from "../../../features/Borrowers/ui/StatusTags";
 import { VerificationList } from "../../../features/Applications/ui/VerificationList";
+import { DocumentList } from "../../../features/Loan/ui/DocumentList";
 import {
   ApproveModal,
   DeclineModal,
@@ -416,11 +417,16 @@ export default function ApplicationDetailsScreen({
       extra={
         canDecide
           ? decision
-            ? (
-              <Button onClick={() => setAction("override")}>
-                {t("appAction.override")}
-              </Button>
-            ) : (
+            ? // Override overturns an AUTOMATED decision only (WBS: "override
+              // an automated decision"). Once a human has decided themselves,
+              // the decision is final — there is no "change your own decision"
+              // action, so this shows nothing beside the status banner.
+              decision.source === "automated" ? (
+                <Button onClick={() => setAction("override")}>
+                  {t("appAction.override")}
+                </Button>
+              ) : null
+            : (
               <Flex gap={8} align="center">
                 {/* Hierarchy: Approve is the filled primary, Decline steps back
                     to a SECONDARY button — a light neutral frame, not the heavy
@@ -533,15 +539,28 @@ export default function ApplicationDetailsScreen({
         </Card>
       )}
 
+      {/*
+        THE EVIDENCE, OPENABLE.
+
+        This card listed filenames and nothing else: an underwriter looking at
+        "payslip.jpg" could read its name and not the pay stub. WBS "View
+        application details" puts "submitted documents" among the things this
+        role must be able to view, and the borrower's own equivalent story is
+        explicit about what viewing means here — "download only, no in-app
+        preview is assumed".
+
+        So it is the borrower's own DocumentList: the same documents drawn the
+        same way — name, type, date, download — for the person whose job is to
+        read them. The staff LOAN record already did this; only the screen the
+        decision is made on did not.
+      */}
       <Card title={t("appDetail.documents")} style={styles.card}>
-        <Flex vertical>
-          {record.documents.map((doc) => (
-            <Flex key={doc} align="center" gap={10} style={styles.documents}>
-              <FileTextOutlined />
-              <Typography.Text>{doc}</Typography.Text>
-            </Flex>
-          ))}
-        </Flex>
+        <DocumentList
+          documents={record.documents}
+          /* Reported the way every other download in the product is — the
+             loan record's and the borrower's own are both a console line. */
+          onDownload={(doc) => console.log("download application document", record.id, doc.name)}
+        />
       </Card>
 
       <Card title={t("appDetail.requests")} style={styles.card}>

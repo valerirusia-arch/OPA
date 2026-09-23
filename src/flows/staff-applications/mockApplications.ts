@@ -8,8 +8,64 @@
 // overridden, and one where an integration failed rather than the applicant.
 
 import type { ApplicationRecord } from "../../features/Applications/ui/types";
+import type { LoanDocument } from "../../features/Loan/ui/types";
+
+/**
+ * THE DOCUMENTS AN UNDERWRITER OPENS.
+ *
+ * They were four bare strings, so the decision screen could name them and
+ * nothing else — see the note on the Documents card in ApplicationDetailsScreen.
+ * They carry a type and a date now, which is what the borrower's own list has
+ * shown since Epic 5, so one component can draw both.
+ *
+ * The three consents are the package every application generates; the fourth is
+ * whatever the applicant uploaded to prove their income, which is the one the
+ * underwriter is actually reading.
+ */
+const papers = (income?: { name: string; on: string }): LoanDocument[] => [
+  { id: "d-credit", name: "Credit authorization.pdf", type: "consent", on: "Sep 05, 2026", executed: true },
+  { id: "d-ecomm", name: "Electronic communications consent.pdf", type: "consent", on: "Sep 05, 2026", executed: true },
+  { id: "d-privacy", name: "Privacy notice.pdf", type: "disclosure", on: "Sep 05, 2026", executed: true },
+  ...(income ? [{ id: "d-income", name: income.name, type: "income", on: income.on }] : []),
+];
+
 
 export const mockApplications: ApplicationRecord[] = [
+  {
+    // The system APPROVED this one automatically. It still sits in the queue
+    // (awaitsReview keeps automated decisions until a human confirms them) with
+    // "Auto-approved · review" in its Source cell, and it shows in the
+    // dashboard's Recent applications — both routes lead to its detail, where
+    // the Underwriter can Override the automated decision.
+    id: "A-2483",
+    status: "approved",
+    borrower: {
+      name: "Nadia Haddad",
+      email: "nadia.haddad@example.com",
+      phone: "(408) 555-0148",
+      state: "CA",
+      checks: [
+        { key: "identity", outcome: "passed", detail: "Full match", ranOn: "Sep 07, 2026" },
+        { key: "ofac", outcome: "passed", detail: "No match", ranOn: "Sep 07, 2026" },
+        { key: "noLend", outcome: "passed", detail: "No open application or loan", ranOn: "Sep 07, 2026" },
+        { key: "credit", outcome: "passed", detail: "769", ranOn: "Sep 07, 2026" },
+        { key: "income", outcome: "passed", detail: "W-2 · 1 file read", ranOn: "Sep 07, 2026" },
+        { key: "rules", outcome: "passed", detail: "All approval criteria met" },
+      ],
+    },
+    uscisType: "N-400 · Application for Naturalization",
+    requestedAmount: 760,
+    annualIncome: 58_600,
+    submittedOn: "Sep 07, 2026",
+    coBorrowerRequired: false,
+    documents: papers({ name: "W-2 2025.pdf", on: "Sep 03, 2026" }),
+    requests: [],
+    decision: { outcome: "approved", source: "automated", by: "System", on: "Sep 07, 2026 09:14" },
+    audit: [
+      { id: "1", on: "Sep 07, 2026 09:12", by: "System", action: "audit.submitted" },
+      { id: "2", on: "Sep 07, 2026 09:14", by: "System", action: "audit.approvedAuto" },
+    ],
+  },
   {
     id: "A-2481",
     status: "review",
@@ -33,7 +89,7 @@ export const mockApplications: ApplicationRecord[] = [
     submittedOn: "Sep 05, 2026",
     routedBy: "credit",
     coBorrowerRequired: false,
-    documents: ["Credit authorization", "Electronic communications consent", "Privacy notice", "W-2 2025.pdf"],
+    documents: papers({ name: "W-2 2025.pdf", on: "Sep 03, 2026" }),
     requests: [],
     audit: [
       { id: "1", on: "Sep 05, 2026 14:12", by: "System", action: "audit.submitted" },
@@ -63,7 +119,7 @@ export const mockApplications: ApplicationRecord[] = [
     submittedOn: "Sep 03, 2026",
     routedBy: "income",
     coBorrowerRequired: false,
-    documents: ["Credit authorization", "Electronic communications consent", "Privacy notice", "payslip.jpg"],
+    documents: papers({ name: "payslip.jpg", on: "Sep 03, 2026" }),
     requests: [
       {
         id: "r1",
@@ -127,12 +183,11 @@ export const mockApplications: ApplicationRecord[] = [
     submittedOn: "Sep 02, 2026",
     routedBy: "rules",
     coBorrowerRequired: true,
+    /* The one application with a co-borrower, so it carries their
+       acknowledgement on top of the standard package. */
     documents: [
-      "Credit authorization",
-      "Electronic communications consent",
-      "Privacy notice",
-      "Co-borrower acknowledgement",
-      "1099 2025.pdf",
+      ...papers({ name: "1099 2025.pdf", on: "Sep 01, 2026" }),
+      { id: "d-cb-ack", name: "Co-borrower acknowledgement.pdf", type: "consent", on: "Sep 02, 2026", executed: true },
     ],
     requests: [],
     audit: [
@@ -182,7 +237,7 @@ export const mockApplications: ApplicationRecord[] = [
     submittedOn: "Aug 31, 2026",
     routedBy: "identity",
     coBorrowerRequired: false,
-    documents: ["Credit authorization", "Electronic communications consent", "Privacy notice", "W-2 2025.pdf"],
+    documents: papers({ name: "W-2 2025.pdf", on: "Sep 03, 2026" }),
     requests: [],
     audit: [
       { id: "1", on: "Aug 31, 2026 08:05", by: "System", action: "audit.submitted" },
@@ -222,7 +277,7 @@ export const mockApplications: ApplicationRecord[] = [
      */
     routedBy: "credit",
     coBorrowerRequired: false,
-    documents: ["Credit authorization", "Electronic communications consent", "Privacy notice", "W-2 2025.pdf"],
+    documents: papers({ name: "W-2 2025.pdf", on: "Sep 03, 2026" }),
     requests: [],
     audit: [
       { id: "1", on: "Aug 30, 2026 13:55", by: "System", action: "audit.submitted" },
@@ -251,7 +306,7 @@ export const mockApplications: ApplicationRecord[] = [
     annualIncome: 57_900,
     submittedOn: "Aug 24, 2026",
     coBorrowerRequired: false,
-    documents: ["Credit authorization", "Electronic communications consent", "Privacy notice", "W-2 2025.pdf"],
+    documents: papers({ name: "W-2 2025.pdf", on: "Sep 03, 2026" }),
     requests: [],
     decision: { outcome: "approved", source: "automated", by: "System", on: "Aug 24, 2026 15:31" },
     audit: [
@@ -282,7 +337,7 @@ export const mockApplications: ApplicationRecord[] = [
     approvedAmount: undefined,
     submittedOn: "Aug 18, 2026",
     coBorrowerRequired: false,
-    documents: ["Credit authorization", "Electronic communications consent", "Privacy notice"],
+    documents: papers(),
     requests: [],
     decision: {
       outcome: "declined",

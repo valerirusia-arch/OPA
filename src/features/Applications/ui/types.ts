@@ -4,6 +4,7 @@
 // vocabulary. Owned by the screens that render it; Dev adapts /models onto it.
 
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
+import type { LoanDocument } from "../../Loan/ui/types";
 
 /**
  * The automated checks, in the order the WBS runs them.
@@ -162,7 +163,11 @@ export type ApplicationRecord = {
   routedBy?: CheckKey;
   /** WBS: "The system should push the application to require a co-borrower". */
   coBorrowerRequired: boolean;
-  documents: string[];
+  /* WBS "View application details" names "submitted documents" among what the
+     underwriter must be able to view, and viewing a pay stub means opening it,
+     not reading its filename. Same shape as the borrower's own list so one
+     component draws both. */
+  documents: LoanDocument[];
   requests: InformationRequest[];
   decision?: Decision;
   audit: AuditEntry[];
