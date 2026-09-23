@@ -38,15 +38,34 @@ const applicationColors: Partial<Record<ApplicationStatus, string>> = {
 
 export function ApplicationStatusTag({
   status,
+  coBorrowerFailed = false,
 }: {
   status: ApplicationStatus;
+  /**
+   * THE REASON, NOT A DIFFERENT STATUS.
+   *
+   * Story 14's reset leaves the application waiting on a co-borrower again, so
+   * the status stays `coBorrower` — that is what it IS, and the WBS names the
+   * statuses it wants. What changed is WHY, and "Co-borrower required" does
+   * not carry it: the borrower has already invited somebody, and being told
+   * again that one is required reads as though nothing happened.
+   *
+   * The colour does not change with it. A turned-down co-borrower is still
+   * `warning` — something to act on — and not `error`: the application is not
+   * over, it is waiting for a different person.
+   */
+  coBorrowerFailed?: boolean;
 }) {
   const t = useT();
   // No application yet is the absence of a state, not a state.
   if (status === "none") return <StatusPill>{t("application.none")}</StatusPill>;
   return (
     <StatusPill color={applicationColors[status]}>
-      {t(applicationKeys[status])}
+      {t(
+        coBorrowerFailed && status === "coBorrower"
+          ? "application.coBorrowerFailed"
+          : applicationKeys[status]
+      )}
     </StatusPill>
   );
 }

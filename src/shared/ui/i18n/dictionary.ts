@@ -525,7 +525,7 @@ export const en = {
   "nav.applications": "Applications",
   "nav.reviewQueue": "Review queue",
   "nav.loans": "Loans",
-  "nav.payment": "Payment",
+  "nav.payment": "Payments",
   "nav.acquisition": "Acquisition",
   "nav.source": "Source",
   "nav.partners": "Partners & Groups",
@@ -641,6 +641,8 @@ export const en = {
   "application.submitted": "Submitted",
   "application.review": "Under review",
   "application.coBorrower": "Co-borrower required",
+  /* Same status, a different reason — see ApplicationStatusTag. */
+  "application.coBorrowerFailed": "Co-borrower didn't qualify",
   "application.approved": "Approved",
   "application.declined": "Declined",
 
@@ -1270,7 +1272,7 @@ export const en = {
   "acquisition.allSources": "All acquisition sources",
   "acquisition.allPartners": "All referral partners",
   "acquisition.allCampaigns": "All campaigns",
-  "loans.title": "Loan",
+  "loans.title": "Loans",
   "loans.card": "Loan",
   "loans.searchPlaceholder": "Search by name or email",
   "loans.allStatuses": "All loan statuses",
@@ -1423,6 +1425,7 @@ export const en = {
   "acq.activated": "{name} activated",
   "acq.deactivated": "{name} deactivated",
   "acq.source.title": "Acquisition sources",
+  "acq.source.lead": "Where your applications come from. Each source has a tracking code and can belong to a referral partner.",
   "acq.source.new": "New source",
   "acq.source.newTitle": "New acquisition source",
   "acq.source.editTitle": "Edit acquisition source",
@@ -1447,6 +1450,7 @@ export const en = {
   "acq.partner.noun": "partner",
   "acq.group.noun": "partner group",
   "acq.partners.title": "Referral partners",
+  "acq.partners.lead": "The referral partners who bring in borrowers, and the groups you organise them into.",
   "acq.partners.tabPartners": "Referral partners",
   "acq.partners.tabGroups": "Partner groups",
   "acq.partner.new": "New partner",
@@ -1461,6 +1465,7 @@ export const en = {
   "acq.group.code": "Code",
   "acq.campaign.noun": "campaign",
   "acq.campaign.title": "Marketing campaigns",
+  "acq.campaign.lead": "Marketing campaigns and the period each one runs. Every campaign ties back to an acquisition source.",
   "acq.campaign.new": "New campaign",
   "acq.campaign.newTitle": "New marketing campaign",
   "acq.campaign.editTitle": "Edit marketing campaign",
@@ -1523,6 +1528,8 @@ export const en = {
   "queue.empty": "No applications match these filters",
   "queue.emptyBody": "Clear a filter, or check back when the next application is submitted.",
   "queue.coBorrowerTag": "Co-borrower",
+  "queue.autoApproved": "Auto-approved · review",
+  "queue.autoDeclined": "Auto-declined · review",
 
   "appDetail.back": "Back to applications",
   "appDetail.notFound": "No application with that number",
@@ -1655,7 +1662,7 @@ export const en = {
   // Epic 6 — Manage payments. Sixteen WBS stories; four of them are "System"
   // and have no interface, which is why the rules they define are STATED here
   // instead: a borrower cannot check a calculation they were never shown.
-  "payments.title": "Payment",
+  "payments.title": "Payments",
   "payments.tabScheduled": "Scheduled payment",
   "payments.tabAdditional": "Additional payment",
   "payments.installmentLabel": "Installment",
@@ -1680,7 +1687,7 @@ export const en = {
      list is empty because the borrower finished, which is the opposite news.
      */
   "payments.settledTitle": "Every payment is made",
-  "payments.settledBody": "There is nothing left to schedule. The Payment history tab has the record of all twelve.",
+  "payments.settledBody": "There is nothing left to schedule. The Repayment history tab has the record of all twelve.",
   "payments.noneTitle": "There is nothing to repay yet",
   "payments.noneBody": "Your repayment schedule is created when the loan is paid out. It will appear here with every payment due date.",
   "payments.viewLoan": "Go to my loan",
@@ -1771,7 +1778,7 @@ export const en = {
   "payments.ruleAcceleration": "An account more than 120 days past due is accelerated: the full remaining balance, including interest and outstanding fees, must be paid within 30 days of the notice of default. The APR stays at 1%.",
 
   // WBS stories 4, 12 and 13.
-  "payments.history": "Payment history",
+  "payments.history": "Repayment history",
   "payments.date": "Date",
   "payments.method": "Paid with",
   "payments.cardEnding": "•••• {last4}",
@@ -2348,6 +2355,7 @@ const es: Record<TranslationKey, string> = {
   "application.submitted": "Enviada",
   "application.review": "En revisión",
   "application.coBorrower": "Requiere coprestatario",
+  "application.coBorrowerFailed": "El coprestatario no cumple los requisitos",
   "application.approved": "Aprobada",
   "application.declined": "Rechazada",
 
@@ -2925,6 +2933,7 @@ const es: Record<TranslationKey, string> = {
   "acq.activated": "{name} activada",
   "acq.deactivated": "{name} desactivada",
   "acq.source.title": "Fuentes de captación",
+  "acq.source.lead": "De dónde vienen tus solicitudes. Cada fuente tiene un código de seguimiento y puede pertenecer a un socio de referencia.",
   "acq.source.new": "Nueva fuente",
   "acq.source.newTitle": "Nueva fuente de captación",
   "acq.source.editTitle": "Editar fuente de captación",
@@ -2949,6 +2958,7 @@ const es: Record<TranslationKey, string> = {
   "acq.partner.noun": "socio",
   "acq.group.noun": "grupo de socios",
   "acq.partners.title": "Socios de referencia",
+  "acq.partners.lead": "Los socios de referencia que traen prestatarios y los grupos en los que los organizas.",
   "acq.partners.tabPartners": "Socios de referencia",
   "acq.partners.tabGroups": "Grupos de socios",
   "acq.partner.new": "Nuevo socio",
@@ -2963,6 +2973,7 @@ const es: Record<TranslationKey, string> = {
   "acq.group.code": "Código",
   "acq.campaign.noun": "campaña",
   "acq.campaign.title": "Campañas de marketing",
+  "acq.campaign.lead": "Campañas de marketing y el período en que se ejecuta cada una. Cada campaña se vincula a una fuente de captación.",
   "acq.campaign.new": "Nueva campaña",
   "acq.campaign.newTitle": "Nueva campaña de marketing",
   "acq.campaign.editTitle": "Editar campaña de marketing",
@@ -3021,6 +3032,8 @@ const es: Record<TranslationKey, string> = {
   "queue.empty": "Ninguna solicitud coincide con estos filtros",
   "queue.emptyBody": "Quita un filtro o vuelve cuando se envíe la siguiente solicitud.",
   "queue.coBorrowerTag": "Coprestatario",
+  "queue.autoApproved": "Aprobado automáticamente · revisar",
+  "queue.autoDeclined": "Rechazado automáticamente · revisar",
 
   "appDetail.back": "Volver a las solicitudes",
   "appDetail.notFound": "No hay ninguna solicitud con ese número",

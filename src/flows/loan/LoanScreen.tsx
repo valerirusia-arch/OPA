@@ -128,7 +128,15 @@ export default function LoanScreen({
                   page; when nothing is, they describe nothing. */}
               {hasOpenApplication(record) && record ? (
                 <Flex align="center" gap={8}>
-                  <ApplicationStatusTag status={record.status} />
+                  {/* The pill says WHY it is waiting on a co-borrower again,
+                      not just that it is — the borrower has already invited
+                      somebody, and "Co-borrower required" on its own reads as
+                      though that never happened. The page's own body still
+                      carries the detail; this is the heading's one word on it. */}
+                  <ApplicationStatusTag
+                    status={record.status}
+                    coBorrowerFailed={Boolean(record.coBorrowerFailed)}
+                  />
                   {record.loan ? (
                     <StatusPill
                       /* Funded is the state the loan is meant to reach, so it
