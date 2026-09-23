@@ -481,7 +481,11 @@ export default function CoBorrowerApplicationScreen({
         {header}
         {/* The same card the borrower's Application tab stands on, on the
             same ground: one state on an otherwise empty page. */}
-        <HeroBackdrop center paddingBlock={64}>
+        {/* `plain`, like every other borrower page — the coloured wash is gone
+            from its twin on /application too, so the two gates match each other
+            and the rest of the product. `center` stays: the card is placed in
+            the window, not dropped at the top of it. */}
+        <HeroBackdrop tone="plain" center paddingBlock={64}>
           <div style={{ ...styles.column, ...styles.lift }}>
             <ApplicationGate
               state={gateState}

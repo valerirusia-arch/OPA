@@ -51,6 +51,29 @@ export const brand = {
   tintHover: "#F4F8FC",
   tintStrong: "#DDEBF7",
   /**
+   * THE SAME THREE TINTS, TURNED WARM — the tables' own family.
+   *
+   * *"ნაცრისფერი ფერი... ჩვენი მთავარი ფერის ტონალობაში გავაკეთოთ, აი ამ
+   * ნარინჯისფერით, ოღონდ ტონალობა იგივე სიმსუბუქის."* So each one is the blue
+   * above it with its LIGHTNESS kept exactly and the burnt orange's hue put in
+   * its place: #F4F8FC and #FCF7F4 are the same L, and so on down the three.
+   * Nothing got darker or lighter — only warmer.
+   *
+   * SEPARATE FROM `tint` RATHER THAN REPLACING IT, because those three are
+   * spent all over the theme — Select's hover, the rail's, the illustration
+   * grounds — and the question asked was about tables. Applied in the Table
+   * block alone, so this is one thing to look at and one thing to undo.
+   *
+   * Not the orange itself. `#B85C23` is the primary button and nothing else;
+   * what these borrow is its hue at 92–98% lightness, which is a warm off-white
+   * rather than a colour.
+   */
+  warmTintHover: "#FCF7F4",
+  warmTint: "#FBF2ED",
+  warmTintStrong: "#F7E7DD",
+  /** antd's own table header grey (#FBFBFB), warmed to match the three above. */
+  warmHeader: "#FDFAF8",
+  /**
    * THE LOGO'S DEEP TEAL, and the heading colour. The site sets its H1 at
    * #125A71; headings in the product take a shade deeper for contrast.
    */
@@ -196,12 +219,25 @@ export const brand = {
     shape. Only the paler mixes survive being enlarged this far — which is
     why each step here lightens the hue and leaves the alpha alone.
   */
+  /*
+    A SOFT PASTEL DIAGONAL — 2026-09-23, matched to a reference the designer
+    sent — *"შეგიძლია ესე გამიკეთო?"* A dreamy full-bleed wash: warm PEACH in
+    the top-left, blending through a soft LAVENDER across the middle and foot,
+    into a light PERIWINKLE blue on the right. No hard blobs — three large,
+    overlapping fields on a pale periwinkle ground, so the colour is smooth edge
+    to edge. Hexes sampled from the reference (an 11×7 read): peach #FDE4E5,
+    lavender #DACFE5, periwinkle #D4DAF8, lightest corner near #F0F5FD.
+
+    The hues are pale, so the alphas can run high without weight — the page
+    reads as luminous pastel, not as any one colour. It only ever renders on the
+    two application-gate pages (HeroBackdrop `tone="wash"`); every other page
+    passes `tone="plain"` and never sees it.
+  */
   cover: [
-    "radial-gradient(56% 110% at 18% 12%, rgba(178,224,232,0.26) 0%, rgba(178,224,232,0) 62%)",
-    "radial-gradient(48% 100% at 78% 8%, rgba(244,193,177,0.26) 0%, rgba(244,193,177,0) 60%)",
-    "radial-gradient(54% 115% at 88% 78%, rgba(192,240,243,0.22) 0%, rgba(192,240,243,0) 62%)",
-    "radial-gradient(58% 120% at 30% 96%, rgba(248,210,180,0.20) 0%, rgba(248,210,180,0) 60%)",
-    "#FAF8F6",
+    "radial-gradient(85% 95% at 6% 10%, rgba(253,226,220,0.30) 0%, rgba(253,226,220,0.10) 42%, rgba(253,226,220,0) 68%)",
+    "radial-gradient(70% 78% at 44% 96%, rgba(227,225,246,0.20) 0%, rgba(227,225,246,0) 60%)",
+    "radial-gradient(95% 110% at 100% 62%, rgba(198,211,248,0.34) 0%, rgba(198,211,248,0.12) 46%, rgba(198,211,248,0) 74%)",
+    "#F7F6F8",
   ].join(", "),
   /**
    * THE SECOND WASH LAYER — two blobs that drift against the first.
@@ -212,8 +248,8 @@ export const brand = {
    * the colour is, not how much of it there is.
    */
   coverDrift: [
-    "radial-gradient(44% 86% at 62% 24%, rgba(178,224,232,0.20) 0%, rgba(178,224,232,0) 64%)",
-    "radial-gradient(50% 92% at 26% 70%, rgba(244,193,177,0.20) 0%, rgba(244,193,177,0) 64%)",
+    "radial-gradient(64% 82% at 28% 30%, rgba(253,226,220,0.12) 0%, rgba(253,226,220,0) 64%)",
+    "radial-gradient(74% 92% at 82% 76%, rgba(198,211,248,0.14) 0%, rgba(198,211,248,0) 64%)",
   ].join(", "),
 
 
@@ -565,9 +601,10 @@ export const tokens: ThemeConfig = {
       cellPaddingBlock: 12,
       // The row hover was a heavy grey; the light cyan reads as a highlight,
       // not a slab. Selected rows take the same family a step firmer.
-      rowHoverBg: brand.tintHover,
-      rowSelectedBg: brand.tint,
-      rowSelectedHoverBg: brand.tintStrong,
+      headerBg: brand.warmHeader,
+      rowHoverBg: brand.warmTintHover,
+      rowSelectedBg: brand.warmTint,
+      rowSelectedHoverBg: brand.warmTintStrong,
     },
     Modal: {
       borderRadiusLG: 16,
