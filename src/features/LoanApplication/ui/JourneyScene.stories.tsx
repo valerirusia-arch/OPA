@@ -32,8 +32,11 @@ export const Waiting: Story = { args: { variant: "waiting" } };
  *  one state meant to be readable across a room. */
 export const Attention: Story = { args: { variant: "attention" } };
 
+/* The last two draw a person's record rather than the loan's packet, because
+   they are states about a person. */
+
 /** Waiting on somebody else — an invited co-borrower whose part is not in.
- *  Nothing is wrong, so nothing on it is amber. */
+ *  No badge: nothing has happened to them yet, and a mark would say it had. */
 export const Person: Story = { args: { variant: "person" } };
 
 /** Reviewed, and did not pass. The cross says what the exclamation mark was

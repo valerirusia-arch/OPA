@@ -27,20 +27,24 @@
 //   done      — settled, and nothing is owed. A green check.
 //   waiting   — filed, and not your move. The packet with no badge at all.
 //   attention — something needs looking at. An amber "!", and the amber runs
-//               through the packet's own lines and the shape behind it, so
-//               the state is readable before a word of it is.
-//   person    — waiting on somebody else. A teal figure, because what the
-//               page is waiting for is a PERSON and not a decision: nothing
-//               is wrong and nothing is asked of the reader.
-//   failed    — reviewed, and did not pass. An amber cross.
+//               through the shape behind it too, so the state is readable
+//               before a word of it is.
+//   person    — waiting on somebody else.
+//   failed    — that somebody was reviewed and did not pass. An amber cross.
 //
-// THE LAST TWO WERE BOTH `attention` AND SHOULD NOT HAVE BEEN. An exclamation
-// mark over "Waiting on your co-borrower" alarms a reader about a state in
-// which nothing has gone wrong, and the same mark over "didn't qualify" is
-// too mild for the one that did: *"აქ ვორნინგი არ უნდა იყოს... კაცუნსავით
-// რამე... ხოლო როცა ვერ გაიარა, უნდა იყოს რამე იქსივით."* Amber stays on the
-// cross because this is still a detour and not a dead end — nothing filled in
-// is lost and another invitation carries it on. Red would say otherwise.
+// THOSE TWO DROP THE PACKET AND DRAW A PERSON'S RECORD. They were the loan's
+// sheet with a person on its corner, which is a document about a person; what
+// these two states are about IS the person — whether they have finished, and
+// whether they passed. The subject should be the subject: *"დოკუმენტის
+// მაგივრად უნდა იყოს კაცუნა."* The frame is the same, so they still belong to
+// the set. See `PersonCard` for why it is a card and not a bare figure.
+//
+// BOTH WERE ONCE `attention`, AND SHOULD NOT HAVE BEEN. An exclamation mark
+// over "Waiting on your co-borrower" alarms a reader about a state in which
+// nothing has gone wrong, and the same mark over "didn't qualify" is too mild
+// for the one that did. Amber stays on the cross because this is still a
+// detour and not a dead end — nothing filled in is lost and another
+// invitation carries it on. Red would say otherwise.
 //
 // THE CONTOUR IS GREY IN ALL FOUR, and the same grey as the empty states —
 // *"სთროუკი ისევ იგივე ნაცრისფერი უნდა იყოს, რაც სხვაგან."* It was teal, and
@@ -74,6 +78,12 @@ export type JourneySceneProps = {
  *  page-sized and carrying a page rather than apologising for one. */
 const CONTOUR = 2.2;
 
+const LINE_PROPS = {
+  stroke: brand.sceneLine,
+  strokeWidth: CONTOUR,
+  fill: brand.white,
+} as const;
+
 /** What each state is drawn in. `ink` is the sparkles now — the packet's own
  *  contents are the same grey in every state; see `Packet`. */
 const TONE = {
@@ -81,7 +91,10 @@ const TONE = {
   done: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.success },
   waiting: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: null },
   attention: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
-  person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
+  /* No badge. Nothing has happened to this person yet — they have been
+     invited and have not finished — and a mark on them would say something
+     has. The figure alone is the state. */
+  person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: null },
   failed: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
 } satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
 
@@ -131,6 +144,60 @@ function Packet() {
 }
 
 /**
+ * A PERSON'S RECORD: the subject of the two states that are about a person.
+ *
+ * It was the bare head-and-shoulders first, which is what this product draws
+ * a person AS — and that is exactly why it failed here. Alone in the frame it
+ * is an avatar placeholder: a glyph, with no inside, no structure and nothing
+ * to look at, which is the same mistake the Avatar-and-icon discs made before
+ * any of these were drawn. *"არ ვარგა ესე, რამე უფრო მინდა რომ მოჯდარი იყოს,
+ * უფრო დახვეწილი."*
+ *
+ * So the person is ON something. A card with their picture and their details
+ * is an OBJECT — it has an edge, a layout and contents — and it sits in the
+ * frame the way the packet does, takes the badge in the same corner, and is
+ * still unmistakably about somebody rather than about a document. The details
+ * are the same grey dashes as every other record in the set: this person's
+ * part is not filled in, which is the whole state.
+ */
+function PersonCard() {
+  return (
+    <>
+      <path
+        d="M54 52a12 12 0 0 1 12-12h72a12 12 0 0 1 12 12v60a12 12 0 0 1-12 12H66a12 12 0 0 1-12-12V52Z"
+        {...LINE_PROPS}
+        strokeLinejoin="round"
+      />
+
+      {/* The picture on it. */}
+      <circle cx={82} cy={72} r={12} {...LINE_PROPS} />
+      <path
+        d="M68 102c0-7.7 6.3-14 14-14s14 6.3 14 14v2a3 3 0 0 1-3 3H71a3 3 0 0 1-3-3v-2Z"
+        {...LINE_PROPS}
+        strokeLinejoin="round"
+      />
+
+      {/* And their details beside it. The last line is short twice over: a
+          real one ends early, and the badge's ring comes in at x=125. */}
+      {[
+        { y: 72, w: 34 },
+        { y: 86, w: 34 },
+        { y: 100, w: 14 },
+      ].map((line) => (
+        <path
+          key={line.y}
+          d={`M106 ${line.y}h${line.w}`}
+          stroke={brand.sceneSoft}
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          strokeDasharray="6 7"
+        />
+      ))}
+    </>
+  );
+}
+
+/**
  * The badge, ringed in white so it reads as sitting ON the packet rather than
  * punched out of it — and in the same slot whichever glyph it carries, so
  * moving between states changes the mark and nothing else.
@@ -140,7 +207,13 @@ function Packet() {
  * ten units. Sitting higher, the ring cut across the end of a line and the
  * packet read as a document with a hole punched in it.
  */
-function Badge({ variant, fill }: { variant: JourneySceneVariant; fill: string }) {
+function Badge({
+  variant,
+  fill,
+}: {
+  variant: JourneySceneVariant;
+  fill: string;
+}) {
   return (
     <g>
       <circle cx={141} cy={112} r={20} fill={brand.white} />
@@ -199,7 +272,7 @@ export function JourneyScene({ variant = "act", size = 200 }: JourneySceneProps)
 
   return (
     <SceneFrame width={size} blob={tone.blob} spark={tone.ink}>
-      <Packet />
+      {variant === "person" || variant === "failed" ? <PersonCard /> : <Packet />}
       {tone.badge ? <Badge variant={variant} fill={tone.badge} /> : null}
     </SceneFrame>
   );
