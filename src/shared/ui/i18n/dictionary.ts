@@ -752,9 +752,18 @@ export const en = {
     "We'll walk you through it step by step and show you what OPA can cover.",
   "application.start": "Start application",
   /* Invited and not started. The date is the WBS's five-day expiry. */
-  "application.invitedTitle": "{name} asked you to join their application",
+  /* SHORT, because this is the first thing a co-borrower ever sees and the
+     heading ran to a full line at any width. "asked you to join their
+     application" also spent four words saying what the next line says
+     better; the title now names the ask and the role, and stops. The body
+     drops "You are the co-borrower on it" with it — the title just said so.
+
+     The date is a key of its own so the gate can set it a shade darker
+     without a translator having to carry markup: it is the one thing on this
+     screen a reader will come back to look for. */
+  "application.invitedTitle": "{name} invited you as co-borrower",
   "application.invitedBody":
-    "You are the co-borrower on it. Your part takes a few minutes, and the invitation expires on {date}.",
+    "Your part takes a few minutes. The invitation expires on",
   "application.invitedAction": "Start my part",
   "application.assignedDoneTitle": "Your part is done",
   "application.assignedDoneBody":
@@ -2474,9 +2483,9 @@ const es: Record<TranslationKey, string> = {
   "application.startSubtitle":
     "Te guiaremos paso a paso y te mostraremos lo que OPA puede cubrir.",
   "application.start": "Iniciar la solicitud",
-  "application.invitedTitle": "{name} te pidió unirte a su solicitud",
+  "application.invitedTitle": "{name} te invitó como coprestatario",
   "application.invitedBody":
-    "Eres el coprestatario. Tu parte lleva unos minutos y la invitación caduca el {date}.",
+    "Tu parte lleva unos minutos. La invitación caduca el",
   "application.invitedAction": "Empezar mi parte",
   "application.assignedDoneTitle": "Tu parte está lista",
   "application.assignedDoneBody":

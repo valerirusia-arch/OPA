@@ -22,6 +22,7 @@
 
 import { Button, Flex, Tag, Tooltip, Typography, theme } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { useCustomerViewer } from "../../shared/ui/viewerRole";
 import { setStage, stageLabel, stagesForPath, useBorrowerStage } from "../loan/loanRecord";
 import { getStyles, styles } from "./StageDock.styles";
 
@@ -34,8 +35,11 @@ export function StageDock({ pathname }: StageDockProps) {
   const { token } = theme.useToken();
   const s = getStyles(token);
   const stage = useBorrowerStage();
+  /* The walk depends on WHO is looking as much as on where they are: a
+     co-borrower has no "no application" state to step through. */
+  const viewer = useCustomerViewer();
 
-  const order = stagesForPath(pathname);
+  const order = stagesForPath(pathname, viewer.role);
   const index = order.indexOf(stage);
   const step = (delta: number) => {
     /* Standing on a stage this page does not list — walk in from its start

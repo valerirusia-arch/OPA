@@ -40,7 +40,7 @@
 // Dumb: it takes a state and reports which button was pressed. It navigates
 // nowhere — ApplicationStartScreen does that.
 
-import { Button, Card, ConfigProvider, Result, theme } from "antd";
+import { Button, Card, ConfigProvider, Result, Typography, theme } from "antd";
 import { brand } from "../../../theme/tokens";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { JourneyScene } from "./JourneyScene";
@@ -245,7 +245,20 @@ export function ApplicationGate({
     invited: {
       icon: <JourneyScene variant="act" size={MARK} />,
       title: t("application.invitedTitle", { name: invitation?.invitedBy ?? "" }),
-      subTitle: t("application.invitedBody", { date: invitation?.expiresOn ?? "" }),
+      /* The date a shade darker than the sentence carrying it — it is the one
+         thing on this screen a reader comes back to look for, and in the
+         subtitle's grey it read as the least important word in the line. Set
+         as a separate run rather than inside the string, so no translator has
+         to carry markup. */
+      subTitle: (
+        <>
+          {t("application.invitedBody")}{" "}
+          <Typography.Text style={s.emphasis}>
+            {invitation?.expiresOn ?? ""}
+          </Typography.Text>
+          .
+        </>
+      ),
       action: (
         <Button type="primary" size="large" onClick={onOpenInvitation}>
           {t("application.invitedAction")}

@@ -19,5 +19,9 @@ export const getStyles = (token: GlobalToken) =>
   ({
     /** The invitation to begin: generous, and the only thing on the page. */
     card: { paddingBlock: token.paddingLG },
+    /** A run inside the sentence that should be read first — the date an
+     *  invitation lapses on. Ink rather than the subtitle's grey, and nothing
+     *  else: a bolder weight here would make the sentence read as two. */
+    emphasis: { color: token.colorText },
     ...getPageResultStyles(token),
   }) satisfies Record<string, CSSProperties>;

@@ -218,7 +218,38 @@ const ALL_STAGES: BorrowerStage[] = [
   "cancelled",
 ];
 
-export const stagesForPath = (pathname: string): BorrowerStage[] =>
+/**
+ * THE CO-BORROWER'S OWN WALK, which is not the borrower's.
+ *
+ * `none` is off it, and that is the point: a co-borrower with no application
+ * is not a person this product has. They exist because somebody invited them,
+ * so their first state is the invitation and never "start a loan application"
+ * — which is what the dock was offering them. *"ქო-ბოროვერს პირველი ექნებოდა
+ * რომ ლევი აკერმანმა მოგიწვია."*
+ *
+ * Seven stages, and each one draws a different screen for them: invited,
+ * their part filed, a request for more, the invitation closed after they did
+ * not qualify, the loan live, the application closed, and settled.
+ */
+const CO_BORROWER_STAGES: BorrowerStage[] = [
+  "coBorrower",
+  "review",
+  "needsInfo",
+  "coBorrowerFailed",
+  "funded",
+  "declined",
+  "paidOff",
+];
+
+export const stagesForPath = (
+  pathname: string,
+  role?: "borrower" | "coBorrower",
+): BorrowerStage[] =>
+  role === "coBorrower"
+    ? CO_BORROWER_STAGES
+    : stagesForBorrowerPath(pathname);
+
+const stagesForBorrowerPath = (pathname: string): BorrowerStage[] =>
   pathname.startsWith("/dashboard")
     ? ALL_STAGES
     : pathname.startsWith("/payments")
@@ -728,7 +759,12 @@ export const isRepaid = (record: ApplicationSummary | undefined) =>
  * first, because they are true no matter what the status field still says.
  */
 export const coBorrowerGateFor = (record: ApplicationSummary | undefined) => {
-  if (!record) return "open" as const;
+  /* NOT `open`, which is the borrower's answer to "there is no application":
+     start one. A co-borrower cannot start anything — they exist because
+     somebody invited them to an application that is not theirs — so being
+     here with no record means the invitation they came through is gone, and
+     that state already has the right words for it. */
+  if (!record) return "invitationClosed" as const;
   if (isRepaid(record)) return "assignedSettled" as const;
   /* Declined and cancelled share a state: what the co-borrower does about
      either is the same — nothing — and one sentence can be true of both
