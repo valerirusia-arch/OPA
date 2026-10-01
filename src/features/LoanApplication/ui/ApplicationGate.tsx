@@ -228,6 +228,19 @@ export function ApplicationGate({
     </ConfigProvider>
   );
 
+  /*
+    EVERY WAY FORWARD IS THE ORANGE BUTTON.
+
+    Four of these were the outline button, on the reasoning that a state with
+    nothing much to do should not shout. On the page it read as the opposite:
+    the one control on an otherwise empty screen, drawn as the quiet
+    alternative to a primary that was not there — a dead end with a disabled
+    look. *"CTA იყოს სულ ნარინჯისფერი, რა იქნება ეს თეთრი."*
+
+    The only exception stays green, and it is not an exception to this rule:
+    `closeButton` is a primary too, themed rather than demoted, because it
+    acknowledges an ending instead of asking for anything.
+  */
   const content = {
     /* EVERY STATE GETS THE DRAWING, and it is the same packet in all of them
        — what differs is the badge on it, which is exactly the difference
@@ -370,7 +383,7 @@ export function ApplicationGate({
       title: t("application.assignedClosedTitle"),
       subTitle: t("application.assignedClosedBody"),
       action: (
-        <Button size="large" onClick={onViewStatus}>
+        <Button type="primary" size="large" onClick={onViewStatus}>
           {t("application.assignedDoneAction")}
         </Button>
       ),
@@ -441,7 +454,7 @@ export function ApplicationGate({
       title: t("application.blockedFlagTitle"),
       subTitle: t("application.blockedFlagBody"),
       action: (
-        <Button size="large" onClick={onContact}>
+        <Button type="primary" size="large" onClick={onContact}>
           {t("nav.contact")}
         </Button>
       ),
@@ -549,7 +562,7 @@ export function ApplicationGate({
       title: t("application.invitationClosedTitle"),
       subTitle: t("application.invitationClosedBody"),
       action: (
-        <Button size="large" onClick={onContact}>
+        <Button type="primary" size="large" onClick={onContact}>
           {t("application.invitationClosedAction")}
         </Button>
       ),
@@ -563,7 +576,7 @@ export function ApplicationGate({
       title: t("application.checkPausedTitle"),
       subTitle: t("application.checkPausedBody"),
       action: (
-        <Button size="large" onClick={onProfile}>
+        <Button type="primary" size="large" onClick={onProfile}>
           {t("application.checkPausedAction")}
         </Button>
       ),
