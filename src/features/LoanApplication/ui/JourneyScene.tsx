@@ -74,8 +74,8 @@ export type JourneySceneProps = {
  *  page-sized and carrying a page rather than apologising for one. */
 const CONTOUR = 2.2;
 
-/** What each state is drawn in: the lines inside the packet, the shape behind
- *  it, and the badge on it. */
+/** What each state is drawn in. `ink` is the sparkles now — the packet's own
+ *  contents are the same grey in every state; see `Packet`. */
 const TONE = {
   act: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   done: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.success },
@@ -86,26 +86,31 @@ const TONE = {
 } satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
 
 /**
- * The packet: the shared sheet, with something written on it.
+ * The packet: the shared sheet, drawn exactly as the empty states draw it.
  *
- * A HEADING AND THEN BODY, rather than three equal marks. Three identical
- * lines say "there is text here" and stop; a heavier short bar above them
- * says it is a FORM — which is what every state on this page is about, and
- * what makes the drawing worth looking at for the second it is looked at:
- * *"უფრო საინტერესო უნდა იყოს."*
+ * ITS LINES WERE SOLID AND IN THE STATE'S OWN COLOUR, on the reasoning that
+ * solid-versus-dashed was the one mark separating a record with something in
+ * it from a record with nothing. It separated them too well: two documents
+ * side by side in the same product, one written in teal and one in grey
+ * dashes, read as two different objects rather than one page in two moments.
+ * *"დოკუმენტში შიგნით ტექსტი ნაცრისფრად იყოს, როგორც დეშბორდზეა... მსგავსი
+ * წყვეტილი ხაზები იყოს ყველგან."*
  *
- * It is also now the real difference from the empty record, which has no
- * heading and no solid line anywhere: one sheet, and what is on it is the
- * whole story.
+ * So the sheet is now the same sheet everywhere and the STATE IS CARRIED BY
+ * THE BADGE AND THE SHAPE BEHIND IT — which is the better division anyway:
+ * the thing that changes between states is the thing that is drawn
+ * differently, and the document, which does not change, is not.
+ *
+ * The heading bar stays. It is what makes this a form rather than three marks
+ * on a page, and it is the one thing the empty record does not have: nothing
+ * has been written there, not even a title.
  */
-function Packet({ ink }: { ink: string }) {
+function Packet() {
   return (
     <>
       <Sheet stroke={brand.sceneLine} strokeWidth={CONTOUR} />
 
-      {/* The heading: filled rather than stroked, so it carries weight at a
-          third of the width of a body line. */}
-      <rect x={82} y={56} width={32} height={6} rx={3} fill={ink} />
+      <rect x={82} y={56} width={32} height={6} rx={3} fill={brand.sceneSoft} />
 
       {[
         { y: 78, w: 46 },
@@ -115,9 +120,10 @@ function Packet({ ink }: { ink: string }) {
         <path
           key={line.y}
           d={`M82 ${line.y}h${line.w}`}
-          stroke={ink}
-          strokeWidth={2.6}
+          stroke={brand.sceneSoft}
+          strokeWidth={2.2}
           strokeLinecap="round"
+          strokeDasharray="6 7"
         />
       ))}
     </>
@@ -193,7 +199,7 @@ export function JourneyScene({ variant = "act", size = 200 }: JourneySceneProps)
 
   return (
     <SceneFrame width={size} blob={tone.blob} spark={tone.ink}>
-      <Packet ink={tone.ink} />
+      <Packet />
       {tone.badge ? <Badge variant={variant} fill={tone.badge} /> : null}
     </SceneFrame>
   );

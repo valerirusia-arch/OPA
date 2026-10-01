@@ -43,8 +43,10 @@ export function SupportMark({ size = 168 }: SupportMarkProps) {
         strokeLinejoin="round"
       />
 
-      {/* What is being said. Solid, like the packet's lines and unlike the
-          empty record's dashes: there is somebody on the other end. */}
+      {/* What is being said — grey, like the inside of every document in the
+          set, but SOLID where those are dashed. A dashed line inside a speech
+          bubble says nothing is being said, which is the opposite of what
+          this panel is for: there is somebody on the other end of it. */}
       {[
         { y: 54, w: 46 },
         { y: 70, w: 30 },
@@ -52,7 +54,7 @@ export function SupportMark({ size = 168 }: SupportMarkProps) {
         <path
           key={line.y}
           d={`M76 ${line.y}h${line.w}`}
-          stroke={brand.sceneTealSoft}
+          stroke={brand.sceneSoft}
           strokeWidth={2.6}
           strokeLinecap="round"
         />
