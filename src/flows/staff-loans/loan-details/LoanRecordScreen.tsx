@@ -44,7 +44,7 @@ import { LoanAdminPanel } from "../../../features/Loan/ui/LoanAdminPanel";
 import { AcquisitionPanel } from "../../../features/Loan/ui/AcquisitionPanel";
 import { allLoans, type LoanRow } from "../mockStaffLoans";
 import { styles } from "./LoanRecordScreen.styles";
-import { EmptyMark } from "../../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
 
 export type LoanRecordScreenProps = {
   loans?: LoanRow[];
@@ -105,7 +105,7 @@ export default function LoanRecordScreen({
         <AdminPage title={t("loans.title")}>
           <Card>
             <Result
-              icon={<EmptyMark variant="missing" scale="page" />}
+              icon={<EmptyScene variant="notFound" scale="page" />}
               title={t("loans.notFound")}
               extra={
                 <Button type="primary" onClick={() => navigate({ to: "/staff/loans" })}>

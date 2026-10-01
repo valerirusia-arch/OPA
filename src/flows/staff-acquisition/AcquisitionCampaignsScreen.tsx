@@ -31,7 +31,7 @@ import type { AcquisitionStatus, Campaign } from "../../features/Acquisition/ui/
 import { mockSources } from "./mockSources";
 import { mockCampaigns } from "./mockCampaigns";
 import { getStyles } from "./AcquisitionSourcesScreen.styles";
-import { EmptyMark } from "../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
 
 type Pending = { kind: "delete" | "deactivate" | "activate"; campaign: Campaign } | null;
 
@@ -225,7 +225,7 @@ export default function AcquisitionCampaignsScreen({
         ) : (
           <Card>
             <Result
-              icon={<EmptyMark variant="denied" scale="page" />}
+              icon={<EmptyScene variant="noAccess" scale="page" />}
               title={t("access.deniedTitle")}
               subTitle={t("access.deniedDescription")}
               extra={

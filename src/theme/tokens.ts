@@ -60,6 +60,26 @@ export const brand = {
    * disc ground reuses the product's own `tint`; the rest are the reference's
    * blues: a bright accent for a header or badge, a mid line, and a faint one.
    */
+  /**
+   * THE EMPTY-STATE DRAWINGS — line art, and the four values it is drawn with.
+   *
+   * Warm greys rather than the product's teal: an empty state is a place where
+   * nothing has happened, and an accent on it competes with the one button
+   * that is the way forward. They are warm because every other grey here is —
+   * a cool line on this off-white ground reads as a different material.
+   *
+   * `sceneLine` is the contour. It is a step darker than `borderHover`, which
+   * is deliberate: a drawing held at border weight disappears into the card it
+   * sits on, and this has to read as a picture rather than as a smudge.
+   * `sceneSoft` is everything inside a contour — dots, bars, the sparkles.
+   * `sceneBlob` is the soft shape behind the subject and the ground it stands
+   * on; it sits between `warmTint` and `warmTintStrong`, so it separates from
+   * a white card without ever becoming a second subject.
+   */
+  sceneLine: "#C7BEB4",
+  sceneSoft: "#DCD4CB",
+  sceneBlob: "#F2EEEA",
+
   illoGround: "#E8EEFB",
   illoInk: "#2F6BFF",
   illoSoft: "#AFC9FF",

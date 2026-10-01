@@ -59,7 +59,7 @@ import {
   type UserStatus,
 } from "../../features/Users/ui/roles";
 import { getStyles, styles } from "./StaffUsersScreen.styles";
-import { EmptyMark } from "../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
 
 export type UserRow = {
   id: string;
@@ -456,7 +456,7 @@ export default function StaffUsersScreen({
           // is a route guard, and that is Dev's, in /app.
           <Card>
             <Result
-              icon={<EmptyMark variant="denied" scale="page" />}
+              icon={<EmptyScene variant="noAccess" scale="page" />}
               title={t("access.deniedTitle")}
               subTitle={t("access.deniedDescription")}
               extra={
@@ -486,7 +486,7 @@ export default function StaffUsersScreen({
               locale={{
                 emptyText: (
                   <EmptyState
-                    variant="search"
+                    variant="notFound"
                     title={t("users.empty")}
                     description={t("users.emptyHint")}
                     minHeight={TABLE_EMPTY_MIN_HEIGHT}

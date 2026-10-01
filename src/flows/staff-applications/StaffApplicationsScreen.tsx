@@ -69,7 +69,7 @@ import { awaitsReview } from "../../features/Applications/ui/checks";
 import type { ApplicationRecord } from "../../features/Applications/ui/types";
 import { mockApplications } from "./mockApplications";
 import { getStyles, styles } from "./StaffApplicationsScreen.styles";
-import { EmptyMark } from "../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
 
 const money = (amount: number) =>
   `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
@@ -292,7 +292,7 @@ export default function StaffApplicationsScreen({
             locale={{
               emptyText: (
                 <EmptyState
-                  variant="search"
+                  variant="notFound"
                   title={t("queue.empty")}
                   description={t("queue.emptyBody")}
                   minHeight={TABLE_EMPTY_MIN_HEIGHT}
@@ -305,7 +305,7 @@ export default function StaffApplicationsScreen({
         ) : (
         <Card>
           <Result
-            icon={<EmptyMark variant="denied" scale="page" />}
+            icon={<EmptyScene variant="noAccess" scale="page" />}
             title={t("access.deniedTitle")}
             subTitle={t("access.deniedDescription")}
             extra={

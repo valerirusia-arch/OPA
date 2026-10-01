@@ -62,7 +62,7 @@ import { fullName } from "../../../features/Borrowers/ui/types";
 import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { mockBorrowers } from "../mockBorrowers";
 import { styles } from "./BorrowerDetailsScreen.styles";
-import { EmptyMark } from "../../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
 
 /**
  * The record stores a date of birth as it reads — "14 May 1990" — and the
@@ -136,7 +136,7 @@ export default function BorrowerDetailsScreen({
         <AdminPage title={t("borrowers.title")}>
           <Card>
             <Result
-              icon={<EmptyMark variant="missing" scale="page" />}
+              icon={<EmptyScene variant="notFound" scale="page" />}
               /* NOT `borrowers.empty`. This page is reached by id, so it is
                  never a filter that emptied it — it said "No borrowers match
                  these filters" to a reader who had typed no filter, on a

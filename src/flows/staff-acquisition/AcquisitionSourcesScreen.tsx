@@ -36,7 +36,7 @@ import {
 import type { AcquisitionSource, AcquisitionStatus } from "../../features/Acquisition/ui/types";
 import { mockPartners, mockSources } from "./mockSources";
 import { getStyles } from "./AcquisitionSourcesScreen.styles";
-import { EmptyMark } from "../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
 
 export type AcquisitionSourcesScreenProps = {
   sources?: AcquisitionSource[];
@@ -244,7 +244,7 @@ export default function AcquisitionSourcesScreen({
         ) : (
           <Card>
             <Result
-              icon={<EmptyMark variant="denied" scale="page" />}
+              icon={<EmptyScene variant="noAccess" scale="page" />}
               title={t("access.deniedTitle")}
               subTitle={t("access.deniedDescription")}
               extra={

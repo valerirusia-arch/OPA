@@ -71,7 +71,7 @@ import type {
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
 import { mockApplications } from "../mockApplications";
 import { getStyles, styles } from "./ApplicationDetailsScreen.styles";
-import { EmptyMark } from "../../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
 
 const money = (amount: number) =>
   `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
@@ -277,7 +277,7 @@ export default function ApplicationDetailsScreen({
       <AdminPage title={t("queue.title")}>
         <Card>
           <Result
-            icon={<EmptyMark variant="denied" scale="page" />}
+            icon={<EmptyScene variant="noAccess" scale="page" />}
             title={t("access.deniedTitle")}
             subTitle={t("access.deniedDescription")}
             extra={
@@ -299,7 +299,7 @@ export default function ApplicationDetailsScreen({
       <AdminPage title={t("queue.title")}>
         <Card>
           <Result
-            icon={<EmptyMark variant="missing" scale="page" />}
+            icon={<EmptyScene variant="notFound" scale="page" />}
             title={t("appDetail.notFound")}
             extra={
               <Button type="primary" onClick={() => navigate({ to: "/staff/applications" })}>

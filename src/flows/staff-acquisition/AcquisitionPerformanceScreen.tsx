@@ -34,7 +34,7 @@ import { mockSources } from "./mockSources";
 import { mockGroups, mockReferralPartners } from "./mockPartners";
 import { mockCampaigns } from "./mockCampaigns";
 import { styles } from "./AcquisitionPerformanceScreen.styles";
-import { EmptyMark } from "../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
 
 // The analysis, from the wireframe: a few totals, then a row per channel with
 // its loans, credit reports and approval rate. Mock aggregates — Dev reads the
@@ -263,7 +263,7 @@ export default function AcquisitionPerformanceScreen({
         ) : (
           <Card>
             <Result
-              icon={<EmptyMark variant="denied" scale="page" />}
+              icon={<EmptyScene variant="noAccess" scale="page" />}
               title={t("access.deniedTitle")}
               subTitle={t("access.deniedDescription")}
               extra={

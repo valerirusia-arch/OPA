@@ -71,7 +71,7 @@ import { Button, Card, Col, Flex, Grid, Result, Row, Typography, theme } from "a
 import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { DocumentList } from "./DocumentList";
-import { EmptyArt } from "../../../shared/ui/empty/EmptyArt";
+import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
 import { LoanStatement, type LoanStatementProps, type StatementFact } from "./LoanStatement";
 import { VirtualCardPanel } from "./VirtualCardPanel";
 import { getStyles, styles } from "./LoanOverview.styles";
@@ -191,7 +191,7 @@ export function LoanOverview({
   const nothingHere = () => (
     <Card>
       <Result
-        icon={<EmptyArt variant="plus" />}
+        icon={<EmptyScene scale="page" />}
         title={t("loanPage.none")}
         subTitle={t("loanPage.noneBody")}
         extra={

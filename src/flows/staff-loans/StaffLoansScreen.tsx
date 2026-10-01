@@ -290,7 +290,7 @@ export default function StaffLoansScreen({
             locale={{
               emptyText: (
                 <EmptyState
-                  variant="search"
+                  variant="notFound"
                   title={t("loans.empty")}
                   description={t("loans.emptyHint")}
                   minHeight={TABLE_EMPTY_MIN_HEIGHT}

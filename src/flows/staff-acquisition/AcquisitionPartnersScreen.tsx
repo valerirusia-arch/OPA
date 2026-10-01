@@ -34,7 +34,7 @@ import type {
 } from "../../features/Acquisition/ui/types";
 import { mockGroups, mockReferralPartners } from "./mockPartners";
 import { getStyles } from "./AcquisitionSourcesScreen.styles";
-import { EmptyMark } from "../../shared/ui/empty/EmptyMark";
+import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
 
 type Entity = "partner" | "group";
 type Tab = "partners" | "groups";
@@ -310,7 +310,7 @@ export default function AcquisitionPartnersScreen({
         ) : (
           <Card>
             <Result
-              icon={<EmptyMark variant="denied" scale="page" />}
+              icon={<EmptyScene variant="noAccess" scale="page" />}
               title={t("access.deniedTitle")}
               subTitle={t("access.deniedDescription")}
               extra={
