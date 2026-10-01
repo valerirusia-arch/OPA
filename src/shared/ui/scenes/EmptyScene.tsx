@@ -38,7 +38,7 @@
 // land its blob somewhere slightly else.
 
 import { brand } from "../../../theme/tokens";
-import { SceneFrame } from "./SceneFrame";
+import { SceneFrame, Sheet } from "./SceneFrame";
 
 export type EmptySceneVariant = "empty" | "notFound" | "noAccess";
 
@@ -81,29 +81,21 @@ const LINE = { stroke: brand.sceneLine, strokeWidth: 1.8, fill: brand.white } as
 function Empty() {
   return (
     <>
-      <path
-        d="M68 34a8 8 0 0 1 8-8h40l26 26v64a8 8 0 0 1-8 8H76a8 8 0 0 1-8-8V34Z"
-        {...LINE}
-        strokeLinejoin="round"
-      />
-      {/* The corner turned down — the one mark that makes a rounded rectangle
-          a sheet rather than a card. */}
-      <path
-        d="M116 26l26 26h-18a8 8 0 0 1-8-8V26Z"
-        {...LINE}
-        strokeLinejoin="round"
-      />
+      <Sheet stroke={brand.sceneLine} strokeWidth={1.8} />
 
       {/* Where the writing would be, and the last line short, the way a real
-          one ends. */}
+          one ends. Nothing else: this record has no heading either, which is
+          the difference between it and the journey's packet. Centred in the
+          taller sheet rather than pushed to its foot, where three marks under
+          a wide blank read as a page that had been started and abandoned. */}
       {[
-        { y: 72, w: 44 },
-        { y: 86, w: 44 },
-        { y: 100, w: 26 },
+        { y: 64, w: 46 },
+        { y: 80, w: 46 },
+        { y: 96, w: 30 },
       ].map((line) => (
         <path
           key={line.y}
-          d={`M84 ${line.y}h${line.w}`}
+          d={`M82 ${line.y}h${line.w}`}
           stroke={brand.sceneSoft}
           strokeWidth={2.2}
           strokeLinecap="round"

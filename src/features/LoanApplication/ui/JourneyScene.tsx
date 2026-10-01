@@ -41,7 +41,7 @@
 // empties, so the two sets cannot drift apart.
 
 import { brand } from "../../../theme/tokens";
-import { SceneFrame } from "../../../shared/ui/scenes/SceneFrame";
+import { SceneFrame, Sheet } from "../../../shared/ui/scenes/SceneFrame";
 
 export type JourneySceneVariant = "act" | "done" | "waiting" | "attention";
 
@@ -51,13 +51,10 @@ export type JourneySceneProps = {
   size?: number;
 };
 
-/** The contour, shared with every other drawing in the product. Heavier than
- *  the empty states' 1.8, because these are page-sized and carrying a page. */
-const LINE = {
-  stroke: brand.sceneLine,
-  strokeWidth: 2.2,
-  fill: brand.white,
-} as const;
+/** The contour weight. The grey itself is shared with every other drawing;
+ *  this is a hair heavier than the empty states' 1.8, because these are
+ *  page-sized and carrying a page rather than apologising for one. */
+const CONTOUR = 2.2;
 
 /** What each state is drawn in: the lines inside the packet, the shape behind
  *  it, and the badge on it. */
@@ -68,32 +65,36 @@ const TONE = {
   attention: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
 } satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
 
-/** The packet. Geometry lifted from the empty states' sheet unchanged, which
- *  is what makes the grey set and this one read as one drawing style. */
+/**
+ * The packet: the shared sheet, with something written on it.
+ *
+ * A HEADING AND THEN BODY, rather than three equal marks. Three identical
+ * lines say "there is text here" and stop; a heavier short bar above them
+ * says it is a FORM — which is what every state on this page is about, and
+ * what makes the drawing worth looking at for the second it is looked at:
+ * *"უფრო საინტერესო უნდა იყოს."*
+ *
+ * It is also now the real difference from the empty record, which has no
+ * heading and no solid line anywhere: one sheet, and what is on it is the
+ * whole story.
+ */
 function Packet({ ink }: { ink: string }) {
   return (
     <>
-      <path
-        d="M68 34a8 8 0 0 1 8-8h40l26 26v64a8 8 0 0 1-8 8H76a8 8 0 0 1-8-8V34Z"
-        {...LINE}
-        strokeLinejoin="round"
-      />
-      <path
-        d="M116 26l26 26h-18a8 8 0 0 1-8-8V26Z"
-        {...LINE}
-        strokeLinejoin="round"
-      />
-      {/* Solid lines, where the empty sheet's are dashes. That one difference
-          carries the whole distinction between the two sets: there IS
-          something written on this one. */}
+      <Sheet stroke={brand.sceneLine} strokeWidth={CONTOUR} />
+
+      {/* The heading: filled rather than stroked, so it carries weight at a
+          third of the width of a body line. */}
+      <rect x={82} y={56} width={32} height={6} rx={3} fill={ink} />
+
       {[
-        { y: 72, w: 44 },
-        { y: 86, w: 44 },
-        { y: 100, w: 26 },
+        { y: 78, w: 46 },
+        { y: 92, w: 46 },
+        { y: 106, w: 30 },
       ].map((line) => (
         <path
           key={line.y}
-          d={`M84 ${line.y}h${line.w}`}
+          d={`M82 ${line.y}h${line.w}`}
           stroke={ink}
           strokeWidth={2.6}
           strokeLinecap="round"
@@ -107,15 +108,20 @@ function Packet({ ink }: { ink: string }) {
  * The badge, ringed in white so it reads as sitting ON the packet rather than
  * punched out of it — and in the same slot whichever glyph it carries, so
  * moving between states changes the mark and nothing else.
+ *
+ * Placed so its ring clears the body lines: at (141, 112) the nearest it
+ * comes to the middle line is tangent, and to the short last line it leaves
+ * ten units. Sitting higher, the ring cut across the end of a line and the
+ * packet read as a document with a hole punched in it.
  */
 function Badge({ variant, fill }: { variant: JourneySceneVariant; fill: string }) {
   return (
     <g>
-      <circle cx={140} cy={104} r={20} fill={brand.white} />
-      <circle cx={140} cy={104} r={16} fill={fill} />
+      <circle cx={141} cy={112} r={20} fill={brand.white} />
+      <circle cx={141} cy={112} r={16} fill={fill} />
       {variant === "done" ? (
         <path
-          d="m132.5 104.5 5 5 10-10"
+          d="m133.5 112.5 5 5 10-10"
           fill="none"
           stroke={brand.white}
           strokeWidth={3}
@@ -127,12 +133,12 @@ function Badge({ variant, fill }: { variant: JourneySceneVariant; fill: string }
           {/* Drawn rather than set in type: an exclamation mark at this size
               is two shapes, and the font's would arrive with its own metrics
               and sit off the circle's centre. */}
-          <rect x={138.4} y={95} width={3.2} height={11} rx={1.6} fill={brand.white} />
-          <circle cx={140} cy={110.6} r={1.9} fill={brand.white} />
+          <rect x={139.4} y={103} width={3.2} height={11} rx={1.6} fill={brand.white} />
+          <circle cx={141} cy={118.6} r={1.9} fill={brand.white} />
         </>
       ) : (
         <path
-          d="M140 95v18M131 104h18"
+          d="M141 103v18M132 112h18"
           stroke={brand.white}
           strokeWidth={3}
           strokeLinecap="round"

@@ -16,6 +16,7 @@
 // designer's hard rule for the style: *"არ უნდა იყოს 3 სივრცული."*
 
 import type { ReactNode } from "react";
+import { brand } from "../../../theme/tokens";
 
 /* Everything is laid out in this box and scaled from it. Not exported: a
    scene supplies a subject and a width, never a coordinate system, and the
@@ -44,10 +45,38 @@ function Sparkle({ x, y, r, tone }: { x: number; y: number; r: number; tone: str
   );
 }
 
+/**
+ * THE SHEET BOTH REGISTERS DRAW — the empty states' blank record and the
+ * journey's packet. Shared rather than copied, because "the same hand" has to
+ * be a fact about the code and not a thing two files happen to agree on.
+ *
+ * TALLER THAN IT WAS, at 76 × 108 — a 0.70 ratio, which is A4's. At 74 × 98 it
+ * sat between a page and a card and read as neither: *"სიგრძეში ოდნავ რომ
+ * მოუმატო, მგონი უკეთესი იქნება."* The extra height is also what gives the
+ * contents room to be a document rather than three marks.
+ *
+ * What goes ON it is each register's own business — dashes where nothing has
+ * been written, a heading and solid lines where something has.
+ */
+export function Sheet({ stroke, strokeWidth }: { stroke: string; strokeWidth: number }) {
+  const line = { stroke, strokeWidth, fill: brand.white, strokeLinejoin: "round" } as const;
+  return (
+    <>
+      <path
+        d="M66 28a8 8 0 0 1 8-8h42l26 26v74a8 8 0 0 1-8 8H74a8 8 0 0 1-8-8V28Z"
+        {...line}
+      />
+      {/* The corner turned down — the one mark that makes a rounded rectangle
+          a sheet rather than a card. */}
+      <path d="M116 20l26 26h-18a8 8 0 0 1-8-8V20Z" {...line} />
+    </>
+  );
+}
+
 export type SceneFrameProps = {
   /** Rendered width in px; the height follows the box. */
   width: number;
-  /** The blob and the ground. */
+  /** The soft shape behind the subject. The ground is NOT this — see below. */
   blob: string;
   /** The sparkles. */
   spark: string;
@@ -67,10 +96,26 @@ export function SceneFrame({ width, blob, spark, children }: SceneFrameProps) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path d={BLOB} fill={blob} />
+      {/*
+        THE GROUND IS THE SAME IN EVERY SCENE, AND IT IS NOT THE BLOB.
+
+        It was drawn in the blob's colour, so the amber state's shadow came
+        out amber — *"ჩრდილი არ უნდა იცვლებოდეს ფერი არასდროს, მუდამ ერთი და
+        იგივე უნდა იყოს."* Right, and for a reason worth writing down: the
+        blob is a thing the picture SAYS — teal for the journey, amber for a
+        state that wants looking at — while the ground is a fact about where
+        the subject is standing. A floor that changes colour with the mood of
+        what is on it is the one thing in a flat drawing that gives the whole
+        illusion away.
+
+        UNDER the subject, not over it. It was drawn last, so it washed across
+        the foot of whatever stood on it — the sheet's bottom edge, and any
+        badge that reached below the sheet. A shadow is behind the thing
+        casting it. Flat, no blur: the subject stands on the page without
+        being lit by anything.
+      */}
+      <ellipse cx={96} cy={132} rx={54} ry={4} fill={brand.sceneBlob} />
       {children}
-      {/* The ground is last of the solids: a flat ellipse, no blur, so the
-          subject stands on the page without being lit by anything. */}
-      <ellipse cx={96} cy={132} rx={54} ry={4} fill={blob} />
       <Sparkle x={36} y={38} r={5.5} tone={spark} />
       <Sparkle x={170} y={46} r={4} tone={spark} />
       <Sparkle x={30} y={100} r={4.5} tone={spark} />
