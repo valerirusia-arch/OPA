@@ -119,6 +119,18 @@ export const brand = {
    */
   sceneTealSoft: "#C6DDE5",
   sceneTealBlob: "#ECF3F6",
+  /**
+   * AND THE AMBER ONE, for the states where something needs the reader's
+   * attention — a co-borrower whose part is unfinished and running out of
+   * time, and one who was reviewed and did not qualify.
+   *
+   * Amber rather than red on purpose. Neither of those is a failure the
+   * borrower caused or has to live with: nothing they filled in is lost and
+   * both are fixed by inviting somebody else. Red would make a detour read as
+   * a dead end. These are `warning` at the same two dilutions the teal uses.
+   */
+  sceneAmberSoft: "#ECDCC0",
+  sceneAmberBlob: "#F7F1E6",
 
   /**
    * THE SAME THREE TINTS, TURNED WARM — the tables' own family.

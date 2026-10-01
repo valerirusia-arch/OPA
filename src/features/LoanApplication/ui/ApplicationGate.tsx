@@ -304,7 +304,12 @@ export function ApplicationGate({
     */
     coBorrowerNeeded: invitation
       ? {
-          icon: <JourneyScene variant="act" size={MARK} />,
+          /* AMBER, NOT THE PLAIN "+". Nothing is being asked of the
+             borrower yet — but the invitation has an expiry printed in the
+             sentence below, and a state with a clock running on it is not
+             the same as a state that is simply waiting. The drawing says so
+             before the date is read. */
+          icon: <JourneyScene variant="attention" size={MARK} />,
           title: t("application.coBorrowerWaitingTitle"),
           subTitle: t("application.coBorrowerWaitingBody", {
             name: invitation.invitee,
@@ -351,7 +356,10 @@ export function ApplicationGate({
       the WBS alone will not find this, and the copy below depends on it.
     */
     coBorrowerFailed: {
-      icon: <JourneyScene variant="act" size={MARK} />,
+      /* AMBER, and amber rather than red: the co-borrower did not qualify,
+         nothing the borrower filled in is lost, and the way on is to invite
+         somebody else. Red would make a detour read as a dead end. */
+      icon: <JourneyScene variant="attention" size={MARK} />,
       title: t("application.coBorrowerFailedTitle"),
       subTitle: t("application.coBorrowerFailedBody", { name: coBorrowerFailed ?? "" }),
       action: (

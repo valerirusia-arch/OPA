@@ -25,3 +25,9 @@ export const Done: Story = { args: { variant: "done" } };
 /** Filed, and not your move — a check in progress, a decision pending, an
  *  application that has stopped. No badge at all: there is nothing to do. */
 export const Waiting: Story = { args: { variant: "waiting" } };
+
+/** Something needs looking at: a co-borrower whose invitation is running out,
+ *  or one who was reviewed and did not qualify. The amber runs through the
+ *  packet's lines and the shape behind it, not just the badge — this is the
+ *  one state meant to be readable across a room. */
+export const Attention: Story = { args: { variant: "attention" } };
