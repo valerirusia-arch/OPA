@@ -189,7 +189,7 @@ export default function ContactScreen({ userName, now }: ContactScreenProps) {
                         appears exactly when there is a column shaped to hold
                         it. It is the one thing on this panel that is not
                         information; it gives way to the fact. */}
-                    {screens.lg === false ? null : <SupportMark size={104} />}
+                    {screens.lg === false ? null : <SupportMark size={150} />}
                   </Flex>
 
                   {/* Pinned to the foot of the panel so this rule and the

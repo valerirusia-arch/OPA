@@ -245,18 +245,34 @@ export function ApplicationGate({
     invited: {
       icon: <JourneyScene variant="act" size={MARK} />,
       title: t("application.invitedTitle", { name: invitation?.invitedBy ?? "" }),
-      /* The date a shade darker than the sentence carrying it — it is the one
-         thing on this screen a reader comes back to look for, and in the
-         subtitle's grey it read as the least important word in the line. Set
-         as a separate run rather than inside the string, so no translator has
-         to carry markup. */
+      /*
+        TWO LINES, AND THE SECOND IS THE DEADLINE.
+
+        It was one sentence, and it came out one line: it wants 476px against
+        the 480 measure these Results are set to, so it cleared the cap by
+        four pixels and never broke — *"ჩამოდროპე ცოტა საბთაითლი."* Narrowing
+        the measure would have fixed this string and broken on the Spanish,
+        which runs longer; splitting at the full stop that is already there
+        holds whatever either language does.
+
+        It is also the better break. The date is the one thing on this screen
+        a reader comes back to look for, and on its own line with the sentence
+        that frames it, it can be found without reading. A shade darker than
+        that sentence, too — in the subtitle's grey it read as the least
+        important word in the line. Set as its own run rather than markup
+        inside the string, so no translator has to carry it.
+      */
       subTitle: (
         <>
-          {t("application.invitedBody")}{" "}
-          <Typography.Text style={s.emphasis}>
-            {invitation?.expiresOn ?? ""}
+          <Typography.Text style={styles.subLine}>
+            {t("application.invitedBody")}
           </Typography.Text>
-          .
+          <Typography.Text style={styles.subLine}>
+            {t("application.invitedExpires")}{" "}
+            <Typography.Text style={s.emphasis}>
+              {invitation?.expiresOn ?? ""}
+            </Typography.Text>
+          </Typography.Text>
         </>
       ),
       action: (

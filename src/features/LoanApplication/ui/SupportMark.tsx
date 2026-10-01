@@ -1,79 +1,75 @@
 // src/features/LoanApplication/ui/SupportMark.tsx
 //
-// The illustration on the contact page. Epic 3, WBS story 8.
+// THE CONTACT PANEL'S DRAWING, redrawn in the product's one style.
 //
-// It draws what the page promises without a sentence saying so: a message,
-// with a person behind it. Not a headset, which says call centre; not a
-// speech bubble alone, which says chat, a thing this product deliberately
-// does not have. It sits in the Call panel, whose whole claim is that there
-// is somebody on the end of the number.
+// It was the last survivor of the old mark family — a speech bubble on a soft
+// disc with a filled badge, built before the line-art set existed, so the
+// contact page carried the only picture in the product that was drawn by a
+// different hand. Same subject, same meaning, standing in `SceneFrame` with
+// the rest: *"ესეც ჩვენს სტილზე უნდა დავსვათ."*
 //
-// Built to the family's own grammar rather than invented beside it: the 120
-// viewBox, the soft primary ground at r52, one object in the container colour
-// with a hairline stroke, and the badge in the slot every other mark uses —
-// cx 82, cy 84, r 15, with a 3px ring so it sits ON the object instead of
-// beside it. Same as InvitationMark and SubmittedMark, so
-// this reads as the fourth of a set and not as a stray picture.
+// COLOURED, like the application journey and unlike the empty states. The
+// reasoning is the same one that split those two: an empty state is a place
+// where nothing has happened and its picture must not compete with the way
+// out, while this one sits beside a phone number somebody is looking for.
+// Nothing on this panel is waiting to be filled in.
 //
-// Drawn rather than composed because antd has no illustration to compose from;
-// every colour comes from the theme, so it follows a token change like
-// everything else.
+// Grey contour, teal contents, teal badge — the `act` register exactly, so
+// the bubble and the application packet read as the same hand holding the
+// same pen.
 
-import { theme } from "antd";
+import { brand } from "../../../theme/tokens";
+import { SceneFrame } from "../../../shared/ui/scenes/SceneFrame";
 
 export type SupportMarkProps = {
-  /** Rendered square. The artwork scales from a 120-unit viewBox. */
+  /** Rendered width in px. */
   size?: number;
 };
 
-export function SupportMark({ size = 112 }: SupportMarkProps) {
-  const { token } = theme.useToken();
+const LINE = {
+  stroke: brand.sceneLine,
+  strokeWidth: 2.2,
+  fill: brand.white,
+} as const;
 
+export function SupportMark({ size = 168 }: SupportMarkProps) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 120 120"
-      fill="none"
-      role="presentation"
-      aria-hidden="true"
-    >
-      <circle cx="60" cy="60" r="52" fill={token.colorPrimaryBg} />
-
-      {/*
-        The message. A rounded panel with a tail on the lower left, so the
-        bubble points back toward the reader rather than off the mark.
-      */}
+    <SceneFrame width={size} blob={brand.sceneTealBlob} spark={brand.sceneTealSoft}>
+      {/* The bubble, with its tail down and to the left — away from the badge,
+          so the two marks do not meet in the same corner. */}
       <path
-        d="M32 26h56a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8H52l-12 11V76h-8a8 8 0 0 1-8-8V34a8 8 0 0 1 8-8z"
-        fill={token.colorBgContainer}
-        stroke={token.colorBorderSecondary}
+        d="M58 46a14 14 0 0 1 14-14h56a14 14 0 0 1 14 14v40a14 14 0 0 1-14 14H92l-16 14v-14h-4a14 14 0 0 1-14-14V46Z"
+        {...LINE}
+        strokeLinejoin="round"
       />
 
-      {/* What is written in it. Two lines, the way the application mark and the
-          invitation mark both carry their content: the top line is the ask,
-          the shorter one under it the reply. */}
-      <rect x="42" y="40" width="36" height="4" rx="2" fill={token.colorPrimary} />
-      <rect x="42" y="52" width="22" height="4" rx="2" fill={token.colorFillSecondary} />
+      {/* What is being said. Solid, like the packet's lines and unlike the
+          empty record's dashes: there is somebody on the other end. */}
+      {[
+        { y: 54, w: 46 },
+        { y: 70, w: 30 },
+      ].map((line) => (
+        <path
+          key={line.y}
+          d={`M76 ${line.y}h${line.w}`}
+          stroke={brand.sceneTealSoft}
+          strokeWidth={2.6}
+          strokeLinecap="round"
+        />
+      ))}
 
-      {/* The person who answers, in the family's badge slot. */}
-      <circle
-        cx="82"
-        cy="84"
-        r="15"
-        fill={token.colorPrimary}
-        stroke={token.colorBgContainer}
-        strokeWidth="3"
+      {/* The person answering, ringed in white and in the badge's own slot. */}
+      <circle cx={138} cy={96} r={20} fill={brand.white} />
+      <circle cx={138} cy={96} r={16} fill={brand.primary} />
+      <circle cx={138} cy={91.5} r={4.6} fill={brand.white} />
+      <path
+        d="M130 105c0-4.8 3.6-8 8-8s8 3.2 8 8"
+        fill="none"
+        stroke={brand.white}
+        strokeWidth={3}
+        strokeLinecap="round"
       />
-      <clipPath id="opa-support-badge">
-        <circle cx="82" cy="84" r="15" />
-      </clipPath>
-      <g clipPath="url(#opa-support-badge)" fill={token.colorWhite}>
-        <circle cx="82" cy="80" r="4.6" />
-        {/* Clipped by the badge, so the shoulders read as a bust. */}
-        <path d="M74 92.5a8 8 0 0 1 16 0z" />
-      </g>
-    </svg>
+    </SceneFrame>
   );
 }
 

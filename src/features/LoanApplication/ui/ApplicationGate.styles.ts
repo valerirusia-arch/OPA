@@ -7,6 +7,9 @@ import { getPageResultStyles } from "../../../shared/ui/pageResult.styles";
 export const styles = {
   /** The card supplies the padding; Result would add its own on top. */
   result: { padding: 0 },
+  /** One sentence per line inside a subtitle. No colour of its own: it has to
+   *  inherit the Result's, or the two lines read as two voices. */
+  subLine: { display: "block" },
 } satisfies Record<string, CSSProperties>;
 
 /**

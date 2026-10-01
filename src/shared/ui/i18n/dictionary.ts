@@ -762,8 +762,8 @@ export const en = {
      without a translator having to carry markup: it is the one thing on this
      screen a reader will come back to look for. */
   "application.invitedTitle": "{name} invited you as co-borrower",
-  "application.invitedBody":
-    "Your part takes a few minutes. The invitation expires on",
+  "application.invitedBody": "Your part takes a few minutes.",
+  "application.invitedExpires": "The invitation expires on",
   "application.invitedAction": "Start my part",
   "application.assignedDoneTitle": "Your part is done",
   "application.assignedDoneBody":
@@ -1071,8 +1071,7 @@ export const en = {
      "You haven't applied yet", which is only half of what is missing, and is
      also not true of somebody who applied and then cancelled. */
   "loanPage.none": "No application or loan yet",
-  "loanPage.noneBody":
-    "Start an application and it appears here, with its status, its terms and every document on it.",
+  "loanPage.noneBody": "Start an application and it appears here.",
   "loanPage.startApplication": "Start an application",
 
   "loanPage.application": "Application",
@@ -1729,7 +1728,7 @@ export const en = {
   "payments.settledTitle": "Every payment is made",
   "payments.settledBody": "There is nothing left to schedule. The Repayment history tab has the record of all twelve.",
   "payments.noneTitle": "There is nothing to repay yet",
-  "payments.noneBody": "Your repayment schedule is created when the loan is paid out. It will appear here with every payment due date.",
+  "payments.noneBody": "The schedule appears here once the loan is paid out.",
   "payments.viewLoan": "Go to my loan",
   /* Nothing at all — not even an application. This page is one of two a
      first-time visitor can land on, so it says what to do rather than
@@ -2484,8 +2483,8 @@ const es: Record<TranslationKey, string> = {
     "Te guiaremos paso a paso y te mostraremos lo que OPA puede cubrir.",
   "application.start": "Iniciar la solicitud",
   "application.invitedTitle": "{name} te invitó como coprestatario",
-  "application.invitedBody":
-    "Tu parte lleva unos minutos. La invitación caduca el",
+  "application.invitedBody": "Tu parte lleva unos minutos.",
+  "application.invitedExpires": "La invitación caduca el",
   "application.invitedAction": "Empezar mi parte",
   "application.assignedDoneTitle": "Tu parte está lista",
   "application.assignedDoneBody":
@@ -2722,8 +2721,7 @@ const es: Record<TranslationKey, string> = {
   // ── Epic 5 — Manage loan ───────────────────────────────────────────────
   "loanPage.title": "Gestionar el préstamo",
   "loanPage.none": "Aún no hay solicitud ni préstamo",
-  "loanPage.noneBody":
-    "Inicia una solicitud y aparecerá aquí, con su estado, sus condiciones y todos sus documentos.",
+  "loanPage.noneBody": "Inicia una solicitud y aparecerá aquí.",
   "loanPage.startApplication": "Iniciar una solicitud",
 
   "loanPage.application": "Solicitud",
@@ -3235,7 +3233,7 @@ const es: Record<TranslationKey, string> = {
   "payments.settledTitle": "Todos los pagos están hechos",
   "payments.settledBody": "No queda nada por programar. La pestaña Historial de pagos tiene el registro de los doce.",
   "payments.noneTitle": "Todavía no hay nada que pagar",
-  "payments.noneBody": "Tu calendario de pagos se crea cuando se desembolsa el préstamo. Aparecerá aquí con cada fecha de vencimiento.",
+  "payments.noneBody": "El calendario aparece aquí una vez desembolsado el préstamo.",
   "payments.viewLoan": "Ir a mi préstamo",
   "payments.noLoanTitle": "Todavía no hay pagos",
   "payments.noLoanBody":
