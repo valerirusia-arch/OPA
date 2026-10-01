@@ -76,6 +76,7 @@ import { LoanStatement, type LoanStatementProps, type StatementFact } from "./Lo
 import { VirtualCardPanel } from "./VirtualCardPanel";
 import { getStyles, styles } from "./LoanOverview.styles";
 import type { ApplicationSummary, LoanDocument } from "./types";
+import { getPageResultStyles } from "../../../shared/ui/pageResult.styles";
 
 export type LoanOverviewProps = {
   /** Omitted entirely when the borrower has never applied. */
@@ -194,6 +195,7 @@ export function LoanOverview({
         icon={<EmptyScene scale="page" />}
         title={t("loanPage.none")}
         subTitle={t("loanPage.noneBody")}
+        styles={getPageResultStyles(token)}
         extra={
           <Button type="primary" size="large" onClick={onStartApplication}>
             {t("loanPage.startApplication")}

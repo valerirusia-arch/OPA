@@ -54,6 +54,7 @@ import { PaymentHistory } from "./PaymentHistory";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { getStyles, styles } from "./PaymentsOverview.styles";
 import { cardHeadTitle } from "../../../shared/ui/cardHead.styles";
+import { getPageResultStyles } from "../../../shared/ui/pageResult.styles";
 import type {
   Installment,
   PaymentTransaction,
@@ -119,6 +120,7 @@ export function PaymentsOverview({
           icon={<EmptyScene scale="page" />}
           title={t(nothingAtAll ? "payments.noLoanTitle" : "payments.noneTitle")}
           subTitle={t(nothingAtAll ? "payments.noLoanBody" : "payments.noneBody")}
+          styles={getPageResultStyles(token)}
           extra={
             <Button
               type="primary"
