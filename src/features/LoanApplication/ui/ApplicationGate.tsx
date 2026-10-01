@@ -70,6 +70,23 @@ export type ApplicationGateState =
   | "assignedActive"
   | "assignedClosed"
   | "assignedSettled"
+  /**
+   * APPROVED, AND REFUSED — the borrower's own two, which it did not have.
+   *
+   * `gateFor` sent a declined application to `open`, so the page that should
+   * have broken the news offered to start another as though nothing had
+   * happened; and everything past the decision fell to `hasActive`, whose
+   * words are "OPA is reviewing your application now" — said to somebody
+   * whose loan was already approved and being set up.
+   *
+   * The co-borrower has had both since their own pass. They carry the same
+   * marks on both sides, which is the point: a green check on approval and
+   * the amber cross on a refusal, whoever is reading. *"ეს უნდა იყოს ორივეგან
+   * ერთი და იგივე, ბოროვერზეც და ქო-ბოროვერზეც."* What differs is the way
+   * out, because only the borrower has one.
+   */
+  | "approved"
+  | "declined"
   | "hasActive"
   /**
    * THE LOAN IS REPAID AND THE FILE CAN BE CLOSED.
@@ -173,6 +190,44 @@ export function ApplicationGate({
    */
   const MARK = 140;
 
+  /*
+    THE ONE GREEN BUTTON IN THE PRODUCT, and both states that end a loan use
+    it.
+
+    Every primary action here is the site's burnt orange, which is the colour
+    of "do the thing" — apply, sign, pay. This one is not asking for anything:
+    it acknowledges that the loan is over. *"მინდა რომ ღილაკი მწვანე ფერი
+    იყოს, ან რამე Done."*
+
+    Themed through `ConfigProvider` rather than styled with a background,
+    because a solid button needs a hover and an active state as well, and antd
+    derives all three from `colorPrimary` once it is told what green means
+    here.
+
+    The co-borrower's settled state takes the same one. It used the ordinary
+    outline button and "See the application", which made the end of a loan
+    look like a link on a page rather than the end of something — and the two
+    sides were saying the same news two ways: *"ქო-ბოროვერზე იგივე CTA
+    მინდა."*
+  */
+  const closeButton = (
+    <ConfigProvider
+      theme={{
+        components: {
+          Button: {
+            colorPrimary: brand.success,
+            colorPrimaryHover: brand.successMark,
+            colorPrimaryActive: brand.successActive,
+          },
+        },
+      }}
+    >
+      <Button type="primary" size="large" onClick={onCloseApplication}>
+        {t("application.closeApplication")}
+      </Button>
+    </ConfigProvider>
+  );
+
   const content = {
     /* EVERY STATE GETS THE DRAWING, and it is the same packet in all of them
        — what differs is the badge on it, which is exactly the difference
@@ -217,23 +272,7 @@ export function ApplicationGate({
         antd derives all three from `colorPrimary` once it is told what green
         means here.
       */
-      action: (
-        <ConfigProvider
-          theme={{
-            components: {
-              Button: {
-                colorPrimary: brand.success,
-                colorPrimaryHover: brand.successMark,
-                colorPrimaryActive: brand.successActive,
-              },
-            },
-          }}
-        >
-          <Button type="primary" size="large" onClick={onCloseApplication}>
-            {t("application.closeApplication")}
-          </Button>
-        </ConfigProvider>
-      ),
+      action: closeButton,
     },
     /*
       INVITED, AND NOT STARTED. The invitation is an email, and an email is
@@ -325,7 +364,9 @@ export function ApplicationGate({
        know something it is not told. No badge: an ending with nothing to act
        on is not an alert. */
     assignedClosed: {
-      icon: <JourneyScene variant="waiting" size={MARK} />,
+      /* The same cross the borrower's `declined` wears — one refusal, drawn
+         one way, whichever side is reading it. */
+      icon: <JourneyScene variant="declined" size={MARK} />,
       title: t("application.assignedClosedTitle"),
       subTitle: t("application.assignedClosedBody"),
       action: (
@@ -341,9 +382,31 @@ export function ApplicationGate({
       icon: <JourneyScene variant="done" size={MARK} />,
       title: t("application.assignedSettledTitle"),
       subTitle: t("application.assignedSettledBody"),
+      action: closeButton,
+    },
+    /* APPROVED. The green check, the same one the co-borrower's side shows
+       for this, because it is the same news. */
+    approved: {
+      icon: <JourneyScene variant="done" size={MARK} />,
+      title: t("application.approvedTitle"),
+      subTitle: t("application.approvedBody"),
       action: (
-        <Button size="large" onClick={onViewStatus}>
-          {t("application.assignedDoneAction")}
+        <Button type="primary" size="large" onClick={onViewStatus}>
+          {t("application.approvedAction")}
+        </Button>
+      ),
+    },
+    /* REFUSED. It went to `open` before, which offered a new application
+       without ever saying the last one had been turned down — and the WBS
+       does not stop them applying again, so the way out stays. It is the
+       news that was missing, not the action. */
+    declined: {
+      icon: <JourneyScene variant="declined" size={MARK} />,
+      title: t("application.declinedTitle"),
+      subTitle: t("application.declinedBody"),
+      action: (
+        <Button type="primary" size="large" onClick={onStart}>
+          {t("application.declinedAction")}
         </Button>
       ),
     },

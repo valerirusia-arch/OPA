@@ -166,9 +166,12 @@ const APPLICATION_STAGES: BorrowerStage[] = [
   "coBorrower",
   "coBorrowerFailed",
   "needsInfo",
-  /* AND THE ONE STAGE THAT IS NOT A COLLAPSE. `paidOff` is the only funded
-     stage this page draws differently from the other four: it is the state
-     that offers to close the file, so it has to be walkable from here. */
+  /* The decision, both ways: this page draws each of them now rather than
+     collapsing approved onto "still with OPA" and declined onto "start one". */
+  "approved",
+  "declined",
+  /* `paidOff` is the only funded stage this page draws differently from the
+     rest: it is the state that offers to close the file. */
   "paidOff",
 ];
 
@@ -799,13 +802,21 @@ export const gateFor = (record: ApplicationSummary | undefined) => {
      "invite a DIFFERENT one", not "invite one". */
   if (record.coBorrowerFailed) return "coBorrowerFailed" as const;
   if (record.status === "coBorrower") return "coBorrowerNeeded" as const;
-  /* Declined is over, and nothing in the WBS stops them applying again. */
-  if (record.status === "declined") return "open" as const;
+  /* DECLINED SAYS SO. It returned `open`, which offered a new application
+     without ever telling them the last one had been turned down — the page
+     that should break the news behaved as though nothing had happened.
+     Nothing in the WBS stops them applying again, so the way out is still
+     there; it is the sentence that was missing. */
+  if (record.status === "declined") return "declined" as const;
+  /* AND APPROVED SAYS SO. Everything past the decision used to fall to
+     `hasActive`, whose words are "OPA is reviewing your application now" —
+     said to somebody whose loan was already approved and being set up. */
+  if (record.status === "approved" || record.loan) return "approved" as const;
   /*
-    Everything else is blocked, and the WBS blocks it for two reasons at once:
-    "verify that the applicant does not have an open application OR LOAN". A
-    live application and a funded loan are the same answer to "can I start
-    another one", which is why they share a state.
+    What is left is an application still being read. The WBS blocks a second
+    one for two reasons at once — "verify that the applicant does not have an
+    open application OR LOAN" — and that rule is stated in this state's own
+    sentence rather than in a state of its own.
   */
   return "hasActive" as const;
 };

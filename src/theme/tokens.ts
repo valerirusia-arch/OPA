@@ -131,6 +131,18 @@ export const brand = {
    */
   sceneAmberSoft: "#ECDCC0",
   sceneAmberBlob: "#F7F1E6",
+  /**
+   * AND A RED ONE, for the single state that is a refusal rather than a
+   * detour: the application OPA will not go ahead with.
+   *
+   * The amber says "this is fixable" — a co-borrower who did not qualify is
+   * replaced, an information request is answered. A declined application is
+   * not any of those, and dressing it in the colour of the recoverable
+   * states understates it. `danger` at the same two dilutions the other two
+   * ramps use.
+   */
+  sceneRedSoft: "#F0CFCB",
+  sceneRedBlob: "#FAF0EF",
 
   /**
    * THE SAME THREE TINTS, TURNED WARM — the tables' own family.

@@ -35,6 +35,12 @@
 //   person    — waiting on somebody else. The review clock, on their record:
 //               what is being waited for is time, the same as with OPA.
 //   failed    — that somebody was reviewed and did not pass. An amber cross.
+//   declined  — the APPLICATION was reviewed and did not pass. The same cross
+//               on the packet, and RED where `failed` is amber: a co-borrower
+//               who did not qualify is replaced and the application carries
+//               on, which is a detour; this one is the end of that
+//               application. Dressing it in the colour of the recoverable
+//               states understates it.
 //
 // THOSE TWO DROP THE PACKET AND DRAW A PERSON'S RECORD. They were the loan's
 // sheet with a person on its corner, which is a document about a person; what
@@ -68,6 +74,7 @@ export type JourneySceneVariant =
   | "done"
   | "review"
   | "invite"
+  | "declined"
   | "waiting"
   | "attention"
   | "person"
@@ -109,6 +116,7 @@ const TONE = {
   invite: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   failed: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
+  declined: { ink: brand.sceneRedSoft, blob: brand.sceneRedBlob, badge: brand.danger },
 } satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
 
 /**
@@ -293,7 +301,7 @@ function Badge({
           <rect x={139.4} y={103} width={3.2} height={11} rx={1.6} fill={brand.white} />
           <circle cx={141} cy={118.6} r={1.9} fill={brand.white} />
         </>
-      ) : variant === "failed" ? (
+      ) : variant === "failed" || variant === "declined" ? (
         <path
           d="M135 106l12 12M147 106l-12 12"
           stroke={brand.white}

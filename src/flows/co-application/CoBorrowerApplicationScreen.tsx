@@ -491,6 +491,10 @@ export default function CoBorrowerApplicationScreen({
               onOpenInvitation={() => setStarted(true)}
               onViewStatus={() => navigate({ to: "/loan" })}
               onSendInformation={() => navigate({ to: "/application/information" })}
+              /* The same Done the borrower's settled state has. Closing is
+                 the prototype's way of saying the chapter is over; the record
+                 goes back to nothing, exactly as it does on their side. */
+              onCloseApplication={() => setStage("none")}
             />
           </div>
         </HeroBackdrop>

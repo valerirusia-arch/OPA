@@ -766,8 +766,19 @@ export const en = {
   "application.invitedExpires": "The invitation expires on",
   "application.invitedAction": "Start my part",
   "application.assignedDoneTitle": "Your part is done",
-  "application.assignedDoneBody": "OPA is reviewing your application.",
+  "application.assignedDoneBody": "OPA is reviewing your application now.",
   "application.assignedDoneAction": "See the application",
+  /* The borrower's own decision states. The co-borrower's pair says the same
+     things from the outside; what differs is the last line, because only the
+     borrower can start another one. */
+  "application.approvedTitle": "Your application was approved",
+  "application.approvedBody":
+    "The loan is being set up. You can follow it on your loan page.",
+  "application.approvedAction": "See the loan",
+  "application.declinedTitle": "This application wasn't approved",
+  "application.declinedBody":
+    "OPA has reviewed it and can't go ahead. You can start a new one when you are ready.",
+  "application.declinedAction": "Start a new application",
   /* The three outcomes the co-borrower's side had nowhere to say. The WBS's
      "View application status and details" names Borrower/Co-borrower in its
      role column and owes them Approved and declined; a repaid loan is the
@@ -778,9 +789,8 @@ export const en = {
   "application.assignedClosedTitle": "This application is closed",
   "application.assignedClosedBody":
     "OPA is not going ahead with it. There is nothing left for you to do here.",
-  "application.assignedSettledTitle": "This loan is fully repaid",
-  "application.assignedSettledBody":
-    "Every payment has been made and nothing is owed. Your part in it is finished.",
+  "application.assignedSettledTitle": "Your loan is fully repaid",
+  "application.assignedSettledBody": "Nothing is owed. Close it when you are ready.",
   /* The co-borrower's side of story 14's reset. No decision, no reason, no
      "you did not qualify": OPA telling somebody it turned them down for credit
      is an adverse action with its own legal handling, and the epic's own
@@ -799,8 +809,7 @@ export const en = {
   /* NOT "pick up where you left off". By the time this page says no, the
      application has been sent: there is nothing to continue, and the only
      thing to do with it is look at where it has got to. */
-  "application.blockedActiveBody":
-    "OPA is reviewing your application now. You can follow where it has got to on your loan page.",
+  "application.blockedActiveBody": "OPA is reviewing your application now.",
   "application.resume": "Review my application",
   "application.blockedFlagTitle": "You can't start a new application",
   "application.blockedFlagBody":
@@ -2488,22 +2497,28 @@ const es: Record<TranslationKey, string> = {
   "application.assignedDoneTitle": "Tu parte está lista",
   "application.assignedDoneBody": "OPA está revisando tu solicitud.",
   "application.assignedDoneAction": "Ver la solicitud",
+  "application.approvedTitle": "Tu solicitud fue aprobada",
+  "application.approvedBody":
+    "El préstamo se está preparando. Puedes seguirlo en la página de tu préstamo.",
+  "application.approvedAction": "Ver el préstamo",
+  "application.declinedTitle": "Esta solicitud no fue aprobada",
+  "application.declinedBody":
+    "OPA la ha revisado y no puede seguir adelante. Puedes iniciar una nueva cuando quieras.",
+  "application.declinedAction": "Iniciar una solicitud nueva",
   "application.assignedActiveTitle": "Esta solicitud fue aprobada",
   "application.assignedActiveBody":
     "El préstamo sigue adelante. Puedes ver en qué punto está en la página del préstamo.",
   "application.assignedClosedTitle": "Esta solicitud está cerrada",
   "application.assignedClosedBody":
     "OPA no va a seguir adelante con ella. No queda nada por hacer de tu parte.",
-  "application.assignedSettledTitle": "Este préstamo está totalmente pagado",
-  "application.assignedSettledBody":
-    "Todos los pagos están hechos y no se debe nada. Tu parte ya está terminada.",
+  "application.assignedSettledTitle": "Tu préstamo está totalmente pagado",
+  "application.assignedSettledBody": "No debes nada. Ciérralo cuando quieras.",
   "application.invitationClosedTitle": "Esta invitación ya no está activa",
   "application.invitationClosedBody":
     "Aquí no queda nada por hacer. Si tienes dudas, la persona que te invitó puede explicártelo, o puedes escribirnos.",
   "application.invitationClosedAction": "Contacta con nosotros",
   "application.blockedActiveTitle": "Tu solicitud está en OPA",
-  "application.blockedActiveBody":
-    "OPA está revisando tu solicitud. Puedes seguir su avance en la página de tu préstamo.",
+  "application.blockedActiveBody": "OPA está revisando tu solicitud.",
   "application.resume": "Revisar mi solicitud",
   "application.blockedFlagTitle": "No puedes iniciar una solicitud nueva",
   "application.blockedFlagBody":
