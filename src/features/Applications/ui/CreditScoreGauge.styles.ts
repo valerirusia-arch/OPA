@@ -2,7 +2,6 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
-import { brand } from "../../../theme/tokens";
 
 /** The FICO range the gauge spans, and the band edges on it. */
 export const SCORE_MIN = 300;
@@ -51,32 +50,23 @@ export const getStyles = (token: GlobalToken) => {
       background: `linear-gradient(90deg, ${red} 0 ${redEnd}%, ${amber} ${redEnd}% ${amberEnd}%, ${green} ${amberEnd}% 100%)`,
     },
     /**
-     * "YOU ARE HERE" — THE SLIDER'S OWN HANDLE.
+     * "YOU ARE HERE" — A NOTCH IN THE BAND, BRACKETED.
      *
-     * It was a 4px white bar ringed in near-black, and against a product with
-     * no hard outlines anywhere it read as borrowed from somewhere else:
-     * *"ეს თითქოს სტილიდან ამოვარდნილია."*
+     * The mark that read best but cost the least height: the band is cut by a
+     * thin gap at the score and the two edges curve toward it, `)（`, like a
+     * caliper on the spot — *"დაახლოებით ესეთი რამ, უფრო დახვეწილი."* The number
+     * already lives large above the band, so the mark only says WHERE.
      *
-     * The product already HAS a control for a position on a track — the
-     * amount sliders — so this is that handle: a white disc with a 2px ring in
-     * the soft teal, measured off `.ant-slider-handle` rather than guessed.
-     * One idiom for one idea.
-     *
-     * 16 rather than the slider's 12, because it sits on a 10px band instead
-     * of a 4px rail and has to stand proud of it by the same margin. The drop
-     * shadow is what lifts it off whichever zone it lands on — red, amber or
-     * green — where a single flat ring reads differently against each.
+     * Drawn as an SVG so the curves are true arcs and the overhang is clean;
+     * the gap is painted in the panel's own colour and the brackets in the
+     * band's, both set inline in the component. Centred on the band, it costs a
+     * couple of px of overhang and no vertical block.
      */
-    marker: {
+    markerWrap: {
       position: "absolute",
       top: "50%",
-      width: 16,
-      height: 16,
-      marginLeft: -8,
-      marginTop: -8,
-      borderRadius: "50%",
-      background: token.colorBgContainer,
-      boxShadow: `0 0 0 2px ${brand.primarySoft}, 0 1px 4px rgba(38, 36, 35, 0.22)`,
+      transform: "translate(-50%, -50%)",
+      lineHeight: 0,
     },
     endsQuiet: { color: token.colorTextTertiary },
   }) satisfies Record<string, CSSProperties>;

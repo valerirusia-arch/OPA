@@ -5,6 +5,7 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
+import { brand } from "../../../theme/tokens";
 
 /** Balanced lines: no sentence leaves a single word stranded on the last. */
 const description: CSSProperties = {
@@ -15,7 +16,17 @@ const description: CSSProperties = {
 
 export const styles = {
   form: { width: "100%" },
-  title: { marginTop: 0, marginBottom: 4 },
+  /**
+   * SANS, not the page-title serif. These step headings are `Title level={2}`,
+   * which index.html binds to Playfair — but a level-2 is a PAGE title and these
+   * sit INSIDE the registration card, where the project's own rule already wants
+   * the sans (see the note in index.html: serif is for page titles, never inside
+   * a container). Overriding the family here drops the serif, and the size comes
+   * down 4px from the level-2 default (30 → 26) — a page-title size read too big
+   * inside the card — while the weight stays. *"რეგისტრაციის კონტეინერში ეს
+   * სტილის თაითლი არ უნდა იყოს… 4 პიქსელით დააპატარავე."*
+   */
+  title: { marginTop: 0, marginBottom: 4, fontFamily: brand.fontSans, fontSize: 26 },
   description,
   /**
    * The contact step's subtitle is the long one. Sized so it breaks after

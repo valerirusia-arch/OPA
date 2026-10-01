@@ -32,7 +32,7 @@ import { IdentityStep, type IdentityStatus } from "../../features/Auth/ui/Identi
 import { RegistrationDone } from "../../features/Auth/ui/RegistrationDone";
 import { TermsStep } from "../../features/Auth/ui/TermsStep";
 import { VerifyCodeStep } from "../../features/Auth/ui/VerifyCodeStep";
-import { Logo } from "../../shared/ui/Logo";
+import { LogoLockup } from "../../shared/ui/LogoLockup";
 import {
   footer,
   getStyles,
@@ -109,7 +109,7 @@ export default function RegisterScreen() {
       <Flex style={styles.header}>
         <div style={styles.headerInner}>
           <Link to="/">
-            <Logo />
+            <LogoLockup />
           </Link>
 
 

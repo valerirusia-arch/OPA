@@ -28,6 +28,9 @@ export const styles = {
   card: { marginBottom: 24 },
   /** The decision banner sits above everything, before the record itself. */
   banner: { marginBottom: 24 },
+  /** The short stroke that sets Request information apart from Decline/Approve
+   *  in the split layout's header — a request is not a decision. */
+  actionDivider: { height: 22, marginInline: 4 },
   amount: { fontSize: 16, fontWeight: 600, fontVariantNumeric: "tabular-nums" },
   /** The requested figure, struck through once an underwriter has changed it. */
   amountWas: { textDecoration: "line-through", fontVariantNumeric: "tabular-nums" },
@@ -70,4 +73,22 @@ export const getStyles = (token: GlobalToken) =>
       background: token.colorFillQuaternary,
     },
     sectionTitle: { fontWeight: 500 },
+    /**
+     * THE LAYOUT SWITCH, FLOATING — pinned bottom-right, out of the page flow so
+     * it costs the columns no room. A pale elevated pill with the product's own
+     * card shadow, the same idea as the borrower side's demo dock.
+     */
+    layoutSwitch: {
+      position: "fixed",
+      bottom: 20,
+      right: 20,
+      zIndex: 100,
+      background: token.colorBgElevated,
+      border: `1px solid ${token.colorBorderSecondary}`,
+      borderRadius: token.borderRadius,
+      boxShadow: token.boxShadowSecondary,
+      padding: "3px 6px 3px 10px",
+    },
+    /** Smaller, quieter label beside the compact switch. */
+    layoutSwitchLabel: { fontSize: 12 },
   }) satisfies Record<string, CSSProperties>;

@@ -383,6 +383,9 @@ export default function StaffUsersScreen({
 
   const saveUser = (values: UserFormValues) => {
     if (editing) {
+      // The last-admin guard is enforced in the form itself, under the Role
+      // field (see UserFormModal's `isLastAdmin`), so a demotion never reaches
+      // here — the modal will not submit while that error stands.
       console.log("update user", editing.id, values);
       setRows((current) =>
         current.map((row) =>
@@ -506,6 +509,12 @@ export default function StaffUsersScreen({
           editing
             ? { name: editing.name, email: editing.email, role: editing.role }
             : undefined
+        }
+        /* True only while editing the sole remaining admin — the Role field
+           then refuses to move off "admin" and says why under itself. */
+        isLastAdmin={
+          editing?.role === "admin" &&
+          rows.filter((row) => row.role === "admin").length === 1
         }
         onSubmit={saveUser}
         onCancel={() => {

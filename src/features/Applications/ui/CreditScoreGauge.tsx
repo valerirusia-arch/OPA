@@ -64,9 +64,23 @@ export function CreditScoreGauge({ score, provider }: CreditScoreGaugeProps) {
         <Typography.Text style={s.provider}>{provider}</Typography.Text>
       </Flex>
 
-      {/* The banded track with the needle at the score. */}
+      {/* The banded track, notched at the score by a bracketed gap. */}
       <div style={s.track}>
-        <div style={{ ...s.marker, left: `${scorePct(score)}%` }} />
+        <div style={{ ...s.markerWrap, left: `${scorePct(score)}%` }}>
+          {/* A CALIPER on the score: a mark above and below point in at the
+              exact spot, and between them a white line runs through the band
+              with the band's own zone colour inside it — *"შუაში თეთრი ხაზი და
+              მაგის შიგნით ყვითელი ზოლი."* The caliper and the inner stripe wear
+              the zone colour (red / amber / green, set inline); the line is the
+              solid surface, so it reads clean over any zone. Centred on the band,
+              overhanging a little above and below. */}
+          <svg width={20} height={28} viewBox="0 0 20 28" fill="none" aria-hidden="true">
+            <path d="M5 0 H15 L10 7 Z" fill={band.color} />
+            <path d="M5 28 H15 L10 21 Z" fill={band.color} />
+            <rect x="7" y="8" width="6" height="12" rx="3" fill={token.colorBgContainer} />
+            <rect x="9" y="8" width="2" height="12" rx="1" fill={band.color} />
+          </svg>
+        </div>
       </div>
       <Flex justify="space-between" style={{ marginTop: 6 }}>
         <Typography.Text style={{ ...styles.ends, ...s.endsQuiet }}>

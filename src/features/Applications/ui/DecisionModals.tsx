@@ -21,7 +21,7 @@
 //
 // Dumb: each reports what was entered. Nothing is sent.
 
-import { Alert, Form, Input, Modal, Radio, Typography } from "antd";
+import { Form, Input, Modal, Radio, Typography } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { useAuthRules } from "../../Auth/ui/validation";
 import { RangeField } from "../../LoanApplication/ui/RangeField";
@@ -273,7 +273,8 @@ export function AmountModal({
 }: AmountModalProps) {
   const t = useT();
   const rules = useAuthRules();
-  const money = `$${requested.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+  const fmt = (value: number) =>
+    `$${value.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
   return (
     <ActionModal
@@ -286,14 +287,6 @@ export function AmountModal({
         onSave?.(values.amount as number, values.reason as string)
       }
     >
-      {/* What was asked for, kept on screen: the whole point of this dialog is
-          the difference between the two numbers. */}
-      <Alert
-        type="info"
-        showIcon
-        style={styles.alert}
-        title={`${t("amountModal.requested")}: ${money}`}
-      />
       <Form.Item
         label={t("amountModal.newAmount")}
         name="amount"
@@ -302,8 +295,19 @@ export function AmountModal({
         initialValue={current ?? requested}
       >
         {/* The same field the borrower chose an amount with, so the two sides
-            of the product speak about money the same way. */}
-        <RangeField compact max={5_000} step={10} openEnded={false} />
+            of the product speak about money the same way. "Currently $X" reads
+            INSIDE the field's box, above the editable figure — the whole
+            before/after in one container, the way the underwriter preferred it
+            over a separate banner. */}
+        <RangeField
+          compact
+          min={0}
+          max={5_000}
+          step={10}
+          openEnded={false}
+          prefix="$"
+          caption={t("amountPanel.currentIs", { amount: fmt(current ?? requested) })}
+        />
       </Form.Item>
       <Form.Item
         label={t("amountModal.reason")}

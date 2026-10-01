@@ -112,9 +112,22 @@ export function MakePaymentModal({
 
   /** Only what is still owed can be chosen. WBS story 5 is "a SCHEDULED payment". */
   const unpaid = installments.filter((row) => row.status !== "paid");
+
+  /**
+   * Which line the Scheduled tab opens on.
+   *
+   * The passed installment is honoured ONLY if it is still payable. A stale or
+   * already-paid id — a Retry from the history that points at a line since
+   * settled, or the schedule changing under an open dialog — would otherwise
+   * sit in the Select as a raw id ("s3"), silently swap the charged figure to
+   * the whole payoff, and disable Pay with nothing said. When the passed id is
+   * not payable we fall back to the next line owed, so the dialog always opens
+   * ready to pay the right thing.
+   */
+  const payable = (id?: string) => unpaid.some((row) => row.id === id);
   const initial: FormValues = {
     tab: "scheduled",
-    installmentId: installment?.id ?? unpaid[0]?.id,
+    installmentId: payable(installment?.id) ? installment?.id : unpaid[0]?.id,
     kind: "custom",
   };
 
@@ -229,6 +242,13 @@ export function MakePaymentModal({
       ) : (
         <Form
           form={form}
+          /* Remount the form when the SET OF PAYABLE LINES changes — the demo
+             dock walking the loan to another stage under an open dialog. The
+             field would otherwise keep an id that is no longer an option and
+             fall back to painting it raw; a remount re-applies `initial`, whose
+             guard lands on a payable line. `destroyOnHidden` already covers the
+             ordinary open/close, so this only bites on a live schedule change. */
+          key={unpaid.map((row) => row.id).join(",")}
           layout="vertical"
           initialValues={initial}
           onFinish={() => onSubmit?.(amount)}

@@ -41,7 +41,7 @@ import {
 import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
-import { Logo } from "./Logo";
+import { LogoLockup } from "./LogoLockup";
 import { useT } from "./i18n/useT";
 import type { NavItem, NavSection } from "./navigation";
 import {
@@ -152,7 +152,7 @@ export function AdminShell({
           open={navOpen}
           onClose={() => setNavOpen(false)}
           width={SIDER_WIDTH}
-          title={<Logo />}
+          title={<LogoLockup />}
           styles={{ body: styles.drawerBody }}
         >
           {navMenu_}
@@ -160,7 +160,7 @@ export function AdminShell({
       ) : (
         <Layout.Sider theme="light" width={SIDER_WIDTH} style={styles.sider}>
           <Flex align="center" style={styles.brand}>
-            <Logo />
+            <LogoLockup />
           </Flex>
           {navMenu_}
         </Layout.Sider>

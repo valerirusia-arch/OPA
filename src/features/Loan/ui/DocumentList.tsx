@@ -22,7 +22,6 @@ import { useT } from "../../../shared/ui/i18n/useT";
 import { pill } from "../../../shared/ui/tag.styles";
 import { decorateColumns } from "../../../shared/ui/tableColumns";
 import { EmptyState } from "../../../shared/ui/EmptyState";
-import { styles } from "./DocumentList.styles";
 import type { LoanDocument } from "./types";
 
 export type DocumentListProps = {
@@ -84,13 +83,18 @@ export function DocumentList({ documents, onDownload }: DocumentListProps) {
       key: "actions",
       width: "16%",
       align: "end",
+      /* THE ICON ALONE — no "Download" word. Four columns plus a labelled action
+         read as cramped in this card, so the control drops to the glyph a reader
+         already knows; the word moves to `aria-label` so the button is still
+         named for a screen reader. *"დოვნლოდ ტექსტი აღარ არის საჭირო, მხოლოდ
+         აიქონი დატოვე."* */
       render: (_v, row) => (
         <Flex justify="flex-end">
-          <Typography.Link onClick={() => onDownload?.(row)}>
-            <Flex align="center" gap={6} style={styles.download}>
-              <DownloadOutlined />
-              {t("loanPage.download")}
-            </Flex>
+          <Typography.Link
+            onClick={() => onDownload?.(row)}
+            aria-label={t("loanPage.download")}
+          >
+            <DownloadOutlined />
           </Typography.Link>
         </Flex>
       ),

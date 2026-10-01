@@ -28,6 +28,13 @@ export type UserFormModalProps = {
   /** "create" also explains the invitation; "edit" needs no explaining. */
   mode: "create" | "edit";
   initialValues?: UserFormValues;
+  /**
+   * True when this edit is on the ONLY admin left. The system must never be
+   * left with no admin, so the Role field refuses to move off "admin" and says
+   * why, under the field itself, rather than as a toast after the fact —
+   * *"ერორი ინფუთის ქვემოთ დამიწეროს, რომ ბოლო ადმინია."*
+   */
+  isLastAdmin?: boolean;
   onSubmit?: (values: UserFormValues) => void;
   onCancel?: () => void;
 };
@@ -36,6 +43,7 @@ export function UserFormModal({
   open,
   mode,
   initialValues,
+  isLastAdmin = false,
   onSubmit,
   onCancel,
 }: UserFormModalProps) {
@@ -89,7 +97,22 @@ export function UserFormModal({
           />
         </Form.Item>
 
-        <Form.Item label={t("field.role")} name="role" rules={[rules.required()]} required>
+        <Form.Item
+          label={t("field.role")}
+          name="role"
+          rules={[
+            rules.required(),
+            {
+              // The last admin cannot be moved off "admin". The error prints
+              // under the field, and submit is blocked while it stands.
+              validator: (_rule, value: UserRole) =>
+                isLastAdmin && value && value !== "admin"
+                  ? Promise.reject(new Error(t("users.lastAdmin")))
+                  : Promise.resolve(),
+            },
+          ]}
+          required
+        >
           <Select size="large" options={roleOptions} placeholder={t("field.role")} />
         </Form.Item>
 

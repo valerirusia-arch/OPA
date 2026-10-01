@@ -32,7 +32,7 @@ import {
 import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
-import { Logo } from "./Logo";
+import { LogoLockup } from "./LogoLockup";
 import { useT } from "./i18n/useT";
 import type { NavItem } from "./navigation";
 import {
@@ -119,7 +119,7 @@ export function AppHeader({
       ) : null}
 
       <Link to="/" aria-label={t("header.home")}>
-        <Logo />
+        <LogoLockup />
       </Link>
 
       {compact ? (
@@ -128,7 +128,7 @@ export function AppHeader({
           open={navOpen}
           onClose={() => setNavOpen(false)}
           width={260}
-          title={<Logo />}
+          title={<LogoLockup />}
           styles={{ body: { padding: 0 } }}
         >
           <Menu

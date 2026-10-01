@@ -23,7 +23,7 @@
 // Dumb: the record comes from mock data keyed by the :id in the route, and
 // adding is local state plus a console.log.
 
-import { useState } from "react";
+import { useRef, useState, type RefObject } from "react";
 import dayjs from "dayjs";
 import { App, Button, Card, Flex, Result } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -68,6 +68,17 @@ export default function LoanRecordScreen({
 
   /** Up here with the other hooks: the screen returns early below. */
   const [adding, setAdding] = useState(false);
+
+  /* After adding, scroll to where it landed — the Documents card for a file,
+     the comments card for a note — so the staff member SEES it took, the same
+     way the application screen scrolls to a new request. Local scroll only. */
+  const documentsRef = useRef<HTMLDivElement>(null);
+  const commentsRef = useRef<HTMLDivElement>(null);
+  const scrollTo = (ref: RefObject<HTMLDivElement | null>) =>
+    setTimeout(
+      () => ref.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      60,
+    );
   const [addedDocs, setAddedDocs] = useState<LoanDocument[]>([]);
   const [addedComments, setAddedComments] = useState<LoanComment[]>([]);
 
@@ -203,7 +214,7 @@ export default function LoanRecordScreen({
         ) : null}
 
         {/* WBS story 10's "related documents", with who put each one there. */}
-        <Card title={t("loanPage.documents")} style={styles.card}>
+        <Card ref={documentsRef} title={t("loanPage.documents")} style={styles.card}>
           <LoanDocumentsTable
             documents={loan.documents}
             packageParts={loan.package}
@@ -213,7 +224,7 @@ export default function LoanRecordScreen({
 
         {/* Story 11's other half. The comments an authorised user has left,
             append-only, and read by all three roles. */}
-        <Card style={styles.card}>
+        <Card ref={commentsRef} style={styles.card}>
           <LoanAdminPanel comments={loan.comments} />
         </Card>
       </AdminPage>
@@ -256,6 +267,9 @@ export default function LoanRecordScreen({
           }
           message.success(t("loanAdmin.noteAdded"));
           setAdding(false);
+          /* Scroll to where it appears: the Documents card if a file was
+             attached, otherwise the comments card below it. */
+          scrollTo(values.files?.length ? documentsRef : commentsRef);
         }}
       />
 

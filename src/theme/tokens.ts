@@ -76,8 +76,13 @@ export const brand = {
    */
   warmTint: "#F6F3F2",
   warmTintStrong: "#EFE9E5",
-  /** antd's own table header grey (#FBFBFB), warmed to match the three above. */
-  warmHeader: "#F9F7F6",
+  /**
+   * The table's light shade — the header band and the row hover both wear it.
+   * Set to `#FBFAF9` on the designer's call (*"ამ ჰექკოდით ამოცვალე FBFAF9"*):
+   * a hair lighter and warmer than the earlier #F9F7F6, so the tables' light
+   * grey matches the hex the product leads its light surfaces with.
+   */
+  warmHeader: "#FBFAF9",
   /**
    * THE LOGO'S DEEP TEAL, and the heading colour. The site sets its H1 at
    * #125A71; headings in the product take a shade deeper for contrast.

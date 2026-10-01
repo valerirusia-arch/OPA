@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/features/Applications/ui/CreditScoreGauge.styles.ts"
+        ],
+        "createdAt": "2026-09-24T07:50:56.996Z",
+        "reason": "false positive: L88-90 are a width:0/height:0 CSS triangle (the value-flag stem), not a card side-tab accent border"
+      }
+    ]
+  }
+}

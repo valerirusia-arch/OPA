@@ -9,9 +9,12 @@ export const styles = {
   otp: { justifyContent: "center", marginBottom: 16 },
   alert: { marginBottom: 16, textAlign: "start" },
   actions: { marginTop: 12 },
-  /** antd's default OTP box is narrow and tall; square reads better. */
-  /* Wider than tall, not square — *"ესენი არ უნდა იყოს ოთკუთხედი, უნდა იყოს
-     სულ ოდნავ უფრო გრძელი სიგრძეში."* A digit is wider than it is tall to
-     read, and six squares in a row read as a grid rather than as one code. */
-  otpInput: { width: 56, height: 48, fontSize: 18 },
+  /**
+   * The OTP boxes, at the size the designer set from Figma: 44 wide × 50 tall.
+   *
+   * Each box is a touch taller than it is wide, so a digit sits upright in its
+   * own cell rather than in a wide slot; six of them keep an even rhythm across
+   * the row without reading as a grid.
+   */
+  otpInput: { width: 44, height: 50, fontSize: 18 },
 } satisfies Record<string, CSSProperties>;

@@ -1,75 +1,26 @@
 // src/features/Auth/ui/PasswordField.tsx
 //
-// A password box whose DOTS are legible and whose TEXT is the size of every
-// other field's.
+// The one password box in the product, so every field that takes a password —
+// sign-in, registration, change / reset / set — is the same control and none
+// of them can drift.
 //
-// THE PROBLEM IS ONLY THE MASKED STATE. A masked field does not draw the font's
-// characters, it draws the browser's security disc, and Montserrat's is small
-// and sits low — at the 14px the rest of the form uses it reads as a faint
-// dotted rule rather than as a typed answer. Someone typing a password cannot
-// see what they typed; the count of marks is the only feedback there is.
+// IT DOES NOT RESIZE ON TOGGLE. An earlier version enlarged the MASKED discs,
+// because Montserrat's security disc is small and faint at 14px. But that made
+// the field jump every time the reveal eye was pressed: the discs (18px) gave
+// way to the 14px text and the input's own line box changed with them —
+// *"როცა თვალს ვაწვები უცებ ინფუთი იზრდება და ტექსტიც პატარავდება."* The
+// revealed text has to stay at the form's ordinary 14px, the size of every
+// other field, so the only way the toggle can change nothing is for the masked
+// discs to be that size too. Both states render at 14px now and the field is
+// perfectly still.
 //
-// But the first fix applied the larger type unconditionally, so pressing the
-// reveal eye showed the password at 18px with 2px between the letters, three
-// sizes up from the field above it: *"ეს რა არის რატომ არის ტექტსი ამხელა? …
-// მხოლოდ წერტილებზე გიტხარი."* Exactly the right correction — the discs are
-// the only thing that needed help.
-//
-// So the enlargement is tied to visibility, which means owning the toggle:
-// antd's `visibilityToggle` takes `{ visible, onVisibleChange }`, and this
-// holds that one boolean. Local UI state, nothing else — the field stays dumb,
-// and every prop it is given passes straight through to antd.
-//
-// Every password box in the product uses this, so none of them can drift.
+// Dumb: a thin wrapper, every prop passing straight through to antd.
 
-import { useState } from "react";
 import { Input } from "antd";
 import type { PasswordProps } from "antd/es/input/Password";
-import { maskedText } from "./PasswordField.styles";
 
-/* `styles` is omitted on purpose: this component owns `styles.input`, which is
-   how the masked size reaches the element that draws the discs. A caller
-   passing its own would be silently fighting it, so the type says no. */
-export function PasswordField({ visibilityToggle, ...rest }: Omit<PasswordProps, "styles">) {
-  const [visible, setVisible] = useState(false);
-
-  /*
-    ONLY WHEN THERE ARE DISCS TO ENLARGE.
-    
-    The masked size is on the input, and a placeholder is drawn by the input —
-    so an EMPTY field rendered "Enter new password" at 18px with 2px between
-    the letters, three sizes up from every other placeholder on the form.
-    Nothing was being masked at that moment; there was nothing to help read.
-    The value arrives from Form.Item, which is what makes this knowable here.
-  */
-  const hasValue = Boolean((rest as { value?: unknown }).value);
-
-  return (
-    <Input.Password
-      {...rest}
-      visibilityToggle={
-        /* `false` hides the eye altogether, and a field that cannot be revealed
-           is always masked — so it passes straight through and `visible` stays
-           false, which is already the right answer. */
-        visibilityToggle === false
-          ? false
-          : {
-              /* Spread first so a caller keeps its own `tabIndex` and still
-                 hears about the change. */
-              ...(typeof visibilityToggle === "object" ? visibilityToggle : null),
-              visible,
-              onVisibleChange: (next) => {
-                setVisible(next);
-                if (typeof visibilityToggle === "object") {
-                  visibilityToggle.onVisibleChange?.(next);
-                }
-              },
-            }
-      }
-      /* Revealed — or empty — it is ordinary text at the form's ordinary size. */
-      styles={{ input: !visible && hasValue ? maskedText : undefined }}
-    />
-  );
+export function PasswordField(props: PasswordProps) {
+  return <Input.Password {...props} />;
 }
 
 export default PasswordField;

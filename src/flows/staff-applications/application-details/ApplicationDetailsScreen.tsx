@@ -32,9 +32,9 @@
 // Dumb: the record comes from mock data keyed by the :id in the route, and
 // every action is local state plus a console.log for Dev to wire.
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import dayjs from "dayjs";
-import { App, Alert, Button, Card, Col, Flex, Result, Row, Tabs, Tag, Typography, theme } from "antd";
+import { App, Alert, Button, Card, Col, Divider, Flex, Result, Row, Segmented, Tabs, Tag, Typography, theme } from "antd";
 import { ArrowRightOutlined, FileTextOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
@@ -53,6 +53,7 @@ import { ApplicationStatusTag } from "../../../features/Borrowers/ui/StatusTags"
 import { VerificationList } from "../../../features/Applications/ui/VerificationList";
 import { DocumentList } from "../../../features/Loan/ui/DocumentList";
 import {
+  AmountModal,
   ApproveModal,
   DeclineModal,
   OverrideModal,
@@ -98,17 +99,53 @@ export default function ApplicationDetailsScreen({
   const record = applications.find((row) => row.id === params.id);
 
   /**
-   * Which dialog is open, if any. Three, not five: requesting information and
-   * changing the amount are inline in the actions column now, because the
-   * wireframe puts them on the page and both are things an underwriter writes
-   * while reading the application a modal would cover.
+   * Which DECISION dialog is open, if any — the three that settle the
+   * application. Requesting information and changing the amount are dialogs too
+   * now, but each has its own flag below: they are not decisions, and each is
+   * opened from its own place (the actions column, the application card).
    */
   const [action, setAction] = useState<"approve" | "decline" | "override">();
   /* Open when the underwriter is asking for a different co-borrower. Its own
      flag rather than a fourth `action`: those three are DECISIONS on the
      application, and this is a request to the borrower. */
   const [askingCoBorrower, setAskingCoBorrower] = useState(false);
+  /* Changing the requested amount is a dialog, opened from the application
+     card's own head. (Requesting information is an inline form in its own card,
+     so it needs no flag.) */
+  const [changingAmount, setChangingAmount] = useState(false);
   const close = () => setAction(undefined);
+
+  /*
+   * TWO LAYOUTS OF THIS ONE PAGE, switchable — a preview control so the designer
+   * can show a team lead both and pick one. *"ერთი ფეიჯის ორი ვარიანტი… მქონდეს
+   * ასარჩევად, რომ გადავცვლაო და შევახედო თიმ ლიდს."*
+   *
+   *   "panel" — the current layout: the evidence in a wide left column, a
+   *             standing "Request information" panel down the right.
+   *   "split" — Verification results on the left, everything else (the
+   *             application, the people, the documents, the requests and the
+   *             history) in a column of its own on the right, and "Request
+   *             information" promoted to a dialog opened from the header, the
+   *             way Decline / Approve are.
+   *
+   * Local UI state only — it changes nothing about the application, just how the
+   * page is arranged.
+   */
+  const [layout, setLayout] = useState<"panel" | "split">("panel");
+  /* The split layout's "Request information", as a dialog off the header button
+     rather than a standing panel. */
+  const [reqInfoOpen, setReqInfoOpen] = useState(false);
+
+  /* After an action lands, the page scrolls to where its result shows — a
+     request to the Information requests card, an amount change to the History —
+     so the underwriter SEES it took. Local scroll behaviour, nothing fetched. */
+  const requestsRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null);
+  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) =>
+    setTimeout(
+      () => ref.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      60,
+    );
 
   /**
    * The audit trail and the approved amount are held in local state so the
@@ -182,6 +219,7 @@ export default function ApplicationDetailsScreen({
     ]);
     setStatus("pendingAction");
     message.success(t("requestModal.send"));
+    scrollTo(requestsRef);
   };
 
   const settle = (
@@ -304,27 +342,34 @@ export default function ApplicationDetailsScreen({
   );
 
   const attachedPerson = (heading: string, who: ApplicationPerson, extra?: React.ReactNode) => (
-    <Card key={heading} title={heading} extra={extra} style={styles.card}>
-      <PersonPanel
-        name={who.name}
-        meta={`${who.email} · ${who.phone} · ${who.state}`}
-        /* THE DOOR TO THEIR RECORD. This page is evidence — an underwriter
-           reads it and decides on it. A correction to somebody's details is
-           "Manage borrower accounts", which lives on their own record, and a
-           co-borrower has one. Without this the page states a fact and gives
-           no way to act on it being wrong. */
-        trailing={
-          who.recordId ? (
+    <Card
+      key={heading}
+      title={heading}
+      /* THE ACTIONS SIT IN THE HEAD, right-aligned — not at the foot of the
+         panel. "Open their borrower record" was PersonPanel's trailing, which
+         dropped below the name on a narrow column and read as a stray line —
+         *"ეს დაბლა რატომ არის?"* It is the same door the borrower's own
+         sponsoring list opens from its head, so both carry it the same way,
+         top-right; the underwriter's "ask a different co-borrower" sits beside
+         it. (Its own reason to exist: this page is evidence, and a correction
+         to somebody's details is "Manage borrower accounts", on their record.) */
+      extra={
+        <Flex align="center" gap={16} wrap justify="flex-end">
+          {extra}
+          {who.recordId ? (
             <Button
               type="link"
-              style={styles.recordLink}
+              style={styles.headAction}
               onClick={() => navigate({ to: `/staff/borrowers/${who.recordId}` })}
             >
               {t("coBorrower.openRecord")}
             </Button>
-          ) : undefined
-        }
-      />
+          ) : null}
+        </Flex>
+      }
+      style={styles.card}
+    >
+      <PersonPanel name={who.name} meta={`${who.email} · ${who.phone} · ${who.state}`} />
     </Card>
   );
 
@@ -392,6 +437,209 @@ export default function ApplicationDetailsScreen({
     </Card>
   );
 
+  /* The application card — the USCIS service, the amount, the submitted date,
+     with Change amount in its head. */
+  const applicationCard = (
+    <Card
+      title={t("appDetail.application")}
+      style={styles.card}
+      extra={
+        canDecide && decision === undefined ? (
+          <Button
+            type="link"
+            style={styles.headAction}
+            onClick={() => setChangingAmount(true)}
+          >
+            {t("appAction.editAmount")} <ArrowRightOutlined />
+          </Button>
+        ) : undefined
+      }
+    >
+      <DetailGrid
+        columns={2}
+        items={[
+          { key: "uscis", label: t("appDetail.uscis"), value: record.uscisType },
+          {
+            key: "requested",
+            label: t("appDetail.requested"),
+            value: (
+              <Typography.Text
+                style={record.approvedAmount ? styles.amountWas : styles.amount}
+                type={record.approvedAmount ? "secondary" : undefined}
+              >
+                {money(record.requestedAmount)}
+              </Typography.Text>
+            ),
+          },
+          ...(record.approvedAmount
+            ? [
+                {
+                  key: "approved",
+                  label: t("appDetail.approved"),
+                  value: (
+                    <Typography.Text style={styles.amount}>
+                      {money(record.approvedAmount)}
+                    </Typography.Text>
+                  ),
+                },
+              ]
+            : []),
+          { key: "submitted", label: t("appDetail.submitted"), value: record.submittedOn },
+        ]}
+      />
+      {record.coBorrowerRequired ? (
+        <PageNotice tone="warning" style={styles.note}>
+          {t("appDetail.coBorrowerRequired")}
+        </PageNotice>
+      ) : null}
+    </Card>
+  );
+
+  const borrowerCard = person(t("appDetail.borrower"), record.borrower);
+
+  const coBorrowerCard = record.coBorrower ? (
+    attachedPerson(
+      t("appDetail.coBorrower"),
+      record.coBorrower,
+      decision === undefined && canDecide ? (
+        <Button
+          type="link"
+          style={styles.headAction}
+          onClick={() => setAskingCoBorrower(true)}
+        >
+          {t("appDetail.askDifferentCoBorrower")} <ArrowRightOutlined />
+        </Button>
+      ) : undefined
+    )
+  ) : (
+    <Card title={t("appDetail.coBorrower")} style={styles.card}>
+      <Typography.Text type="secondary">{t("appDetail.noCoBorrower")}</Typography.Text>
+    </Card>
+  );
+
+  const documentsCard = (
+    <Card title={t("appDetail.documents")} style={styles.card}>
+      <DocumentList
+        documents={record.documents}
+        onDownload={(doc) => console.log("download application document", record.id, doc.name)}
+      />
+    </Card>
+  );
+
+  const requestsCard = (
+    <Card ref={requestsRef} title={t("appDetail.requests")} style={styles.card}>
+      {requests.length === 0 ? (
+        <Typography.Text type="secondary">{t("appDetail.noRequests")}</Typography.Text>
+      ) : (
+        <Flex vertical>
+          {requests.map((request, index) => (
+            <Flex vertical key={request.id}>
+              <Flex
+                vertical
+                gap={4}
+                style={index > 0 ? s.recordRow : styles.recordRowFirst}
+              >
+                <Flex align="center" justify="space-between" gap={12}>
+                  <Typography.Text type="secondary" style={styles.meta}>
+                    {t("appDetail.askedBy", {
+                      name: request.askedBy,
+                      date: request.askedOn,
+                    })}
+                  </Typography.Text>
+                  <Tag
+                    color={request.answeredOn ? "success" : "warning"}
+                    variant="filled"
+                    style={pill}
+                  >
+                    {request.answeredOn
+                      ? t("appDetail.answeredOn", { date: request.answeredOn })
+                      : t("appDetail.awaitingAnswer")}
+                  </Tag>
+                </Flex>
+                <Typography.Text style={styles.note}>{request.note}</Typography.Text>
+
+                {request.answerNote || request.answerFiles?.length ? (
+                  <Flex vertical gap={6} style={s.answer}>
+                    {request.answerNote ? (
+                      <Typography.Text>{request.answerNote}</Typography.Text>
+                    ) : null}
+                    {request.answerFiles?.map((file) => (
+                      <Flex key={file} align="center" gap={8}>
+                        <FileTextOutlined />
+                        <Typography.Text>{file}</Typography.Text>
+                      </Flex>
+                    ))}
+                  </Flex>
+                ) : null}
+              </Flex>
+            </Flex>
+          ))}
+        </Flex>
+      )}
+    </Card>
+  );
+
+  const auditCard = (
+    <Card ref={historyRef} title={t("appDetail.audit")} style={styles.card}>
+      {audit.length === 0 ? (
+        <EmptyState title={t("appDetail.noRequests")} />
+      ) : (
+        <Flex vertical>
+          {audit.map((entry, index) => (
+            <Flex vertical key={entry.id}>
+              <Flex
+                vertical
+                gap={4}
+                style={index > 0 ? s.recordRow : styles.recordRowFirst}
+              >
+                <Flex align="center" justify="space-between" gap={12}>
+                  <Typography.Text>{t(entry.action)}</Typography.Text>
+                  <Typography.Text type="secondary" style={styles.meta}>
+                    {entry.on} · {entry.by}
+                  </Typography.Text>
+                </Flex>
+                {entry.from || entry.to ? (
+                  <Typography.Text type="secondary" style={styles.meta}>
+                    {t("audit.from")}: {entry.from} → {t("audit.to")}: {entry.to}
+                  </Typography.Text>
+                ) : null}
+                {entry.reason ? (
+                  <Typography.Text type="secondary" style={styles.meta}>
+                    {t("audit.reason")}: {entry.reason}
+                  </Typography.Text>
+                ) : null}
+              </Flex>
+            </Flex>
+          ))}
+        </Flex>
+      )}
+    </Card>
+  );
+
+  /* Everything that is not the checks. In the panel layout it stacks in the
+     wide left column beside the Request information side panel; in the split
+     layout it all runs FULL WIDTH beneath the checks — the designer walked every
+     card down to full width so nothing is cramped in a narrow column.
+     *"ესენიც ჩაიტანე, ეს სამივე."* */
+  const evidence = (
+    <>
+      {applicationCard}
+      {borrowerCard}
+      {coBorrowerCard}
+      {documentsCard}
+      {requestsCard}
+      {auditCard}
+    </>
+  );
+
+  /* The standing "Request information" panel — the PANEL layout's right column.
+     In the split layout this work moves into a dialog off the header. */
+  const requestInfoCard = (
+    <Card title={t("requestModal.title")} style={styles.card}>
+      <UnderwritingActions decision={decision} onRequestInfo={sendRequest} />
+    </Card>
+  );
+
   return shell(
     <AdminPage
       /* The borrower's name, per the wireframe. The application's own id is
@@ -455,6 +703,21 @@ export default function ApplicationDetailsScreen({
               ) : null
             : (
               <Flex gap={8} align="center">
+                {/* SPLIT LAYOUT ONLY: Request information joins the header
+                    actions as a dialog, because that layout has no standing
+                    request panel. A divider sets it apart from Decline /
+                    Approve — it is a REQUEST to the borrower, not a decision on
+                    the application, so the two kinds of action read as two
+                    groups. *"ახალ ღილაკსა და იმ ღილაკებს შორის პატარა სტროუკი,
+                    რომ გამოვყოთ."* */}
+                {layout === "split" ? (
+                  <>
+                    <Button onClick={() => setReqInfoOpen(true)}>
+                      {t("requestModal.title")}
+                    </Button>
+                    <Divider type="vertical" style={styles.actionDivider} />
+                  </>
+                ) : null}
                 {/* Hierarchy: Approve is the filled primary, Decline steps back
                     to a SECONDARY button — a light neutral frame, not the heavy
                     red-outlined danger it was. Framed, so it reads as a real
@@ -470,8 +733,13 @@ export default function ApplicationDetailsScreen({
                     buttons competing, which is the opposite of the hierarchy the
                     frame was chosen for. *"მეორადი ფერის იყოს, ოდნავ
                     მონაცრისფრო."* */}
+                {/* Decline wears the full-strength INK in the SPLIT layout — the
+                    dark text, not the teal — and the quiet grey in the panel one.
+                    *"შავ ფერზე ვეძახი და არა ლურჯზე."* */}
                 <Button
-                  style={{ color: token.colorTextTertiary }}
+                  style={{
+                    color: layout === "split" ? token.colorText : token.colorTextTertiary,
+                  }}
                   onClick={() => setAction("decline")}
                 >
                   {t("appAction.decline")}
@@ -500,270 +768,51 @@ export default function ApplicationDetailsScreen({
         />
       )}
 
-      {/* The wireframe's two columns: the evidence on the left, what you may
-          do about it on the right, so an underwriter writes a note while
-          reading the thing the note is about. */}
-      <Row gutter={[24, 24]}>
-        <Col xs={24} xl={canDecide ? 15 : 24}>
-
-      {checksCard}
-
-      <Card title={t("appDetail.application")} style={styles.card}>
-        <DetailGrid
-          columns={2}
-          items={[
-            { key: "uscis", label: t("appDetail.uscis"), value: record.uscisType },
-            {
-              key: "requested",
-              label: t("appDetail.requested"),
-              value: (
-                <Typography.Text
-                  style={record.approvedAmount ? styles.amountWas : styles.amount}
-                  type={record.approvedAmount ? "secondary" : undefined}
-                >
-                  {money(record.requestedAmount)}
-                </Typography.Text>
-              ),
-            },
-            // Only once an underwriter has changed it. Shown beside the
-            // request rather than replacing it: the pair is the point.
-            ...(record.approvedAmount
-              ? [
-                  {
-                    key: "approved",
-                    label: t("appDetail.approved"),
-                    value: (
-                      <Typography.Text style={styles.amount}>
-                        {money(record.approvedAmount)}
-                      </Typography.Text>
-                    ),
-                  },
-                ]
-              : []),
-            { key: "submitted", label: t("appDetail.submitted"), value: record.submittedOn },
+      {/* THE LAYOUT SWITCH — a FLOATING preview control, not part of the page,
+          so it takes no room from the layout and the columns fill the width.
+          Pinned bottom-right, the same idea as the borrower side's demo dock,
+          so the designer can flip between the two arrangements to show a team
+          lead. *"ფლოატედ ბათონად, ლეიაუთის ნაწილი არ უნდა იყოს."* */}
+      <Flex align="center" gap={6} style={s.layoutSwitch}>
+        <Typography.Text type="secondary" style={s.layoutSwitchLabel}>
+          {t("appDetail.layout")}
+        </Typography.Text>
+        <Segmented
+          size="small"
+          value={layout}
+          onChange={(value) => setLayout(value as "panel" | "split")}
+          options={[
+            { label: t("appDetail.layoutPanel"), value: "panel" },
+            { label: t("appDetail.layoutSplit"), value: "split" },
           ]}
         />
-        {/* THE PRODUCT'S OWN NOTICE, not a bare antd Alert. This one was
-            drawing itself: antd's default stacks the icon above the sentence,
-            so the glyph sat on its own line with the words underneath —
-            *"მრგვალი რაცაა, ტექსტს გვერდზე მიუსვი და არა ესე."* PageNotice
-            already puts it inline and on the copy's first line, and carries
-            the panel every other notice in the product wears. */}
-        {record.coBorrowerRequired ? (
-          <PageNotice tone="warning" style={styles.note}>
-            {t("appDetail.coBorrowerRequired")}
-          </PageNotice>
-        ) : null}
-      </Card>
+      </Flex>
 
-      {person(t("appDetail.borrower"), record.borrower)}
-
-      {record.coBorrower ? (
-        attachedPerson(
-          t("appDetail.coBorrower"),
-          record.coBorrower,
-          /*
-            THE ONE THING AN UNDERWRITER CAN DO ABOUT A CO-BORROWER.
-
-            The epic gives this role no way to turn one down: Approve, Decline,
-            Override, Update amount, Request additional information, and
-            nothing in between. So a human who reads the file and finds the
-            co-borrower inadequate has only Decline — which kills the whole
-            application, including a borrower who may be fine — or a free-text
-            note the borrower cannot act on from where it lands.
-
-            This is the request story, worded. It is NOT a decision about the
-            co-borrower: telling somebody they were refused credit is an
-            adverse action with its own handling, and the WBS gives that to
-            the system's own checks. What the underwriter does here is ask the
-            BORROWER to invite somebody else — which is exactly story 14's
-            own trigger, "the co-borrower does not satisfy the underwriting
-            requirements".
-
-            Only while the application is still open: once a decision is
-            recorded there is nothing left to ask for.
-          */
-          decision === undefined && canDecide ? (
-            <Button
-              type="link"
-              style={styles.headAction}
-              onClick={() => setAskingCoBorrower(true)}
-            >
-              {t("appDetail.askDifferentCoBorrower")} <ArrowRightOutlined />
-            </Button>
-          ) : undefined
-        )
-      ) : (
-        <Card title={t("appDetail.coBorrower")} style={styles.card}>
-          <Typography.Text type="secondary">{t("appDetail.noCoBorrower")}</Typography.Text>
-        </Card>
-      )}
-
-      {/*
-        THE EVIDENCE, OPENABLE.
-
-        This card listed filenames and nothing else: an underwriter looking at
-        "payslip.jpg" could read its name and not the pay stub. WBS "View
-        application details" puts "submitted documents" among the things this
-        role must be able to view, and the borrower's own equivalent story is
-        explicit about what viewing means here — "download only, no in-app
-        preview is assumed".
-
-        So it is the borrower's own DocumentList: the same documents drawn the
-        same way — name, type, date, download — for the person whose job is to
-        read them. The staff LOAN record already did this; only the screen the
-        decision is made on did not.
-      */}
-      <Card title={t("appDetail.documents")} style={styles.card}>
-        <DocumentList
-          documents={record.documents}
-          /* Reported the way every other download in the product is — the
-             loan record's and the borrower's own are both a console line. */
-          onDownload={(doc) => console.log("download application document", record.id, doc.name)}
-        />
-      </Card>
-
-      <Card title={t("appDetail.requests")} style={styles.card}>
-        {requests.length === 0 ? (
-          <Typography.Text type="secondary">{t("appDetail.noRequests")}</Typography.Text>
-        ) : (
-          <Flex vertical>
-            {requests.map((request, index) => (
-              <Flex vertical key={request.id}>
-                <Flex
-                  vertical
-                  gap={4}
-                  style={index > 0 ? s.recordRow : styles.recordRowFirst}
-                >
-                  <Flex align="center" justify="space-between" gap={12}>
-                    <Typography.Text type="secondary" style={styles.meta}>
-                      {t("appDetail.askedBy", {
-                        name: request.askedBy,
-                        date: request.askedOn,
-                      })}
-                    </Typography.Text>
-                    <Tag
-                      color={request.answeredOn ? "success" : "warning"}
-                      variant="filled"
-                      style={pill}
-                    >
-                      {request.answeredOn
-                        ? t("appDetail.answeredOn", { date: request.answeredOn })
-                        : t("appDetail.awaitingAnswer")}
-                    </Tag>
-                  </Flex>
-                  <Typography.Text style={styles.note}>{request.note}</Typography.Text>
-
-                  {request.answerNote || request.answerFiles?.length ? (
-                    <Flex vertical gap={6} style={s.answer}>
-                      {request.answerNote ? (
-                        <Typography.Text>{request.answerNote}</Typography.Text>
-                      ) : null}
-                      {request.answerFiles?.map((file) => (
-                        <Flex key={file} align="center" gap={8}>
-                          <FileTextOutlined />
-                          <Typography.Text>{file}</Typography.Text>
-                        </Flex>
-                      ))}
-                    </Flex>
-                  ) : null}
-                </Flex>
-              </Flex>
-            ))}
-          </Flex>
-        )}
-      </Card>
-
-      {/* WBS attaches "recorded", "logged" and "for audit purposes" to four
-          separate stories, so the record of what happened is part of the
-          screen and not a developer's afterthought. */}
-      <Card title={t("appDetail.audit")} style={styles.card}>
-        {audit.length === 0 ? (
-          <EmptyState title={t("appDetail.noRequests")} />
-        ) : (
-          <Flex vertical>
-            {audit.map((entry, index) => (
-              <Flex vertical key={entry.id}>
-                <Flex
-                  vertical
-                  gap={4}
-                  style={index > 0 ? s.recordRow : styles.recordRowFirst}
-                >
-                  <Flex align="center" justify="space-between" gap={12}>
-                    <Typography.Text>{t(entry.action)}</Typography.Text>
-                    <Typography.Text type="secondary" style={styles.meta}>
-                      {entry.on} · {entry.by}
-                    </Typography.Text>
-                  </Flex>
-                  {entry.from || entry.to ? (
-                    <Typography.Text type="secondary" style={styles.meta}>
-                      {t("audit.from")}: {entry.from} → {t("audit.to")}: {entry.to}
-                    </Typography.Text>
-                  ) : null}
-                  {entry.reason ? (
-                    <Typography.Text type="secondary" style={styles.meta}>
-                      {t("audit.reason")}: {entry.reason}
-                    </Typography.Text>
-                  ) : null}
-                </Flex>
-              </Flex>
-            ))}
-          </Flex>
-        )}
-      </Card>
-
-        </Col>
-
-        {/* WBS: "OPA Staff has read-only access to application information and
-            cannot modify application data or perform business actions." So the
-            column is absent for them, not disabled. */}
-        {canDecide ? (
-          <Col xs={24} xl={9}>
-            {/* The decision (Decline / Approve, or Override) sits in the PAGE
-                header, far right of the applicant's name — see the AdminPage
-                `extra` above. What stays in this card is the composing work:
-                requesting information and changing the amount. */}
-            <Card title={t("appDetail.actions")} style={styles.card}>
-              <UnderwritingActions
-                requestedAmount={record.requestedAmount}
-                approvedAmount={approvedAmount}
-                decision={decision}
-                audit={audit}
-                /* WBS: the amount may be adjusted "before the final approval
-                   decision", so the panel closes once there is one. */
-                canChangeAmount={decision === undefined}
-                onRequestInfo={sendRequest}
-                onChangeAmount={({ amount, reason }) => {
-                  console.log("update approved amount", record.id, amount, reason);
-                  const previous = approvedAmount ?? record.requestedAmount;
-                  const now = new Date();
-                  const on = `${now.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "2-digit",
-                    year: "numeric",
-                  })} ${now.toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                  })}`;
-                  const entry: AuditEntry = {
-                    id: `amount-${now.getTime()}`,
-                    on,
-                    by: name,
-                    action: "audit.amountChanged",
-                    from: money(previous),
-                    to: money(amount),
-                    reason,
-                  };
-                  setAudit((prev) => [...prev, entry]);
-                  setApprovedAmount(amount);
-                  message.success(t("amountModal.save"));
-                }}
-              />
-            </Card>
+      {layout === "panel" ? (
+        /* PANEL — the product's current arrangement: the evidence in a wide
+           left column, the standing Request information panel down the right. */
+        <Row gutter={[24, 24]}>
+          <Col xs={24} xl={canDecide ? 15 : 24}>
+            {checksCard}
+            {evidence}
           </Col>
-        ) : null}
-      </Row>
+          {/* WBS: OPA Staff is read-only, so the panel is absent for them. */}
+          {canDecide ? (
+            <Col xs={24} xl={9}>
+              {requestInfoCard}
+            </Col>
+          ) : null}
+        </Row>
+      ) : (
+        /* SPLIT — every card FULL WIDTH, one under the other, so nothing is
+           cramped in a narrow column. Request information is a dialog off the
+           header (see the page `extra`), so there is no standing side panel —
+           which is what frees the whole width for the record. */
+        <>
+          {checksCard}
+          {evidence}
+        </>
+      )}
 
       {/* The co-borrower request, opened from that card's own head. It is the
           same dialog the Underwriting actions panel uses, arriving with the
@@ -778,6 +827,50 @@ export default function ApplicationDetailsScreen({
         onRequest={(note) => {
           sendRequest(note);
           setAskingCoBorrower(false);
+        }}
+      />
+
+      {/* The SPLIT layout's general "Request information" — the same dialog, off
+          the header button, since that layout drops the standing request panel. */}
+      <RequestInfoModal
+        open={reqInfoOpen}
+        title={t("requestModal.title")}
+        onCancel={() => setReqInfoOpen(false)}
+        onRequest={(note) => {
+          sendRequest(note);
+          setReqInfoOpen(false);
+        }}
+      />
+
+      {/* Change the requested amount, opened from the application card's head.
+          Saving appends to the audit trail and moves the "Approved" figure —
+          the change history the inline panel used to show is that same trail,
+          which the Audit card below already renders. */}
+      <AmountModal
+        open={changingAmount}
+        requested={record.requestedAmount}
+        current={approvedAmount ?? record.requestedAmount}
+        onCancel={() => setChangingAmount(false)}
+        onSave={(amount, reason) => {
+          console.log("update approved amount", record.id, amount, reason);
+          const previous = approvedAmount ?? record.requestedAmount;
+          const on = stampNow();
+          setAudit((prev) => [
+            ...prev,
+            {
+              id: `amount-${prev.length + 1}`,
+              on,
+              by: name,
+              action: "audit.amountChanged",
+              from: money(previous),
+              to: money(amount),
+              reason,
+            },
+          ]);
+          setApprovedAmount(amount);
+          setChangingAmount(false);
+          message.success(t("amountModal.save"));
+          scrollTo(historyRef);
         }}
       />
 

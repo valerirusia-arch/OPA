@@ -35,8 +35,8 @@
 import { useState } from "react";
 import { Button, Flex, Modal, Typography, theme } from "antd";
 import {
-  BlockOutlined,
   CheckOutlined,
+  CopyOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
   LockOutlined,
@@ -94,8 +94,18 @@ export function VirtualCardModal({
   */
   const [showCvv, setShowCvv] = useState(false);
   const [showExpiry, setShowExpiry] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const pan = `${MOCK_PAN} ${last4}`;
+
+  /* Copy the number, and flash the tick for a beat. Same clipboard write antd's
+     `copyable` did — the change is that the control is now the SAME 32px button
+     as the reveal eyes, so the action column lines up. Local UI state only. */
+  const copyNumber = () => {
+    navigator.clipboard?.writeText(pan.replace(/\s/g, ""));
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1500);
+  };
   /* Masked to the same shape as the value they cover, so the row does not jump
      when the eye is pressed. */
   const cvvMasked = "•••";
@@ -144,28 +154,25 @@ export function VirtualCardModal({
       value: <Typography.Text style={s.rowValue}>{pan}</Typography.Text>,
       /* THE ONE ROW WORTH COPYING — a card number is read off a screen and
          typed into a form, and this is the form's way of not being retyped.
-         It is the ROW's action, so it is centred against the whole row rather
-         than against the digits: inside the value it sat on the number's own
-         line, a third of the way down a 64px row, level with nothing.
-         *"ეს აიქონი შუაში აწიე."*
-
-         A `Typography.Text` with no children renders antd's copy button and
-         nothing else, so the clipboard, the copied state and the accessible
-         label all stay antd's and only the placement is ours. The glyph is
-         `BlockOutlined` — two clean overlapping squares, which is the copy
-         glyph people actually recognise. antd's own `CopyOutlined` is a sheet
-         with a folded corner behind another and at 18px it reads as a
-         document, not as an action. *"აქ უკეთესი დაკოპირების აიქონი ჩასვი."* */
+         It is the ROW's action, and it shares the reveal eyes' own 32px button
+         so the whole action column lines up — the copy and the two eyes sit on
+         one vertical axis. `CopyOutlined`, the glyph a reader recognises as
+         copy, flipping to the green tick for a beat after a press.
+         *"აქონების ელაინმენტი გასასწორებელია და რამე უკეთესი აიქონი კოპისთვის."* */
       action: (
-        <Typography.Text
-            copyable={{
-              text: pan.replace(/\s/g, ""),
-              tooltips: false,
-              icon: [
-                <BlockOutlined key="copy" style={s.copyIcon} />,
-                <CheckOutlined key="copied" style={s.copiedIcon} />,
-              ],
-          }}
+        <Button
+          type="text"
+          size="small"
+          aria-label={t("loanPage.cardNumber")}
+          style={s.revealButton}
+          icon={
+            copied ? (
+              <CheckOutlined style={s.copiedIcon} />
+            ) : (
+              <CopyOutlined style={s.copyIcon} />
+            )
+          }
+          onClick={copyNumber}
         />
       ),
     },

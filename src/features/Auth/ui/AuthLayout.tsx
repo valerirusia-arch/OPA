@@ -13,7 +13,7 @@ import type { ReactNode } from "react";
 import { Flex, Grid, theme } from "antd";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "../../../shared/ui/LanguageSwitcher";
-import { Logo } from "../../../shared/ui/Logo";
+import { LogoLockup } from "../../../shared/ui/LogoLockup";
 import { content, contentBlock, getStyles } from "./AuthLayout.styles";
 
 export type AuthLayoutProps = {
@@ -34,7 +34,7 @@ export function AuthLayout({ children, language, onLanguageChange }: AuthLayoutP
       <Flex vertical align="flex-start" style={styles.pane}>
         <Flex align="center" justify="space-between" style={content}>
           <Link to="/">
-            <Logo />
+            <LogoLockup />
           </Link>
           <LanguageSwitcher value={language} onChange={onLanguageChange} size="small" />
         </Flex>
