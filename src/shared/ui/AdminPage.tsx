@@ -91,19 +91,24 @@ export function AdminPage({
             />
           ) : null}
           {/*
-            WHAT FOLLOWS THE TITLE SITS ON ITS BASELINE, not on its centre.
+            WHAT FOLLOWS THE TITLE IS CENTRED ON IT.
 
-            Everything here was centred, and geometrically it was: the heading's
-            box, the id and the status pill all had the same middle. It still
-            read as misaligned, because two pieces of TYPE on one line are
-            judged by where they stand, not by where their boxes' middles fall —
-            and a 26px serif and a 14px sans centred on one axis have baselines
-            five pixels apart. The reference this page reads as broken is the
-            line the letters sit on. *"ისევ ეს შუაში დაალაინე მთავარ
-            ტექსტთან."*
+            This was `align="baseline"`, on the reasoning that two pieces of
+            type on one line are read off the line they stand on. That is true
+            of TYPE — and what actually follows the title here is a BOX: a
+            status pill, a Badge, a tag. A box has no baseline of its own, so
+            flex uses the baseline of the text inside it, which hangs the
+            pill's padding and its rounded hem BELOW the title's baseline and
+            drops the whole lozenge a few pixels. On screen it reads as sunk,
+            twice reported: *"შუაში დაალაინე მთავარ ტექსტთან"*, then *"ეს
+            სტატუსი უცებ გაუცენტრე ამ თაითლს"*.
 
+            Centre is the right reference for a box beside type, and the
+            title's line box is only 8px taller than a pill, so the plain
+            `record.id` that rides along on the applications screen lands
+            within a pixel of where baseline put it.
           */}
-          <Flex align="baseline" gap={12} wrap>
+          <Flex align="center" gap={12} wrap>
             <Typography.Title level={2} style={styles.title}>
               {title}
             </Typography.Title>

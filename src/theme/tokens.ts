@@ -51,6 +51,20 @@ export const brand = {
   tintHover: "#F4F8FC",
   tintStrong: "#DDEBF7",
   /**
+   * THE EMPTY-STATE ILLUSTRATION FAMILY — a flat, light-blue set matched to a
+   * Figma reference the designer chose, so every "nothing here yet" state reads
+   * as one drawing style across the product instead of the mixed set it was.
+   *
+   * Trialled in LIGHT BLUE first — the designer may mute these later, which is a
+   * one-line change here. Kept together so a recolour touches one place. The
+   * disc ground reuses the product's own `tint`; the rest are the reference's
+   * blues: a bright accent for a header or badge, a mid line, and a faint one.
+   */
+  illoGround: "#E8EEFB",
+  illoInk: "#2F6BFF",
+  illoSoft: "#AFC9FF",
+  illoFaint: "#DCE7F9",
+  /**
    * THE SAME THREE TINTS, TURNED WARM — the tables' own family.
    *
    * *"ნაცრისფერი ფერი... ჩვენი მთავარი ფერის ტონალობაში გავაკეთოთ, აი ამ
@@ -609,7 +623,47 @@ export const tokens: ThemeConfig = {
      * small variant to 24), so the pager reads as a pager and not a row of
      * buttons. *"უფრო პატარა პაგინაციები."*
      */
-    Pagination: { itemSize: 32, itemSizeSM: 24 },
+    Pagination: {
+      itemSize: 32,
+      itemSizeSM: 24,
+      /**
+       * THE CURRENT PAGE IS A SELECTED ROW, drawn the way the tables draw one.
+       *
+       * antd rings the active tile in `colorPrimary` — a teal outline round a
+       * white box, the only stroked thing on a page whose tables state
+       * selection with a fill and nothing else: *"აქ არ მინდა სთროუკი,
+       * უბრალოდ აი ამ ფერს თეიბლებში რომ ვიყენებ, ეგ ჰქონდეს ბექგრაუნდზე."*
+       *
+       * So it takes the table's own selected pair, unchanged: `warmTint` for
+       * the fill, `warmTintStrong` a step firmer. `warmHeader` — the other
+       * table tone — would have been invisible here, because the page ground
+       * is already that off-white; `warmTint` is the one that separates from
+       * it, and it is also the one that means *selected* rather than
+       * *hovered*, which is what a current page is.
+       *
+       * The ring is not removed, it is matched to the fill. Dropping it to
+       * transparent would work too, but the border still occupies its pixel
+       * either way, and a border that agrees with its fill can never put the
+       * tile half a pixel out of line with its neighbours.
+       */
+      itemActiveBg: brand.warmTint,
+      colorPrimary: brand.warmTint,
+      colorPrimaryHover: brand.warmTintStrong,
+      /* Scoping `colorPrimary` above would have taken the numeral with it —
+         `itemActiveColor` defaults to it — so the teal is named back. */
+      itemActiveColor: brand.primary,
+      itemActiveColorHover: brand.primaryHover,
+      /*
+        AND THE PAGES YOU ARE NOT ON HOVER THE WAY ROWS DO. These were antd's
+        `colorBgTextHover` — a flat black at 6%, the same cold grey the tables
+        were taken off. Pointed back at the table's own row-hover, so the pager
+        reads as the bottom of the table rather than as a separate control:
+        warmHeader to hover, warmTint a step firmer while the mouse is down,
+        which is exactly where the current page already sits.
+      */
+      colorBgTextHover: brand.warmHeader,
+      colorBgTextActive: brand.warmTint,
+    },
     Table: {
       headerBorderRadius: 0,
       cellPaddingBlock: 12,
