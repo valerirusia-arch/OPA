@@ -96,9 +96,10 @@ function Sparkle({ x, y, r }: { x: number; y: number; r: number }) {
  * What is left is one sheet. Nearly every empty this appears in is a record
  * that has not been made yet — no documents, no comments, no history, no
  * co-borrower — and lines left as dashes say exactly that: the shape of the
- * thing exists and nothing has been put in it. It is the device `NoLoanMark`
- * uses for a card that was never issued, for the same reason: a dashed
- * outline is a SPACE, where a cross or a sad face would be a failure.
+ * thing exists and nothing has been put in it. `NoLoanMark` used the same
+ * device for a card that was never issued, and for the same reason: a dashed
+ * outline is a SPACE, where a cross or a sad face would be a failure. That
+ * mark is gone — this is what the dashboard draws now.
  */
 function Empty() {
   return (

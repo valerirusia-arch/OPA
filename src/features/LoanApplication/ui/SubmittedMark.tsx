@@ -12,7 +12,6 @@
 // Third of a family. The same document appears at every turn of the epic and
 // changes only its badge, so the three moments read as one story:
 //
-//   ApplicationMark — part-filled sheet, blue "+"      → start one
 //   InvitationMark  — sheet with two people            → join somebody's
 //   SubmittedMark   — filled sheet, green check        → hand it in
 //

@@ -11,13 +11,12 @@
 // beside them, tilted as if it has just been handed over, with the tick
 // demoted to a badge on the corner. The tick confirms; the card is the news.
 //
-// Built to the same rules as the loan application's marks (ApplicationMark,
-// InvitationMark, SubmittedMark), so the two epics look like one product:
+// Built to the same rules as the loan application's marks (InvitationMark,
+// SubmittedMark), so the two epics look like one product:
 // a soft circular ground, one tilted object, a badge at the lower right in the
 // same place and the same size, and every colour from the theme.
 //
 //   AccountReadyMark — a card with a person       → you have an account
-//   ApplicationMark  — part-filled sheet, blue +  → start an application
 //   InvitationMark   — sheet with two people      → join somebody's
 //   SubmittedMark    — filled sheet, green check  → hand it in
 //

@@ -12,7 +12,7 @@
 // viewBox, the soft primary ground at r52, one object in the container colour
 // with a hairline stroke, and the badge in the slot every other mark uses —
 // cx 82, cy 84, r 15, with a 3px ring so it sits ON the object instead of
-// beside it. Same as ApplicationMark, InvitationMark and SubmittedMark, so
+// beside it. Same as InvitationMark and SubmittedMark, so
 // this reads as the fourth of a set and not as a stray picture.
 //
 // Drawn rather than composed because antd has no illustration to compose from;

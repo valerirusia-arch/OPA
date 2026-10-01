@@ -19,7 +19,6 @@
 //
 //   IdentityVerifiedMark — a photo ID under a magnifier → checked, and it's you
 //   AccountReadyMark     — a card with a person         → you have an account
-//   ApplicationMark      — part-filled sheet, blue "+"  → start an application
 //   InvitationMark       — sheet with two people        → join somebody's
 //   SubmittedMark        — filled sheet, green check    → hand it in
 

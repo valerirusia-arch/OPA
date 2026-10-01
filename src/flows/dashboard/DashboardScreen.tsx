@@ -58,7 +58,7 @@ import { ApplicationProgress } from "../../features/Dashboard/ui/ApplicationProg
 import { StageFoot } from "../../features/Dashboard/ui/StageFoot";
 import { FactTiles } from "../../features/Dashboard/ui/FactTiles";
 import { PaymentHistory } from "../../features/Payments/ui/PaymentHistory";
-import { NoLoanMark } from "../../features/Loan/ui/NoLoanMark";
+import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
 import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
 import { stageCopy } from "../../features/Payments/ui/delinquency";
 import { hasOpenApplication, useLoanRecord, usePaymentsRecord } from "../loan/loanRecord";
@@ -335,11 +335,25 @@ export default function DashboardScreen({
                  names the page. */
               <Card style={styles.band}>
                 <Flex vertical align="center" gap={12} style={styles.empty}>
-                  {/* Grey, not accent-teal: on the empty dashboard the one
-                      colour that should draw the eye is the button, and the
-                      designer wants the illustration neutral. *"ფერი არ მინდა,
-                      ნაცრისფერი."* */}
-                  <NoLoanMark size={128} muted />
+                  {/* THE SAME DRAWING AS /loan AND /payments, not one of its
+                      own.
+
+                      It was `NoLoanMark` — a dashed card slot with a grey "+"
+                      badge, built when this was the only page that said "no
+                      loan". Three pages say it now, and they say it about the
+                      SAME state: there is no application, and the way out of
+                      it is the one button under this sentence. A drawing that
+                      changes between them would claim three situations where
+                      there is one, and an empty state's picture is there to
+                      name a CATEGORY — nothing here yet — not to say which
+                      page you are standing on. The heading, the sentence and
+                      the rail already do that, and do it better than a
+                      picture could.
+
+                      Neutral by default, which is what the old `muted` prop
+                      was for: the one colour on an empty dashboard belongs to
+                      the button. *"ფერი არ მინდა, ნაცრისფერი."* */}
+                  <EmptyScene />
                   <Typography.Text type="secondary" style={styles.emptyCopy}>
                     {t("dashboard.emptyBody")}
                   </Typography.Text>
