@@ -113,8 +113,15 @@ export function SceneFrame({ width, blob, spark, children }: SceneFrameProps) {
         badge that reached below the sheet. A shadow is behind the thing
         casting it. Flat, no blur: the subject stands on the page without
         being lit by anything.
+
+        AND CLEAR OF IT. Its top edge met the sheet's bottom exactly, so the
+        two read as one shape with a grey skirt rather than as an object and
+        its shadow: *"ჩრდილი მიწებებულია, დააშორე, ჩამოწიე დაბლა."* Seven
+        units of air below the tallest subject in the set. Narrower too, at
+        50 — a detached ellipse that overhangs the thing casting it stops
+        being a shadow and becomes a second object.
       */}
-      <ellipse cx={96} cy={132} rx={54} ry={4} fill={brand.sceneBlob} />
+      <ellipse cx={96} cy={139} rx={50} ry={4} fill={brand.sceneBlob} />
       {children}
       <Sparkle x={36} y={38} r={5.5} tone={spark} />
       <Sparkle x={170} y={46} r={4} tone={spark} />

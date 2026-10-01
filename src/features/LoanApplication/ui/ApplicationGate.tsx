@@ -281,7 +281,17 @@ export function ApplicationGate({
       ),
     },
     needsInfo: {
-      icon: <JourneyScene variant="waiting" size={MARK} />,
+      /* AMBER, NOT THE NO-BADGE WAIT. `waiting` means filed and not your
+         move, and this is the opposite: somebody has asked for something,
+         there is a primary button to go and send it, and the body says in
+         as many words that "your application waits here until it arrives".
+         An application stalled on the reader is the definition of a state
+         that wants attention — *"რატომ არ ჩანს აქ ნარინჯისფერი, როცა
+         ეუბნება რომ სხვებიც უნდა?"*
+
+         Both sides get it: the borrower and the co-borrower share this
+         state, and the request lands on whichever of them is reading. */
+      icon: <JourneyScene variant="attention" size={MARK} />,
       title: t("application.needsInfoTitle"),
       subTitle: t("application.needsInfoBody"),
       action: (
