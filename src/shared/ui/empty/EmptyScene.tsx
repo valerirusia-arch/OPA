@@ -14,16 +14,16 @@
 //
 // TWO SCENES, because that is the whole set the product needs:
 //
-//   empty    — there is nothing here. A list with its rows blank.
+//   empty    — there is nothing here. A record with nothing written in it.
 //   notFound — we looked and there is nothing. A folder under a magnifier.
 //
 // Plus one that is not an empty state at all and is drawn here so it does not
 // have to be drawn somewhere else:
 //
 //   noAccess — a padlock, for the pages a role may not open. It cannot share
-//              `empty`'s drawing: blank rows under the words "You don't have
-//              access to this page" say the page is EMPTY, which is both wrong
-//              and the more alarming of the two readings.
+//              `empty`'s drawing: a blank record under the words "You don't
+//              have access to this page" says the page is EMPTY, which is
+//              both wrong and the more alarming of the two readings.
 //
 // WHY THESE ARE DRAWN AND NOT INSTALLED. Every illustration pack — unDraw,
 // Storyset, the rest — arrives with a palette and a drawing style of its own.
@@ -57,7 +57,7 @@ const BOX = { w: 200, h: 150 };
 const WIDTH = { card: 168, page: 212 } as const;
 
 /** One uniform contour for everything that is drawn. */
-const LINE = { stroke: brand.sceneLine, strokeWidth: 2.2, fill: brand.white } as const;
+const LINE = { stroke: brand.sceneLine, strokeWidth: 1.8, fill: brand.white } as const;
 
 /**
  * The soft shape behind the subject. Irregular on purpose: a circle behind an
@@ -81,45 +81,59 @@ function Sparkle({ x, y, r }: { x: number; y: number; r: number }) {
   );
 }
 
-/** A list with nothing in its rows. */
+/**
+ * A record with nothing written in it.
+ *
+ * THREE THINGS THIS WAS FIRST. A list of three rows carrying dots and a bar —
+ * which is a list WITH data in it, the one thing that is not true where this
+ * appears: *"როცა ინფო არ გვაქვს, თითქოს მაგას არ ასახავს."* Then an open box,
+ * on the reasoning that a container can be shown empty where a list can only
+ * be shown blank; drawn flat, with no inner wall to look into, its folded-out
+ * flaps read as handles and the thing came out a bag. Then the same sheet as
+ * below with a second one tilted behind it, which was one object too many:
+ * *"რაიმე უფრო მარტივი რომ იყოს."*
+ *
+ * What is left is one sheet. Nearly every empty this appears in is a record
+ * that has not been made yet — no documents, no comments, no history, no
+ * co-borrower — and lines left as dashes say exactly that: the shape of the
+ * thing exists and nothing has been put in it. It is the device `NoLoanMark`
+ * uses for a card that was never issued, for the same reason: a dashed
+ * outline is a SPACE, where a cross or a sad face would be a failure.
+ */
 function Empty() {
   return (
     <>
-      {/*
-        Stepped left going down, and the top one lifted off square.
+      <path
+        d="M68 34a8 8 0 0 1 8-8h40l26 26v64a8 8 0 0 1-8 8H76a8 8 0 0 1-8-8V34Z"
+        {...LINE}
+        strokeLinejoin="round"
+      />
+      {/* The corner turned down — the one mark that makes a rounded rectangle
+          a sheet rather than a card. */}
+      <path
+        d="M116 26l26 26h-18a8 8 0 0 1-8-8V26Z"
+        {...LINE}
+        strokeLinejoin="round"
+      />
 
-        Three identical rectangles in a column read as a table that has lost
-        its data — a thing that is broken. Stepped, they read as a stack; and
-        with the top one tilted, as a stack being gone through, which is the
-        difference between "something is wrong here" and "there is nothing in
-        here yet". It is the same move the folder's sheets make, which is what
-        ties the two scenes together.
-      */}
+      {/* Where the writing would be, and the last line short, the way a real
+          one ends. */}
       {[
-        { x: 66, y: 24, tilt: "rotate(-7 112 37)" },
-        { x: 56, y: 60, tilt: undefined },
-        { x: 48, y: 94, tilt: undefined },
-      ].map((row) => (
-        <g key={row.y} transform={row.tilt}>
-          <rect x={row.x} y={row.y} width={92} height={26} rx={7} {...LINE} />
-          {[20, 33, 46].map((dx) => (
-            <circle
-              key={dx}
-              cx={row.x + dx}
-              cy={row.y + 13}
-              r={3.4}
-              fill={brand.sceneSoft}
-            />
-          ))}
-          <rect
-            x={row.x + 60}
-            y={row.y + 9.5}
-            width={22}
-            height={7}
-            rx={3.5}
-            fill={brand.sceneSoft}
-          />
-        </g>
+        { y: 72, w: 44 },
+        { y: 86, w: 44 },
+        { y: 100, w: 26 },
+      ].map((line) => (
+        <path
+          key={line.y}
+          d={`M84 ${line.y}h${line.w}`}
+          stroke={brand.sceneSoft}
+          strokeWidth={2.2}
+          strokeLinecap="round"
+          /* Dashes, not dots. At a 2-unit dash the round caps closed into
+             circles and the three lines read as a grid of beads rather than
+             as writing that is not there. */
+          strokeDasharray="6 7"
+        />
       ))}
     </>
   );
@@ -170,11 +184,14 @@ function NotFound() {
 
       {/* The magnifier, over the pocket's corner and out past the blob, which
           is what stops the scene reading as one centred lump. */}
-      <circle cx={124} cy={96} r={22} {...LINE} strokeWidth={2.4} />
+      <circle cx={124} cy={96} r={22} {...LINE} />
+      {/* The handle is the one stroke allowed to be heavier, because it is a
+          SOLID object rather than a contour — at contour weight it reads as
+          the outline of a handle that was never filled in. */}
       <path
         d="M140.5 112.5 152 124"
         stroke={brand.sceneLine}
-        strokeWidth={5.5}
+        strokeWidth={4.5}
         strokeLinecap="round"
       />
     </>
@@ -189,7 +206,7 @@ function NoAccess() {
       <path
         d="M80 70V54a20 20 0 0 1 40 0v16"
         stroke={brand.sceneLine}
-        strokeWidth={2.4}
+        strokeWidth={LINE.strokeWidth}
         fill="none"
         strokeLinecap="round"
       />

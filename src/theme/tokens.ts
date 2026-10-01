@@ -68,17 +68,21 @@ export const brand = {
    * that is the way forward. They are warm because every other grey here is —
    * a cool line on this off-white ground reads as a different material.
    *
-   * `sceneLine` is the contour. It is a step darker than `borderHover`, which
-   * is deliberate: a drawing held at border weight disappears into the card it
-   * sits on, and this has to read as a picture rather than as a smudge.
+   * `sceneLine` is the contour, and it is LIGHT on purpose. It was two steps
+   * darker, on the reasoning that a drawing held at border weight disappears
+   * into the card it sits on — but at that weight the outlines were the
+   * heaviest marks on the screen, heavier than the sentence they are there to
+   * introduce: *"არ მომწონს ესეთი მუქი სთროუკები გარშემო."* An empty state is
+   * the quietest thing on a page and its picture cannot be the loudest.
    * `sceneSoft` is everything inside a contour — dots, bars, the sparkles.
    * `sceneBlob` is the soft shape behind the subject and the ground it stands
-   * on; it sits between `warmTint` and `warmTintStrong`, so it separates from
-   * a white card without ever becoming a second subject.
+   * on. A hair lighter than `warmTint`, so it separates from a white card and
+   * stops there — at the earlier value it read as a shape in its own right
+   * rather than as air behind one.
    */
-  sceneLine: "#C7BEB4",
-  sceneSoft: "#DCD4CB",
-  sceneBlob: "#F2EEEA",
+  sceneLine: "#D3CCC4",
+  sceneSoft: "#E5DFD9",
+  sceneBlob: "#F6F3F0",
 
   illoGround: "#E8EEFB",
   illoInk: "#2F6BFF",
