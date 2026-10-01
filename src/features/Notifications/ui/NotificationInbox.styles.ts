@@ -21,7 +21,6 @@ export const styles = {
    * most needs to read it.
    */
   list: { maxHeight: 320, overflowY: "auto" },
-  empty: { marginBlock: 32 },
   /** A row is the whole width, left-aligned, and as tall as its own copy. */
   row: {
     display: "block",

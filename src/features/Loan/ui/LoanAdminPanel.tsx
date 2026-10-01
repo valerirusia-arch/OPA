@@ -36,7 +36,9 @@ export function LoanAdminPanel({ comments }: LoanAdminPanelProps) {
       <Typography.Text style={s.sectionTitle}>{t("loanAdmin.comments")}</Typography.Text>
 
       {comments.length === 0 ? (
-        <EmptyState title={t("loanAdmin.noComments")} />
+        <EmptyState
+          title={t("loanAdmin.noComments")}
+        />
       ) : (
         <Flex vertical style={styles.list}>
           {comments.map((comment, index) => (

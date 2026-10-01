@@ -21,13 +21,14 @@
 //
 // Dumb: items in, callbacks out. No fetching, no state of its own.
 
-import { Badge, Button, Divider, Empty, Flex, Switch, Typography, theme } from "antd";
+import { Badge, Button, Divider, Flex, Switch, Typography, theme } from "antd";
 import {
   CheckCircleFilled,
   CloseCircleFilled,
   ExclamationCircleFilled,
   InfoCircleFilled,
 } from "@ant-design/icons";
+import { EmptyState } from "../../../shared/ui/EmptyState";
 import { useT } from "../../../shared/ui/i18n/useT";
 import type { ChannelPreferences, NotificationItem, NotificationTone } from "./types";
 import { getStyles, styles } from "./NotificationInbox.styles";
@@ -86,11 +87,12 @@ export function NotificationInbox({
 
       <div style={styles.list}>
         {items.length === 0 ? (
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={t("notify.none")}
-            style={styles.empty}
-          />
+          /* THE ONE EMPTY THAT WAS NOT IN THE FAMILY. It was a bare antd
+             `Empty` with the grey tray — a third look, after the product's
+             own drawings and the default "no data" glyph — on the one screen
+             a borrower opens expecting to find something. It says it the
+             same way every other empty in the product does now. */
+          <EmptyState variant="inbox" title={t("notify.none")} />
         ) : (
           items.map((item, index) => {
             const Mark = marks[item.tone].icon;

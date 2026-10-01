@@ -43,8 +43,7 @@ import {
 } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { EmptyState } from "../../../shared/ui/EmptyState";
-import { NoScheduleMark } from "./NoScheduleMark";
-import { RepaidMark } from "./RepaidMark";
+import { EmptyArt } from "../../../shared/ui/empty/EmptyArt";
 import { stageCopy } from "./delinquency";
 import { formatAmount, toAmount } from "./money";
 import { PageNotice } from "../../../shared/ui/PageNotice";
@@ -117,7 +116,7 @@ export function PaymentsOverview({
     return (
       <Card>
         <Result
-          icon={<NoScheduleMark muted />}
+          icon={<EmptyArt variant="schedule" />}
           title={t(nothingAtAll ? "payments.noLoanTitle" : "payments.noneTitle")}
           subTitle={t(nothingAtAll ? "payments.noLoanBody" : "payments.noneBody")}
           extra={
@@ -277,7 +276,7 @@ export function PaymentsOverview({
                 */
                 <div style={styles.settled}>
                   <EmptyState
-                    image={<RepaidMark confetti={false} />}
+                    variant="done"
                     title={t("payments.settledTitle")}
                     description={t("payments.settledBody")}
                   />

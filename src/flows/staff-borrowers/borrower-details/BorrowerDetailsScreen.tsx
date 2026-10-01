@@ -62,6 +62,7 @@ import { fullName } from "../../../features/Borrowers/ui/types";
 import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { mockBorrowers } from "../mockBorrowers";
 import { styles } from "./BorrowerDetailsScreen.styles";
+import { EmptyMark } from "../../../shared/ui/empty/EmptyMark";
 
 /**
  * The record stores a date of birth as it reads — "14 May 1990" — and the
@@ -135,8 +136,14 @@ export default function BorrowerDetailsScreen({
         <AdminPage title={t("borrowers.title")}>
           <Card>
             <Result
-              status="404"
-              title={t("borrowers.empty")}
+              icon={<EmptyMark variant="missing" scale="page" />}
+              /* NOT `borrowers.empty`. This page is reached by id, so it is
+                 never a filter that emptied it — it said "No borrowers match
+                 these filters" to a reader who had typed no filter, on a
+                 screen with no filters on it. The loans and applications
+                 screens next door already phrase their own version of this
+                 correctly. */
+              title={t("borrowers.notFound")}
               extra={
                 <Button type="primary" onClick={() => navigate({ to: "/staff/borrowers" })}>
                   {t("borrower.back")}

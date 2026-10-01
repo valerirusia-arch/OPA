@@ -104,7 +104,15 @@ export default function StaffReportingScreen({
         navigate({ to: "/" });
       }}
     >
-      <AdminPage title={t("reporting.title")} subtitle={t("reporting.lead")}>
+      {/* NO LEAD UNDER THE TITLE. It read "Export reports and application data
+          for your records. Files download as XLSX or CSV." — and every row
+          below it already names its own report, while the two formats are the
+          only two items in the Export menu, where they are read at the moment
+          one is chosen rather than a scroll earlier. A lead that only
+          summarises what the page then says in full is read twice and acted on
+          once:
+          *"აქ თაითლის ქვემოთ საბთაითლი არ გვჭირდება."* */}
+      <AdminPage title={t("reporting.title")}>
         <Card>
           {available.map((report, index) => (
             <div key={report.key}>

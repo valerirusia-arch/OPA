@@ -28,7 +28,6 @@ import { useT } from "../../../shared/ui/i18n/useT";
 import { decorateColumns } from "../../../shared/ui/tableColumns";
 import { getStyles as getPageStyles } from "../../../shared/ui/AdminPage.styles";
 import { EmptyState } from "../../../shared/ui/EmptyState";
-import { NoHistoryMark } from "./NoHistoryMark";
 import { PaymentStatusTag } from "./PaymentTags";
 import { styles } from "./PaymentHistory.styles";
 import type { PaymentTransaction } from "./types";
@@ -90,7 +89,6 @@ export function PaymentHistory({
   if (transactions.length === 0) {
     return (
       <EmptyState
-        image={<NoHistoryMark />}
         title={t("payments.noHistory")}
         description={t("payments.noHistoryBody")}
       />

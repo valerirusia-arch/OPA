@@ -71,6 +71,7 @@ import type {
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
 import { mockApplications } from "../mockApplications";
 import { getStyles, styles } from "./ApplicationDetailsScreen.styles";
+import { EmptyMark } from "../../../shared/ui/empty/EmptyMark";
 
 const money = (amount: number) =>
   `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
@@ -276,7 +277,7 @@ export default function ApplicationDetailsScreen({
       <AdminPage title={t("queue.title")}>
         <Card>
           <Result
-            status="403"
+            icon={<EmptyMark variant="denied" scale="page" />}
             title={t("access.deniedTitle")}
             subTitle={t("access.deniedDescription")}
             extra={
@@ -298,7 +299,7 @@ export default function ApplicationDetailsScreen({
       <AdminPage title={t("queue.title")}>
         <Card>
           <Result
-            status="404"
+            icon={<EmptyMark variant="missing" scale="page" />}
             title={t("appDetail.notFound")}
             extra={
               <Button type="primary" onClick={() => navigate({ to: "/staff/applications" })}>
@@ -582,7 +583,9 @@ export default function ApplicationDetailsScreen({
   const auditCard = (
     <Card ref={historyRef} title={t("appDetail.audit")} style={styles.card}>
       {audit.length === 0 ? (
-        <EmptyState title={t("appDetail.noRequests")} />
+        <EmptyState
+          title={t("appDetail.noRequests")}
+        />
       ) : (
         <Flex vertical>
           {audit.map((entry, index) => (

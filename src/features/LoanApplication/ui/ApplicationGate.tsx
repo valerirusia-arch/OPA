@@ -43,10 +43,7 @@
 import { Button, Card, ConfigProvider, Result, theme } from "antd";
 import { brand } from "../../../theme/tokens";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { ApplicationMark } from "./ApplicationMark";
-import { InvitationMark } from "./InvitationMark";
-import { RepaidMark } from "../../Payments/ui/RepaidMark";
-import { SubmittedMark } from "./SubmittedMark";
+import { EmptyArt } from "../../../shared/ui/empty/EmptyArt";
 import { getStyles, styles } from "./ApplicationGate.styles";
 
 /** Where a borrower's application has got to, as far as they need to know. */
@@ -164,7 +161,7 @@ export function ApplicationGate({
        them; what differs is the badge on it and the tint behind it, which is
        exactly the difference between these states. */
     open: {
-      icon: <ApplicationMark badge="add" />,
+      icon: <EmptyArt variant="plus" size={MARK} />,
       title: t("application.startTitle"),
       subTitle: t("application.startSubtitle"),
       action: (
@@ -180,7 +177,7 @@ export function ApplicationGate({
       filed. See RepaidMark.
     */
     repaid: {
-      icon: <RepaidMark size={MARK} />,
+      icon: <EmptyArt variant="check" size={MARK} />,
       title: t("application.repaidTitle"),
       subTitle: t("application.repaidBody"),
       /*
@@ -222,7 +219,7 @@ export function ApplicationGate({
       expires 5 calendar days after it is sent."
     */
     invited: {
-      icon: <InvitationMark size={MARK} />,
+      icon: <EmptyArt variant="plus" size={MARK} />,
       title: t("application.invitedTitle", { name: invitation?.invitedBy ?? "" }),
       subTitle: t("application.invitedBody", { date: invitation?.expiresOn ?? "" }),
       action: (
@@ -236,7 +233,7 @@ export function ApplicationGate({
        job being finished. The application carries on without them; what they
        keep is the right to see where it has got to. */
     assignedDone: {
-      icon: <SubmittedMark size={MARK} />,
+      icon: <EmptyArt variant="check" size={MARK} />,
       title: t("application.assignedDoneTitle"),
       subTitle: t("application.assignedDoneBody"),
       action: (
@@ -259,7 +256,7 @@ export function ApplicationGate({
       is still said, in the sentence, where it belongs.
     */
     hasActive: {
-      icon: <SubmittedMark size={MARK} />,
+      icon: <EmptyArt variant="check" size={MARK} />,
       title: t("application.blockedActiveTitle"),
       subTitle: t("application.blockedActiveBody"),
       action: (
@@ -269,7 +266,7 @@ export function ApplicationGate({
       ),
     },
     notEligible: {
-      icon: <ApplicationMark badge="blocked" />,
+      icon: <EmptyArt variant="doc" size={MARK} />,
       title: t("application.blockedFlagTitle"),
       subTitle: t("application.blockedFlagBody"),
       action: (
@@ -279,7 +276,7 @@ export function ApplicationGate({
       ),
     },
     needsInfo: {
-      icon: <ApplicationMark badge="more" />,
+      icon: <EmptyArt variant="doc" size={MARK} />,
       title: t("application.needsInfoTitle"),
       subTitle: t("application.needsInfoBody"),
       action: (
@@ -302,7 +299,7 @@ export function ApplicationGate({
     */
     coBorrowerNeeded: invitation
       ? {
-          icon: <InvitationMark size={MARK} />,
+          icon: <EmptyArt variant="plus" size={MARK} />,
           title: t("application.coBorrowerWaitingTitle"),
           subTitle: t("application.coBorrowerWaitingBody", {
             name: invitation.invitee,
@@ -315,7 +312,7 @@ export function ApplicationGate({
           ),
         }
       : {
-          icon: <InvitationMark size={MARK} />,
+          icon: <EmptyArt variant="plus" size={MARK} />,
           title: t("application.coBorrowerNeededTitle"),
           subTitle: t("application.coBorrowerNeededBody"),
           action: (
@@ -349,7 +346,7 @@ export function ApplicationGate({
       the WBS alone will not find this, and the copy below depends on it.
     */
     coBorrowerFailed: {
-      icon: <InvitationMark size={MARK} />,
+      icon: <EmptyArt variant="plus" size={MARK} />,
       title: t("application.coBorrowerFailedTitle"),
       subTitle: t("application.coBorrowerFailedBody", { name: coBorrowerFailed ?? "" }),
       action: (
@@ -359,7 +356,7 @@ export function ApplicationGate({
       ),
     },
     invitationClosed: {
-      icon: <InvitationMark size={MARK} />,
+      icon: <EmptyArt variant="plus" size={MARK} />,
       title: t("application.invitationClosedTitle"),
       subTitle: t("application.invitationClosedBody"),
       action: (
@@ -373,7 +370,7 @@ export function ApplicationGate({
        nothing the borrower can do, and a button that pretends otherwise would
        be a lie. The way out goes somewhere else in the product. */
     checkPaused: {
-      icon: <ApplicationMark badge="paused" />,
+      icon: <EmptyArt variant="doc" size={MARK} />,
       title: t("application.checkPausedTitle"),
       subTitle: t("application.checkPausedBody"),
       action: (
@@ -387,7 +384,7 @@ export function ApplicationGate({
        sanctions screening, which is neither the borrower's to argue with on a
        screen nor ours to publish on one. */
     stopped: {
-      icon: <ApplicationMark badge="blocked" />,
+      icon: <EmptyArt variant="doc" size={MARK} />,
       title: t("application.stoppedTitle"),
       subTitle: t("application.stoppedBody"),
       action: (

@@ -269,6 +269,7 @@ export default function StaffBorrowersScreen({
             locale={{
               emptyText: (
                 <EmptyState
+                  variant="search"
                   title={t("borrowers.empty")}
                   description={t("borrowers.emptyHint")}
                   minHeight={TABLE_EMPTY_MIN_HEIGHT}

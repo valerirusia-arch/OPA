@@ -11,7 +11,12 @@ import type { GlobalToken } from "antd";
 export const TABLE_EMPTY_MIN_HEIGHT = 288;
 
 export const styles = {
-  title: { display: "block" },
+  /** A touch heavier than the body, so the title reads as the title — just a
+   *  touch. *"თაითლები ოდნავ უფრო გააბოლდე, სულ ოდნავ."* */
+  title: { display: "block", fontWeight: 500 },
+  /** antd pins its image slot to a fixed height; the mark is let out to its
+   *  own. */
+  image: { height: "auto" },
 } satisfies Record<string, CSSProperties>;
 
 export const getStyles = (token: GlobalToken) =>

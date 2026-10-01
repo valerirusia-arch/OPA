@@ -635,6 +635,7 @@ export const en = {
   "borrowers.col.address": "Address",
   "borrowers.col.flag": "Flag",
   "borrowers.empty": "No borrowers match these filters",
+  "borrowers.notFound": "That borrower does not exist",
   "borrowers.emptyHint": "Try a different search, or clear the filters.",
   "borrowers.coBorrowerOf": "Co-borrower of {name}",
 
@@ -1412,7 +1413,6 @@ export const en = {
   "queue.exported": "Exporting {count} applications",
 
   "reporting.title": "Reporting",
-  "reporting.lead": "Export reports and application data for your records. Files download as XLSX or CSV.",
   "reporting.statApplications": "Applications",
   "reporting.statApproved": "Approved",
   "reporting.statDeclined": "Declined",
@@ -2367,6 +2367,7 @@ const es: Record<TranslationKey, string> = {
   "borrowers.col.address": "Dirección",
   "borrowers.col.flag": "Marca",
   "borrowers.empty": "Ningún prestatario coincide con estos filtros",
+  "borrowers.notFound": "Ese prestatario no existe",
   "borrowers.emptyHint": "Prueba con otra búsqueda o quita los filtros.",
   "borrowers.coBorrowerOf": "Coprestatario de {name}",
 
@@ -2933,7 +2934,6 @@ const es: Record<TranslationKey, string> = {
   "queue.exported": "Exportando {count} solicitudes",
 
   "reporting.title": "Informes",
-  "reporting.lead": "Exporta informes y datos de solicitudes para tus registros. Los archivos se descargan en XLSX o CSV.",
   "reporting.statApplications": "Solicitudes",
   "reporting.statApproved": "Aprobadas",
   "reporting.statDeclined": "Rechazadas",

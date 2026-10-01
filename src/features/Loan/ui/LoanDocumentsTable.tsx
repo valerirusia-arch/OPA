@@ -126,7 +126,9 @@ export function LoanDocumentsTable({
       ) : null}
 
       {documents.length === 0 ? (
-        <EmptyState title={t("loanPage.noDocuments")} />
+        <EmptyState
+          title={t("loanPage.noDocuments")}
+        />
       ) : (
         <Table<LoanDocument>
           rowKey="id"

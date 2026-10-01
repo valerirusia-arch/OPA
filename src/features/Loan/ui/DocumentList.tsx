@@ -32,7 +32,12 @@ export type DocumentListProps = {
 export function DocumentList({ documents, onDownload }: DocumentListProps) {
   const t = useT();
 
-  if (documents.length === 0) return <EmptyState title={t("loanPage.noDocuments")} />;
+  if (documents.length === 0)
+    return (
+      <EmptyState
+        title={t("loanPage.noDocuments")}
+      />
+    );
 
   const columns: ColumnsType<LoanDocument> = [
     /*
