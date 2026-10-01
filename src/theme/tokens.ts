@@ -68,21 +68,32 @@ export const brand = {
    * that is the way forward. They are warm because every other grey here is —
    * a cool line on this off-white ground reads as a different material.
    *
-   * `sceneLine` is the contour, and it is LIGHT on purpose. It was two steps
-   * darker, on the reasoning that a drawing held at border weight disappears
-   * into the card it sits on — but at that weight the outlines were the
-   * heaviest marks on the screen, heavier than the sentence they are there to
-   * introduce: *"არ მომწონს ესეთი მუქი სთროუკები გარშემო."* An empty state is
-   * the quietest thing on a page and its picture cannot be the loudest.
+   * `sceneLine` is the contour, and it is LIGHT on purpose: it now sits
+   * between `border` and `borderHover`, which is to say the drawing is held
+   * at about the weight of a card's own outline rather than above it.
+   * It started two steps darker than `borderHover`, on the reasoning that a
+   * drawing held at border weight disappears into the card it sits on. It
+   * does not: at that weight the outlines were the heaviest marks on the
+   * screen, heavier than the sentence they are there to introduce, and it
+   * took two passes to get them down — *"არ მომწონს ესეთი მუქი სთროუკები
+   * გარშემო"*, then *"ჯერჯერობით მინდა რომ უფრო მსუბუქი სთროუკი ჰქონდეს."*
+   * An empty state is the quietest thing on a page and its picture cannot be
+   * the loudest.
+   *
+   * `sceneSoft` moves WITH it, always a few steps lighter. Lightening the
+   * contour alone would close the gap between the outline and what sits
+   * inside it, and the drawing would go flat — one tone, no subject.
    * `sceneSoft` is everything inside a contour — dots, bars, the sparkles.
    * `sceneBlob` is the soft shape behind the subject and the ground it stands
-   * on. A hair lighter than `warmTint`, so it separates from a white card and
-   * stops there — at the earlier value it read as a shape in its own right
-   * rather than as air behind one.
+   * on. It is now barely off white — just enough to separate from a card and
+   * no more, which is the whole job: behind the subject is air, not a second
+   * shape. It is lighter than the page ground `layout`, so it reads on the
+   * white cards these all sit in and would vanish if one were ever drawn
+   * straight onto the page.
    */
-  sceneLine: "#D3CCC4",
-  sceneSoft: "#E5DFD9",
-  sceneBlob: "#F6F3F0",
+  sceneLine: "#DCD6CF",
+  sceneSoft: "#EBE6E1",
+  sceneBlob: "#F8F6F3",
 
   illoGround: "#E8EEFB",
   illoInk: "#2F6BFF",
