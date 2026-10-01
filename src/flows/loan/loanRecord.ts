@@ -762,12 +762,22 @@ export const isRepaid = (record: ApplicationSummary | undefined) =>
  * first, because they are true no matter what the status field still says.
  */
 export const coBorrowerGateFor = (record: ApplicationSummary | undefined) => {
-  /* NOT `open`, which is the borrower's answer to "there is no application":
-     start one. A co-borrower cannot start anything — they exist because
-     somebody invited them to an application that is not theirs — so being
-     here with no record means the invitation they came through is gone, and
-     that state already has the right words for it. */
-  if (!record) return "invitationClosed" as const;
+  /*
+    NO RECORD MEANS NOT A CO-BORROWER ANY MORE, so this is `open` — the same
+    "start an application" any signed-in person with nothing sees.
+    *"დანს რომ დააწვება, უბრალოდ აღარ არის ქო-ბოროვერი, და როგორც ბოროვერს
+    უჩანს, ისე გამოჩნდება."*
+
+    Being a co-borrower is a relationship to one application. When that
+    application ends and they acknowledge it, the relationship ends with it
+    and what is left is a person with no application.
+
+    This does not put "start a loan application" back at the top of their
+    walk: `CO_BORROWER_STAGES` has no `none` in it, so the demo never opens
+    there. It is reached by pressing the button on a closed application,
+    which is the only way a real one would reach it either.
+  */
+  if (!record) return "open" as const;
   if (isRepaid(record)) return "assignedSettled" as const;
   /* Declined and cancelled share a state: what the co-borrower does about
      either is the same — nothing — and one sentence can be true of both

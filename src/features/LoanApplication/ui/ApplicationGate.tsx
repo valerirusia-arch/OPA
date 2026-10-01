@@ -388,9 +388,14 @@ export function ApplicationGate({
          differs, because only the borrower can start another. */
       title: t("application.declinedTitle"),
       subTitle: t("application.declinedBody"),
+      /* ACKNOWLEDGING IT ENDS IT. "See the application" sent them to look at
+         a refusal they had just been told about; nothing there changes
+         anything. Pressing this closes the record, and with it the only
+         thing that made this reader a co-borrower — so the next screen they
+         get is the one any signed-in person with no application gets. */
       action: (
-        <Button type="primary" size="large" onClick={onViewStatus}>
-          {t("application.assignedDoneAction")}
+        <Button type="primary" size="large" onClick={onCloseApplication}>
+          {t("application.acknowledge")}
         </Button>
       ),
     },

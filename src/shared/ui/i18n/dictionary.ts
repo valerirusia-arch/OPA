@@ -784,6 +784,11 @@ export const en = {
      is the only thing that differs between the two sides. */
   "application.declinedBody": "OPA staff reviewed it and couldn't go ahead.",
   "application.declinedAction": "Start a new application",
+  /* The co-borrower's end of the same screen. Not "see the application" —
+     there is nothing to go and look at that would change anything — and not
+     "done", which is the green button two states away that means a loan
+     repaid. It acknowledges, and acknowledging is what closes it. */
+  "application.acknowledge": "Got it",
   /* The three outcomes the co-borrower's side had nowhere to say. The WBS's
      "View application status and details" names Borrower/Co-borrower in its
      role column and owes them Approved and declined; a repaid loan is the
@@ -2506,6 +2511,7 @@ const es: Record<TranslationKey, string> = {
   "application.declinedTitle": "Esta solicitud no fue aprobada",
   "application.declinedBody": "El personal de OPA la revisó y no pudo seguir adelante.",
   "application.declinedAction": "Iniciar una solicitud nueva",
+  "application.acknowledge": "Entendido",
   "application.assignedActiveTitle": "Esta solicitud fue aprobada",
   "application.assignedActiveBody":
     "El préstamo sigue adelante. Puedes ver en qué punto está en la página del préstamo.",
