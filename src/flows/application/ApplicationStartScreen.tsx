@@ -27,7 +27,7 @@ import {
 } from "../../features/LoanApplication/ui/ApplicationGate";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
-import { gateFor, setStage, useLoanRecord } from "../loan/loanRecord";
+import { coBorrowerGateFor, gateFor, setStage, useLoanRecord } from "../loan/loanRecord";
 import { styles } from "./ApplicationStartScreen.styles";
 
 /** Kept as the screen's own name for the prop Dev will feed. */
@@ -78,20 +78,10 @@ export default function ApplicationStartScreen({
    */
   const state =
     gate ??
-    (viewer.role === "coBorrower" && record
-      ? /* BEFORE the invited branch. Story 14's reset leaves the status at
-           `coBorrower` with no invitation on the record, so this person was
-           being shown "{name} asked you to join their application… the
-           invitation expires on ." — both values blank, and a "Start my part"
-           button for an application that has moved on without them. */
-        record.coBorrowerFailed
-        ? "invitationClosed"
-        : record.status === "coBorrower"
-          ? "invited"
-          : record.status === "pendingAction"
-            ? "needsInfo"
-            : "assignedDone"
-      : gateFor(record));
+    /* The co-borrower's side has its own answer and it now lives in one
+       place — this screen and /co-application were each deriving it, and
+       they had already drifted apart. See `coBorrowerGateFor`. */
+    (viewer.role === "coBorrower" ? coBorrowerGateFor(record) : gateFor(record));
   const person = userName ?? viewer.name;
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
 

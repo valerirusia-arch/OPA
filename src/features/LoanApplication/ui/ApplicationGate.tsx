@@ -51,6 +51,25 @@ export type ApplicationGateState =
   | "open"
   | "invited"
   | "assignedDone"
+  /**
+   * WHERE THE CO-BORROWER'S SIDE ENDS UP — three outcomes it did not have.
+   *
+   * `assignedDone` was the catch-all for every record that was not an
+   * invitation or an information request, and it says "OPA is reviewing the
+   * application now". So a co-borrower on a loan that had been APPROVED,
+   * DECLINED, or paid off in full read that it was still under review —
+   * measured on a repaid loan, where the sentence had been wrong for a
+   * year. *"ქო-ბოროვერის მხარეს, როცა აპლიკაცია მორჩება, საერთოდ უნდა რამე
+   * სტეიტი."*
+   *
+   * THE WBS ASKS FOR THIS, which is why they are states and not a nicety.
+   * "View application status and details" carries Borrower/Co-borrower in its
+   * role column and lists the statuses owed: "Submitted, Under Review,
+   * Pending action, APPROVED, DECLINED". Two of the five had nowhere to show.
+   */
+  | "assignedActive"
+  | "assignedClosed"
+  | "assignedSettled"
   | "hasActive"
   /**
    * THE LOAN IS REPAID AND THE FILE CAN BE CLOSED.
@@ -243,6 +262,48 @@ export function ApplicationGate({
       subTitle: t("application.assignedDoneBody"),
       action: (
         <Button type="primary" size="large" onClick={onViewStatus}>
+          {t("application.assignedDoneAction")}
+        </Button>
+      ),
+    },
+    /* APPROVED, and the co-borrower is told so rather than left on
+       "reviewing". They do not own the loan's controls — signing, the card,
+       cancelling are the borrower's — so this says where it got to and
+       points at the page that keeps saying. */
+    assignedActive: {
+      icon: <JourneyScene variant="done" size={MARK} />,
+      title: t("application.assignedActiveTitle"),
+      subTitle: t("application.assignedActiveBody"),
+      action: (
+        <Button type="primary" size="large" onClick={onViewStatus}>
+          {t("application.assignedDoneAction")}
+        </Button>
+      ),
+    },
+    /* DECLINED, or cancelled by the borrower. One state for the two because
+       what the co-borrower has to do about either is the same — nothing —
+       and a sentence that guessed between them would be the page claiming to
+       know something it is not told. No badge: an ending with nothing to act
+       on is not an alert. */
+    assignedClosed: {
+      icon: <JourneyScene variant="waiting" size={MARK} />,
+      title: t("application.assignedClosedTitle"),
+      subTitle: t("application.assignedClosedBody"),
+      action: (
+        <Button size="large" onClick={onViewStatus}>
+          {t("application.assignedDoneAction")}
+        </Button>
+      ),
+    },
+    /* PAID OFF. The borrower's own `repaid` cannot be reused here: it offers
+       to close the file and start another, and neither is the co-borrower's
+       to do. What is theirs is knowing it is over. */
+    assignedSettled: {
+      icon: <JourneyScene variant="done" size={MARK} />,
+      title: t("application.assignedSettledTitle"),
+      subTitle: t("application.assignedSettledBody"),
+      action: (
+        <Button size="large" onClick={onViewStatus}>
           {t("application.assignedDoneAction")}
         </Button>
       ),

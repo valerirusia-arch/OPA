@@ -760,6 +760,19 @@ export const en = {
   "application.assignedDoneBody":
     "OPA is reviewing the application now. You can follow where it has got to on your loan page.",
   "application.assignedDoneAction": "See the application",
+  /* The three outcomes the co-borrower's side had nowhere to say. The WBS's
+     "View application status and details" names Borrower/Co-borrower in its
+     role column and owes them Approved and declined; a repaid loan is the
+     third, and it was reading "OPA is reviewing the application now". */
+  "application.assignedActiveTitle": "This application was approved",
+  "application.assignedActiveBody":
+    "The loan is going ahead. You can follow where it has got to on the loan page.",
+  "application.assignedClosedTitle": "This application is closed",
+  "application.assignedClosedBody":
+    "OPA is not going ahead with it. There is nothing left for you to do here.",
+  "application.assignedSettledTitle": "This loan is fully repaid",
+  "application.assignedSettledBody":
+    "Every payment has been made and nothing is owed. Your part in it is finished.",
   /* The co-borrower's side of story 14's reset. No decision, no reason, no
      "you did not qualify": OPA telling somebody it turned them down for credit
      is an adverse action with its own legal handling, and the epic's own
@@ -2469,6 +2482,15 @@ const es: Record<TranslationKey, string> = {
   "application.assignedDoneBody":
     "OPA está revisando la solicitud. Puedes seguir su avance en la página de tu préstamo.",
   "application.assignedDoneAction": "Ver la solicitud",
+  "application.assignedActiveTitle": "Esta solicitud fue aprobada",
+  "application.assignedActiveBody":
+    "El préstamo sigue adelante. Puedes ver en qué punto está en la página del préstamo.",
+  "application.assignedClosedTitle": "Esta solicitud está cerrada",
+  "application.assignedClosedBody":
+    "OPA no va a seguir adelante con ella. No queda nada por hacer de tu parte.",
+  "application.assignedSettledTitle": "Este préstamo está totalmente pagado",
+  "application.assignedSettledBody":
+    "Todos los pagos están hechos y no se debe nada. Tu parte ya está terminada.",
   "application.invitationClosedTitle": "Esta invitación ya no está activa",
   "application.invitationClosedBody":
     "Aquí no queda nada por hacer. Si tienes dudas, la persona que te invitó puede explicártelo, o puedes escribirnos.",

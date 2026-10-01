@@ -54,7 +54,7 @@ import { SubmitStep } from "../../features/LoanApplication/ui/SubmitStep";
 import { ReviewStep } from "../../features/LoanApplication/ui/ReviewStep";
 import { ConfirmModal } from "../../shared/ui/ConfirmModal";
 import { useApplicationReview } from "../../features/LoanApplication/ui/summary";
-import { applyCard, setStage, useLoanRecord } from "../loan/loanRecord";
+import { applyCard, coBorrowerGateFor, setStage, useLoanRecord } from "../loan/loanRecord";
 import type {
   CardToken,
   HouseholdValues,
@@ -166,16 +166,13 @@ export default function CoBorrowerApplicationScreen({
   /** Pressed "Start my part": the invitation stands down and the wizard opens. */
   const [started, setStarted] = useState(false);
 
-  const gateState =
-    record === undefined
-      ? ("open" as const)
-      : record.status === "coBorrower"
-        ? started
-          ? undefined
-          : ("invited" as const)
-        : record.status === "pendingAction"
-          ? ("needsInfo" as const)
-          : ("assignedDone" as const);
+  /* One derivation, shared with /application — this screen used to have its
+     own, which is how a declined co-borrower ended up being handed the
+     invitation screen again with the inviter's name blank. `started` is the
+     one thing that is this screen's: the invitation turns into the wizard
+     here, and nowhere else. */
+  const base = coBorrowerGateFor(record);
+  const gateState = base === "invited" && started ? undefined : base;
   const submitted = gateState !== undefined && initialStep === undefined;
 
   const [step, setStep] = useState<number>(initialStep ?? STEP.account);

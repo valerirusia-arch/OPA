@@ -708,6 +708,43 @@ export const isRepaid = (record: ApplicationSummary | undefined) =>
   record.loan.schedule.length > 0 &&
   record.loan.schedule.every((row) => row.status === "paid");
 
+/**
+ * THE SAME QUESTION FROM THE CO-BORROWER'S SIDE, answered in one place.
+ *
+ * It was answered in two, and they had already drifted: `/application`
+ * checked `coBorrowerFailed` and `/co-application` did not, so a declined
+ * co-borrower opening the second one was handed the invitation screen again
+ * with the inviter's name blank. That is what a second copy of a rule buys.
+ *
+ * BOTH COPIES ALSO STOPPED AT `assignedDone`, whose words are "OPA is
+ * reviewing the application now" — so an approved application, a declined
+ * one and a loan repaid in full all told the co-borrower it was still under
+ * review. The WBS's "View application status and details" carries
+ * Borrower/Co-borrower in its role column and owes them "Submitted, Under
+ * Review, Pending action, Approved, declined"; two of those five had nowhere
+ * to appear.
+ *
+ * The order matters and is not the borrower's. Settled and closed come
+ * first, because they are true no matter what the status field still says.
+ */
+export const coBorrowerGateFor = (record: ApplicationSummary | undefined) => {
+  if (!record) return "open" as const;
+  if (isRepaid(record)) return "assignedSettled" as const;
+  /* Declined and cancelled share a state: what the co-borrower does about
+     either is the same — nothing — and one sentence can be true of both
+     without the page guessing which it was. */
+  if (record.status === "declined" || record.loan?.stage === "cancelled")
+    return "assignedClosed" as const;
+  /* Before the plain co-borrower check, same as the borrower's: story 14's
+     reset leaves the status at `coBorrower` with no invitation on it. */
+  if (record.coBorrowerFailed) return "invitationClosed" as const;
+  if (record.status === "coBorrower") return "invited" as const;
+  if (record.status === "pendingAction") return "needsInfo" as const;
+  /* A loan exists, or the decision is in: either way it is past review. */
+  if (record.status === "approved" || record.loan) return "assignedActive" as const;
+  return "assignedDone" as const;
+};
+
 export const gateFor = (record: ApplicationSummary | undefined) => {
   if (!record) return "open" as const;
   /* SETTLED, AND THE FILE CAN BE CLOSED. Before `hasActive`, which is what
