@@ -742,7 +742,10 @@ export const en = {
      the burst on the drawing is the celebration, and a product that has spent
      ten screens being careful about money does not suddenly shout. */
   "application.repaidTitle": "Your loan is fully repaid",
-  "application.repaidBody": "Nothing is owed. Close it when you are ready and you can start a new one.",
+  /* The second sentence earns its place by saying what the button does.
+     "Close it when you are ready" said only that the button exists, which
+     the button was already saying. */
+  "application.repaidBody": "Nothing is owed. Close it to start a new application.",
   /* "Done", not "Close this application". The sentence above already says
      what closing it means and what it frees; the button only has to be the
      full stop. *"ან რამე Done რაიმე ესეთი რომ ეწეროს."* */
@@ -776,8 +779,10 @@ export const en = {
     "The loan is being set up. You can follow it on your loan page.",
   "application.approvedAction": "See the loan",
   "application.declinedTitle": "This application wasn't approved",
-  "application.declinedBody":
-    "OPA has reviewed it and can't go ahead. You can start a new one when you are ready.",
+  /* It names WHO decided, which is the one fact a reader cannot work out from
+     the title, and stops. What happens next is on the button, and the button
+     is the only thing that differs between the two sides. */
+  "application.declinedBody": "OPA staff reviewed it and couldn't go ahead.",
   "application.declinedAction": "Start a new application",
   /* The three outcomes the co-borrower's side had nowhere to say. The WBS's
      "View application status and details" names Borrower/Co-borrower in its
@@ -786,11 +791,8 @@ export const en = {
   "application.assignedActiveTitle": "This application was approved",
   "application.assignedActiveBody":
     "The loan is going ahead. You can follow where it has got to on the loan page.",
-  "application.assignedClosedTitle": "This application is closed",
-  "application.assignedClosedBody":
-    "OPA is not going ahead with it. There is nothing left for you to do here.",
   "application.assignedSettledTitle": "Your loan is fully repaid",
-  "application.assignedSettledBody": "Nothing is owed. Close it when you are ready.",
+  "application.assignedSettledBody": "Nothing is owed. Your part in it is finished.",
   /* The co-borrower's side of story 14's reset. No decision, no reason, no
      "you did not qualify": OPA telling somebody it turned them down for credit
      is an adverse action with its own legal handling, and the epic's own
@@ -2484,7 +2486,7 @@ const es: Record<TranslationKey, string> = {
 
   "application.title": "Solicitud",
   "application.repaidTitle": "Tu préstamo está totalmente pagado",
-  "application.repaidBody": "No debes nada. Ciérrala cuando quieras y podrás iniciar una nueva.",
+  "application.repaidBody": "No debes nada. Ciérrala para iniciar una solicitud nueva.",
   "application.closeApplication": "Listo",
   "application.startTitle": "Inicia tu solicitud de préstamo",
   "application.startSubtitle":
@@ -2502,17 +2504,13 @@ const es: Record<TranslationKey, string> = {
     "El préstamo se está preparando. Puedes seguirlo en la página de tu préstamo.",
   "application.approvedAction": "Ver el préstamo",
   "application.declinedTitle": "Esta solicitud no fue aprobada",
-  "application.declinedBody":
-    "OPA la ha revisado y no puede seguir adelante. Puedes iniciar una nueva cuando quieras.",
+  "application.declinedBody": "El personal de OPA la revisó y no pudo seguir adelante.",
   "application.declinedAction": "Iniciar una solicitud nueva",
   "application.assignedActiveTitle": "Esta solicitud fue aprobada",
   "application.assignedActiveBody":
     "El préstamo sigue adelante. Puedes ver en qué punto está en la página del préstamo.",
-  "application.assignedClosedTitle": "Esta solicitud está cerrada",
-  "application.assignedClosedBody":
-    "OPA no va a seguir adelante con ella. No queda nada por hacer de tu parte.",
   "application.assignedSettledTitle": "Tu préstamo está totalmente pagado",
-  "application.assignedSettledBody": "No debes nada. Ciérralo cuando quieras.",
+  "application.assignedSettledBody": "No debes nada. Tu parte ya está terminada.",
   "application.invitationClosedTitle": "Esta invitación ya no está activa",
   "application.invitationClosedBody":
     "Aquí no queda nada por hacer. Si tienes dudas, la persona que te invitó puede explicártelo, o puedes escribirnos.",

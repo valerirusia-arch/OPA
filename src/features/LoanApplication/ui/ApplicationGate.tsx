@@ -380,8 +380,14 @@ export function ApplicationGate({
       /* The same cross the borrower's `declined` wears — one refusal, drawn
          one way, whichever side is reading it. */
       icon: <JourneyScene variant="declined" size={MARK} />,
-      title: t("application.assignedClosedTitle"),
-      subTitle: t("application.assignedClosedBody"),
+      /* THE BORROWER'S OWN WORDS. It had a pair of its own saying the same
+         thing differently — "This application is closed. OPA is not going
+         ahead with it. There is nothing left for you to do here." One piece
+         of news, one way of saying it, whichever side is reading: *"ესენი
+         უნდა იყოს ბოროვერშიც და ქო-ბოროვერშიც იგივე."* Only the button
+         differs, because only the borrower can start another. */
+      title: t("application.declinedTitle"),
+      subTitle: t("application.declinedBody"),
       action: (
         <Button type="primary" size="large" onClick={onViewStatus}>
           {t("application.assignedDoneAction")}
