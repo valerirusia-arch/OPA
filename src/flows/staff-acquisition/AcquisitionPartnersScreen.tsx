@@ -34,7 +34,7 @@ import type {
 } from "../../features/Acquisition/ui/types";
 import { mockGroups, mockReferralPartners } from "./mockPartners";
 import { getStyles } from "./AcquisitionSourcesScreen.styles";
-import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
 
 type Entity = "partner" | "group";
 type Tab = "partners" | "groups";

@@ -31,7 +31,7 @@ import type { AcquisitionStatus, Campaign } from "../../features/Acquisition/ui/
 import { mockSources } from "./mockSources";
 import { mockCampaigns } from "./mockCampaigns";
 import { getStyles } from "./AcquisitionSourcesScreen.styles";
-import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
 
 type Pending = { kind: "delete" | "deactivate" | "activate"; campaign: Campaign } | null;
 

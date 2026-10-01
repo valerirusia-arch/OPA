@@ -51,16 +51,6 @@ export const brand = {
   tintHover: "#F4F8FC",
   tintStrong: "#DDEBF7",
   /**
-   * THE EMPTY-STATE ILLUSTRATION FAMILY — a flat, light-blue set matched to a
-   * Figma reference the designer chose, so every "nothing here yet" state reads
-   * as one drawing style across the product instead of the mixed set it was.
-   *
-   * Trialled in LIGHT BLUE first — the designer may mute these later, which is a
-   * one-line change here. Kept together so a recolour touches one place. The
-   * disc ground reuses the product's own `tint`; the rest are the reference's
-   * blues: a bright accent for a header or badge, a mid line, and a faint one.
-   */
-  /**
    * THE EMPTY-STATE DRAWINGS — line art, and the four values it is drawn with.
    *
    * Warm greys rather than the product's teal: an empty state is a place where
@@ -106,10 +96,30 @@ export const brand = {
   sceneSoft: "#EFEBE6",
   sceneBlob: "#F8F6F3",
 
-  illoGround: "#E8EEFB",
-  illoInk: "#2F6BFF",
-  illoSoft: "#AFC9FF",
-  illoFaint: "#DCE7F9",
+  /**
+   * THE SAME DRAWINGS, IN COLOUR — the loan application's journey.
+   *
+   * The empties above are grey because nothing has happened in them and an
+   * accent would compete with the one button that is the way forward. The
+   * application gate is the opposite case and the designer drew the line
+   * there: *"აქ უნდა იყოს ფერადები იგივე სტილში, იმიტომ რომ ეს უფრო
+   * ილუსტრაციაში გაგვყავს და არა ემფთი სფეისში."* These states are a journey
+   * somebody is ON, not a place where nothing is, so the picture may carry
+   * the brand.
+   *
+   * Teal rather than the CTA orange, which is deliberate: the orange belongs
+   * to the button directly under the drawing, and an illustration in the same
+   * colour as the action would put the two in competition. Teal is the
+   * identity; orange is the verb.
+   *
+   * The contour is `primarySoft` — teal at ~45% over white, the outline weight
+   * this product already uses to hint. These two are the same ramp continued:
+   * roughly a quarter of the teal for what sits inside a contour, and a
+   * sixteenth for the air behind it.
+   */
+  sceneTealSoft: "#C6DDE5",
+  sceneTealBlob: "#ECF3F6",
+
   /**
    * THE SAME THREE TINTS, TURNED WARM — the tables' own family.
    *

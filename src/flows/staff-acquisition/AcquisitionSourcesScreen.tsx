@@ -36,7 +36,7 @@ import {
 import type { AcquisitionSource, AcquisitionStatus } from "../../features/Acquisition/ui/types";
 import { mockPartners, mockSources } from "./mockSources";
 import { getStyles } from "./AcquisitionSourcesScreen.styles";
-import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
 
 export type AcquisitionSourcesScreenProps = {
   sources?: AcquisitionSource[];

@@ -44,7 +44,7 @@ import { LoanAdminPanel } from "../../../features/Loan/ui/LoanAdminPanel";
 import { AcquisitionPanel } from "../../../features/Loan/ui/AcquisitionPanel";
 import { allLoans, type LoanRow } from "../mockStaffLoans";
 import { styles } from "./LoanRecordScreen.styles";
-import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../../shared/ui/scenes/EmptyScene";
 
 export type LoanRecordScreenProps = {
   loans?: LoanRow[];

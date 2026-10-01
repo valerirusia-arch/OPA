@@ -58,7 +58,7 @@ import { ApplicationProgress } from "../../features/Dashboard/ui/ApplicationProg
 import { StageFoot } from "../../features/Dashboard/ui/StageFoot";
 import { FactTiles } from "../../features/Dashboard/ui/FactTiles";
 import { PaymentHistory } from "../../features/Payments/ui/PaymentHistory";
-import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
 import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
 import { stageCopy } from "../../features/Payments/ui/delinquency";
 import { hasOpenApplication, useLoanRecord, usePaymentsRecord } from "../loan/loanRecord";

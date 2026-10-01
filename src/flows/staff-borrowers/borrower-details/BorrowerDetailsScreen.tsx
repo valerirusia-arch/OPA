@@ -62,7 +62,7 @@ import { fullName } from "../../../features/Borrowers/ui/types";
 import { PersonPanel } from "../../../shared/ui/PersonPanel";
 import { mockBorrowers } from "../mockBorrowers";
 import { styles } from "./BorrowerDetailsScreen.styles";
-import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../../shared/ui/scenes/EmptyScene";
 
 /**
  * The record stores a date of birth as it reads — "14 May 1990" — and the

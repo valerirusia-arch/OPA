@@ -29,7 +29,7 @@
 // empties out.
 
 import { Empty, Flex, Typography, theme } from "antd";
-import { EmptyScene, type EmptySceneVariant } from "./empty/EmptyScene";
+import { EmptyScene, type EmptySceneVariant } from "./scenes/EmptyScene";
 import { getStyles, styles } from "./EmptyState.styles";
 
 export type EmptyStateProps = {

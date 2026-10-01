@@ -69,7 +69,7 @@ import { awaitsReview } from "../../features/Applications/ui/checks";
 import type { ApplicationRecord } from "../../features/Applications/ui/types";
 import { mockApplications } from "./mockApplications";
 import { getStyles, styles } from "./StaffApplicationsScreen.styles";
-import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
 
 const money = (amount: number) =>
   `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;

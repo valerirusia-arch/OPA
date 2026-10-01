@@ -34,7 +34,7 @@ import { mockSources } from "./mockSources";
 import { mockGroups, mockReferralPartners } from "./mockPartners";
 import { mockCampaigns } from "./mockCampaigns";
 import { styles } from "./AcquisitionPerformanceScreen.styles";
-import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
 
 // The analysis, from the wireframe: a few totals, then a row per channel with
 // its loans, credit reports and approval rate. Mock aggregates — Dev reads the

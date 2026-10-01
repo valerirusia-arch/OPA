@@ -71,7 +71,7 @@ import { Button, Card, Col, Flex, Grid, Result, Row, Typography, theme } from "a
 import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { DocumentList } from "./DocumentList";
-import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../../shared/ui/scenes/EmptyScene";
 import { LoanStatement, type LoanStatementProps, type StatementFact } from "./LoanStatement";
 import { VirtualCardPanel } from "./VirtualCardPanel";
 import { getStyles, styles } from "./LoanOverview.styles";

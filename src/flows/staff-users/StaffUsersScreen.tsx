@@ -59,7 +59,7 @@ import {
   type UserStatus,
 } from "../../features/Users/ui/roles";
 import { getStyles, styles } from "./StaffUsersScreen.styles";
-import { EmptyScene } from "../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
 
 export type UserRow = {
   id: string;

@@ -43,7 +43,7 @@ import {
 } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { EmptyState } from "../../../shared/ui/EmptyState";
-import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../../shared/ui/scenes/EmptyScene";
 import { stageCopy } from "./delinquency";
 import { formatAmount, toAmount } from "./money";
 import { PageNotice } from "../../../shared/ui/PageNotice";

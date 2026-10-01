@@ -71,7 +71,7 @@ import type {
 import type { TranslationKey } from "../../../shared/ui/i18n/dictionary";
 import { mockApplications } from "../mockApplications";
 import { getStyles, styles } from "./ApplicationDetailsScreen.styles";
-import { EmptyScene } from "../../../shared/ui/empty/EmptyScene";
+import { EmptyScene } from "../../../shared/ui/scenes/EmptyScene";
 
 const money = (amount: number) =>
   `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;

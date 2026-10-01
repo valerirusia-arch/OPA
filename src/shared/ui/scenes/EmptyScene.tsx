@@ -1,4 +1,4 @@
-// src/shared/ui/empty/EmptyScene.tsx
+// src/shared/ui/scenes/EmptyScene.tsx
 //
 // THE EMPTY-STATE DRAWINGS. Line art: one uniform contour, white inside it, a
 // soft blob behind the subject, a few thin sparkles and a ground shadow.
@@ -32,12 +32,13 @@
 // so a recolour of the theme is one edit and there is no asset to re-export.
 // This is the approved SVG-illustration exception.
 //
-// THE CHROME IS SHARED AND THE SUBJECT IS NOT. Blob, ground and sparkles are
-// composed once below and drawn for every scene in the same places, which is
-// what makes three different objects read as one family rather than as three
-// drawings that happen to be grey.
+// THE CHROME IS SHARED AND THE SUBJECT IS NOT. Blob, ground and sparkles live
+// in `SceneFrame`, which the coloured journey drawings stand in too — so the
+// grey set and the teal set are provably the same hand, and a new scene cannot
+// land its blob somewhere slightly else.
 
 import { brand } from "../../../theme/tokens";
+import { SceneFrame } from "./SceneFrame";
 
 export type EmptySceneVariant = "empty" | "notFound" | "noAccess";
 
@@ -52,34 +53,10 @@ export type EmptySceneProps = {
   scale?: "card" | "page";
 };
 
-/** The artwork is laid out in this box and scaled from it. */
-const BOX = { w: 200, h: 150 };
 const WIDTH = { card: 168, page: 212 } as const;
 
 /** One uniform contour for everything that is drawn. */
 const LINE = { stroke: brand.sceneLine, strokeWidth: 1.8, fill: brand.white } as const;
-
-/**
- * The soft shape behind the subject. Irregular on purpose: a circle behind an
- * object reads as a plate it has been placed on, and a blob reads as depth of
- * field — which is the only kind of depth this style allows itself.
- */
-const BLOB =
-  "M44 48C54 26 82 16 110 22C138 28 162 44 164 70C166 96 144 114 114 118" +
-  "C84 122 50 114 42 92C36 76 38 62 44 48Z";
-
-/** A thin cross. Three of them, at three sizes, is what keeps the frame from
- *  looking like a cropped icon. */
-function Sparkle({ x, y, r }: { x: number; y: number; r: number }) {
-  return (
-    <path
-      d={`M${x} ${y - r}V${y + r}M${x - r} ${y}H${x + r}`}
-      stroke={brand.sceneSoft}
-      strokeWidth={1.8}
-      strokeLinecap="round"
-    />
-  );
-}
 
 /**
  * A record with nothing written in it.
@@ -226,27 +203,11 @@ const SUBJECTS = {
 
 export function EmptyScene({ variant = "empty", scale = "card" }: EmptySceneProps) {
   const Subject = SUBJECTS[variant];
-  const width = WIDTH[scale];
 
   return (
-    <svg
-      width={width}
-      height={Math.round((width * BOX.h) / BOX.w)}
-      viewBox={`0 0 ${BOX.w} ${BOX.h}`}
-      fill="none"
-      role="presentation"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d={BLOB} fill={brand.sceneBlob} />
+    <SceneFrame width={WIDTH[scale]} blob={brand.sceneBlob} spark={brand.sceneSoft}>
       <Subject />
-      {/* The ground last of the solids: a flat ellipse, no blur, so the object
-          stands on the page without being lit by anything. */}
-      <ellipse cx={96} cy={132} rx={54} ry={4} fill={brand.sceneBlob} />
-      <Sparkle x={36} y={38} r={5.5} />
-      <Sparkle x={170} y={46} r={4} />
-      <Sparkle x={30} y={100} r={4.5} />
-    </svg>
+    </SceneFrame>
   );
 }
 
