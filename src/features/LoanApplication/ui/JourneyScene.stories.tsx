@@ -19,8 +19,12 @@ type Story = StoryObj<typeof meta>;
 /** Your move: start an application, invite a co-borrower, answer a request. */
 export const Act: Story = { args: { variant: "act" } };
 
-/** Settled, and nothing is owed. The one green mark in the set. */
+/** Settled, or decided in the reader's favour. The one green mark in the set,
+ *  and it means FINISHED — which is why the state below cannot borrow it. */
 export const Done: Story = { args: { variant: "done" } };
+
+/** With OPA and being read. Time passing, not a decision made. */
+export const Review: Story = { args: { variant: "review" } };
 
 /** Filed, and not your move — a check in progress, a decision pending, an
  *  application that has stopped. No badge at all: there is nothing to do. */
@@ -32,8 +36,12 @@ export const Waiting: Story = { args: { variant: "waiting" } };
  *  one state meant to be readable across a room. */
 export const Attention: Story = { args: { variant: "attention" } };
 
-/* The last two draw a person's record rather than the loan's packet, because
-   they are states about a person. */
+/* The last three draw a person's record rather than the loan's packet,
+   because they are states about a person. */
+
+/** Somebody has asked you to join their application. Their record, with an
+ *  envelope — a "+" here would read as "add this person", which is backwards. */
+export const Invite: Story = { args: { variant: "invite" } };
 
 /** Waiting on somebody else — an invited co-borrower whose part is not in.
  *  No badge: nothing has happened to them yet, and a mark would say it had. */

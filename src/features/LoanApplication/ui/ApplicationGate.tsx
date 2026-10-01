@@ -243,7 +243,12 @@ export function ApplicationGate({
       expires 5 calendar days after it is sent."
     */
     invited: {
-      icon: <JourneyScene variant="act" size={MARK} />,
+      /* THE PERSON WHO ASKED, not the loan's paperwork. This is the first
+         thing a co-borrower ever sees, and what it is about is somebody
+         inviting them — a document with a "+" on it said "start a form".
+         *"აი ბოროვერი უნდა იყოს ილუსტრაციაზე, ვინმე კაცუნა რომელმაც მოწვევა
+         გამოგიგზავნა."* */
+      icon: <JourneyScene variant="invite" size={MARK} />,
       title: t("application.invitedTitle", { name: invitation?.invitedBy ?? "" }),
       /*
         TWO LINES, AND THE SECOND IS THE DEADLINE.
@@ -286,7 +291,12 @@ export function ApplicationGate({
        job being finished. The application carries on without them; what they
        keep is the right to see where it has got to. */
     assignedDone: {
-      icon: <JourneyScene variant="done" size={MARK} />,
+      /* THE CLOCK TOO, and that is a judgement worth stating. The title
+         congratulates the co-borrower — their part IS in — but the drawing is
+         of the APPLICATION, and the application is being read. Its own body
+         says so in the same words `hasActive` uses, so the two screens cannot
+         carry different badges over the same sentence. */
+      icon: <JourneyScene variant="review" size={MARK} />,
       title: t("application.assignedDoneTitle"),
       subTitle: t("application.assignedDoneBody"),
       action: (
@@ -351,7 +361,10 @@ export function ApplicationGate({
       is still said, in the sentence, where it belongs.
     */
     hasActive: {
-      icon: <JourneyScene variant="done" size={MARK} />,
+      /* A CLOCK, NOT A GREEN CHECK. This page says "OPA is reviewing your
+         application now", and it was wearing the mark a loan repaid in full
+         wears. Green and a tick mean finished; nothing here is. */
+      icon: <JourneyScene variant="review" size={MARK} />,
       title: t("application.blockedActiveTitle"),
       subTitle: t("application.blockedActiveBody"),
       action: (

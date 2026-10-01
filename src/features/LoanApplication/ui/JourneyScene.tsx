@@ -24,12 +24,16 @@
 // the one thing that changed.
 //
 //   act       — your move. A teal "+": start, invite, replace, answer.
-//   done      — settled, and nothing is owed. A green check.
+//   done      — settled, or decided in the reader's favour. A green check.
+//   review    — with OPA, and being looked at. A teal clock.
 //   waiting   — filed, and not your move. The packet with no badge at all.
 //   attention — something needs looking at. An amber "!", and the amber runs
 //               through the shape behind it too, so the state is readable
 //               before a word of it is.
-//   person    — waiting on somebody else.
+//   invite    — somebody has asked you to join theirs. Their record, with an
+//               envelope on it.
+//   person    — waiting on somebody else. The review clock, on their record:
+//               what is being waited for is time, the same as with OPA.
 //   failed    — that somebody was reviewed and did not pass. An amber cross.
 //
 // THOSE TWO DROP THE PACKET AND DRAW A PERSON'S RECORD. They were the loan's
@@ -62,6 +66,8 @@ import { SceneFrame, Sheet } from "../../../shared/ui/scenes/SceneFrame";
 export type JourneySceneVariant =
   | "act"
   | "done"
+  | "review"
+  | "invite"
   | "waiting"
   | "attention"
   | "person"
@@ -89,12 +95,19 @@ const LINE_PROPS = {
 const TONE = {
   act: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   done: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.success },
+  /* Teal, not green, and a clock rather than a check. Green and a tick mean
+     FINISHED, and an application that OPA is still reading is not — it was
+     wearing the same mark as a loan repaid in full: *"ეს მწვანე არ უნდა
+     იყოს... იმიტომ რომ ჩვენ არ დასრულებულა, ჯერ ოპა ცდილობს გადახედოს."* */
+  review: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   waiting: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: null },
   attention: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
-  /* No badge. Nothing has happened to this person yet — they have been
-     invited and have not finished — and a mark on them would say something
-     has. The figure alone is the state. */
-  person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: null },
+  /* The clock, as `review` wears it. It was bare, on the reasoning that
+     nothing has happened to this person yet and a mark would say it had —
+     but the clock does not say something happened, it says something is
+     being waited for, which is exactly this state. */
+  invite: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
+  person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   failed: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
 } satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
 
@@ -218,7 +231,52 @@ function Badge({
     <g>
       <circle cx={141} cy={112} r={20} fill={brand.white} />
       <circle cx={141} cy={112} r={16} fill={fill} />
-      {variant === "done" ? (
+      {variant === "invite" ? (
+        <>
+          {/* An envelope: this person sent you something. A "+" would have
+              read as "add this person", which is backwards — they are
+              already on it and the one being added is the reader. */}
+          <rect
+            x={133}
+            y={105.5}
+            width={16}
+            height={13}
+            rx={2.5}
+            fill="none"
+            stroke={brand.white}
+            strokeWidth={2}
+          />
+          <path
+            d="M133.5 107.5 141 113l7.5-5.5"
+            fill="none"
+            stroke={brand.white}
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </>
+      ) : variant === "review" || variant === "person" ? (
+        <>
+          {/* A clock: the application is somewhere, and the somewhere is time
+              passing rather than a decision made. */}
+          <circle
+            cx={141}
+            cy={112}
+            r={8.5}
+            fill="none"
+            stroke={brand.white}
+            strokeWidth={2.4}
+          />
+          <path
+            d="M141 106.5V112h4.5"
+            fill="none"
+            stroke={brand.white}
+            strokeWidth={2.4}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </>
+      ) : variant === "done" ? (
         <path
           d="m133.5 112.5 5 5 10-10"
           fill="none"
@@ -242,20 +300,7 @@ function Badge({
           strokeWidth={3}
           strokeLinecap="round"
         />
-      ) : variant === "person" ? (
-        <>
-          {/* The same figure the contact panel's badge carries, so "a person"
-              means one thing in this product's drawings. */}
-          <circle cx={141} cy={107.5} r={4.6} fill={brand.white} />
-          <path
-            d="M133 121c0-4.8 3.6-8 8-8s8 3.2 8 8"
-            fill="none"
-            stroke={brand.white}
-            strokeWidth={3}
-            strokeLinecap="round"
-          />
-        </>
-      ) : (
+            ) : (
         <path
           d="M141 103v18M132 112h18"
           stroke={brand.white}
@@ -272,7 +317,11 @@ export function JourneyScene({ variant = "act", size = 200 }: JourneySceneProps)
 
   return (
     <SceneFrame width={size} blob={tone.blob} spark={tone.ink}>
-      {variant === "person" || variant === "failed" ? <PersonCard /> : <Packet />}
+      {variant === "person" || variant === "failed" || variant === "invite" ? (
+        <PersonCard />
+      ) : (
+        <Packet />
+      )}
       {tone.badge ? <Badge variant={variant} fill={tone.badge} /> : null}
     </SceneFrame>
   );
