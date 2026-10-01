@@ -68,21 +68,30 @@ export const brand = {
    * that is the way forward. They are warm because every other grey here is —
    * a cool line on this off-white ground reads as a different material.
    *
-   * `sceneLine` is the contour, and it is LIGHT on purpose: it now sits
-   * between `border` and `borderHover`, which is to say the drawing is held
-   * at about the weight of a card's own outline rather than above it.
-   * It started two steps darker than `borderHover`, on the reasoning that a
-   * drawing held at border weight disappears into the card it sits on. It
-   * does not: at that weight the outlines were the heaviest marks on the
+   * `sceneLine` is the contour, and it has walked all the way down to
+   * `hairline` — the value the designer pointed at with a swatch, and already
+   * the lightest stroke in the product, the one used where a line only has to
+   * SEPARATE. It started two steps darker than `borderHover`, on the
+   * reasoning that a drawing held at border weight disappears into its card.
+   * It does not: at that weight the outlines were the heaviest marks on the
    * screen, heavier than the sentence they are there to introduce, and it
-   * took two passes to get them down — *"არ მომწონს ესეთი მუქი სთროუკები
-   * გარშემო"*, then *"ჯერჯერობით მინდა რომ უფრო მსუბუქი სთროუკი ჰქონდეს."*
-   * An empty state is the quietest thing on a page and its picture cannot be
-   * the loudest.
+   * took four passes to get them down.
    *
-   * `sceneSoft` moves WITH it, always a few steps lighter. Lightening the
-   * contour alone would close the gap between the outline and what sits
-   * inside it, and the drawing would go flat — one tone, no subject.
+   * THIS IS THE FLOOR, and it is worth writing down. `hairline` differs from
+   * white by about 6%. The drawings are legible at it and nothing below it
+   * would be — a fifth step would put the pictures under the threshold at
+   * which a 1.8px line reads on a white card at all. If they are still too
+   * present, the move left is a thinner stroke, not a lighter colour.
+   *
+   * `sceneSoft` IS `sceneLine` now, and that is not laziness. Lightening it
+   * to keep the old gap put it four steps off white, and the sheet's dashes —
+   * the marks that say nothing has been written — disappeared entirely, which
+   * left a drawing of a page rather than of an empty one. At the same value
+   * they come back, and they still read lighter than the outline, because a
+   * broken line lays down less ink than a continuous one. The ranking is done
+   * optically instead of by tone, which is the only way left at this floor.
+   *
+   * `sceneBlob` sits above both and is the one value with room to move.
    * `sceneSoft` is everything inside a contour — dots, bars, the sparkles.
    * `sceneBlob` is the soft shape behind the subject and the ground it stands
    * on. It is now barely off white — just enough to separate from a card and
@@ -91,8 +100,10 @@ export const brand = {
    * white cards these all sit in and would vanish if one were ever drawn
    * straight onto the page.
    */
-  sceneLine: "#DCD6CF",
-  sceneSoft: "#EBE6E1",
+  /* The same value as `hairline` below, written out because a key in this
+     object cannot reference a sibling. Keep the two in step. */
+  sceneLine: "#EFEBE6",
+  sceneSoft: "#EFEBE6",
   sceneBlob: "#F8F6F3",
 
   illoGround: "#E8EEFB",
