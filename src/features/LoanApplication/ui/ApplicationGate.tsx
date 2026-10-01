@@ -569,7 +569,10 @@ export function ApplicationGate({
       ),
     },
     invitationClosed: {
-      icon: <JourneyScene variant="act" size={MARK} />,
+      /* THE RECORD WITH THE ENVELOPE GONE. It wore the "+" the start screen
+         wears, which offered to add something to a page whose own sentence
+         says there is nothing left to do. */
+      icon: <JourneyScene variant="closed" size={MARK} />,
       title: t("application.invitationClosedTitle"),
       subTitle: t("application.invitationClosedBody"),
       action: (
