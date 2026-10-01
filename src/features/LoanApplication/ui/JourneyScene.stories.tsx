@@ -31,3 +31,11 @@ export const Waiting: Story = { args: { variant: "waiting" } };
  *  packet's lines and the shape behind it, not just the badge — this is the
  *  one state meant to be readable across a room. */
 export const Attention: Story = { args: { variant: "attention" } };
+
+/** Waiting on somebody else — an invited co-borrower whose part is not in.
+ *  Nothing is wrong, so nothing on it is amber. */
+export const Person: Story = { args: { variant: "person" } };
+
+/** Reviewed, and did not pass. The cross says what the exclamation mark was
+ *  too mild for; the amber says it is still a detour. */
+export const Failed: Story = { args: { variant: "failed" } };

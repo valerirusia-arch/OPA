@@ -29,6 +29,18 @@
 //   attention — something needs looking at. An amber "!", and the amber runs
 //               through the packet's own lines and the shape behind it, so
 //               the state is readable before a word of it is.
+//   person    — waiting on somebody else. A teal figure, because what the
+//               page is waiting for is a PERSON and not a decision: nothing
+//               is wrong and nothing is asked of the reader.
+//   failed    — reviewed, and did not pass. An amber cross.
+//
+// THE LAST TWO WERE BOTH `attention` AND SHOULD NOT HAVE BEEN. An exclamation
+// mark over "Waiting on your co-borrower" alarms a reader about a state in
+// which nothing has gone wrong, and the same mark over "didn't qualify" is
+// too mild for the one that did: *"აქ ვორნინგი არ უნდა იყოს... კაცუნსავით
+// რამე... ხოლო როცა ვერ გაიარა, უნდა იყოს რამე იქსივით."* Amber stays on the
+// cross because this is still a detour and not a dead end — nothing filled in
+// is lost and another invitation carries it on. Red would say otherwise.
 //
 // THE CONTOUR IS GREY IN ALL FOUR, and the same grey as the empty states —
 // *"სთროუკი ისევ იგივე ნაცრისფერი უნდა იყოს, რაც სხვაგან."* It was teal, and
@@ -43,7 +55,13 @@
 import { brand } from "../../../theme/tokens";
 import { SceneFrame, Sheet } from "../../../shared/ui/scenes/SceneFrame";
 
-export type JourneySceneVariant = "act" | "done" | "waiting" | "attention";
+export type JourneySceneVariant =
+  | "act"
+  | "done"
+  | "waiting"
+  | "attention"
+  | "person"
+  | "failed";
 
 export type JourneySceneProps = {
   variant?: JourneySceneVariant;
@@ -63,6 +81,8 @@ const TONE = {
   done: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.success },
   waiting: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: null },
   attention: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
+  person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
+  failed: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
 } satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
 
 /**
@@ -135,6 +155,26 @@ function Badge({ variant, fill }: { variant: JourneySceneVariant; fill: string }
               and sit off the circle's centre. */}
           <rect x={139.4} y={103} width={3.2} height={11} rx={1.6} fill={brand.white} />
           <circle cx={141} cy={118.6} r={1.9} fill={brand.white} />
+        </>
+      ) : variant === "failed" ? (
+        <path
+          d="M135 106l12 12M147 106l-12 12"
+          stroke={brand.white}
+          strokeWidth={3}
+          strokeLinecap="round"
+        />
+      ) : variant === "person" ? (
+        <>
+          {/* The same figure the contact panel's badge carries, so "a person"
+              means one thing in this product's drawings. */}
+          <circle cx={141} cy={107.5} r={4.6} fill={brand.white} />
+          <path
+            d="M133 121c0-4.8 3.6-8 8-8s8 3.2 8 8"
+            fill="none"
+            stroke={brand.white}
+            strokeWidth={3}
+            strokeLinecap="round"
+          />
         </>
       ) : (
         <path

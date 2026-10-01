@@ -742,7 +742,7 @@ export const en = {
      the burst on the drawing is the celebration, and a product that has spent
      ten screens being careful about money does not suddenly shout. */
   "application.repaidTitle": "Your loan is fully repaid",
-  "application.repaidBody": "Every payment is made and nothing is owed. Close this application when you are ready — you can start a new one any time after that.",
+  "application.repaidBody": "Nothing is owed. Close it when you are ready and you can start a new one.",
   /* "Done", not "Close this application". The sentence above already says
      what closing it means and what it frees; the button only has to be the
      full stop. *"ან რამე Done რაიმე ესეთი რომ ეწეროს."* */
@@ -766,8 +766,7 @@ export const en = {
   "application.invitedExpires": "The invitation expires on",
   "application.invitedAction": "Start my part",
   "application.assignedDoneTitle": "Your part is done",
-  "application.assignedDoneBody":
-    "OPA is reviewing the application now. You can follow where it has got to on your loan page.",
+  "application.assignedDoneBody": "OPA is reviewing your application.",
   "application.assignedDoneAction": "See the application",
   /* The three outcomes the co-borrower's side had nowhere to say. The WBS's
      "View application status and details" names Borrower/Co-borrower in its
@@ -848,7 +847,7 @@ export const en = {
   /* The borrower's side of the invitation, once it is out. */
   "application.coBorrowerWaitingTitle": "Waiting on your co-borrower",
   "application.coBorrowerWaitingBody":
-    "{name} has been invited and their part is not finished yet. The invitation expires on {date}; you can invite somebody else instead.",
+    "{name}'s part is not finished. The invitation expires on {date}.",
   /* WBS story 14, the reset. Three things at once, because a borrower who is
      only told "invite a co-borrower" will think the first invite failed to
      send: who was turned down, that the application survived them, and that
@@ -856,7 +855,7 @@ export const en = {
      that is somebody else's credit file, not this borrower's to read. */
   "application.coBorrowerFailedTitle": "Your co-borrower didn't qualify",
   "application.coBorrowerFailedBody":
-    "{name} was reviewed and didn't meet the requirements. Nothing you filled in is lost — invite a different co-borrower and your application carries on from there.",
+    "Invite a different co-borrower — everything you filled in is saved.",
   "application.coBorrowerFailedAction": "Invite a different co-borrower",
   "inviteCoBorrower.title": "Invite a co-borrower",
   "inviteCoBorrower.subtitle":
@@ -1325,7 +1324,7 @@ export const en = {
   // entry screen rather than a page of its own: the borrower's own status page
   // belongs to the Loan epic, not this one.
   "application.needsInfoTitle": "We need one more thing",
-  "application.needsInfoBody": "Someone reviewing your application has asked for something. Your application waits here until it arrives.",
+  "application.needsInfoBody": "Someone reviewing your application has asked for something.",
   "application.needsInfoAction": "See what is needed",
   // WBS: "Technical failures during credit check shall not cause the
   // application to be rejected. The application shall be resumed after the
@@ -2476,7 +2475,7 @@ const es: Record<TranslationKey, string> = {
 
   "application.title": "Solicitud",
   "application.repaidTitle": "Tu préstamo está totalmente pagado",
-  "application.repaidBody": "Todos los pagos están hechos y no debes nada. Cierra esta solicitud cuando quieras: después podrás iniciar una nueva en cualquier momento.",
+  "application.repaidBody": "No debes nada. Ciérrala cuando quieras y podrás iniciar una nueva.",
   "application.closeApplication": "Listo",
   "application.startTitle": "Inicia tu solicitud de préstamo",
   "application.startSubtitle":
@@ -2487,8 +2486,7 @@ const es: Record<TranslationKey, string> = {
   "application.invitedExpires": "La invitación caduca el",
   "application.invitedAction": "Empezar mi parte",
   "application.assignedDoneTitle": "Tu parte está lista",
-  "application.assignedDoneBody":
-    "OPA está revisando la solicitud. Puedes seguir su avance en la página de tu préstamo.",
+  "application.assignedDoneBody": "OPA está revisando tu solicitud.",
   "application.assignedDoneAction": "Ver la solicitud",
   "application.assignedActiveTitle": "Esta solicitud fue aprobada",
   "application.assignedActiveBody":
@@ -2546,10 +2544,10 @@ const es: Record<TranslationKey, string> = {
 
   "application.coBorrowerWaitingTitle": "Esperando a tu coprestatario",
   "application.coBorrowerWaitingBody":
-    "{name} ha sido invitado y su parte todavía no está lista. La invitación caduca el {date}; puedes invitar a otra persona.",
+    "La parte de {name} no está lista. La invitación caduca el {date}.",
   "application.coBorrowerFailedTitle": "Tu coprestatario no cumple los requisitos",
   "application.coBorrowerFailedBody":
-    "Hemos revisado a {name} y no cumple los requisitos. No se pierde nada de lo que rellenaste: invita a otro coprestatario y tu solicitud sigue desde ahí.",
+    "Invita a otro coprestatario: todo lo que rellenaste se guarda.",
   "application.coBorrowerFailedAction": "Invitar a otro coprestatario",
   "inviteCoBorrower.title": "Invitar a un coprestatario",
   "inviteCoBorrower.subtitle":
@@ -2888,7 +2886,7 @@ const es: Record<TranslationKey, string> = {
   "loanAdmin.loanIdLabel": "ID del préstamo",
 
   "application.needsInfoTitle": "Nos falta una cosa",
-  "application.needsInfoBody": "La persona que revisa tu solicitud ha pedido algo. Tu solicitud espera aquí hasta que llegue.",
+  "application.needsInfoBody": "La persona que revisa tu solicitud ha pedido algo.",
   "application.needsInfoAction": "Ver qué se necesita",
   "application.checkPausedTitle": "Una de nuestras verificaciones no responde",
   "application.checkPausedBody": "Es cosa nuestra, no tuya. No se pierde nada de lo que enviaste y tu solicitud no ha sido rechazada. Continúa sola en cuanto el servicio vuelva.",

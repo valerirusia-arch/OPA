@@ -404,12 +404,11 @@ export function ApplicationGate({
     */
     coBorrowerNeeded: invitation
       ? {
-          /* AMBER, NOT THE PLAIN "+". Nothing is being asked of the
-             borrower yet — but the invitation has an expiry printed in the
-             sentence below, and a state with a clock running on it is not
-             the same as a state that is simply waiting. The drawing says so
-             before the date is read. */
-          icon: <JourneyScene variant="attention" size={MARK} />,
+          /* A FIGURE, NOT A WARNING. What this page is waiting for is a
+             PERSON — nothing has gone wrong and nothing is asked of the
+             borrower — and an exclamation mark over that alarms a reader
+             about a state that is simply in progress. */
+          icon: <JourneyScene variant="person" size={MARK} />,
           title: t("application.coBorrowerWaitingTitle"),
           subTitle: t("application.coBorrowerWaitingBody", {
             name: invitation.invitee,
@@ -456,10 +455,11 @@ export function ApplicationGate({
       the WBS alone will not find this, and the copy below depends on it.
     */
     coBorrowerFailed: {
-      /* AMBER, and amber rather than red: the co-borrower did not qualify,
-         nothing the borrower filled in is lost, and the way on is to invite
-         somebody else. Red would make a detour read as a dead end. */
-      icon: <JourneyScene variant="attention" size={MARK} />,
+      /* A CROSS: this one WAS reviewed and did not pass, which the "!" it
+         shared with the waiting state was too mild to say. Still amber and
+         not red — nothing filled in is lost and another invitation carries
+         it on, and red would make a detour read as a dead end. */
+      icon: <JourneyScene variant="failed" size={MARK} />,
       title: t("application.coBorrowerFailedTitle"),
       subTitle: t("application.coBorrowerFailedBody", { name: coBorrowerFailed ?? "" }),
       action: (
