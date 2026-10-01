@@ -751,8 +751,11 @@ export const en = {
      full stop. *"ან რამე Done რაიმე ესეთი რომ ეწეროს."* */
   "application.closeApplication": "Done",
   "application.startTitle": "Start your loan application",
-  "application.startSubtitle":
-    "We'll walk you through it step by step and show you what OPA can cover.",
+  /* Short, and the half of it worth keeping. "We'll walk you through it step
+     by step" is reassurance about a form the reader has not seen yet; what
+     they are actually here to find out is what OPA pays for, and how much of
+     it is asked of them. Both, in one line. */
+  "application.startSubtitle": "A few steps, and you'll see what OPA can cover.",
   "application.start": "Start application",
   /* Invited and not started. The date is the WBS's five-day expiry. */
   /* SHORT, because this is the first thing a co-borrower ever sees and the
@@ -2494,8 +2497,7 @@ const es: Record<TranslationKey, string> = {
   "application.repaidBody": "No debes nada. Ciérrala para iniciar una solicitud nueva.",
   "application.closeApplication": "Listo",
   "application.startTitle": "Inicia tu solicitud de préstamo",
-  "application.startSubtitle":
-    "Te guiaremos paso a paso y te mostraremos lo que OPA puede cubrir.",
+  "application.startSubtitle": "Son unos pasos y verás qué puede cubrir OPA.",
   "application.start": "Iniciar la solicitud",
   "application.invitedTitle": "{name} te invitó como coprestatario",
   "application.invitedBody": "Tu parte lleva unos minutos.",
