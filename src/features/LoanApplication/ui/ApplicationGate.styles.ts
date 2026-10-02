@@ -7,6 +7,10 @@ import { getPageResultStyles } from "../../../shared/ui/pageResult.styles";
 export const styles = {
   /** The card supplies the padding; Result would add its own on top. */
   result: { padding: 0 },
+  /** A second way out, under the first. The padding comes off so the 12 the
+   *  stack is set to is the 12 that shows — antd's link button carries its
+   *  own, and the gap would have read as sixteen. */
+  secondaryLink: { padding: 0, height: "auto" },
   /**
    * One sentence per line inside a subtitle.
    *

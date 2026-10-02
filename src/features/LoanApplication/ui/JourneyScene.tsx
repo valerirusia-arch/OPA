@@ -32,14 +32,14 @@
 //               before a word of it is.
 //   invite    — somebody has asked you to join theirs. Their record, with an
 //               envelope on it.
-//   closed    — that invitation is over. The same record with the envelope
-//               GONE, which is the whole state: an invitation is the
-//               envelope, and there is no longer one. It wore the "+" the
-//               start screen wears, which offered to add something to a page
-//               where nothing can be added.
 //   person    — waiting on somebody else. The review clock, on their record:
 //               what is being waited for is time, the same as with OPA.
-//   failed    — that somebody was reviewed and did not pass. An amber cross.
+//   failed    — somebody was reviewed and did not pass. An amber cross, and
+//               BOTH SIDES OF THAT EVENT WEAR IT: the borrower is told their
+//               co-borrower did not qualify, the co-borrower is told their
+//               invitation is no longer active, and it is one thing that
+//               happened. They never share a screen, so one mark for one
+//               event is the whole of it.
 //   declined  — the APPLICATION was reviewed and did not pass. The same cross
 //               on the packet, and RED where `failed` is amber: a co-borrower
 //               who did not qualify is replaced and the application carries
@@ -79,7 +79,6 @@ export type JourneySceneVariant =
   | "done"
   | "review"
   | "invite"
-  | "closed"
   | "declined"
   | "waiting"
   | "attention"
@@ -120,10 +119,6 @@ const TONE = {
      but the clock does not say something happened, it says something is
      being waited for, which is exactly this state. */
   invite: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
-  /* No badge, and that is the message rather than an omission: `invite` is
-     this same record with an envelope on it, and an invitation that is over
-     is one without. */
-  closed: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: null },
   person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   failed: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
   declined: { ink: brand.sceneRedSoft, blob: brand.sceneRedBlob, badge: brand.danger },
@@ -337,8 +332,7 @@ export function JourneyScene({ variant = "act", size = 200 }: JourneySceneProps)
     <SceneFrame width={size} blob={tone.blob} spark={tone.ink}>
       {variant === "person" ||
       variant === "failed" ||
-      variant === "invite" ||
-      variant === "closed" ? (
+      variant === "invite" ? (
         <PersonCard />
       ) : (
         <Packet />

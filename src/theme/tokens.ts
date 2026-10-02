@@ -647,6 +647,22 @@ export const tokens: ThemeConfig = {
       dangerShadow: brand.shadowNone,
       fontWeight: 500,
       /**
+       * SHOULDERS ON THE PAGE-SIZED BUTTONS.
+       *
+       * antd derives this from `paddingContentHorizontal`, which gave every
+       * large button 15px a side — against the 48px height this theme sets
+       * them to, a ratio of 0.31. A long label carried it; a short one came
+       * out a stub, and the gate is full of short ones: "Got it", "Done",
+       * "Contact us". *"ყველა ეგეთი პატარა ღილაკი ოდნავ გაზარდე."*
+       *
+       * 28 — a little past half the height, because the labels here are
+       * short enough that half still read as a stub. "Got it" goes from 63px
+       * wide to 97. Only `paddingInlineLG` moves: the default-size buttons
+       * are in toolbars and table rows where width is shared with other
+       * things.
+       */
+      paddingInlineLG: 28,
+      /**
        * A DISABLED BUTTON STAYS IN THE CTA'S WARM FAMILY, not antd's cool grey.
        * A disabled Continue that turns blue-grey reads as a different control;
        * a pale orange keeps it recognisably the same button, just not yet

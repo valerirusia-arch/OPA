@@ -40,7 +40,7 @@
 // Dumb: it takes a state and reports which button was pressed. It navigates
 // nowhere — ApplicationStartScreen does that.
 
-import { Button, Card, ConfigProvider, Result, Typography, theme } from "antd";
+import { Button, Card, ConfigProvider, Flex, Result, Typography, theme } from "antd";
 import { brand } from "../../../theme/tokens";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { JourneyScene } from "./JourneyScene";
@@ -569,16 +569,37 @@ export function ApplicationGate({
       ),
     },
     invitationClosed: {
-      /* THE RECORD WITH THE ENVELOPE GONE. It wore the "+" the start screen
-         wears, which offered to add something to a page whose own sentence
-         says there is nothing left to do. */
-      icon: <JourneyScene variant="closed" size={MARK} />,
+      /* THE SAME CROSS THE BORROWER SEES for this. It wore the "+" the start
+         screen wears, which offered to add something to a page whose own
+         sentence says there is nothing left to do — and then, briefly, no
+         badge at all, which said nothing where something had happened. One
+         event, one mark: their co-borrower did not qualify, which from this
+         side is an invitation that is over. */
+      icon: <JourneyScene variant="failed" size={MARK} />,
       title: t("application.invitationClosedTitle"),
       subTitle: t("application.invitationClosedBody"),
+      /*
+        ACKNOWLEDGE FIRST, ASK SECOND.
+
+        "Contact us" was the only button, which made getting in touch the
+        thing this page wanted — and for most readers it is not: the
+        invitation is over, they have been told, and that is the end of it.
+        The same "Got it" the refused application has takes the primary slot
+        and does the same work, closing the record and releasing them.
+
+        Contact drops to a line of text under it, where a second option
+        belongs: available to the reader who wants it, and not in the way of
+        the one who does not.
+      */
       action: (
-        <Button type="primary" size="large" onClick={onContact}>
-          {t("application.invitationClosedAction")}
-        </Button>
+        <Flex vertical align="center" gap={12}>
+          <Button type="primary" size="large" onClick={onCloseApplication}>
+            {t("application.acknowledge")}
+          </Button>
+          <Button type="link" style={styles.secondaryLink} onClick={onContact}>
+            {t("application.invitationClosedAction")}
+          </Button>
+        </Flex>
       ),
     },
     /* A check did not answer. The WBS is explicit that this is not a refusal,

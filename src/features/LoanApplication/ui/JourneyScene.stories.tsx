@@ -43,14 +43,13 @@ export const Attention: Story = { args: { variant: "attention" } };
  *  envelope — a "+" here would read as "add this person", which is backwards. */
 export const Invite: Story = { args: { variant: "invite" } };
 
-/** And that invitation once it is over: the same record without the envelope.
- *  The absence is the state. */
-export const Closed: Story = { args: { variant: "closed" } };
 
 /** Waiting on somebody else — an invited co-borrower whose part is not in.
  *  No badge: nothing has happened to them yet, and a mark would say it had. */
 export const Person: Story = { args: { variant: "person" } };
 
 /** Reviewed, and did not pass. The cross says what the exclamation mark was
- *  too mild for; the amber says it is still a detour. */
+ *  too mild for; the amber says it is still a detour. Both sides of that one
+ *  event wear it — "your co-borrower didn't qualify" and "this invitation is
+ *  no longer active" are the same thing from two chairs. */
 export const Failed: Story = { args: { variant: "failed" } };
