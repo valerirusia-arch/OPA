@@ -691,7 +691,37 @@ export const tokens: ThemeConfig = {
     // filled fill on focus (antd turns it white, which reads as disappearing).
     Input: { colorErrorText: brand.ink, activeBg: brand.surfaceSubtle },
     Select: { optionSelectedFontWeight: 500, colorErrorText: brand.ink },
-    DatePicker: { activeBg: brand.surfaceSubtle, colorErrorText: brand.ink },
+    DatePicker: {
+      activeBg: brand.surfaceSubtle,
+      colorErrorText: brand.ink,
+      /**
+       * A CALENDAR DAY IS NOT A BUTTON.
+       *
+       * antd sizes the picker's cells off `controlHeight`, which this theme
+       * pins to 48 for roomy inputs — so every square in the month grid came
+       * out 48px and the panel stood 401px tall. Measured in the campaign
+       * dialog on a 768px window, which is an ordinary 1366×768 laptop: the
+       * field has 286px under it, the panel needs 401, so antd flips it up
+       * and it covers the dialog's title and the two fields above it.
+       *
+       * 28 brings the rendered cell to 40 — antd adds its own padding — and
+       * the panel from 401 to 345. That is a real improvement to a grid of
+       * oversized squares, and it does NOT fix the flip: 345 still does not
+       * fit in 286, and measured arithmetic says nothing survivable does.
+       * Reaching 280 would need cells under antd's own default.
+       *
+       * The flip is a LAYOUT problem, not a size one: the period field is the
+       * last in a dialog that sits 100px down a 768px window, so any
+       * single-month panel struggles under it. Fixing it properly means
+       * giving the field room — a smaller `top` on that dialog, or the dates
+       * above the name — and both are the designer's call. It is not broken
+       * meanwhile: the panel covers the title and the two fields above, the
+       * date fields and both buttons stay visible, and everything reappears
+       * when it closes.
+       */
+      cellHeight: 28,
+      cellWidth: 38,
+    },
     // The rail is a list of destinations: 40px rows, 2px between them.
     Menu: {
       itemHeight: 40,
