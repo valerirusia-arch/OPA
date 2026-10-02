@@ -628,30 +628,24 @@ export function ApplicationGate({
       title: t("application.stoppedTitle"),
       subTitle: t("application.stoppedBody"),
       /*
-        CALLING IS THE WAY ON — AND NOT THE ONLY WAY OUT.
+        THE CALL IS THE ONLY WAY OFF THIS SCREEN, DELIBERATELY.
 
-        The phone number was the only control, which left the reader who has
-        decided not to call with nowhere to go: a terminal screen their
-        account keeps returning to. Closing it is the same second-option
-        pattern the closed invitation uses — a line of text under the
-        primary, where an alternative belongs without competing.
+        It briefly had "Close this application" under it, on the reasoning
+        that a reader who has decided not to call should not be pinned to a
+        terminal screen. That reasoning is right for every other ending in
+        this file and wrong for this one: the check that stopped it is OFAC,
+        and nobody self-serves their way out of a sanctions hit. Closing the
+        record would have cleared the block with it and offered a fresh
+        application that the same screening would stop again — a loop dressed
+        as a way forward.
 
-        It ends the application, so the next screen is the one a person with
-        none gets. Nothing is lost that was not already stopped.
+        A dead end is the honest shape of this state. The phone number is not
+        a consolation; it is the resolution.
       */
       action: (
-        <Flex vertical align="center" gap={12}>
-          <Button type="primary" size="large" href="tel:+18005550142">
-            {t("application.stoppedAction")}
-          </Button>
-          <Button
-            type="link"
-            style={styles.secondaryLink}
-            onClick={onCloseApplication}
-          >
-            {t("application.closeStopped")}
-          </Button>
-        </Flex>
+        <Button type="primary" size="large" href="tel:+18005550142">
+          {t("application.stoppedAction")}
+        </Button>
       ),
     },
   }[state];

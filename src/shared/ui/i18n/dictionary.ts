@@ -750,9 +750,6 @@ export const en = {
      what closing it means and what it frees; the button only has to be the
      full stop. *"ან რამე Done რაიმე ესეთი რომ ეწეროს."* */
   "application.closeApplication": "Done",
-  /* The second way off a stopped application: calling is the way ON, and
-     somebody who has decided not to needs a way to put it down. */
-  "application.closeStopped": "Close this application",
   "application.startTitle": "Start your loan application",
   /* Short, and the half of it worth keeping. "We'll walk you through it step
      by step" is reassurance about a form the reader has not seen yet; what
@@ -2515,7 +2512,6 @@ const es: Record<TranslationKey, string> = {
   "application.repaidTitle": "Tu préstamo está totalmente pagado",
   "application.repaidBody": "No debes nada. Ciérrala para iniciar una solicitud nueva.",
   "application.closeApplication": "Listo",
-  "application.closeStopped": "Cerrar esta solicitud",
   "application.startTitle": "Inicia tu solicitud de préstamo",
   "application.startSubtitle": "Son unos pasos y verás qué puede cubrir OPA.",
   "application.start": "Iniciar la solicitud",
