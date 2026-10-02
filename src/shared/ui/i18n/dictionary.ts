@@ -834,7 +834,12 @@ export const en = {
      thing to do with it is look at where it has got to. */
   "application.blockedActiveBody": "OPA is reviewing your application now.",
   "application.resume": "Review my application",
-  "application.blockedFlagTitle": "You can't start a new application",
+  /* "An application", not "a new" one. This state fires on the WBS's NO LEND
+     look up, which checks "a legacy no lend list" as well as recent denials
+     and defaults — so it reaches people who have never applied, and "a NEW
+     application" would be telling them about one they never had. The state
+     for somebody who DOES already have one is `hasActive`, and it says so. */
+  "application.blockedFlagTitle": "You can't start an application",
   "application.blockedFlagBody":
     "This account is not eligible to apply at the moment. Contact OPA support if you think that is a mistake.",
 
@@ -2551,7 +2556,7 @@ const es: Record<TranslationKey, string> = {
   "application.blockedActiveTitle": "Tu solicitud está en OPA",
   "application.blockedActiveBody": "OPA está revisando tu solicitud.",
   "application.resume": "Revisar mi solicitud",
-  "application.blockedFlagTitle": "No puedes iniciar una solicitud nueva",
+  "application.blockedFlagTitle": "No puedes iniciar una solicitud",
   "application.blockedFlagBody":
     "Esta cuenta no puede solicitar en este momento. Comunícate con el soporte de OPA si crees que es un error.",
 
