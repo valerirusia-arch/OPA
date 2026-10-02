@@ -858,18 +858,25 @@ export const gateFor = (record: ApplicationSummary | undefined) => {
      not something to resume, so the page offers a new one. */
   if (record.loan?.stage === "cancelled") return "open" as const;
   if (record.status === "pendingAction") return "needsInfo" as const;
+  /* DECLINED SAYS SO, AND IT SAYS IT FIRST. It returned `open`, which offered
+     a new application without ever telling them the last one had been turned
+     down. Nothing in the WBS stops them applying again, so the way out is
+     still there; it is the sentence that was missing.
+
+     ABOVE `coBorrowerFailed`, which it used to sit below. Story 14's whole
+     point is that the application did NOT die with the co-borrower — "invite
+     a different one and it carries on" — and on a record that is also
+     declined, it did die, so that screen would be sending the borrower to
+     invite somebody onto an application that is over. It is also what the
+     co-borrower's side already does, and the two were reading one record in
+     opposite orders. */
+  if (record.status === "declined") return "declined" as const;
   /* BEFORE the plain co-borrower check, because it is the same status with a
      different thing to say. WBS story 14: a reset application is waiting on a
-     co-borrower again, but the borrower is owed the reason — and the action is
+     co-borrower again, but the borrower is owed the reason — the action is
      "invite a DIFFERENT one", not "invite one". */
   if (record.coBorrowerFailed) return "coBorrowerFailed" as const;
   if (record.status === "coBorrower") return "coBorrowerNeeded" as const;
-  /* DECLINED SAYS SO. It returned `open`, which offered a new application
-     without ever telling them the last one had been turned down — the page
-     that should break the news behaved as though nothing had happened.
-     Nothing in the WBS stops them applying again, so the way out is still
-     there; it is the sentence that was missing. */
-  if (record.status === "declined") return "declined" as const;
   /* AND APPROVED SAYS SO. Everything past the decision used to fall to
      `hasActive`, whose words are "OPA is reviewing your application now" —
      said to somebody whose loan was already approved and being set up. */
