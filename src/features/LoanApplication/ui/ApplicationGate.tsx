@@ -67,8 +67,8 @@ export type ApplicationGateState =
    * role column and lists the statuses owed: "Submitted, Under Review,
    * Pending action, APPROVED, DECLINED". Two of the five had nowhere to show.
    */
-  | "assignedActive"
   | "assignedClosed"
+  | "assignedCancelled"
   | "assignedSettled"
   /**
    * APPROVED, AND REFUSED — the borrower's own two, which it did not have.
@@ -357,25 +357,8 @@ export function ApplicationGate({
         </Button>
       ),
     },
-    /* APPROVED, and the co-borrower is told so rather than left on
-       "reviewing". They do not own the loan's controls — signing, the card,
-       cancelling are the borrower's — so this says where it got to and
-       points at the page that keeps saying. */
-    assignedActive: {
-      icon: <JourneyScene variant="done" size={MARK} />,
-      title: t("application.assignedActiveTitle"),
-      subTitle: t("application.assignedActiveBody"),
-      action: (
-        <Button type="primary" size="large" onClick={onViewStatus}>
-          {t("application.assignedDoneAction")}
-        </Button>
-      ),
-    },
-    /* DECLINED, or cancelled by the borrower. One state for the two because
-       what the co-borrower has to do about either is the same — nothing —
-       and a sentence that guessed between them would be the page claiming to
-       know something it is not told. No badge: an ending with nothing to act
-       on is not an alert. */
+    /* DECLINED. One wording with the borrower's own; see below for why
+       cancelled is no longer folded in with it. */
     assignedClosed: {
       /* The same cross the borrower's `declined` wears — one refusal, drawn
          one way, whichever side is reading it. */
@@ -396,6 +379,26 @@ export function ApplicationGate({
       action: (
         <Button type="primary" size="large" onClick={onCloseApplication}>
           {t("application.acknowledge")}
+        </Button>
+      ),
+    },
+    /*
+      CANCELLED, WHICH IS NOT DECLINED.
+
+      These two shared a state, and once the refusal's wording was unified
+      with the borrower's it started telling the co-borrower that "OPA staff
+      reviewed it and couldn't go ahead" about a loan the BORROWER cancelled —
+      OPA refusing something nobody refused. One sentence cannot be true of
+      both, because the two differ in exactly the thing a reader wants to
+      know: who ended it.
+    */
+    assignedCancelled: {
+      icon: <JourneyScene variant="waiting" size={MARK} />,
+      title: t("application.assignedCancelledTitle"),
+      subTitle: t("application.assignedCancelledBody"),
+      action: (
+        <Button type="primary" size="large" onClick={onViewStatus}>
+          {t("application.assignedDoneAction")}
         </Button>
       ),
     },
@@ -466,7 +469,7 @@ export function ApplicationGate({
       subTitle: t("application.blockedFlagBody"),
       action: (
         <Button type="primary" size="large" onClick={onContact}>
-          {t("nav.contact")}
+          {t("application.invitationClosedAction")}
         </Button>
       ),
     },

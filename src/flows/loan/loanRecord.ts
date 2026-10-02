@@ -40,6 +40,9 @@ import type {
 } from "../../features/Payments/ui/types";
 import { formatAmount, toAmount } from "../../features/Payments/ui/money";
 import {
+  mockCheckPaused,
+  mockNoLend,
+  mockStopped,
   mockAwaitingSignature,
   mockCancelled,
   mockCardUsed,
@@ -70,6 +73,9 @@ export type BorrowerStage =
   | "review"
   | "coBorrower"
   | "coBorrowerFailed"
+  | "noLend"
+  | "checkPaused"
+  | "stopped"
   | "needsInfo"
   | "declined"
   | "approved"
@@ -104,6 +110,9 @@ const STAGES: Record<
   /* WBS story 14: the co-borrower failed underwriting, so the system reset
      the application and it is waiting on a different one. */
   coBorrowerFailed: { label: "Co-borrower did not qualify", loan: mockCoBorrowerFailed },
+  noLend: { label: "Not eligible to apply", loan: mockNoLend },
+  checkPaused: { label: "A check is not responding", loan: mockCheckPaused },
+  stopped: { label: "Stopped — call support", loan: mockStopped },
   needsInfo: { label: "More information needed", loan: mockNeedsInfo },
   declined: { label: "Declined", loan: mockDeclined },
   approved: { label: "Approved · to sign", loan: mockAwaitingSignature },
@@ -125,7 +134,17 @@ const STAGES: Record<
 export const STAGE_GROUPS: { group: string; stages: BorrowerStage[] }[] = [
   {
     group: "Application",
-    stages: ["none", "review", "coBorrower", "coBorrowerFailed", "needsInfo", "declined"],
+    stages: [
+      "none",
+      "review",
+      "coBorrower",
+      "coBorrowerFailed",
+      "needsInfo",
+      "declined",
+      "noLend",
+      "checkPaused",
+      "stopped",
+    ],
   },
   { group: "Loan", stages: ["approved", "funding", "funded", "cardUsed"] },
   { group: "Repayment", stages: ["overdue", "default", "accelerated", "paidOff"] },
@@ -170,6 +189,11 @@ const APPLICATION_STAGES: BorrowerStage[] = [
      collapsing approved onto "still with OPA" and declined onto "start one". */
   "approved",
   "declined",
+  /* And the three system checks, which had screens and no way of reaching
+     them. Walkable here because this is the page that draws all three. */
+  "noLend",
+  "checkPaused",
+  "stopped",
   /* `paidOff` is the only funded stage this page draws differently from the
      rest: it is the state that offers to close the file. */
   "paidOff",
@@ -238,6 +262,12 @@ const CO_BORROWER_STAGES: BorrowerStage[] = [
   "coBorrower",
   "review",
   "needsInfo",
+  /* The two blocks that are facts about the application rather than about
+     the borrower's account — `noLend` is off this walk because an
+     application nobody could start has no co-borrower. */
+  "checkPaused",
+  "stopped",
+  "cancelled",
   "coBorrowerFailed",
   "funded",
   "declined",
@@ -778,24 +808,46 @@ export const coBorrowerGateFor = (record: ApplicationSummary | undefined) => {
     which is the only way a real one would reach it either.
   */
   if (!record) return "open" as const;
+  /* Two of the three system blocks are facts about the APPLICATION, so they
+     reach whoever is reading it. The third cannot: no-lend refuses a borrower
+     before an application exists, and an application nobody could start has
+     no co-borrower. */
+  if (record.block === "paused") return "checkPaused" as const;
+  if (record.block === "stopped") return "stopped" as const;
   if (isRepaid(record)) return "assignedSettled" as const;
   /* Declined and cancelled share a state: what the co-borrower does about
      either is the same — nothing — and one sentence can be true of both
      without the page guessing which it was. */
-  if (record.status === "declined" || record.loan?.stage === "cancelled")
-    return "assignedClosed" as const;
+  /* CANCELLED IS NOT DECLINED, and they shared one state whose words are
+     "OPA staff reviewed it and couldn't go ahead" — false of a loan the
+     BORROWER cancelled. The co-borrower was being told OPA refused something
+     nobody refused. */
+  if (record.loan?.stage === "cancelled") return "assignedCancelled" as const;
+  if (record.status === "declined") return "assignedClosed" as const;
   /* Before the plain co-borrower check, same as the borrower's: story 14's
      reset leaves the status at `coBorrower` with no invitation on it. */
   if (record.coBorrowerFailed) return "invitationClosed" as const;
   if (record.status === "coBorrower") return "invited" as const;
   if (record.status === "pendingAction") return "needsInfo" as const;
   /* A loan exists, or the decision is in: either way it is past review. */
-  if (record.status === "approved" || record.loan) return "assignedActive" as const;
+  /* The borrower's own `approved`, not a second state saying the same thing
+     in slightly different words. */
+  if (record.status === "approved" || record.loan) return "approved" as const;
   return "assignedDone" as const;
 };
 
 export const gateFor = (record: ApplicationSummary | undefined) => {
   if (!record) return "open" as const;
+  /*
+    A SYSTEM CHECK BEFORE ANY OUTCOME. These three are not decisions — paused
+    is undecided, stopped was never scored, and no-lend refuses the
+    application before there is one — so they are read before `status`, which
+    would otherwise report an outcome none of them has. Each had a screen in
+    ApplicationGate's own union and nothing that could ever return it.
+  */
+  if (record.block === "noLend") return "notEligible" as const;
+  if (record.block === "paused") return "checkPaused" as const;
+  if (record.block === "stopped") return "stopped" as const;
   /* SETTLED, AND THE FILE CAN BE CLOSED. Before `hasActive`, which is what
      this would otherwise be: a repaid loan still counts as an open one to
      the WBS's own check ("an open application OR LOAN"), and that is exactly

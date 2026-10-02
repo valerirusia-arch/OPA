@@ -140,6 +140,33 @@ export const mockCoBorrowerFailed: ApplicationSummary = {
   coBorrowerFailed: "Daniel Okafor",
 };
 
+/**
+ * THE THREE SYSTEM BLOCKS, each one a WBS rule that had a screen and no way
+ * of ever reaching it. See `block` on ApplicationSummary.
+ *
+ * `mockNoLend` carries a record although the WBS's no-lend check fires BEFORE
+ * an application exists: the prototype has nowhere else to put a fact about a
+ * person, and the screen it draws is the one that says they cannot start one.
+ * Its `status` is the least wrong of the five — nothing was reviewed, so it
+ * is the submitted state with the block on top.
+ */
+export const mockNoLend: ApplicationSummary = {
+  ...mockUnderReview,
+  block: "noLend",
+};
+
+/** Credit check unavailable: paused, not refused, and it resumes by itself. */
+export const mockCheckPaused: ApplicationSummary = {
+  ...mockUnderReview,
+  block: "paused",
+};
+
+/** OFAC: the borrower cannot proceed and is asked to call. */
+export const mockStopped: ApplicationSummary = {
+  ...mockUnderReview,
+  block: "stopped",
+};
+
 /** Approved and waiting on a signature. WBS story 2. */
 export const mockAwaitingSignature: ApplicationSummary = {
   ...mockUnderReview,

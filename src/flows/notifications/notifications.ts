@@ -295,6 +295,15 @@ const SENT: Record<BorrowerStage, NotificationItem[]> = {
   ],
 
   cancelled: [],
+
+  /* The three system blocks send nothing of their own. The WBS says a message
+     IS sent for two of them — the OFAC stop asks the borrower to call, and the
+     no-lend refusal carries an Adverse Action letter — but both are posted
+     "as a separate user story", and neither is an in-app notification. The
+     screens say it; the inbox stays quiet. */
+  noLend: [],
+  checkPaused: [],
+  stopped: [],
 };
 
 /**

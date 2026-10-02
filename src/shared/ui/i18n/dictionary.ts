@@ -792,13 +792,15 @@ export const en = {
      "done", which is the green button two states away that means a loan
      repaid. It acknowledges, and acknowledging is what closes it. */
   "application.acknowledge": "Got it",
+  /* Cancelled, which is not declined: the borrower ended it, not OPA, and
+     that is the one thing a co-borrower reading this wants to know. */
+  "application.assignedCancelledTitle": "This application was cancelled",
+  "application.assignedCancelledBody":
+    "The borrower cancelled it. There is nothing left for you to do here.",
   /* The three outcomes the co-borrower's side had nowhere to say. The WBS's
      "View application status and details" names Borrower/Co-borrower in its
      role column and owes them Approved and declined; a repaid loan is the
      third, and it was reading "OPA is reviewing the application now". */
-  "application.assignedActiveTitle": "This application was approved",
-  "application.assignedActiveBody":
-    "The loan is going ahead. You can follow where it has got to on the loan page.",
   "application.assignedSettledTitle": "Your loan is fully repaid",
   "application.assignedSettledBody": "Nothing is owed. Your part in it is finished.",
   /* The co-borrower's side of story 14's reset. No decision, no reason, no
@@ -2514,9 +2516,9 @@ const es: Record<TranslationKey, string> = {
   "application.declinedBody": "El personal de OPA la revisó y no pudo seguir adelante.",
   "application.declinedAction": "Iniciar una solicitud nueva",
   "application.acknowledge": "Entendido",
-  "application.assignedActiveTitle": "Esta solicitud fue aprobada",
-  "application.assignedActiveBody":
-    "El préstamo sigue adelante. Puedes ver en qué punto está en la página del préstamo.",
+  "application.assignedCancelledTitle": "Esta solicitud fue cancelada",
+  "application.assignedCancelledBody":
+    "El prestatario la canceló. No queda nada por hacer de tu parte.",
   "application.assignedSettledTitle": "Tu préstamo está totalmente pagado",
   "application.assignedSettledBody": "No debes nada. Tu parte ya está terminada.",
   "application.invitationClosedTitle": "Esta invitación ya no está activa",

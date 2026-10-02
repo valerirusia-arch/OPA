@@ -158,6 +158,29 @@ export type ApplicationSummary = {
    * underwriter's screen and stay there.
    */
   decisionNote?: string;
+  /**
+   * A SYSTEM CHECK THAT STOPPED THE APPLICATION, rather than a decision about
+   * it. Three of the WBS's own, each with a screen already written for it:
+   *
+   *   "noLend"   — "Perform NO LEND look up": the applicant is on the no-lend
+   *                list, or has a denial or default inside six months, so a
+   *                new application "should not be allowed".
+   *   "paused"   — "If credit check fails, the loan decisioning should be
+   *                paused and moved to manual review process." Nothing is
+   *                wrong with what the borrower sent.
+   *   "stopped"  — OFAC screening: "user is unable to proceed, they receive a
+   *                message to call customer service".
+   *
+   * They are separate from `status` because they are not outcomes. An
+   * application that is paused has not been decided, and one stopped on OFAC
+   * was never scored — folding either into `declined` would tell the borrower
+   * they were refused when they were not.
+   *
+   * What is NOT here, deliberately: which check it was. WBS — "Internal
+   * scoring, business rules and decision logic are NOT exposed to the
+   * borrower." The screens say the state, never the reason.
+   */
+  block?: "noLend" | "paused" | "stopped";
   documents: LoanDocument[];
   /**
    * The co-borrower invitation on this application, while one is outstanding.
