@@ -1362,7 +1362,13 @@ export const en = {
   // application to be rejected. The application shall be resumed after the
   // issue is resolved." So this says exactly that, and offers nothing to do.
   "application.checkPausedTitle": "One of our checks is not responding",
-  "application.checkPausedBody": "This is on our side, not yours. Nothing you sent is lost and your application has not been refused. It carries on by itself once the service is back.",
+  /* Three sentences down to two, and the two the reader needs. "This is on
+     our side, not yours" is what the title already says — a check of OURS is
+     not responding — and "nothing you sent is lost" answers a smaller fear
+     than the one this screen actually raises, which is "have I been turned
+     down". That one, and what happens next, is the whole message. */
+  "application.checkPausedBody":
+    "Nothing has been refused. It carries on by itself once the check is back.",
   "application.checkPausedAction": "Back to my profile",
   // WBS, credit check: "IF credit score is between XXX and XXX, then email is
   // sent about requiring a co-borrower and co-borrower invite is sent."
@@ -2924,7 +2930,8 @@ const es: Record<TranslationKey, string> = {
   "application.needsInfoBody": "La persona que revisa tu solicitud ha pedido algo.",
   "application.needsInfoAction": "Ver qué se necesita",
   "application.checkPausedTitle": "Una de nuestras verificaciones no responde",
-  "application.checkPausedBody": "Es cosa nuestra, no tuya. No se pierde nada de lo que enviaste y tu solicitud no ha sido rechazada. Continúa sola en cuanto el servicio vuelva.",
+  "application.checkPausedBody":
+    "No se ha rechazado nada. Continúa sola en cuanto la verificación vuelva.",
   "application.checkPausedAction": "Volver a mi perfil",
   "application.coBorrowerNeededTitle": "Tu solicitud necesita un coprestatario",
   "application.coBorrowerNeededBody": "Un coprestatario solicita junto a ti y comparte la responsabilidad de devolver el préstamo. Invita a uno y tu solicitud continúa desde ahí.",
