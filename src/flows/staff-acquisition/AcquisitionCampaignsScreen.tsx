@@ -241,10 +241,27 @@ export default function AcquisitionCampaignsScreen({
       <AcquisitionEntityModal
         open={creating || editing !== null}
         titleKey={editing ? "acq.campaign.editTitle" : "acq.campaign.newTitle"}
+        /*
+          THE DATES SIT SECOND, ABOVE THE SOURCE, AND THAT IS A LAYOUT FIX.
+
+          Last in the form, the period field lands 482px down a 768px window —
+          an ordinary 1366×768 laptop — leaving 286px under it for a calendar
+          that is 345 tall. antd flips the panel upward and it covers the
+          dialog's title and the fields above. Shrinking the calendar cannot
+          close that gap: measured, reaching 280 needs cells smaller than
+          antd's own default.
+
+          Second, the field is ~150px higher and the panel has 434 to open
+          into — it drops downward as intended, with room to spare on any
+          window over about 680px.
+
+          The order survives the move: a campaign is a name, a span of time,
+          and the source it belongs to. Name still opens the form.
+        */
         fields={[
           { name: "name", labelKey: "acq.campaign.name", kind: "text" },
-          { name: "source", labelKey: "acq.campaign.source", kind: "select", options: sourceOptions },
           { name: "period", labelKey: "acq.campaign.period", kind: "dateRange" },
+          { name: "source", labelKey: "acq.campaign.source", kind: "select", options: sourceOptions },
         ]}
         initialValues={
           editing
