@@ -800,6 +800,9 @@ export const en = {
      "done", which is the green button two states away that means a loan
      repaid. It acknowledges, and acknowledging is what closes it. */
   "application.acknowledge": "Got it",
+  /* The quiet way off an ended application: it clears the record, so the
+     reader stops being attached to something that is over. */
+  "application.closeApplicationLink": "Close application",
   /* Cancelled, which is not declined: the borrower ended it, not OPA, and
      that is the one thing a co-borrower reading this wants to know. */
   "application.assignedCancelledTitle": "This application was cancelled",
@@ -1366,7 +1369,11 @@ export const en = {
      down". That one, and what happens next, is the whole message. */
   "application.checkPausedBody":
     "Nothing has been refused. It carries on by itself once the check is back.",
-  "application.checkPausedAction": "Back to my profile",
+  /* "See my loan", not "Back to my profile". The profile is where a reader
+     goes to change their own details, and nothing on it has anything to do
+     with a check that stalled — the application is on the loan page, which
+     is where somebody told "it carries on by itself" will go to watch it. */
+  "application.checkPausedAction": "See my loan",
   // WBS, credit check: "IF credit score is between XXX and XXX, then email is
   // sent about requiring a co-borrower and co-borrower invite is sent."
   "application.coBorrowerNeededTitle": "Your application needs a co-borrower",
@@ -2531,6 +2538,7 @@ const es: Record<TranslationKey, string> = {
   "application.declinedBody": "El personal de OPA la revisó y no pudo seguir adelante.",
   "application.declinedAction": "Iniciar una solicitud nueva",
   "application.acknowledge": "Entendido",
+  "application.closeApplicationLink": "Cerrar la solicitud",
   "application.assignedCancelledTitle": "Esta solicitud fue cancelada",
   "application.assignedCancelledBody":
     "El prestatario la canceló. No queda nada por hacer de tu parte.",
@@ -2929,7 +2937,7 @@ const es: Record<TranslationKey, string> = {
   "application.checkPausedTitle": "Una de nuestras verificaciones no responde",
   "application.checkPausedBody":
     "No se ha rechazado nada. Continúa sola en cuanto la verificación vuelva.",
-  "application.checkPausedAction": "Volver a mi perfil",
+  "application.checkPausedAction": "Ver mi préstamo",
   "application.coBorrowerNeededTitle": "Tu solicitud necesita un coprestatario",
   "application.coBorrowerNeededBody": "Un coprestatario solicita junto a ti y comparte la responsabilidad de devolver el préstamo. Invita a uno y tu solicitud continúa desde ahí.",
   "application.coBorrowerNeededAction": "Invitar a un coprestatario",

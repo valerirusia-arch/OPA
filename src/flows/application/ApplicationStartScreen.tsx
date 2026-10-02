@@ -126,7 +126,6 @@ export default function ApplicationStartScreen({
             /* NOT the seven-step wizard. Their application is already in;
                the thing they came to do is three fields. */
             onInviteCoBorrower={() => navigate({ to: "/application/co-borrower" })}
-            onProfile={() => navigate({ to: "/profile" })}
             /*
               CLOSING THE FILE IS WHAT LETS THEM COME BACK.
 

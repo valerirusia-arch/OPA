@@ -40,6 +40,7 @@
 // Dumb: it takes a state and reports which button was pressed. It navigates
 // nowhere — ApplicationStartScreen does that.
 
+import type { ReactNode } from "react";
 import { Button, Card, ConfigProvider, Flex, Result, Typography, theme } from "antd";
 import { brand } from "../../../theme/tokens";
 import { useT } from "../../../shared/ui/i18n/useT";
@@ -153,7 +154,6 @@ export type ApplicationGateProps = {
    * the borrower guess at when they invited the person themselves.
    */
   coBorrowerFailed?: string;
-  onProfile?: () => void;
   /** WBS-adjacent — see `repaid` on ApplicationGateState. Closing the file is
    *  what lets the borrower start another application. */
   onCloseApplication?: () => void;
@@ -170,7 +170,6 @@ export function ApplicationGate({
   onContact,
   onSendInformation,
   onInviteCoBorrower,
-  onProfile,
   onCloseApplication,
 }: ApplicationGateProps) {
   const t = useT();
@@ -210,6 +209,35 @@ export function ApplicationGate({
     sides were saying the same news two ways: *"ქო-ბოროვერზე იგივე CTA
     მინდა."*
   */
+  /** A primary with a quieter second option under it — the pattern the ended
+   *  states share, so the gap between them is set once. */
+  const withSecond = (primary: ReactNode, second: ReactNode) => (
+    <Flex vertical align="center" gap={12}>
+      {primary}
+      {second}
+    </Flex>
+  );
+
+  /** The link that ends an application the reader can do nothing more with.
+   *  It clears the record, so they stop being attached to something over. */
+  const closeLink = (
+    <Button type="link" style={styles.secondaryLink} onClick={onCloseApplication}>
+      {t("application.closeApplicationLink")}
+    </Button>
+  );
+
+  const contactLink = (
+    <Button type="link" style={styles.secondaryLink} onClick={onContact}>
+      {t("application.invitationClosedAction")}
+    </Button>
+  );
+
+  const contactPrimary = (
+    <Button type="primary" size="large" onClick={onContact}>
+      {t("application.invitationClosedAction")}
+    </Button>
+  );
+
   const closeButton = (
     <ConfigProvider
       theme={{
@@ -376,10 +404,14 @@ export function ApplicationGate({
          anything. Pressing this closes the record, and with it the only
          thing that made this reader a co-borrower — so the next screen they
          get is the one any signed-in person with no application gets. */
-      action: (
+      /* "Got it" stays the primary — this one WAS decided and there is
+         nothing to ask about that the page has not said — with contact
+         underneath for the reader who wants to anyway. */
+      action: withSecond(
         <Button type="primary" size="large" onClick={onCloseApplication}>
           {t("application.acknowledge")}
-        </Button>
+        </Button>,
+        contactLink,
       ),
     },
     /*
@@ -398,11 +430,12 @@ export function ApplicationGate({
       icon: <JourneyScene variant="cancelled" size={MARK} />,
       title: t("application.assignedCancelledTitle"),
       subTitle: t("application.assignedCancelledBody"),
-      action: (
-        <Button type="primary" size="large" onClick={onViewStatus}>
-          {t("application.assignedDoneAction")}
-        </Button>
-      ),
+      /* CONTACT FIRST. The co-borrower did not cancel this and is not told
+         why, so the only thing they might actually want is to ask — and
+         "See the application" sent them to look at a record that has
+         nothing more to say. Closing it is underneath, for the reader who
+         does not want to ask. */
+      action: withSecond(contactPrimary, closeLink),
     },
     /* PAID OFF. The borrower's own `repaid` cannot be reused here: it offers
        to close the file and start another, and neither is the co-borrower's
@@ -598,16 +631,7 @@ export function ApplicationGate({
         belongs: available to the reader who wants it, and not in the way of
         the one who does not.
       */
-      action: (
-        <Flex vertical align="center" gap={12}>
-          <Button type="primary" size="large" onClick={onCloseApplication}>
-            {t("application.acknowledge")}
-          </Button>
-          <Button type="link" style={styles.secondaryLink} onClick={onContact}>
-            {t("application.invitationClosedAction")}
-          </Button>
-        </Flex>
-      ),
+      action: withSecond(contactPrimary, closeLink),
     },
     /* A check did not answer. The WBS is explicit that this is not a refusal,
        so the screen says so and offers nothing to do about it: there is
@@ -621,7 +645,7 @@ export function ApplicationGate({
       title: t("application.checkPausedTitle"),
       subTitle: t("application.checkPausedBody"),
       action: (
-        <Button type="primary" size="large" onClick={onProfile}>
+        <Button type="primary" size="large" onClick={onViewStatus}>
           {t("application.checkPausedAction")}
         </Button>
       ),
