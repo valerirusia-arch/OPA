@@ -27,7 +27,13 @@ import {
 } from "../../features/LoanApplication/ui/ApplicationGate";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
-import { coBorrowerGateFor, gateFor, setStage, useLoanRecord } from "../loan/loanRecord";
+import {
+  coBorrowerGateFor,
+  gateFor,
+  setStage,
+  useLoanRecord,
+  useNotEligible,
+} from "../loan/loanRecord";
 import { styles } from "./ApplicationStartScreen.styles";
 
 /** Kept as the screen's own name for the prop Dev will feed. */
@@ -51,6 +57,9 @@ export default function ApplicationStartScreen({
 }: ApplicationStartScreenProps) {
   const navigate = useNavigate();
   const record = useLoanRecord();
+  /* Whether this person may apply at all — a fact about them, not about
+     any application they might have. */
+  const blocked = useNotEligible();
   // Whoever the DevBar is pointed at, unless the caller names someone.
   const viewer = useCustomerViewer();
   /** WBS Notifications: what the bell's badge counts. */
@@ -81,7 +90,7 @@ export default function ApplicationStartScreen({
     /* The co-borrower's side has its own answer and it now lives in one
        place — this screen and /co-application were each deriving it, and
        they had already drifted apart. See `coBorrowerGateFor`. */
-    (viewer.role === "coBorrower" ? coBorrowerGateFor(record) : gateFor(record));
+    (viewer.role === "coBorrower" ? coBorrowerGateFor(record) : gateFor(record, blocked));
   const person = userName ?? viewer.name;
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
 

@@ -41,7 +41,6 @@ import type {
 import { formatAmount, toAmount } from "../../features/Payments/ui/money";
 import {
   mockCheckPaused,
-  mockNoLend,
   mockStopped,
   mockAwaitingSignature,
   mockCancelled,
@@ -110,7 +109,10 @@ const STAGES: Record<
   /* WBS story 14: the co-borrower failed underwriting, so the system reset
      the application and it is waiting on a different one. */
   coBorrowerFailed: { label: "Co-borrower did not qualify", loan: mockCoBorrowerFailed },
-  noLend: { label: "Not eligible to apply", loan: mockNoLend },
+  /* NO RECORD. The no-lend block is a fact about the person, so this stage
+     gives them exactly what a blocked person has: no application. The gate
+     reads the block separately — see `useNotEligible`. */
+  noLend: { label: "Not eligible to apply", loan: undefined },
   checkPaused: { label: "A check is not responding", loan: mockCheckPaused },
   stopped: { label: "Stopped — call support", loan: mockStopped },
   needsInfo: { label: "More information needed", loan: mockNeedsInfo },
@@ -309,6 +311,23 @@ export const stageLabel = (stage: BorrowerStage) => STAGES[stage].label;
  * and now the walk starts where the story does.
  */
 let current: BorrowerStage = "none";
+
+/**
+ * IS THIS PERSON ALLOWED TO APPLY AT ALL — which is not a fact about any
+ * application, and was being stored as one.
+ *
+ * The WBS's NO LEND look up runs on "name and email" against a list, before
+ * an application exists. Held on an `ApplicationSummary` it could only ever
+ * describe an application the reader is simultaneously being told they cannot
+ * have, and it showed: at the no-lend stage the Application tab said "You
+ * can't start an application" while the Loan tab, reading the same record,
+ * displayed the amount, the reference and the documents of one.
+ *
+ * So it lives here, next to the stage, and the no-lend stage carries no
+ * record. Both tabs then agree: one says the account may not apply, the other
+ * says there is no application — which is the truth.
+ */
+const notEligible = () => current === "noLend";
 
 const listeners = new Set<() => void>();
 
@@ -729,6 +748,10 @@ export const useBorrowerStage = () => useSyncExternalStore(subscribe, getStage);
 /** The application and its loan, as /loan and /application read them. */
 export const useLoanRecord = () => useSyncExternalStore(subscribe, getLoan);
 
+/** Whether this person may start an application at all. Read beside the
+ *  record rather than out of it — see the note on `notEligible`. */
+export const useNotEligible = () => useSyncExternalStore(subscribe, notEligible);
+
 /** The repayment record, as /payments reads it. */
 export const usePaymentsRecord = () => useSyncExternalStore(subscribe, getPayments);
 
@@ -836,7 +859,15 @@ export const coBorrowerGateFor = (record: ApplicationSummary | undefined) => {
   return "assignedDone" as const;
 };
 
-export const gateFor = (record: ApplicationSummary | undefined) => {
+export const gateFor = (
+  record: ApplicationSummary | undefined,
+  /* A fact about the PERSON, so it is passed in rather than read off the
+     record — and it is checked before everything, including the absence of a
+     record, because somebody who may not apply has no application by
+     definition. */
+  blocked = false,
+) => {
+  if (blocked) return "notEligible" as const;
   if (!record) return "open" as const;
   /*
     A SYSTEM CHECK BEFORE ANY OUTCOME. These three are not decisions — paused
@@ -845,7 +876,6 @@ export const gateFor = (record: ApplicationSummary | undefined) => {
     would otherwise report an outcome none of them has. Each had a screen in
     ApplicationGate's own union and nothing that could ever return it.
   */
-  if (record.block === "noLend") return "notEligible" as const;
   if (record.block === "paused") return "checkPaused" as const;
   if (record.block === "stopped") return "stopped" as const;
   /* SETTLED, AND THE FILE CAN BE CLOSED. Before `hasActive`, which is what

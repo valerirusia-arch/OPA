@@ -159,12 +159,15 @@ export type ApplicationSummary = {
    */
   decisionNote?: string;
   /**
-   * A SYSTEM CHECK THAT STOPPED THE APPLICATION, rather than a decision about
-   * it. Three of the WBS's own, each with a screen already written for it:
+   * A SYSTEM CHECK THAT STOPPED THIS APPLICATION, rather than a decision about
+   * it. Two of the WBS's own, each with a screen already written for it.
    *
-   *   "noLend"   — "Perform NO LEND look up": the applicant is on the no-lend
-   *                list, or has a denial or default inside six months, so a
-   *                new application "should not be allowed".
+   * The third, NO LEND, is NOT here and that is the point: it is a fact about
+   * a PERSON — the WBS checks "name and email" against a list before an
+   * application exists — so a flag on a record could only ever describe an
+   * application the reader is being told they cannot have. It lives in
+   * `loanRecord`'s own store instead. See `useNotEligible`.
+   *
    *   "paused"   — "If credit check fails, the loan decisioning should be
    *                paused and moved to manual review process." Nothing is
    *                wrong with what the borrower sent.
@@ -180,7 +183,7 @@ export type ApplicationSummary = {
    * scoring, business rules and decision logic are NOT exposed to the
    * borrower." The screens say the state, never the reason.
    */
-  block?: "noLend" | "paused" | "stopped";
+  block?: "paused" | "stopped";
   documents: LoanDocument[];
   /**
    * The co-borrower invitation on this application, while one is outstanding.
