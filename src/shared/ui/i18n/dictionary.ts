@@ -736,7 +736,6 @@ export const en = {
   // ── Epic 3 — Loan application ──────────────────────────────────────────
   // Entry. WBS story 2: one active application per borrower, and a borrower on
   // the DO NOT LOAN list may not start one.
-  "application.title": "Application",
   /* THE END OF THE STORY. Plain and short: the loan is over, the file can be
      closed, and closing it is what lets them come back. No exclamation mark —
      the burst on the drawing is the celebration, and a product that has spent
@@ -2521,7 +2520,6 @@ const es: Record<TranslationKey, string> = {
   "setPassword.doneDescription":
     "Tu cuenta de OPA está lista. Inicia sesión con tu correo y tu contraseña nueva.",
 
-  "application.title": "Solicitud",
   "application.repaidTitle": "Tu préstamo está totalmente pagado",
   "application.repaidBody": "No debes nada. Ciérrala para iniciar una solicitud nueva.",
   "application.closeApplication": "Listo",

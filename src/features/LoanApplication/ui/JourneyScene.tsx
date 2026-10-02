@@ -26,7 +26,6 @@
 //   act       — your move. A teal "+": start, invite, replace, answer.
 //   done      — settled, or decided in the reader's favour. A green check.
 //   review    — with OPA, and being looked at. A teal clock.
-//   waiting   — filed, and not your move. The packet with no badge at all.
 //   attention — something needs looking at. An amber "!", and the amber runs
 //               through the shape behind it too, so the state is readable
 //               before a word of it is.
@@ -90,7 +89,6 @@ export type JourneySceneVariant =
   | "cancelled"
   | "ineligible"
   | "declined"
-  | "waiting"
   | "attention"
   | "person"
   | "failed";
@@ -112,8 +110,18 @@ const LINE_PROPS = {
   fill: brand.white,
 } as const;
 
-/** What each state is drawn in. `ink` is the sparkles now — the packet's own
- *  contents are the same grey in every state; see `Packet`. */
+/**
+ * What each state is drawn in. `ink` is the sparkles now — the packet's own
+ * contents are the same grey in every state; see `Packet`.
+ *
+ * THE BLOB AND THE BADGE AGREE, in ten of the eleven. `done` is the
+ * exception and it is deliberate, not an oversight: green is the one colour
+ * this product spends on a single thing — the finished mark, and the one
+ * green button it goes with. Tinting the shape behind it green as well would
+ * make success the loudest illustration on any screen, which is the opposite
+ * of how everything else here is held. It keeps the teal, and the check
+ * carries the news on its own.
+ */
 const TONE = {
   act: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   done: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.success },
@@ -122,7 +130,6 @@ const TONE = {
      wearing the same mark as a loan repaid in full: *"ეს მწვანე არ უნდა
      იყოს... იმიტომ რომ ჩვენ არ დასრულებულა, ჯერ ოპა ცდილობს გადახედოს."* */
   review: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
-  waiting: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: null },
   attention: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
   /* The clock, as `review` wears it. It was bare, on the reasoning that
      nothing has happened to this person yet and a mark would say it had —
