@@ -1768,8 +1768,9 @@ export const en = {
      first-time visitor can land on, so it says what to do rather than
      pointing at a loan page that is just as empty. */
   "payments.noLoanTitle": "No payments yet",
-  "payments.noLoanBody":
-    "Payments start once OPA has funded a loan for you. Apply first and the schedule appears here.",
+  /* "Apply first and the schedule appears here" is the button underneath and
+     the page the reader is standing on, said again in words. */
+  "payments.noLoanBody": "Payments start once OPA has funded a loan for you.",
   "payments.startApplication": "Start an application",
 
   // WBS story 3, and story 10's fees alongside it.
@@ -3273,7 +3274,7 @@ const es: Record<TranslationKey, string> = {
   "payments.viewLoan": "Ir a mi préstamo",
   "payments.noLoanTitle": "Todavía no hay pagos",
   "payments.noLoanBody":
-    "Los pagos empiezan cuando OPA te haya desembolsado un préstamo. Solicítalo y el calendario aparecerá aquí.",
+    "Los pagos empiezan cuando OPA te haya desembolsado un préstamo.",
   "payments.startApplication": "Iniciar la solicitud",
 
   "payments.outstanding": "Saldo pendiente",
