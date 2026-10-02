@@ -23,8 +23,22 @@ export const Act: Story = { args: { variant: "act" } };
  *  and it means FINISHED — which is why the state below cannot borrow it. */
 export const Done: Story = { args: { variant: "done" } };
 
-/** With OPA and being read. Time passing, not a decision made. */
+/** With OPA and being read. Time passing, not a decision made — a stalled
+ *  check wears this too, because it resumes by itself. */
 export const Review: Story = { args: { variant: "review" } };
+
+/** A check shut it and the reader cannot undo that. A padlock rather than a
+ *  cross: nothing was judged, so a cross would claim a refusal that did not
+ *  happen. */
+export const Blocked: Story = { args: { variant: "blocked" } };
+
+/** The borrower ended it themselves: the same cross in amber, because
+ *  something stopped and nobody was refused. */
+export const Cancelled: Story = { args: { variant: "cancelled" } };
+
+/** The same padlock in amber: the account may not apply, and that screen
+ *  offers a way to contest it. */
+export const Ineligible: Story = { args: { variant: "ineligible" } };
 
 /** Filed, and not your move — a check in progress, a decision pending, an
  *  application that has stopped. No badge at all: there is nothing to do. */

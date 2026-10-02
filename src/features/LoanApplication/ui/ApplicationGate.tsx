@@ -393,7 +393,9 @@ export function ApplicationGate({
       know: who ended it.
     */
     assignedCancelled: {
-      icon: <JourneyScene variant="waiting" size={MARK} />,
+      /* The cross in amber. Something stopped — the no-badge mark said
+         nothing had — but nobody was refused, which is what red would say. */
+      icon: <JourneyScene variant="cancelled" size={MARK} />,
       title: t("application.assignedCancelledTitle"),
       subTitle: t("application.assignedCancelledBody"),
       action: (
@@ -464,7 +466,9 @@ export function ApplicationGate({
       ),
     },
     notEligible: {
-      icon: <JourneyScene variant="waiting" size={MARK} />,
+      icon: <JourneyScene variant="ineligible" size={MARK} />,
+      /* A padlock, not the no-badge "in progress" mark it wore. Amber rather
+         than red: the sentence under it offers a way to contest this. */
       title: t("application.blockedFlagTitle"),
       subTitle: t("application.blockedFlagBody"),
       action: (
@@ -610,7 +614,10 @@ export function ApplicationGate({
        nothing the borrower can do, and a button that pretends otherwise would
        be a lie. The way out goes somewhere else in the product. */
     checkPaused: {
-      icon: <JourneyScene variant="waiting" size={MARK} />,
+      /* THE CLOCK, like every other state that is simply taking time. This
+         one really is in progress — it says so itself: "It carries on by
+         itself once the check is back." */
+      icon: <JourneyScene variant="review" size={MARK} />,
       title: t("application.checkPausedTitle"),
       subTitle: t("application.checkPausedBody"),
       action: (
@@ -624,7 +631,11 @@ export function ApplicationGate({
        sanctions screening, which is neither the borrower's to argue with on a
        screen nor ours to publish on one. */
     stopped: {
-      icon: <JourneyScene variant="waiting" size={MARK} />,
+      /* A RED PADLOCK, not the no-badge mark it wore and not the cross.
+         Nothing was judged here — the application never reached a decision —
+         so a cross would claim a refusal that did not happen. What did
+         happen is that it is shut, and the reader cannot open it. */
+      icon: <JourneyScene variant="blocked" size={MARK} />,
       title: t("application.stoppedTitle"),
       subTitle: t("application.stoppedBody"),
       /*

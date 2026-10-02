@@ -40,6 +40,13 @@
 //               invitation is no longer active, and it is one thing that
 //               happened. They never share a screen, so one mark for one
 //               event is the whole of it.
+//   blocked   — a check stopped it and the reader cannot undo that. A red
+//               padlock: not a cross, because nothing was judged — the
+//               application never reached a decision.
+//   ineligible— the ACCOUNT may not apply. The same padlock in amber,
+//               because that screen offers a way to contest it.
+//   cancelled — the borrower ended it themselves. The same cross in amber:
+//               something stopped, and nobody was refused.
 //   declined  — the APPLICATION was reviewed and did not pass. The same cross
 //               on the packet, and RED where `failed` is amber: a co-borrower
 //               who did not qualify is replaced and the application carries
@@ -79,6 +86,9 @@ export type JourneySceneVariant =
   | "done"
   | "review"
   | "invite"
+  | "blocked"
+  | "cancelled"
+  | "ineligible"
   | "declined"
   | "waiting"
   | "attention"
@@ -122,6 +132,9 @@ const TONE = {
   person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
   failed: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
   declined: { ink: brand.sceneRedSoft, blob: brand.sceneRedBlob, badge: brand.danger },
+  blocked: { ink: brand.sceneRedSoft, blob: brand.sceneRedBlob, badge: brand.danger },
+  cancelled: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
+  ineligible: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
 } satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
 
 /**
@@ -244,7 +257,21 @@ function Badge({
     <g>
       <circle cx={141} cy={112} r={20} fill={brand.white} />
       <circle cx={141} cy={112} r={16} fill={fill} />
-      {variant === "invite" ? (
+      {variant === "blocked" || variant === "ineligible" ? (
+        <>
+          {/* A padlock: the thing is shut, and not by anything the reader
+              did or can undo. The shackle first, so the body closes over
+              its feet — the same order the empty states' lock is drawn in. */}
+          <path
+            d="M136 110v-4a5 5 0 0 1 10 0v4"
+            fill="none"
+            stroke={brand.white}
+            strokeWidth={2.2}
+            strokeLinecap="round"
+          />
+          <rect x={133.5} y={109.5} width={15} height={10.5} rx={2.5} fill={brand.white} />
+        </>
+      ) : variant === "invite" ? (
         <>
           {/* An envelope: this person sent you something. A "+" would have
               read as "add this person", which is backwards — they are
@@ -306,7 +333,7 @@ function Badge({
           <rect x={139.4} y={103} width={3.2} height={11} rx={1.6} fill={brand.white} />
           <circle cx={141} cy={118.6} r={1.9} fill={brand.white} />
         </>
-      ) : variant === "failed" || variant === "declined" ? (
+      ) : variant === "failed" || variant === "declined" || variant === "cancelled" ? (
         <path
           d="M135 106l12 12M147 106l-12 12"
           stroke={brand.white}
