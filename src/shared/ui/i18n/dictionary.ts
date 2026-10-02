@@ -784,7 +784,15 @@ export const en = {
   "application.approvedBody":
     "The loan is being set up. You can follow it on your loan page.",
   "application.approvedAction": "See the loan",
-  "application.declinedTitle": "This application wasn't approved",
+  /* "Declined", because that is the word this product already uses for it
+     everywhere else — the WBS's own status list ("Submitted, Under Review,
+     Pending action, Approved, declined"), the underwriter's decision, the
+     status tag, and most of all the notification the SAME READER gets:
+     "Your application was declined". "Wasn't approved" was a softer synonym
+     on one screen, which left the bell and the page naming one event two
+     ways. "This" rather than "Your": the co-borrower reads this too, and it
+     is not their application. */
+  "application.declinedTitle": "This application was declined",
   /* It names WHO decided, which is the one fact a reader cannot work out from
      the title, and stops. What happens next is on the button, and the button
      is the only thing that differs between the two sides. */
@@ -2516,7 +2524,7 @@ const es: Record<TranslationKey, string> = {
   "application.approvedBody":
     "El préstamo se está preparando. Puedes seguirlo en la página de tu préstamo.",
   "application.approvedAction": "Ver el préstamo",
-  "application.declinedTitle": "Esta solicitud no fue aprobada",
+  "application.declinedTitle": "Esta solicitud fue rechazada",
   "application.declinedBody": "El personal de OPA la revisó y no pudo seguir adelante.",
   "application.declinedAction": "Iniciar una solicitud nueva",
   "application.acknowledge": "Entendido",
