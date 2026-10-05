@@ -63,6 +63,7 @@ import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
 import { getMarkStyles, getStyles, styles } from "./CardFace.styles";
+import { useCardSkin } from "./cardSkin";
 
 export type CardFaceProps = {
   /**
@@ -160,8 +161,11 @@ export function CardFace({
      rather than wearing antd's chip. */
   const inverted = true;
   const { token } = theme.useToken();
-  const s = getStyles(token);
-  const marks = getMarkStyles();
+  /* Which finish, while the designer is choosing between two. See
+     cardSkin.ts — the switch lives on the DevBar. */
+  const skin = useCardSkin();
+  const s = getStyles(token, skin);
+  const marks = getMarkStyles(skin);
   const figures = getFigureStyles(token);
 
   /* OPA'S OWN FRONT. It returns early rather than threading `front` through

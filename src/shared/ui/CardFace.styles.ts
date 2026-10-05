@@ -248,7 +248,9 @@ export const getStyles = (token: GlobalToken, skin: CardSkin = "deep") => {
  * OPA application and are accessible only via a secure embedded view", so they
  * appear on the revealed face and nowhere else.
  */
-export const getMarkStyles = () => {
+export const getMarkStyles = (skin: CardSkin = "deep") => {
+  /* The tile follows the ground, like everything else on the face. */
+  const pill = skin === "deep" ? brand.cardDarkPill : brand.cardLightPill;
   /**
    * THE MARK'S TILE, AND THE WHITE THAT MAKES THE FLAME A FLAME.
    *

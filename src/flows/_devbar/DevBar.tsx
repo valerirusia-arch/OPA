@@ -29,6 +29,13 @@ import {
   type ViewerRole,
 } from "../../shared/ui/viewerRole";
 import {
+  CARD_SKINS,
+  CARD_SKIN_LABELS,
+  setCardSkin,
+  useCardSkin,
+  type CardSkin,
+} from "../../shared/ui/cardSkin";
+import {
   getStyles, hiddenToggle, barInner, tagFlush, selectStyle, spacer,
 } from "./DevBar.styles";
 
@@ -102,6 +109,13 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
    * question about the path.
    */
   const isBorrowerView = areaOfPath(pathname) !== "staff";
+  /**
+   * The card finish switch shows where a card face is, and nowhere else: the
+   * loan page draws the virtual card and the payments page the repayment
+   * one. It goes away with the losing skin. See shared/ui/cardSkin.ts.
+   */
+  const cardSkin = useCardSkin();
+  const showCardSkin = pathname.startsWith("/loan") || pathname.startsWith("/payments");
   const [hidden, setHidden] = useState(false);
 
   const all = useMemo(() => flattenRoutes(), []);
@@ -195,6 +209,19 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
             />
 
             <Tag style={styles.pathTag}>{pathname}</Tag>
+
+            {/* Two candidate finishes for the card face, so the choice is
+                made by looking at the card rather than at two hex values. */}
+            {showCardSkin && (
+              <Tooltip title="Card face: the deep blue, or the designer's pale #90D5FF with dark ink.">
+                <Segmented<CardSkin>
+                  size="small"
+                  value={cardSkin}
+                  onChange={setCardSkin}
+                  options={CARD_SKINS.map((k) => ({ label: CARD_SKIN_LABELS[k], value: k }))}
+                />
+              </Tooltip>
+            )}
           </Space>
 
           <Space size="small">
