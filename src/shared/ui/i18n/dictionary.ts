@@ -1198,7 +1198,7 @@ export const en = {
      already looking at, beside a figure it is plainly about — the verb was
      the longest word on the line for the least: *"აქ ვიევ ზედმეტია,
      უბრალოდ ფულ სქედულე"*. */
-  "loanPage.viewSchedule": "Full schedule",
+  "loanPage.viewSchedule": "View schedule",
   "loanPage.cardEndingLabel": "Card ending",
   "loanPage.cardModalTitle": "Your OPA card",
   "loanPage.cardIssuer": "Virtual card",
@@ -1284,7 +1284,7 @@ export const en = {
      prints nothing a reader could mistake for the answer, so the word has to
      carry it: what is behind it is the number, the expiry and the security
      code. *"ვიუვის ნაცვლად რაიმე უფრო ორიგინალური და ქლინ."* */
-  "loanPage.cardOpen": "Card details",
+  "loanPage.cardOpen": "View card",
   /* NOT "Not used yet". The card sits on a face beside "In use", and the
      pair reads as a state either way; "yet" adds a promise the pill does
      not need to make. *"ამას yet არ უნდა."* */
@@ -2853,7 +2853,7 @@ const es: Record<TranslationKey, string> = {
   "loanPage.progressLine": "{paid} de {count} pagadas",
   "loanPage.dueOn": "Vence el {due}",
   "loanPage.terms": "{count} pagos mensuales · {apr}",
-  "loanPage.viewSchedule": "Calendario completo",
+  "loanPage.viewSchedule": "Ver calendario",
   "loanPage.cardEndingLabel": "Tarjeta terminada en",
   "loanPage.cardModalTitle": "Tu tarjeta OPA",
   "loanPage.cardIssuer": "Tarjeta virtual",
@@ -2905,7 +2905,7 @@ const es: Record<TranslationKey, string> = {
   "loanPage.statement": "Tu préstamo",
   "loanPage.card": "Tu tarjeta OPA",
   "loanPage.cardBody": "USIO custodia la tarjeta. OPA nunca ve ni guarda el número.",
-  "loanPage.cardOpen": "Datos de la tarjeta",
+  "loanPage.cardOpen": "Ver tarjeta",
   "loanPage.cardUnused": "Sin usar",
   "loanPage.cardUsed": "En uso",
 

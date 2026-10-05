@@ -26,7 +26,6 @@
 // Dumb: it renders a masked reference and reports a click.
 
 import { Button, Card, Flex, Typography } from "antd";
-import { ArrowRightOutlined } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { styles } from "./VirtualCardPanel.styles";
@@ -75,7 +74,7 @@ export function VirtualCardPanel({
          saved card — a hand-off is not a primary action. */
       extra={
         <Button type="link" style={styles.headAction} onClick={onOpen}>
-          {t("loanPage.cardOpen")} <ArrowRightOutlined />
+          {t("loanPage.cardOpen")}
         </Button>
       }
     >

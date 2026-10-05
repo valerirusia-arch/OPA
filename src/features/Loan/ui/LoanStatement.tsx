@@ -155,12 +155,13 @@ export function LoanStatement({
      long one to make room for air the short one does not need. */
   const defaultSpan = facts && facts.length > 0 ? Math.floor(24 / facts.length) : 24;
 
-  /* In the head, the action is a link with its arrow — the same object the
-     virtual card's head carries, so the two heads on this row match. */
+  /* In the head, the action is a PLAIN link — no arrow, the same as the
+     virtual card's head, so the two heads on this row still match.
+     *"აროუებია აქ მოხსენით ამათ."* */
   const headAction =
     title && action ? (
       <Button type="link" style={styles.headAction} onClick={action.onClick}>
-        {action.label} <ArrowRightOutlined />
+        {action.label}
       </Button>
     ) : undefined;
 

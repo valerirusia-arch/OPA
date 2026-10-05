@@ -38,6 +38,7 @@
 //
 // Dumb: everything arrives as props and leaves as a callback.
 
+import { useRef } from "react";
 import {
   Button, Card, Collapse, Divider, Flex, Grid, Result, Tabs, Typography, theme,
 } from "antd";
@@ -109,6 +110,27 @@ export function PaymentsOverview({
   const compactHeadAction = screens.sm === false;
   const { token } = theme.useToken();
   const s = getStyles(token);
+  /**
+   * THE HEAD'S LINK GOES TO THE SCHEDULE, NOT TO A DIALOG.
+   *
+   * It used to open the pay dialog, which asked "how much" over a page that
+   * already lists every instalment with its own "Pay now" — two doors onto
+   * the same room, and the dialog's was the one that made the reader choose
+   * an amount the table had already decided. So the link does what the arrow
+   * on it says: it takes you down to the table — *"ამან დაბლა თეიბლში
+   * ჩამოგვასქროლინოს რა"* — and the row you mean is where you pay.
+   *
+   * `smooth`, except where the reader has asked for less motion: a jump is
+   * the honest fallback, not a slower animation.
+   */
+  const scheduleRef = useRef<HTMLDivElement>(null);
+  const goToSchedule = () => {
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    scheduleRef.current?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  };
 
   /*
     A PAGE WITH NOTHING TO REPAY, drawn as one thing.
@@ -245,7 +267,7 @@ export function PaymentsOverview({
             <Button
               type="link"
               style={styles.headAction}
-              onClick={() => onPay?.()}
+              onClick={goToSchedule}
               aria-label={compactHeadAction ? t("payments.makePayment") : undefined}
             >
               {compactHeadAction ? null : t("payments.makePayment")}{" "}
@@ -308,6 +330,12 @@ export function PaymentsOverview({
           inset tab bar, the same treatment the back-office tables use, so the
           table's header band meets the card's edge instead of floating in a
           white margin. */}
+      {/* THE ANCHOR, not a ref on the Card: antd's Card does not forward one
+          to its DOM node, so the head's link scrolled nowhere. A zero-height
+          div immediately before it is the node to aim at and costs the layout
+          nothing. */}
+      <div ref={scheduleRef} />
+
       <Card
         style={{ ...styles.card, ...styles.tableCard }}
         styles={{ body: styles.tableCardBody }}

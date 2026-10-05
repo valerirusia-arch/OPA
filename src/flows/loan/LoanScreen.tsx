@@ -127,37 +127,38 @@ export default function LoanScreen({
                   application and no loan. The pills describe what is on the
                   page; when nothing is, they describe nothing. */}
               {hasOpenApplication(record) && record ? (
-                <Flex align="center" gap={8}>
-                  {/* The pill says WHY it is waiting on a co-borrower again,
-                      not just that it is — the borrower has already invited
-                      somebody, and "Co-borrower required" on its own reads as
-                      though that never happened. The page's own body still
-                      carries the detail; this is the heading's one word on it. */}
+                /* ONE STATE BESIDE THE TITLE, NOT TWO. Once a loan exists, its
+                   stage (e.g. Funded) already implies the application was
+                   approved — "Approved · Funded" says the same thing twice — so
+                   the loan stage is the live fact. Before there is a loan, the
+                   application status is. The co-borrower-failed wording still
+                   lives on the status tag below; the page's body carries the
+                   detail, this is the heading's one word on it. */
+                record.loan ? (
+                  <StatusPill
+                    /* Funded is the state the loan is meant to reach, so it
+                       is the one worth a colour; the others are the middle
+                       of the process. */
+                    color={record.loan.stage === "funded" ? "success" : undefined}
+                  >
+                    {/* The same stage reads differently once this person has
+                        signed: they are not being waited on any more, somebody
+                        else is. */}
+                    {record.loan.stage === "awaitingSignature" && signedByReader
+                      ? t("loanPage.stageAwaitingOther", {
+                          name:
+                            (role === "borrower"
+                              ? record.coBorrower
+                              : record.applicant) ?? "",
+                        })
+                      : t(stageLabelKeys[record.loan.stage])}
+                  </StatusPill>
+                ) : (
                   <ApplicationStatusTag
                     status={record.status}
                     coBorrowerFailed={Boolean(record.coBorrowerFailed)}
                   />
-                  {record.loan ? (
-                    <StatusPill
-                      /* Funded is the state the loan is meant to reach, so it
-                         is the one worth a colour; the others are the middle
-                         of the process. */
-                      color={record.loan.stage === "funded" ? "success" : undefined}
-                    >
-                      {/* The same stage reads differently once this person
-                          has signed: they are not being waited on any more,
-                          somebody else is. */}
-                      {record.loan.stage === "awaitingSignature" && signedByReader
-                        ? t("loanPage.stageAwaitingOther", {
-                            name:
-                              (role === "borrower"
-                                ? record.coBorrower
-                                : record.applicant) ?? "",
-                          })
-                        : t(stageLabelKeys[record.loan.stage])}
-                    </StatusPill>
-                  ) : null}
-                </Flex>
+                )
               ) : null}
             </Flex>
 
