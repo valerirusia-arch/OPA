@@ -48,7 +48,6 @@
 // Dumb: mock rows, no fetching.
 
 import { App, Button, Card, Dropdown, Result, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
@@ -58,7 +57,12 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns, TABLE_NAME_WIDTH } from "../../shared/ui/tableColumns";
+import {
+  buildPopinTable,
+  useMeasuredWidth,
+  TABLE_NAME_WIDTH,
+} from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { NameCell } from "../../shared/ui/NameCell";
 import { StatusPill } from "../../shared/ui/StatusPill";
 import { useT } from "../../shared/ui/i18n/useT";
@@ -140,7 +144,7 @@ export default function StaffApplicationsScreen({
    */
   const visible = applications.filter(awaitsReview);
 
-  const columns: ColumnsType<ApplicationRecord> = [
+  const columns: PriorityColumn<ApplicationRecord>[] = [
     {
       /* The wireframe's NAME. The application's id goes underneath rather than
          into a column of its own: it is what support is asked for, not what an
@@ -156,6 +160,8 @@ export default function StaffApplicationsScreen({
          was the column actually short of room. *"როუები ცოტა მარცხნივ
          გამოიწიე."* */
       width: TABLE_NAME_WIDTH,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (_value, row) => (
         <NameCell
           name={row.borrower.name}
@@ -174,6 +180,9 @@ export default function StaffApplicationsScreen({
       title: t("queue.col.source"),
       key: "source",
       width: 190,
+      // The key attribute — why the row is in this queue at all, the
+      // whole reason it's worth scanning. Stays with Name at every width.
+      priority: "high",
       /* An application the system decided automatically shows its decision here
          instead of a routing step — it was not routed by a check, it was decided
          and is waiting for a human to confirm or override it. This is also what
@@ -212,6 +221,7 @@ export default function StaffApplicationsScreen({
       key: "income",
       width: 130,
       align: "end",
+      popinText: (row) => money(row.annualIncome),
       render: (_value, row) => (
         <Typography.Text type="secondary">{money(row.annualIncome)}</Typography.Text>
       ),
@@ -229,6 +239,9 @@ export default function StaffApplicationsScreen({
       ),
     },
   ];
+
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const popin = buildPopinTable(columns, tableWidth);
 
   return (
     <AdminShell
@@ -270,15 +283,15 @@ export default function StaffApplicationsScreen({
       >
         {canView ? (
         <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
+          {/* Four fixed columns plus the flexible USCIS service used to mean
+              a horizontal scroll below ~980px; now Amount, Income and USCIS
+              service print inline under Name instead, leaving it and
+              Source — the reason the row is in this queue at all. */}
+          <div ref={tableRef}>
           <Table<ApplicationRecord>
             rowKey="id"
             tableLayout="fixed"
-            // Four fixed columns at 710px plus the flexible USCIS service; on a
-            // narrow screen that column would collapse to nothing, so the table
-            // scrolls horizontally below ~980px and every column keeps its
-            // width.
-            scroll={{ x: 980 }}
-            columns={decorateColumns(columns)}
+            columns={popin.columns}
             dataSource={visible}
             // The whole row opens the application; the id stays a real link so
             // the row is reachable by keyboard and can be opened in a new tab.
@@ -301,6 +314,7 @@ export default function StaffApplicationsScreen({
             }}
             pagination={false}
           />
+          </div>
         </Card>
         ) : (
         <Card>

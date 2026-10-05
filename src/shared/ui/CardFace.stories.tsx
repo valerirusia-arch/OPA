@@ -23,7 +23,7 @@ function Faces() {
           <CardFace
             front
             label="OPA Virtual Card"
-            status={{ label: "Not used yet" }}
+            status={{ label: "Not used" }}
             facts={[{ key: "h", label: "Cardholder", value: "Levi Ackerman" }]}
           />
         </Card>
@@ -37,7 +37,7 @@ function Faces() {
           <CardFace
             nameplate
             label="OPA Virtual Card"
-            status={{ label: "Not used yet" }}
+            status={{ label: "Not used" }}
             number="•••• 3094"
             facts={[{ key: "h", label: "Cardholder", value: "Levi Ackerman" }]}
           />
@@ -50,7 +50,7 @@ function Faces() {
         </Typography.Text>
         <Card title="Your OPA card">
           <CardFace
-            label="OPA virtual"
+            label="OPA Virtual Card"
             status={{ label: "Mock" }}
             number="4111 2233 4455 3094"
             facts={[

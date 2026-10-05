@@ -17,10 +17,10 @@
 
 import { Flex, Table, Tag, Typography } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
-import type { ColumnsType } from "antd/es/table";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { pill } from "../../../shared/ui/tag.styles";
-import { decorateColumns } from "../../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../../shared/ui/tableColumns";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import type { LoanDocument } from "./types";
 
@@ -31,6 +31,7 @@ export type DocumentListProps = {
 
 export function DocumentList({ documents, onDownload }: DocumentListProps) {
   const t = useT();
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
 
   if (documents.length === 0)
     return (
@@ -39,7 +40,7 @@ export function DocumentList({ documents, onDownload }: DocumentListProps) {
       />
     );
 
-  const columns: ColumnsType<LoanDocument> = [
+  const columns: PriorityColumn<LoanDocument>[] = [
     /*
      * Every column takes a SHARE of the width, not a fixed pixel count, so
      * this table spreads and collapses like every other table in the product.
@@ -52,6 +53,8 @@ export function DocumentList({ documents, onDownload }: DocumentListProps) {
       title: t("loanPage.docName"),
       key: "name",
       width: "44%",
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (_v, row) => (
         <Flex align="center" gap={8}>
           <Typography.Text ellipsis={{ tooltip: row.name }}>{row.name}</Typography.Text>
@@ -73,12 +76,14 @@ export function DocumentList({ documents, onDownload }: DocumentListProps) {
       title: t("loanPage.docType"),
       key: "type",
       width: "20%",
+      popinText: (row) => row.type,
       render: (_v, row) => <Typography.Text type="secondary">{row.type}</Typography.Text>,
     },
     {
       title: t("loanPage.docDate"),
       key: "on",
       width: "20%",
+      popinText: (row) => row.on,
       render: (_v, row) => (
         <Typography.Text type="secondary">{row.on}</Typography.Text>
       ),
@@ -106,18 +111,19 @@ export function DocumentList({ documents, onDownload }: DocumentListProps) {
     },
   ];
 
+  const popin = buildPopinTable(columns, tableWidth);
+
   return (
+    <div ref={tableRef}>
     <Table<LoanDocument>
       rowKey="id"
       size="small"
       tableLayout="fixed"
-      columns={decorateColumns(columns)}
+      columns={popin.columns}
       dataSource={documents}
       pagination={false}
-      /* A minimum, not the content width: above it the percentages spread the
-         columns, below it the table scrolls in its own card. */
-      scroll={{ x: 640 }}
     />
+    </div>
   );
 }
 

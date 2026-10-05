@@ -25,17 +25,22 @@
 
 import { useMemo, useState } from "react";
 import { Card, Input, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
+import { searchIcon } from "../../shared/ui/searchField";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns, TABLE_NAME_WIDTH } from "../../shared/ui/tableColumns";
+import {
+  buildPopinTable,
+  useMeasuredWidth,
+  TABLE_NAME_WIDTH,
+} from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { NameCell } from "../../shared/ui/NameCell";
 import {
   ALL,
@@ -190,7 +195,7 @@ export default function StaffLoansScreen({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loans, canSeeAcquisition, t]);
 
-  const columns: ColumnsType<LoanRow> = [
+  const columns: PriorityColumn<LoanRow>[] = [
     {
       title: t("loans.col.borrower"),
       key: "borrower",
@@ -199,6 +204,8 @@ export default function StaffLoansScreen({
          no long free-text column, so every column is sized and the browser
          shares the slack out proportionally. See TABLE_NAME_WIDTH. */
       width: TABLE_NAME_WIDTH,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (_v, row) => (
         <NameCell
           name={row.borrowerName}
@@ -218,6 +225,9 @@ export default function StaffLoansScreen({
       title: t("loans.col.status"),
       key: "status",
       width: 160,
+      // The key attribute — the one fact this list exists to show. Stays
+      // with Borrower at every width.
+      priority: "high",
       render: (_v, row) => <LoanStatusTag status={row.loan.status} />,
     },
     {
@@ -234,11 +244,17 @@ export default function StaffLoansScreen({
       title: t("loans.col.funded"),
       key: "funded",
       width: 160,
+      // Least essential for scanning the list — pops first.
+      priority: "low",
+      popinText: (row) => row.loan.fundedOn ?? "",
       render: (_v, row) => (
         <Typography.Text type="secondary">{row.loan.fundedOn ?? "—"}</Typography.Text>
       ),
     },
   ];
+
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const popin = buildPopinTable(columns, tableWidth);
 
   return (
     <AdminShell
@@ -257,8 +273,8 @@ export default function StaffLoansScreen({
           <>
             <Input
               allowClear
-              prefix={<SearchOutlined />}
-              placeholder={t("loans.searchPlaceholder")}
+              prefix={<SearchOutlined style={searchIcon} />}
+              placeholder={t("filters.search")}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               style={styles.search}
@@ -271,14 +287,14 @@ export default function StaffLoansScreen({
         }
       >
         <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
+          {/* Six columns used to mean a horizontal scroll below ~960px; now
+              Funded (always) and, below ~830px, also Amount/Rate/Agreement
+              print inline under Borrower, leaving it and Status in the grid. */}
+          <div ref={tableRef}>
           <Table<LoanRow>
             rowKey={(row) => row.loan.loanId}
             tableLayout="fixed"
-            // Six columns (borrower + five fixed at 730px) crush on a narrow
-            // screen: without this the width-less borrower column collapses and
-            // its header stacks. Scroll horizontally below ~960px instead.
-            scroll={{ x: 960 }}
-            columns={decorateColumns(columns)}
+            columns={popin.columns}
             dataSource={visible}
             onRow={(row) => ({
               style: styles.row,
@@ -304,6 +320,7 @@ export default function StaffLoansScreen({
               style: page.pagination,
             }}
           />
+          </div>
         </Card>
       </AdminPage>
 

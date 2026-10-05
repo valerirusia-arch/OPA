@@ -41,6 +41,7 @@ import { Button, Flex, Grid, Typography, theme } from "antd";
 import { InstalmentTrack } from "../../../shared/ui/InstalmentTrack";
 import { StatusPill } from "../../../shared/ui/StatusPill";
 import { useT } from "../../../shared/ui/i18n/useT";
+import { balanceDetails } from "./balanceDetails";
 import { getStyles, styles } from "./BalanceSummary.styles";
 import type { Balance, Installment } from "./types";
 
@@ -176,30 +177,7 @@ export function BalanceSummary({
   */
   const settled = showDetails && next === undefined;
 
-  const details = settled
-    ? [
-        { key: "fees", label: t("payments.feesApplied"), value: balance.fees, alarm: false },
-        {
-          key: "repaid",
-          label: t("payments.totalRepaid"),
-          value: totalRepaid ?? balance.outstanding,
-          alarm: false,
-        },
-        {
-          key: "closed",
-          label: t("payments.closedOn"),
-          value: closedOn ?? balance.maturityOn,
-          alarm: false,
-        },
-      ]
-    : [
-    ...(pastDue
-      ? [{ key: "past", label: t("payments.pastDueLabel"), value: pastDue, alarm: true }]
-      : []),
-    { key: "fees", label: t("payments.feesApplied"), value: balance.fees, alarm: false },
-    { key: "payoff", label: t("payments.payoffToday"), value: balance.payoff, alarm: false },
-    { key: "maturity", label: t("payments.maturity"), value: balance.maturityOn, alarm: false },
-  ];
+  const details = balanceDetails(t, { balance, pastDue, totalRepaid, closedOn, settled });
 
   /* One definition, two arrangements — see the note at the figure row. */
   const detailItem = (detail: (typeof details)[number]) => (

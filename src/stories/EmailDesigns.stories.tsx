@@ -106,13 +106,6 @@ const TEMPLATES: EmailTemplate[] = [
     a bell.
   */
   {
-    slug: "document-signing-request",
-    name: "Document signing request",
-    audience: "Borrower / Co-borrower",
-    wbs: "Notifications · Receive document signing request",
-    fields: ["firstName", "signUrl"],
-  },
-  {
     slug: "co-borrower-expired",
     name: "Co-borrower invitation expired",
     audience: "Borrower",
@@ -278,7 +271,7 @@ function EmailDesigns() {
               <Tag variant="filled">{file}</Tag>
             </Space>
             <Button size="small" icon={<ExportOutlined />} href={url} target="_blank">
-              Open on its own
+              Open in a new tab
             </Button>
           </Flex>
 

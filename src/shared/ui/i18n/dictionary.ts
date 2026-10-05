@@ -60,7 +60,7 @@ export const en = {
   // OPA staff hand-off
   "staff.signIn": "Sign in with Microsoft",
   "staff.note":
-    "OPA staff accounts are managed by your administrator. You will be redirected to your organisation's Microsoft sign-in page.",
+    "OPA staff accounts are managed by your administrator. You will be redirected to your organization's Microsoft sign-in page.",
 
   // Registration
   "register.title": "Create your account",
@@ -277,6 +277,7 @@ export const en = {
      table of contents for a page nobody is looking at yet. *"ცოტა შემოკლე ეს
      ტექსტი რა."* "Where your loan stands" is the card that fills this space,
      so the sentence names it rather than its parts. */
+  "dashboard.emptyTitle": "No application or loan yet",
   "dashboard.emptyBody": "Once you apply, this page shows where your loan stands.",
 
   "dashboard.tileLoan": "Loan amount",
@@ -316,11 +317,11 @@ export const en = {
   "dashboard.stageNeedsInfo": "More information needed",
   "dashboard.stageCoBorrower": "Waiting on your co-borrower",
   "dashboard.stageReviewBody":
-    "OPA is checking your application. You do not need to do anything while it is with underwriting.",
+    "OPA is checking your application. Nothing is needed from you.",
   "dashboard.stageReviewInfo":
-    "An underwriter has asked for something more. Nothing moves until it arrives.",
+    "An underwriter asked for more. Nothing moves until it arrives.",
   "dashboard.stageReviewCoBorrower":
-    "Underwriting cannot start until your co-borrower accepts the invitation and finishes their part.",
+    "Underwriting starts once your co-borrower finishes their part.",
   "dashboard.stageDeclined": "Not approved",
   "dashboard.stageDeclinedBody": "OPA could not approve this application.",
   "dashboard.stageOpenApplication": "Open the application",
@@ -435,14 +436,20 @@ export const en = {
 
     It is not a disclosure — the agreement is — but the last screen before a
     signature should not draw a road that ends with money arriving.
+
+    SHORTENED 2026-10-04, and the rule MOVED one step down rather than lost:
+    signing and funding sit on the same card, one under the other, so the
+    sentence was printed twice within an inch of itself. It now lives on
+    `stepFundingBody` alone — still above the signature in reading order,
+    since the reader passes both before they sign.
   */
   "dashboard.stepSignBody":
-    "Signing happens in DocuSign. Nothing is paid out until it is done, and repayment begins within 45 days of approval, on the 1st of the month.",
+    "Signing happens in DocuSign. Nothing is paid out until it is done.",
   "dashboard.stepSignBodyBoth":
-    "Signing happens in DocuSign, and both of you sign before OPA pays anything out. Repayment begins within 45 days of approval, on the 1st of the month.",
+    "Signing happens in DocuSign. Both of you sign before OPA pays out.",
   "dashboard.stepFunding": "OPA pays out the loan",
   "dashboard.stepFundingBody":
-    "Your virtual payment card is issued at the same time. Repayment begins within 45 days of approval, on the 1st of the month.",
+    "Your card is issued at the same time. Repayment begins within 45 days of approval, on the 1st.",
   "dashboard.stepPayment": "Pay {amount}",
   "dashboard.stepPaymentBody": "Taken from the card ending {card}.",
   "dashboard.stepLateFee": "A late fee is charged",
@@ -459,7 +466,8 @@ export const en = {
 
   "notify.inbox": "Inbox",
   "notify.markAllRead": "Mark all as read",
-  "notify.none": "Nothing to read. We will tell you when something happens.",
+  "notify.none": "No messages yet",
+  "notify.noneBody": "We'll tell you when something happens.",
   "notify.email": "Email notifications",
   "notify.sms": "SMS notifications",
   "notify.channelHint":
@@ -528,7 +536,7 @@ export const en = {
   "nav.payment": "Payments",
   "nav.acquisition": "Acquisition",
   "nav.source": "Source",
-  "nav.partners": "Partners & Groups",
+  "nav.partners": "Partners & groups",
   "nav.campaigns": "Campaigns",
   "nav.performance": "Performance report",
   "nav.users": "Users",
@@ -566,7 +574,6 @@ export const en = {
   "access.deniedDescription":
     "Your role doesn't have access to this page. Head back to the borrowers list.",
   "access.goToBorrowers": "Go to borrowers",
-  "users.searchPlaceholder": "Search by name or email",
   "users.new": "New user",
   "users.col.name": "Name",
   "users.col.email": "Email",
@@ -613,6 +620,13 @@ export const en = {
   // Filtering a list. The search box stays in the page's own toolbar; the
   // facets collapse into one button so the toolbar reads the same on every
   // screen no matter how many facets a list happens to have.
+  /* JUST THE WORD. Each list used to spell out the fields it searched —
+     "Search by name, email or phone" — which is a sentence inside a control
+     that is already wearing a magnifier: *"ტექსტში უბრალოდ სერჩი იყოს რა, და
+     არა ამხელა ტექსტი"*. What each one matches is in its own screen comment,
+     where a reader of the code needs it; the reader of the page needs the
+     verb. One key, because all four now say the same thing. */
+  "filters.search": "Search",
   "filters.title": "Filters",
   "filters.clearAll": "Clear all",
   "filters.remove": "Remove filter: {name}",
@@ -623,7 +637,6 @@ export const en = {
   // Borrowers and co-borrowers, seen from the back office
   "borrowers.title": "Borrowers",
   // WBS: search by name, email or phone number.
-  "borrowers.searchPlaceholder": "Search by name, email or phone",
   "borrowers.allStates": "All states",
   "borrowers.allStatuses": "All statuses",
   "borrowers.allFlags": "All borrowers",
@@ -884,6 +897,13 @@ export const en = {
   "application.coBorrowerWaitingTitle": "Waiting on your co-borrower",
   "application.coBorrowerWaitingBody":
     "{name}'s part is not finished. The invitation expires on {date}.",
+  /* The lead line, split from the body so the date can be its own emphasised run
+     on a second line — the same treatment the `invited` state gives it. */
+  "application.coBorrowerWaitingLead": "{name}'s part is not finished.",
+  /** The quiet way out of the waiting state. A question, because replacing
+   *  somebody who may still be filling their part in is the reader's call to
+   *  make, not an instruction the page is giving. */
+  "application.coBorrowerChangeLink": "Want to change co-borrower?",
   /* WBS story 14, the reset. Three things at once, because a borrower who is
      only told "invite a co-borrower" will think the first invite failed to
      send: who was turned down, that the application survived them, and that
@@ -891,7 +911,7 @@ export const en = {
      that is somebody else's credit file, not this borrower's to read. */
   "application.coBorrowerFailedTitle": "Your co-borrower didn't qualify",
   "application.coBorrowerFailedBody":
-    "Invite a different co-borrower — everything you filled in is saved.",
+    "Invite a different co-borrower. Everything you filled in is saved.",
   "application.coBorrowerFailedAction": "Invite a different co-borrower",
   "inviteCoBorrower.title": "Invite a co-borrower",
   "inviteCoBorrower.subtitle":
@@ -1026,6 +1046,12 @@ export const en = {
   /* Submitted, but underwriting has not started — it cannot until the
      co-borrower finishes. */
   "submitted.tagWaiting": "Waiting on your co-borrower",
+  /* THE TOAST, not the page. The screen's own picture says where the
+     application IS — with OPA, being read. That it was SENT is a thing that
+     just happened and then stops being news, which is what a message is for.
+     *"უნდა ჩამოვიდეს ალერტი, რომ აპლიკაცია გაიგზავნა წარმატებით."* */
+  "submitted.sent": "Your application has been sent",
+  "submitted.partSent": "Your part has been sent",
   "submitted.title": "Your application is submitted",
   /* The co-borrower's: they finished their half of somebody else's. */
   "submitted.partTitle": "Your part is submitted",
@@ -1160,10 +1186,19 @@ export const en = {
      first of them — *"ეს ტექსტიც ცოტა შეამოკლე რა."* "paid" is also how
      /payments says the same count, so the two pages now say it the same way.
      */
-  "loanPage.progressLine": "{paid} of {count} paid · ends {due}",
+  /* NO MATURITY DATE ON THE BAR. "3 of 12 paid · ends Sep 01, 2027" put the
+     loan's end next to a count of what is behind you, which is two different
+     questions in one caption — and the date is already a fact in the strip
+     under the same panel. The dashboard's own bar has only ever said the
+     count; now so does this one. */
+  "loanPage.progressLine": "{paid} of {count} paid",
   "loanPage.dueOn": "Due {due}",
   "loanPage.terms": "{count} monthly payments · {apr}",
-  "loanPage.viewSchedule": "View full schedule",
+  /* NOT "View full schedule". It sits in the head of a panel the reader is
+     already looking at, beside a figure it is plainly about — the verb was
+     the longest word on the line for the least: *"აქ ვიევ ზედმეტია,
+     უბრალოდ ფულ სქედულე"*. */
+  "loanPage.viewSchedule": "Full schedule",
   "loanPage.cardEndingLabel": "Card ending",
   "loanPage.cardModalTitle": "Your OPA card",
   "loanPage.cardIssuer": "Virtual card",
@@ -1332,7 +1367,6 @@ export const en = {
   "acquisition.allCampaigns": "All campaigns",
   "loans.title": "Loans",
   "loans.card": "Loan",
-  "loans.searchPlaceholder": "Search by name or email",
   "loans.allStatuses": "All loan statuses",
   "loans.col.borrower": "Borrower",
   "loans.col.amount": "Amount",
@@ -1371,8 +1405,12 @@ export const en = {
      not responding — and "nothing you sent is lost" answers a smaller fear
      than the one this screen actually raises, which is "have I been turned
      down". That one, and what happens next, is the whole message. */
-  "application.checkPausedBody":
-    "Nothing has been refused. It carries on by itself once the check is back.",
+  /* TWO LINES, ON PURPOSE. As one string this broke mid-clause at every
+     measure wide enough for the gate's other sentences, so the two sentences
+     are two blocks and the break is theirs rather than the width's. */
+  "application.checkPausedBody": "Nothing has been refused.",
+  "application.checkPausedBodyResumes":
+    "It carries on by itself once the check is back.",
   /* "See my loan", not "Back to my profile". The profile is where a reader
      goes to change their own details, and nothing on it has anything to do
      with a check that stalled — the application is on the loan page, which
@@ -1526,7 +1564,7 @@ export const en = {
   "acq.partner.noun": "partner",
   "acq.group.noun": "partner group",
   "acq.partners.title": "Referral partners",
-  "acq.partners.lead": "The referral partners who bring in borrowers, and the groups you organise them into.",
+  "acq.partners.lead": "The referral partners who bring in borrowers, and the groups you organize them into.",
   "acq.partners.tabPartners": "Referral partners",
   "acq.partners.tabGroups": "Partner groups",
   "acq.partner.new": "New partner",
@@ -1647,6 +1685,13 @@ export const en = {
   "appAction.approve": "Approve",
   "appAction.decline": "Decline",
   "appAction.override": "Override decision",
+  /* The confirmation toast after each action — a completed state, not the
+     button's own imperative. The button already says "Approve"; the toast
+     that follows pressing it has to say what just happened, not repeat the
+     instruction. */
+  "appAction.approveSuccess": "Application approved",
+  "appAction.declineSuccess": "Application declined",
+  "appAction.overrideSuccess": "Decision overridden",
   "appDetail.actions": "Underwriting actions",
   "appDetail.bySystem": "System",
   "appDetail.coBorrowerChecks": "Verification results, co-borrower",
@@ -1765,7 +1810,6 @@ export const en = {
      answered above it. */
   "payments.nextPaymentLine": "Next on {due}",
   "payments.savedCard": "Saved payment card",
-  "payments.filterByBorrower": "Filter by borrower",
 
   /* THE SCHEDULE TAB WHEN THERE IS NOTHING LEFT ON IT. Not "no data": the
      list is empty because the borrower finished, which is the opposite news.
@@ -2152,6 +2196,7 @@ const es: Record<TranslationKey, string> = {
     "La solicitud de {name} está en OPA. Aquí ves en qué punto está.",
   "dashboard.urgent": "Se acaba el plazo",
   "dashboard.leadLoan": "Aquí está tu préstamo, lo que cuesta y lo que viene.",
+  "dashboard.emptyTitle": "Aún no hay solicitud ni préstamo",
   "dashboard.emptyBody":
     "Cuando solicites, esta página te mostrará cómo va tu préstamo.",
 
@@ -2186,11 +2231,11 @@ const es: Record<TranslationKey, string> = {
   "dashboard.stageNeedsInfo": "Falta información",
   "dashboard.stageCoBorrower": "Esperando a tu codeudor",
   "dashboard.stageReviewBody":
-    "OPA está revisando tu solicitud. No tienes que hacer nada mientras está en análisis.",
+    "OPA está revisando tu solicitud. No necesitamos nada de ti.",
   "dashboard.stageReviewInfo":
     "Un analista ha pedido algo más. Nada avanza hasta que llegue.",
   "dashboard.stageReviewCoBorrower":
-    "El análisis no puede empezar hasta que tu codeudor acepte la invitación y complete su parte.",
+    "El análisis empieza cuando tu codeudor complete su parte.",
   "dashboard.stageDeclined": "No aprobada",
   "dashboard.stageDeclinedBody": "OPA no ha podido aprobar esta solicitud.",
   "dashboard.stageOpenApplication": "Abrir la solicitud",
@@ -2253,12 +2298,12 @@ const es: Record<TranslationKey, string> = {
     "Tu solicitud vuelve a la cola de revisión en cuanto llegue.",
   "dashboard.stepSign": "Firma los documentos del préstamo",
   "dashboard.stepSignBody":
-    "La firma se realiza en DocuSign. No se desembolsa nada hasta que esté hecha, y la amortización comienza en un plazo de 45 días desde la aprobación, el día 1 de cada mes.",
+    "La firma se realiza en DocuSign. No se desembolsa nada hasta que esté hecha.",
   "dashboard.stepSignBodyBoth":
-    "La firma se realiza en DocuSign, y los dos firmáis antes de que OPA desembolse nada. La amortización comienza en un plazo de 45 días desde la aprobación, el día 1 de cada mes.",
+    "La firma se realiza en DocuSign. Los dos firmáis antes de que OPA desembolse.",
   "dashboard.stepFunding": "OPA desembolsa el préstamo",
   "dashboard.stepFundingBody":
-    "Tu tarjeta virtual de pago se emite a la vez. Los pagos empiezan dentro de los 45 días desde la aprobación, el día 1 del mes.",
+    "Tu tarjeta se emite a la vez. Los pagos empiezan dentro de los 45 días desde la aprobación, el día 1.",
   "dashboard.stepPayment": "Pagar {amount}",
   "dashboard.stepPaymentBody": "Se cobrará de la tarjeta terminada en {card}.",
   "dashboard.stepLateFee": "Se cobra un recargo por demora",
@@ -2275,7 +2320,8 @@ const es: Record<TranslationKey, string> = {
 
   "notify.inbox": "Bandeja",
   "notify.markAllRead": "Marcar todo como leído",
-  "notify.none": "Nada que leer. Te avisaremos cuando ocurra algo.",
+  "notify.none": "Aún no hay mensajes",
+  "notify.noneBody": "Te avisaremos cuando ocurra algo.",
   "notify.email": "Notificaciones por correo",
   "notify.sms": "Notificaciones por SMS",
   "notify.channelHint":
@@ -2370,7 +2416,6 @@ const es: Record<TranslationKey, string> = {
   "access.deniedDescription":
     "Tu rol no tiene acceso a esta página. Vuelve a la lista de prestatarios.",
   "access.goToBorrowers": "Ir a prestatarios",
-  "users.searchPlaceholder": "Busca por nombre o correo",
   "users.new": "Nuevo usuario",
   "users.col.name": "Nombre",
   "users.col.email": "Correo electrónico",
@@ -2414,6 +2459,7 @@ const es: Record<TranslationKey, string> = {
   "role.staff": "Personal de OPA",
   "role.staffHint": "solo lectura",
 
+  "filters.search": "Buscar",
   "filters.title": "Filtros",
   "filters.clearAll": "Quitar todos",
   "filters.remove": "Quitar el filtro: {name}",
@@ -2422,7 +2468,6 @@ const es: Record<TranslationKey, string> = {
   "borrowers.filterFlag": "Lista NO PRESTAR",
 
   "borrowers.title": "Prestatarios",
-  "borrowers.searchPlaceholder": "Busca por nombre, correo o teléfono",
   "borrowers.allStates": "Todos los estados",
   "borrowers.allStatuses": "Todos los estados de solicitud",
   "borrowers.allFlags": "Todos los prestatarios",
@@ -2594,9 +2639,11 @@ const es: Record<TranslationKey, string> = {
   "application.coBorrowerWaitingTitle": "Esperando a tu coprestatario",
   "application.coBorrowerWaitingBody":
     "La parte de {name} no está lista. La invitación caduca el {date}.",
+  "application.coBorrowerWaitingLead": "La parte de {name} no está lista.",
+  "application.coBorrowerChangeLink": "¿Quieres cambiar de coprestatario?",
   "application.coBorrowerFailedTitle": "Tu coprestatario no cumple los requisitos",
   "application.coBorrowerFailedBody":
-    "Invita a otro coprestatario: todo lo que rellenaste se guarda.",
+    "Invita a otro coprestatario. Todo lo que rellenaste se guarda.",
   "application.coBorrowerFailedAction": "Invitar a otro coprestatario",
   "inviteCoBorrower.title": "Invitar a un coprestatario",
   "inviteCoBorrower.subtitle":
@@ -2711,6 +2758,8 @@ const es: Record<TranslationKey, string> = {
 
   "submitted.tag": "En revisión",
   "submitted.tagWaiting": "Esperando a tu coprestatario",
+  "submitted.sent": "Tu solicitud se ha enviado",
+  "submitted.partSent": "Tu parte se ha enviado",
   "submitted.title": "Tu solicitud está enviada",
   "submitted.partTitle": "Tu parte está enviada",
   "submitted.partDescription":
@@ -2801,10 +2850,10 @@ const es: Record<TranslationKey, string> = {
   "loanPage.nextPayment": "Próximo pago",
   "loanPage.paymentsMade": "Pagos realizados",
   "loanPage.paymentsMadeValue": "{paid} de {count}",
-  "loanPage.progressLine": "{paid} de {count} pagadas · termina el {due}",
+  "loanPage.progressLine": "{paid} de {count} pagadas",
   "loanPage.dueOn": "Vence el {due}",
   "loanPage.terms": "{count} pagos mensuales · {apr}",
-  "loanPage.viewSchedule": "Ver el calendario completo",
+  "loanPage.viewSchedule": "Calendario completo",
   "loanPage.cardEndingLabel": "Tarjeta terminada en",
   "loanPage.cardModalTitle": "Tu tarjeta OPA",
   "loanPage.cardIssuer": "Tarjeta virtual",
@@ -2912,7 +2961,6 @@ const es: Record<TranslationKey, string> = {
   "acquisition.allCampaigns": "Todas las campañas",
   "loans.title": "Préstamos",
   "loans.card": "Préstamo",
-  "loans.searchPlaceholder": "Buscar por nombre o correo",
   "loans.allStatuses": "Todos los estados",
   "loans.col.borrower": "Titular",
   "loans.col.amount": "Importe",
@@ -2938,8 +2986,9 @@ const es: Record<TranslationKey, string> = {
   "application.needsInfoBody": "La persona que revisa tu solicitud ha pedido algo.",
   "application.needsInfoAction": "Ver qué se necesita",
   "application.checkPausedTitle": "Una de nuestras verificaciones no responde",
-  "application.checkPausedBody":
-    "No se ha rechazado nada. Continúa sola en cuanto la verificación vuelva.",
+  "application.checkPausedBody": "No se ha rechazado nada.",
+  "application.checkPausedBodyResumes":
+    "Continúa sola en cuanto la verificación vuelva.",
   "application.checkPausedAction": "Ver mi préstamo",
   "application.coBorrowerNeededTitle": "Tu solicitud necesita un coprestatario",
   "application.coBorrowerNeededBody": "Un coprestatario solicita junto a ti y comparte la responsabilidad de devolver el préstamo. Invita a uno y tu solicitud continúa desde ahí.",
@@ -3171,6 +3220,9 @@ const es: Record<TranslationKey, string> = {
   "appAction.approve": "Aprobar",
   "appAction.decline": "Rechazar",
   "appAction.override": "Anular decisión",
+  "appAction.approveSuccess": "Solicitud aprobada",
+  "appAction.declineSuccess": "Solicitud rechazada",
+  "appAction.overrideSuccess": "Decisión anulada",
   "appDetail.actions": "Acciones de suscripción",
   "appDetail.bySystem": "Sistema",
   "appDetail.coBorrowerChecks": "Resultados de verificación del codeudor",
@@ -3276,7 +3328,6 @@ const es: Record<TranslationKey, string> = {
   "payments.payNow": "Pagar ahora",
   "payments.nextPaymentLine": "Próximo el {due}",
   "payments.savedCard": "Tarjeta guardada",
-  "payments.filterByBorrower": "Filtrar por titular",
 
   "payments.settledTitle": "Todos los pagos están hechos",
   "payments.settledBody": "No queda nada por programar. La pestaña Historial de pagos tiene el registro de los doce.",

@@ -120,6 +120,23 @@ export const brand = {
   sceneTealSoft: "#C6DDE5",
   sceneTealBlob: "#ECF3F6",
   /**
+   * THE APPLICATION PACKET'S BODY LINES — a light blue the designer picked by
+   * eye, lighter and calmer than the teal. The heading bar kept its teal
+   * (`primary`), so only this one slate value is needed. *"3 ხაზი C2DEE6."*
+   */
+  sceneSlateSoft: "#C2DEE6",
+  /** The caption grey under an empty-state illustration — the designer's pick,
+   *  a warm mid grey that reads as secondary without going faint. *"ტექსტი
+   *  ნაცრისფერი, 706F6E."* */
+  sceneCaption: "#706F6E",
+  /** The medium-teal outline for the coloured illustrations — confident but not
+   *  the deep primary. The identity colour of the illustration family. */
+  sceneTealLine: "#42869A",
+  /** The medium-amber outline for a warning illustration. */
+  sceneAmberLine: "#C08A2E",
+  /** The medium-red outline for an error / refusal illustration. */
+  sceneRedLine: "#C0392B",
+  /**
    * AND THE AMBER ONE, for the states where something needs the reader's
    * attention — a co-borrower whose part is unfinished and running out of
    * time, and one who was reviewed and did not qualify.
@@ -143,6 +160,19 @@ export const brand = {
    */
   sceneRedSoft: "#F0CFCB",
   sceneRedBlob: "#FAF0EF",
+  /**
+   * AND A GREEN ONE, for the states that are a good ending: an approved
+   * application, a loan repaid in full.
+   *
+   * The line is `successMark` rather than `success`, for the reason that
+   * token exists — `success` is as dark as it is because it carries WORDS,
+   * and a drawing's outline next to a white page does not need that weight.
+   * Soft and blob are the teal ramp's own two dilutions (28% and 10% of the
+   * line over white), so the four illustration families step down together.
+   */
+  sceneGreenLine: "#3E9370",
+  sceneGreenSoft: "#C9E1D7",
+  sceneGreenBlob: "#ECF4F1",
 
   /**
    * THE SAME THREE TINTS, TURNED WARM — the tables' own family.
@@ -466,14 +496,59 @@ export const brand = {
     20% down is past 4.5:1. The top is the lightest at 3.98:1 and carries no
     type — only the mark, which has a white tile of its own.
   */
+  /*
+    AND THE HEM IS BLUE NOW, NOT BROWN.
+
+    The reference's own ramp turned warm below halfway and ended at #6A4A3A.
+    On the card it read as the face going brown at the bottom, which the
+    designer did not want: *"ამ ბარათიდან ეს ყავისფერი ფერი მოაშორო და
+    უბრალოდ ეს ბლუ დავტოვოთ"*. So the blue walk simply CONTINUES — the stops
+    from 50% down carry on at the rate the first half sets (about -2 R, -3 G,
+    -3 B every 5%) instead of crossing into the warm half.
+
+    The structure that was doing the work is untouched: light at the top where
+    only the mark sits, darker towards the foot where every piece of white
+    type is. It is better for that, not worse — the old ramp bottomed out at a
+    mid-toned brown and this one keeps descending, so the contrast under the
+    name and the expiry goes UP. Measured at the 20% stop, the lightest place
+    any type sits: #507B91 against white is 4.58:1, and every stop below it is
+    darker still. The top stop is unchanged and still carries nothing.
+  */
   cardSkin:
     "linear-gradient(180deg," +
     " #5A859D 0%, #57829A 5%, #558097 10%, #527E94 15%," +
     " #507B91 20%, #4E788F 25%, #4C768B 30%, #4A7389 35%," +
-    " #487086 40%, #466E83 45%, #476B7E 50%, #4A6979 55%," +
-    " #4E6674 60%, #516470 65%, #54616A 70%, #575E61 75%," +
-    " #5C5A59 80%, #605550 85%, #635248 90%, #674E3F 95%," +
-    " #6A4A3A 100%)",
+    " #487086 40%, #466E83 45%, #446B80 50%, #42697D 55%," +
+    " #40667A 60%, #3E6477 65%, #3C6174 70%, #3A5F71 75%," +
+    " #385C6E 80%, #365A6B 85%, #345768 90%, #325565 95%," +
+    " #305262 100%)",
+  /*
+    THE SECOND FACE, IN THE DESIGNER'S LIGHT BLUE (#90D5FF).
+
+    *"ან რამე ესეთი ფერი მინდა, ეს მეორე ვარიანტი იყოს."* Same structure as
+    the deep one — a vertical walk, lightest where the mark sits and deepest
+    under the type — but the whole ramp is inverted in weight, because a pale
+    card cannot carry white ink. It prints in the product's own warm ink
+    instead, which on #90D5FF measures 10.2:1.
+
+    The walk is the same 5% cadence, from the designer's colour at the top
+    down to a deeper sky at the hem, so the two faces are the same drawing in
+    two registers rather than two different cards.
+  */
+  cardSkinLight:
+    "linear-gradient(180deg," +
+    " #A6DEFF 0%, #A2DCFF 5%, #9EDAFF 10%, #9AD8FF 15%," +
+    " #96D6FF 20%, #92D4FF 25%, #8ED2FE 30%, #8ACFFC 35%," +
+    " #86CDFA 40%, #82CAF8 45%, #7EC8F6 50%, #7AC5F4 55%," +
+    " #76C3F2 60%, #72C0F0 65%, #6EBEEE 70%, #6ABBEC 75%," +
+    " #66B9EA 80%, #62B6E8 85%, #5EB4E6 90%, #5AB1E4 95%," +
+    " #56AFE2 100%)",
+  /** The ink a pale face prints in — the product's own, not a card-only one. */
+  cardLightInk: "#262423",
+  cardLightQuiet: "rgba(38, 36, 35, 0.66)",
+  /** The status pill and the mark's tile on a pale face: ink at 8%, where the
+   *  deep face uses white at 5%. */
+  cardLightPill: "rgba(38, 36, 35, 0.08)",
   cardOpa: "#146580",
   /** The pale finish the pair was first drawn in; nothing uses it. */
   cardLight: "#E7F1F4",

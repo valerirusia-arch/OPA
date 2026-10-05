@@ -184,18 +184,17 @@ export function LoanOverview({
     card, withdrawing — is scoped to an application that exists.
 
     antd's `Result` rather than the table `EmptyState`: this is the whole page,
-    not a card that ran out of rows, and Result is the component antd gives a
-    page-sized state — the artwork at illustration size, a real heading under
-    it, and the way forward last. It is the same furniture the back office's
-    403 pages already use.
+    not a card that ran out of rows. Its own drawing now, the `noLoan` card —
+    what is missing here is a loan. (The title/spacing consistency with the
+    dashboard is a later pass; for now only the illustration changed.)
   */
   const nothingHere = () => (
     <Card>
       <Result
-        icon={<EmptyScene scale="page" />}
+        icon={<EmptyScene variant="noLoan" scale="page" />}
         title={t("loanPage.none")}
         subTitle={t("loanPage.noneBody")}
-        styles={getPageResultStyles(token)}
+        styles={getPageResultStyles(token, { empty: true })}
         extra={
           <Button type="primary" size="large" onClick={onStartApplication}>
             {t("loanPage.startApplication")}
@@ -340,7 +339,6 @@ export function LoanOverview({
   */
   const paidCount = loan.schedule.filter((row) => row.status === "paid").length;
   const totalCount = loan.schedule.length;
-  const finalDue = loan.schedule[totalCount - 1]?.due;
 
   /* WBS story 8: "loan amount, remaining unused balance, APR, repayment
      terms". Four facts — along the foot of the panel rather than in a strip
@@ -359,6 +357,11 @@ export function LoanOverview({
   */
   const factSpan = 6;
 
+  /* The contract's own facts, along the statement's foot under a hairline.
+     A band of dashboard-style tiles above the page was tried here and taken
+     straight back out — *"დააბრუნე ინფორმაცია სადაც იყო... ინფო იყოს
+     როგორც იყო ქვემოთ და ასევე სთროუკი"*. The tiles stay the DASHBOARD's;
+     this page states its terms where it always has. */
   const terms: StatementFact[] = [
     {
       key: "unused",
@@ -406,14 +409,18 @@ export function LoanOverview({
               : loan.nextPaymentOn.replace(/,\s*\d{4}$/, ""),
           value: loan.nextPayment,
           action: { label: t("loanPage.viewSchedule"), onClick: onViewSchedule },
+          /* HOW FAR THROUGH, under the figure. It was taken off and put
+             straight back — *"დააბრუნე აქაც ტრეკერი პროგრესის"* — and the
+             empty card it left is the argument for it: a panel whose answer
+             is one line of type needs the second half of the question.
+             Its caption is the count alone now; the maturity date it used to
+             carry is in the strip below. */
           progress: {
             paid: paidCount,
             total: totalCount,
-            /* Two facts, one sentence: how far through, and when it ends. */
             caption: t("loanPage.progressLine", {
               paid: String(paidCount),
               count: String(totalCount),
-              due: finalDue ?? "",
             }),
             ariaLabel: t("loanPage.paymentsMade"),
           },

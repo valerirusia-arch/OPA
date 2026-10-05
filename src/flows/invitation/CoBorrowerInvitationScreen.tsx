@@ -34,7 +34,7 @@ import { ClockCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { useT } from "../../shared/ui/i18n/useT";
 import { NEXT_PARAM } from "../../shared/ui/nextDestination";
-import { InvitationMark } from "../../features/LoanApplication/ui/InvitationMark";
+import { GateScene } from "../../shared/ui/scenes/GateScene";
 import { AuthLayout } from "../../features/Auth/ui/AuthLayout";
 import { getStyles, styles } from "./CoBorrowerInvitationScreen.styles";
 
@@ -81,7 +81,11 @@ export default function CoBorrowerInvitationScreen({
           <>
             <Result
               style={styles.result}
-              icon={<InvitationMark />}
+              /* The two figures, teal: this page is an invitation and what
+                 it is about is a person. Same drawing the gate's `invited`
+                 state uses, so the email's landing page and the Application
+                 tab agree. */
+              icon={<GateScene name="person" />}
               title={t("invite.title")}
               subTitle={t("invite.body", { name: invitedBy })}
               styles={{ title: s.title, subTitle: s.subTitle, extra: s.extra }}

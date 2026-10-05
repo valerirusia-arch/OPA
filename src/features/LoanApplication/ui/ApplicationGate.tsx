@@ -44,7 +44,7 @@ import type { ReactNode } from "react";
 import { Button, Card, ConfigProvider, Flex, Result, Typography, theme } from "antd";
 import { brand } from "../../../theme/tokens";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { JourneyScene } from "./JourneyScene";
+import { GateScene } from "../../../shared/ui/scenes/GateScene";
 import { getStyles, styles } from "./ApplicationGate.styles";
 
 /** Where a borrower's application has got to, as far as they need to know. */
@@ -187,7 +187,13 @@ export function ApplicationGate({
    * words, smaller picture. The gate names the size and the defaults stay
    * for the screens that own them.
    */
-  const MARK = 140;
+  /* ONE SIZE FOR EVERY STATE — the exports' viewBox is a 171 x 119 band, so
+     the same number puts the same sheet on the page whichever state the
+     reader lands on, which is the whole point of them being one drawing with
+     the badge changed. 200 (it was 176): the gate is a card with one picture,
+     one line and one button on it, and the picture was the smallest thing in
+     a lot of air. */
+  const GATE = 200;
 
   /*
     THE ONE GREEN BUTTON IN THE PRODUCT, and both states that end a loan use
@@ -281,7 +287,12 @@ export function ApplicationGate({
        must not compete with the way out, but every state on this page is a
        journey somebody is already on. See JourneyScene. */
     open: {
-      icon: <JourneyScene variant="act" size={MARK} />,
+      /* THE FIRST STATE NOW USES THE DESIGNER'S OWN EXPORTED ILLUSTRATION, not
+         the drawn JourneyScene — their Figma export, dropped in verbatim (the
+         white export-card background and baked label stripped, as every empty
+         gets). The gate is migrating state by state to these; the rest still
+         draw through JourneyScene. See GateScene / src/assets/gate/start.svg. */
+      icon: <GateScene name="start" size={GATE} />,
       title: t("application.startTitle"),
       subTitle: t("application.startSubtitle"),
       action: (
@@ -297,7 +308,7 @@ export function ApplicationGate({
       filed. See RepaidMark.
     */
     repaid: {
-      icon: <JourneyScene variant="done" size={MARK} />,
+      icon: <GateScene name="approved" size={GATE} />,
       title: t("application.repaidTitle"),
       subTitle: t("application.repaidBody"),
       /*
@@ -328,7 +339,7 @@ export function ApplicationGate({
          inviting them — a document with a "+" on it said "start a form".
          *"აი ბოროვერი უნდა იყოს ილუსტრაციაზე, ვინმე კაცუნა რომელმაც მოწვევა
          გამოგიგზავნა."* */
-      icon: <JourneyScene variant="invite" size={MARK} />,
+      icon: <GateScene name="person" size={GATE} />,
       title: t("application.invitedTitle", { name: invitation?.invitedBy ?? "" }),
       /*
         TWO LINES, AND THE SECOND IS THE DEADLINE.
@@ -376,7 +387,7 @@ export function ApplicationGate({
          of the APPLICATION, and the application is being read. Its own body
          says so in the same words `hasActive` uses, so the two screens cannot
          carry different badges over the same sentence. */
-      icon: <JourneyScene variant="review" size={MARK} />,
+      icon: <GateScene name="review" size={GATE} />,
       title: t("application.assignedDoneTitle"),
       subTitle: t("application.assignedDoneBody"),
       action: (
@@ -390,7 +401,7 @@ export function ApplicationGate({
     assignedClosed: {
       /* The same cross the borrower's `declined` wears — one refusal, drawn
          one way, whichever side is reading it. */
-      icon: <JourneyScene variant="declined" size={MARK} />,
+      icon: <GateScene name="declined" size={GATE} />,
       /* THE BORROWER'S OWN WORDS. It had a pair of its own saying the same
          thing differently — "This application is closed. OPA is not going
          ahead with it. There is nothing left for you to do here." One piece
@@ -427,7 +438,11 @@ export function ApplicationGate({
     assignedCancelled: {
       /* The cross in amber. Something stopped — the no-badge mark said
          nothing had — but nobody was refused, which is what red would say. */
-      icon: <JourneyScene variant="cancelled" size={MARK} />,
+      /* RED, like the refusal. It was the same cross in teal, on the
+         reasoning that a loan the borrower cancelled is an ending nobody
+         refused — the designer's call is that an application that is over is
+         over, whoever ended it, and the page should not grade it. */
+      icon: <GateScene name="declined" size={GATE} />,
       title: t("application.assignedCancelledTitle"),
       subTitle: t("application.assignedCancelledBody"),
       /* CONTACT FIRST. The co-borrower did not cancel this and is not told
@@ -441,7 +456,7 @@ export function ApplicationGate({
        to close the file and start another, and neither is the co-borrower's
        to do. What is theirs is knowing it is over. */
     assignedSettled: {
-      icon: <JourneyScene variant="done" size={MARK} />,
+      icon: <GateScene name="approved" size={GATE} />,
       title: t("application.assignedSettledTitle"),
       subTitle: t("application.assignedSettledBody"),
       action: closeButton,
@@ -449,7 +464,7 @@ export function ApplicationGate({
     /* APPROVED. The green check, the same one the co-borrower's side shows
        for this, because it is the same news. */
     approved: {
-      icon: <JourneyScene variant="done" size={MARK} />,
+      icon: <GateScene name="approved" size={GATE} />,
       title: t("application.approvedTitle"),
       subTitle: t("application.approvedBody"),
       action: (
@@ -463,13 +478,17 @@ export function ApplicationGate({
        does not stop them applying again, so the way out stays. It is the
        news that was missing, not the action. */
     declined: {
-      icon: <JourneyScene variant="declined" size={MARK} />,
+      icon: <GateScene name="declined" size={GATE} />,
       title: t("application.declinedTitle"),
       subTitle: t("application.declinedBody"),
-      action: (
+      /* Contact under the primary, the same offer the co-borrower's closed
+         state carries — a refusal is the one moment a reader most wants to
+         reach a person. */
+      action: withSecond(
         <Button type="primary" size="large" onClick={onStart}>
           {t("application.declinedAction")}
-        </Button>
+        </Button>,
+        contactLink,
       ),
     },
     /*
@@ -489,7 +508,7 @@ export function ApplicationGate({
       /* A CLOCK, NOT A GREEN CHECK. This page says "OPA is reviewing your
          application now", and it was wearing the mark a loan repaid in full
          wears. Green and a tick mean finished; nothing here is. */
-      icon: <JourneyScene variant="review" size={MARK} />,
+      icon: <GateScene name="review" size={GATE} />,
       title: t("application.blockedActiveTitle"),
       subTitle: t("application.blockedActiveBody"),
       action: (
@@ -499,7 +518,7 @@ export function ApplicationGate({
       ),
     },
     notEligible: {
-      icon: <JourneyScene variant="ineligible" size={MARK} />,
+      icon: <GateScene name="blocked" size={GATE} />,
       /* A padlock, not the no-badge "in progress" mark it wore. Amber rather
          than red: the sentence under it offers a way to contest this. */
       title: t("application.blockedFlagTitle"),
@@ -521,7 +540,7 @@ export function ApplicationGate({
 
          Both sides get it: the borrower and the co-borrower share this
          state, and the request lands on whichever of them is reading. */
-      icon: <JourneyScene variant="attention" size={MARK} />,
+      icon: <GateScene name="attention" size={GATE} />,
       title: t("application.needsInfoTitle"),
       subTitle: t("application.needsInfoBody"),
       action: (
@@ -548,20 +567,45 @@ export function ApplicationGate({
              PERSON — nothing has gone wrong and nothing is asked of the
              borrower — and an exclamation mark over that alarms a reader
              about a state that is simply in progress. */
-          icon: <JourneyScene variant="person" size={MARK} />,
+          icon: <GateScene name="person" size={GATE} />,
           title: t("application.coBorrowerWaitingTitle"),
-          subTitle: t("application.coBorrowerWaitingBody", {
-            name: invitation.invitee,
-            date: invitation.expiresOn,
-          }),
-          action: (
-            <Button type="primary" size="large" onClick={onInviteCoBorrower}>
-              {t("coBorrowerStep.replace")}
-            </Button>
+          /* The date on its own line, a half-step bolder — the one fact the
+             reader comes back for. Same treatment as the `invited` state.
+             *"თარიღი სულ ოდნავ გააბოლდე."* */
+          subTitle: (
+            <>
+              <Typography.Text style={styles.subLine}>
+                {t("application.coBorrowerWaitingLead", { name: invitation.invitee })}
+              </Typography.Text>
+              <Typography.Text style={styles.subLine}>
+                {t("application.invitedExpires")}{" "}
+                <Typography.Text style={s.emphasis}>
+                  {invitation.expiresOn}
+                </Typography.Text>
+              </Typography.Text>
+            </>
+          ),
+          /* THE PRIMARY IS THE ORDINARY THING TO DO. Replacing a co-borrower
+             who may still be filling their part in was the one button on the
+             page, which made an exceptional act look like the expected one —
+             and left the reader who simply came to check on it with nothing
+             to press. Now: the application, as every other waiting state
+             offers, with the replacement as a quiet question under it. */
+          action: withSecond(
+            <Button type="primary" size="large" onClick={onResume}>
+              {t("application.resume")}
+            </Button>,
+            <Button
+              type="link"
+              style={styles.secondaryLink}
+              onClick={onInviteCoBorrower}
+            >
+              {t("application.coBorrowerChangeLink")}
+            </Button>,
           ),
         }
       : {
-          icon: <JourneyScene variant="act" size={MARK} />,
+          icon: <GateScene name="person" size={GATE} />,
           title: t("application.coBorrowerNeededTitle"),
           subTitle: t("application.coBorrowerNeededBody"),
           action: (
@@ -599,7 +643,14 @@ export function ApplicationGate({
          shared with the waiting state was too mild to say. Still amber and
          not red — nothing filled in is lost and another invitation carries
          it on, and red would make a detour read as a dead end. */
-      icon: <JourneyScene variant="failed" size={MARK} />,
+      /* THE FIGURES, NOT THE SHEET. What did not work out here is a
+         PERSON, and the page's whole answer is "invite a different one" — so
+         it draws the two figures the co-borrower states already use, in amber
+         because it is a detour rather than a refusal. `invitationClosed`
+         keeps the sheet: it is read by the INVITED person, about a door that
+         closed, and drawing a figure at the person who is reading it would
+         point the wrong way. */
+      icon: <GateScene name="personAttention" size={GATE} />,
       title: t("application.coBorrowerFailedTitle"),
       subTitle: t("application.coBorrowerFailedBody", { name: coBorrowerFailed ?? "" }),
       action: (
@@ -615,7 +666,14 @@ export function ApplicationGate({
          badge at all, which said nothing where something had happened. One
          event, one mark: their co-borrower did not qualify, which from this
          side is an invitation that is over. */
-      icon: <JourneyScene variant="failed" size={MARK} />,
+      /* AN ENVELOPE, NOT THE SHEET. Every other state draws OPA's own
+         paperwork, but this page is read by somebody who is not applying for
+         anything — all they ever had was an invitation, and it is over. The
+         gate had no drawing for that, so one came out of the designer's own
+         empty-state pack. It is the one gate illustration with a face on it,
+         which is deliberate: it is also the one state not addressed to OPA's
+         borrower. */
+      icon: <GateScene name="expired" size={GATE} />,
       title: t("application.invitationClosedTitle"),
       subTitle: t("application.invitationClosedBody"),
       /*
@@ -638,12 +696,24 @@ export function ApplicationGate({
        nothing the borrower can do, and a button that pretends otherwise would
        be a lie. The way out goes somewhere else in the product. */
     checkPaused: {
-      /* THE CLOCK, like every other state that is simply taking time. This
-         one really is in progress — it says so itself: "It carries on by
-         itself once the check is back." */
-      icon: <JourneyScene variant="review" size={MARK} />,
+      /* A CLOCK, NOT THE MAGNIFIER. It had been borrowing `review`'s drawing,
+         and a magnifier says A PERSON IS READING IT — the one thing that is
+         not happening here. A check did not answer; nobody is acting, and the
+         page's own first sentence is "Nothing has been refused." So: the same
+         sheet, a clock in the badge, and teal rather than amber, because
+         nothing is being asked of the reader. */
+      icon: <GateScene name="paused" size={GATE} />,
       title: t("application.checkPausedTitle"),
-      subTitle: t("application.checkPausedBody"),
+      subTitle: (
+        <>
+          <Typography.Text style={styles.subLine}>
+            {t("application.checkPausedBody")}
+          </Typography.Text>
+          <Typography.Text style={styles.subLine}>
+            {t("application.checkPausedBodyResumes")}
+          </Typography.Text>
+        </>
+      ),
       action: (
         <Button type="primary" size="large" onClick={onViewStatus}>
           {t("application.checkPausedAction")}
@@ -659,7 +729,7 @@ export function ApplicationGate({
          Nothing was judged here — the application never reached a decision —
          so a cross would claim a refusal that did not happen. What did
          happen is that it is shut, and the reader cannot open it. */
-      icon: <JourneyScene variant="blocked" size={MARK} />,
+      icon: <GateScene name="blocked" size={GATE} />,
       title: t("application.stoppedTitle"),
       subTitle: t("application.stoppedBody"),
       /*

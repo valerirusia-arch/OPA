@@ -15,6 +15,13 @@ export const getStyles = (token: GlobalToken) =>
     /** A row whose account has been withdrawn reads dimmer than a live one. */
     inactiveRow: { color: token.colorTextTertiary },
     /**
+     * An active user's name has nowhere to go — this list has no detail
+     * page, only the row menu — so it stays plain text rather than the
+     * product's link teal, but reads at full `colorTextBase` rather than
+     * antd's dimmer default body text.
+     */
+    identifier: { color: token.colorTextBase },
+    /**
      * The row menu is the only way into every action on this screen, so it has
      * to look like a control. At antd's inherited 14px the three dots read as
      * punctuation; larger and in the body colour they read as a button.

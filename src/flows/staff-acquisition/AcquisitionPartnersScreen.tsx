@@ -13,7 +13,6 @@
 
 import { useState } from "react";
 import { App, Badge, Button, Card, Dropdown, Result, Table, Tabs, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
@@ -22,7 +21,8 @@ import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { ConfirmModal } from "../../shared/ui/ConfirmModal";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
@@ -134,13 +134,15 @@ export default function AcquisitionPartnersScreen({
         ]
       : [];
 
-  const partnerColumns: ColumnsType<ReferralPartner> = [
+  const partnerColumns: PriorityColumn<ReferralPartner>[] = [
     {
       title: t("acq.partner.name"),
       dataIndex: "name",
       width: 280,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (value: string, row) => (
-        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : undefined}>
+        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : s.identifier}>
           {value}
         </Typography.Text>
       ),
@@ -148,19 +150,29 @@ export default function AcquisitionPartnersScreen({
     {
       title: t("acq.partner.group"),
       dataIndex: "group",
+      popinText: (row) => row.group,
       render: (value: string) => <Typography.Text style={s.quiet}>{value}</Typography.Text>,
     },
-    { title: t("acq.col.status"), dataIndex: "status", width: 160, render: statusCell },
+    {
+      title: t("acq.col.status"),
+      dataIndex: "status",
+      width: 160,
+      // The key attribute. Stays with Name at every width.
+      priority: "high",
+      render: statusCell,
+    },
     ...actionsColumn<ReferralPartner>("partner", setEditingPartner),
   ];
 
-  const groupColumns: ColumnsType<PartnerGroup> = [
+  const groupColumns: PriorityColumn<PartnerGroup>[] = [
     {
       title: t("acq.group.name"),
       dataIndex: "name",
       width: 280,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (value: string, row) => (
-        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : undefined}>
+        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : s.identifier}>
           {value}
         </Typography.Text>
       ),
@@ -170,7 +182,14 @@ export default function AcquisitionPartnersScreen({
       dataIndex: "code",
       render: (value: string) => <Typography.Text style={s.code}>{value}</Typography.Text>,
     },
-    { title: t("acq.col.status"), dataIndex: "status", width: 160, render: statusCell },
+    {
+      title: t("acq.col.status"),
+      dataIndex: "status",
+      width: 160,
+      // The key attribute. Stays with Name at every width.
+      priority: "high",
+      render: statusCell,
+    },
     ...actionsColumn<PartnerGroup>("group", setEditingGroup),
   ];
 
@@ -237,6 +256,12 @@ export default function AcquisitionPartnersScreen({
   };
 
   const copy = confirmCopy();
+
+  const [partnersTableRef, partnersTableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const partnersPopin = buildPopinTable(partnerColumns, partnersTableWidth);
+  const [groupsTableRef, groupsTableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const groupsPopin = buildPopinTable(groupColumns, groupsTableWidth);
+
   /* Tabs sit ATOP the flush table card, the payments page's pattern: the tab
      bar takes the card's inset and the table runs to the frame under it. */
   const tabs = (
@@ -250,28 +275,30 @@ export default function AcquisitionPartnersScreen({
             key: "partners",
             label: t("acq.partners.tabPartners"),
             children: (
+              <div ref={partnersTableRef}>
               <Table<ReferralPartner>
                 rowKey="id"
                 tableLayout="fixed"
-                scroll={{ x: 720 }}
-                columns={decorateColumns(partnerColumns)}
+                columns={partnersPopin.columns}
                 dataSource={partners}
                 pagination={false}
               />
+              </div>
             ),
           },
           {
             key: "groups",
             label: t("acq.partners.tabGroups"),
             children: (
+              <div ref={groupsTableRef}>
               <Table<PartnerGroup>
                 rowKey="id"
                 tableLayout="fixed"
-                scroll={{ x: 720 }}
-                columns={decorateColumns(groupColumns)}
+                columns={groupsPopin.columns}
                 dataSource={groups}
                 pagination={false}
               />
+              </div>
             ),
           },
         ]}

@@ -208,27 +208,27 @@ export const routes: FlowRoute[] = [
       },
       {
         path: "acquisition",
-        meta: { role: "admin", flow: "Acquisition Channels" },
+        meta: { role: "admin", flow: "Acquisition channels" },
         children: [
           {
             path: "sources",
             component: AcquisitionSourcesScreen,
-            meta: { role: "admin", flow: "Acquisition Channels", label: "Acquisition sources" },
+            meta: { role: "admin", flow: "Acquisition channels", label: "Acquisition sources" },
           },
           {
             path: "partners",
             component: AcquisitionPartnersScreen,
-            meta: { role: "admin", flow: "Acquisition Channels", label: "Referral partners" },
+            meta: { role: "admin", flow: "Acquisition channels", label: "Referral partners" },
           },
           {
             path: "campaigns",
             component: AcquisitionCampaignsScreen,
-            meta: { role: "admin", flow: "Acquisition Channels", label: "Marketing campaigns" },
+            meta: { role: "admin", flow: "Acquisition channels", label: "Marketing campaigns" },
           },
           {
             path: "performance",
             component: AcquisitionPerformanceScreen,
-            meta: { role: "staff", flow: "Acquisition Channels", label: "Lending performance" },
+            meta: { role: "staff", flow: "Acquisition channels", label: "Lending performance" },
           },
         ],
       },

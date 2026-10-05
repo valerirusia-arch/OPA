@@ -31,6 +31,7 @@ import { Card, Input, Tabs, theme } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
+import { searchIcon } from "../../shared/ui/searchField";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
@@ -100,8 +101,8 @@ export default function StaffPaymentsScreen({
         extra={
           <Input
             allowClear
-            prefix={<SearchOutlined />}
-            placeholder={t("payments.filterByBorrower")}
+            prefix={<SearchOutlined style={searchIcon} />}
+            placeholder={t("filters.search")}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             style={styles.search}

@@ -25,12 +25,12 @@
 // Dumb: it renders installments and reports which one was pressed.
 
 import { Flex, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { decorateColumns } from "../../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../../shared/ui/tableColumns";
 import { getStyles as getPageStyles } from "../../../shared/ui/AdminPage.styles";
 import { InstallmentStatusTag } from "./PaymentTags";
-import { styles } from "./PaymentSchedule.styles";
+import { styles, getStyles } from "./PaymentSchedule.styles";
 import type { Installment } from "./types";
 
 export type PaymentScheduleProps = {
@@ -57,6 +57,8 @@ export function PaymentSchedule({
   const t = useT();
   const { token } = theme.useToken();
   const page = getPageStyles(token);
+  const s = getStyles(token);
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
 
   /** WBS story 9: "only one late fee will be charged for each missed payment",
    *  so most schedules have none and the column would be a stripe of dashes. */
@@ -76,14 +78,25 @@ export function PaymentSchedule({
   const payable = (row: Installment) =>
     row.status === "overdue" || row.id === next?.id;
 
-  const columns: ColumnsType<Installment> = [
+  const payNowLink = (row: Installment) =>
+    payable(row) ? (
+      <Typography.Link style={styles.payNow} onClick={() => onPay?.(row)}>
+        {t("payments.payNow")}
+      </Typography.Link>
+    ) : null;
+
+  const columns: PriorityColumn<Installment>[] = [
     ...(showBorrower
       ? [
           {
             title: t("payments.borrower"),
             key: "borrower",
             width: "26%",
-            render: (_v: unknown, row: Installment) => row.borrower,
+            // The identifier — stays on screen at every width.
+            priority: "high" as const,
+            render: (_v: unknown, row: Installment) => (
+              <Typography.Text style={s.identifier}>{row.borrower}</Typography.Text>
+            ),
           },
         ]
       : [
@@ -92,6 +105,7 @@ export function PaymentSchedule({
             title: t("payments.number"),
             key: "number",
             width: "7%",
+            priority: "high" as const,
             render: (_v: unknown, row: Installment) => (
               <Typography.Text type="secondary">{row.number}</Typography.Text>
             ),
@@ -107,7 +121,7 @@ export function PaymentSchedule({
      * cell sits under its own label. `scroll.x` below is a MINIMUM: under it
      * the table scrolls in its card rather than crushing the dates.
      */
-    { title: t("payments.dueDate"), key: "due", width: "27%", render: (_v, row) => row.due },
+    { title: t("payments.dueDate"), key: "due", width: "24%", render: (_v, row) => row.due },
     {
       /*
        * Right-aligned, and that is not a preference.
@@ -123,7 +137,7 @@ export function PaymentSchedule({
        */
       title: t("loanPage.payment"),
       key: "amount",
-      width: "18%",
+      width: "16%",
       align: "end",
       render: (_v, row) => (
         <Typography.Text
@@ -137,7 +151,17 @@ export function PaymentSchedule({
     {
       title: t("loanPage.status"),
       key: "status",
-      width: "20%",
+      /*
+       * A couple of points wider than before: Status now has to keep
+       * standing on its own, next to Pay now, in the narrowest layouts
+       * where Due date and Amount have already popped below — see the note
+       * on the actions column's `priority`. At 20% "Scheduled" marginally
+       * overflowed its own cell at exactly that width.
+       */
+      width: "23%",
+      // The key attribute — whether this installment is paid, due, or
+      // overdue. Stays on screen at every width.
+      priority: "high",
       render: (_v, row) => <InstallmentStatusTag status={row.status} />,
     },
     ...(hasFees
@@ -147,6 +171,8 @@ export function PaymentSchedule({
             key: "fee",
             width: "15%",
             align: "end" as const,
+            // Rare — most schedules have no fee at all. Pops first.
+            priority: "low" as const,
             render: (_v: unknown, row: Installment) =>
               row.fee ? (
                 <Typography.Text type="danger">{row.fee}</Typography.Text>
@@ -163,16 +189,43 @@ export function PaymentSchedule({
           {
             title: "",
             key: "actions",
-            width: "14%",
+            /*
+             * A few points over what a desktop "Pay now" link actually
+             * needs — the other point of the same fit this column's
+             * `priority` note below is about. Once Due date and Amount have
+             * popped and only Status shares the row with it, both have to
+             * stand on their own literal width rather than borrow what
+             * Due/Amount leave behind, so this can't be as tight as the
+             * eventual rendered link is.
+             */
+            width: "18%",
             align: "end" as const,
-            render: (_v: unknown, row: Installment) =>
-              payable(row) ? (
-                <Flex justify="flex-end">
-                  <Typography.Link style={styles.payNow} onClick={() => onPay(row)}>
-                    {t("payments.payNow")}
-                  </Typography.Link>
-                </Flex>
-              ) : null,
+            /*
+             * Pops like any other column rather than surviving every pop —
+             * see `priorityOf` in tableColumns.tsx. An unlabeled column is
+             * normally exempt from popping at all (nothing to call it in the
+             * detail list), but left exempt HERE it instead got squeezed into
+             * whatever sliver of the row's own width was left once other
+             * columns had popped out from under it — a 14%-wide cell with
+             * nowhere near enough room for "Pay now", which wrapped into
+             * "Pay" / "now" stacked on two lines. `popinRender` is what makes
+             * that legal with a blank title: the link is already a complete,
+             * self-explanatory action, not a fact that needs "Label:" in
+             * front of it, so it drops to its own line in the pop-in list
+             * exactly as drawn here — no wrapping, no squeeze.
+             *
+             * `high`, and LAST — the opposite of "pops first". The action is
+             * what a borrower came to this row to do; Due date, Amount and
+             * Fees are allowed to go first and Pay now holds its column as
+             * long as there is room for it, the same rank as the row's own
+             * identifier and its Status. *"ჯერ ფეიმენტი არ ჩამოაგდო, ჯერ
+             * სხვები ჩამოყარე და სულ ბოლოს ფეიმენტი."*
+             */
+            priority: "high" as const,
+            popinRender: (row: Installment) => payNowLink(row),
+            render: (_v: unknown, row: Installment) => (
+              <Flex justify="flex-end">{payNowLink(row)}</Flex>
+            ),
           },
         ]
       : []),
@@ -188,22 +241,23 @@ export function PaymentSchedule({
     decides which lines get one.
   */
 
+  const popin = buildPopinTable(columns, tableWidth);
+
   return (
+    <div ref={tableRef}>
     <Table<Installment>
       rowKey="id"
       size="small"
       tableLayout="fixed"
-      columns={decorateColumns(columns)}
+      columns={popin.columns}
       dataSource={installments}
       pagination={
         pageSize
           ? { pageSize, showSizeChanger: false, style: page.pagination }
           : false
       }
-      /* A minimum, not the content width: above it the percentages spread the
-         columns, below it the table scrolls in its own card. */
-      scroll={{ x: 760 }}
     />
+    </div>
   );
 }
 

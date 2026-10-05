@@ -92,7 +92,7 @@ export function NotificationInbox({
              own drawings and the default "no data" glyph — on the one screen
              a borrower opens expecting to find something. It says it the
              same way every other empty in the product does now. */
-          <EmptyState title={t("notify.none")} />
+          <EmptyState title={t("notify.none")} variant="noMessages" tone="muted" />
         ) : (
           items.map((item, index) => {
             const Mark = marks[item.tone].icon;

@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken, ThemeConfig } from "antd";
+import { brand } from "../../theme/tokens";
 
 /**
  * The rail already eats 240px, so the work area does not get a second centred
@@ -19,6 +20,49 @@ export const PAGE_PADDING = 32;
  */
 export const toolbarTheme: ThemeConfig = {
   token: { controlHeight: 40, controlHeightLG: 40 },
+  /**
+   * AND THE SEARCH BOX IS WHITE — *"მინდა რომ სერჩიც თეთრი ფერის იყოს
+   * ადმინკის მხარეს ყველგან"*.
+   *
+   * The filled variant's ground is `colorFillTertiary`, which this theme sets
+   * to warm ink at 4% so a form's fields read as one material. That is right
+   * inside a form and wrong here: the toolbar's field sits on the page's warm
+   * grey, where a 4% warm wash is the same colour one shade over and the box
+   * loses its edges. White gives it back, and it matches the active-filter
+   * chips under it, which take white for the same reason.
+   *
+   * Three states, because antd derives them separately: resting, hover and
+   * focused. Scoped to the toolbar's own ConfigProvider, so every form field
+   * in the product keeps its fill.
+   */
+  components: {
+    Input: {
+      colorFillTertiary: brand.white,
+      colorFillSecondary: brand.white,
+      activeBg: brand.white,
+    },
+    /**
+     * AND THE TOOLBAR'S OWN BUTTONS READ AT THE SEARCH BOX'S WEIGHT.
+     *
+     * "Filters" sat at full ink (88%) beside a placeholder at 66%, so two
+     * controls on one line, doing the same job, were two different greys —
+     * *"ფილტერ ტექსტი სხვა ფერის არის; სერჩში რა ფერიც აქვს ტექსტს, ის ფერი
+     * ჩაუსვი"*. `quiet` is the same 66% the placeholder takes and measures
+     * 4.6:1 on white, so it clears AA at this size.
+     *
+     * Only the DEFAULT button moves. The hover colour is antd's own and is
+     * left alone, so the control still answers the pointer, and a primary
+     * action in the same toolbar — "New user" — is untouched.
+     *
+     * AND IT CARRIES NO BORDER, same reasoning: "Filters" had a visible
+     * 1px edge next to a search box with none — the box isn't borderless
+     * either, its border is `transparent` at the same 1px (so the control
+     * keeps its box model, nothing shifts by a pixel when it gains one on
+     * focus) — so `defaultBorderColor` takes the same treatment here,
+     * scoped to the DEFAULT variant alone for the identical reason.
+     */
+    Button: { defaultColor: brand.quiet, defaultBorderColor: "transparent" },
+  },
 };
 
 export const styles = {

@@ -14,7 +14,6 @@
 
 import { useState } from "react";
 import { App, Badge, Button, Card, Dropdown, Result, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
@@ -25,7 +24,8 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
@@ -85,13 +85,15 @@ export default function AcquisitionSourcesScreen({
     ],
   });
 
-  const columns: ColumnsType<AcquisitionSource> = [
+  const columns: PriorityColumn<AcquisitionSource>[] = [
     {
       title: t("acq.source.name"),
       dataIndex: "name",
       width: 240,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (value: string, row) => (
-        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : undefined}>
+        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : s.identifier}>
           {value}
         </Typography.Text>
       ),
@@ -99,6 +101,7 @@ export default function AcquisitionSourcesScreen({
     {
       title: t("acq.source.partner"),
       dataIndex: "partner",
+      popinText: (row) => row.partner,
       render: (value: string) => <Typography.Text style={s.quiet}>{value}</Typography.Text>,
     },
     {
@@ -111,6 +114,8 @@ export default function AcquisitionSourcesScreen({
       title: t("acq.col.status"),
       dataIndex: "status",
       width: 160,
+      // The key attribute. Stays with Name at every width.
+      priority: "high",
       render: (status: AcquisitionStatus) => (
         <Badge
           status={status === "active" ? "success" : "default"}
@@ -199,6 +204,9 @@ export default function AcquisitionSourcesScreen({
 
   const copy = confirmCopy();
 
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const popin = buildPopinTable(columns, tableWidth);
+
   return (
     <AdminShell
       sections={staffNavFor(viewer.role)}
@@ -223,11 +231,11 @@ export default function AcquisitionSourcesScreen({
       >
         {canManage ? (
           <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
+            <div ref={tableRef}>
             <Table<AcquisitionSource>
               rowKey="id"
               tableLayout="fixed"
-              scroll={{ x: 860 }}
-              columns={decorateColumns(columns)}
+              columns={popin.columns}
               dataSource={rows}
               locale={{
                 emptyText: (
@@ -240,6 +248,7 @@ export default function AcquisitionSourcesScreen({
               }}
               pagination={false}
             />
+            </div>
           </Card>
         ) : (
           <Card>

@@ -10,7 +10,7 @@
 
 import { Button, Result, Typography, theme } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { AccountReadyMark } from "./AccountReadyMark";
+import { JourneyScene } from "../../../shared/ui/scenes/JourneyScene";
 import { getStyles, styles } from "./RegistrationDone.styles";
 
 export type RegistrationDoneProps = {
@@ -30,7 +30,7 @@ export function RegistrationDone({
 
   return (
     <Result
-      icon={<AccountReadyMark />}
+      icon={<JourneyScene variant="verified" size={140} />}
       title={t("done.title")}
       subTitle={
         <>

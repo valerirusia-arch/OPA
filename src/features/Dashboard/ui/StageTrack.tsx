@@ -137,6 +137,9 @@ export function StageTrack({
         })}
 
         {goal ? (
+          /* NO CAPSULE, and it was tried: a bar under this label was built
+             and taken straight back out — *"წაშალე ეგ, უბრალოდ მინდა ეგ
+             ტექსტი მანდ ყოფილიყო"*. The words alone are the point. */
           <Flex align="center" gap={6} style={styles.goalCell}>
             <ArrowRightOutlined style={s.goalMark} />
             <Typography.Text style={s.goal}>{goal}</Typography.Text>

@@ -12,14 +12,18 @@
 // and shows counts.
 
 import { Card, Table, Tabs, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns, TABLE_NAME_WIDTH } from "../../shared/ui/tableColumns";
+import {
+  buildPopinTable,
+  useMeasuredWidth,
+  TABLE_NAME_WIDTH,
+} from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { NameCell } from "../../shared/ui/NameCell";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SummaryStats, type SummaryStat } from "../../shared/ui/SummaryStats";
@@ -87,11 +91,13 @@ export default function StaffDashboardScreen({
     loans list both already ended on a left-aligned field; these two now do
     too.
   */
-  const recentColumns: ColumnsType<ApplicationRecord> = [
+  const recentColumns: PriorityColumn<ApplicationRecord>[] = [
     {
       title: t("staffDash.colBorrower"),
       key: "name",
       width: TABLE_NAME_WIDTH,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (_value, row) => (
         <NameCell
           name={row.borrower.name}
@@ -113,6 +119,8 @@ export default function StaffDashboardScreen({
       title: t("staffDash.colStatus"),
       key: "status",
       width: 180,
+      // The key attribute this summary exists to show.
+      priority: "high",
       render: (_value, row) => <ApplicationStatusTag status={row.status} />,
     },
     /* LAST, AND LEFT-ALIGNED — the queue ends the same way. See the note above
@@ -128,11 +136,13 @@ export default function StaffDashboardScreen({
     },
   ];
 
-  const recentLoanColumns: ColumnsType<LoanRow> = [
+  const recentLoanColumns: PriorityColumn<LoanRow>[] = [
     {
       title: t("loans.col.borrower"),
       key: "name",
       width: TABLE_NAME_WIDTH,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (_value, row) => (
         <NameCell
           name={row.borrowerName}
@@ -154,17 +164,27 @@ export default function StaffDashboardScreen({
       title: t("loans.col.status"),
       key: "status",
       width: 180,
+      // The key attribute this summary exists to show.
+      priority: "high",
       render: (_value, row) => <LoanStatusTag status={row.loan.status} />,
     },
-    /* Last and left-aligned, exactly as the loans list ends. */
+    /* Last and left-aligned, exactly as the loans list ends. Also the first
+       to pop — least essential for a five-row "recent" summary. */
     {
       title: t("loans.col.funded"),
       key: "funded",
+      priority: "low",
+      popinText: (row) => row.loan.fundedOn ?? "",
       render: (_value, row) => (
         <Typography.Text type="secondary">{row.loan.fundedOn ?? "—"}</Typography.Text>
       ),
     },
   ];
+
+  const [appsTableRef, appsTableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const appsPopin = buildPopinTable(recentColumns, appsTableWidth);
+  const [loansTableRef, loansTableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const loansPopin = buildPopinTable(recentLoanColumns, loansTableWidth);
 
   return (
     <AdminShell
@@ -193,10 +213,11 @@ export default function StaffDashboardScreen({
                 key: "applications",
                 label: t("staffDash.recentApps"),
                 children: (
+                  <div ref={appsTableRef}>
                   <Table<ApplicationRecord>
                     rowKey="id"
-                    scroll={{ x: 800 }}
-                    columns={decorateColumns(recentColumns)}
+                    tableLayout="fixed"
+                    columns={appsPopin.columns}
                     dataSource={recent}
                     pagination={false}
                     onRow={(row) => ({
@@ -207,16 +228,18 @@ export default function StaffDashboardScreen({
                       },
                     })}
                   />
+                  </div>
                 ),
               },
               {
                 key: "loans",
                 label: t("staffDash.recentLoans"),
                 children: (
+                  <div ref={loansTableRef}>
                   <Table<LoanRow>
                     rowKey={(row) => row.loan.loanId}
-                    scroll={{ x: 800 }}
-                    columns={decorateColumns(recentLoanColumns)}
+                    tableLayout="fixed"
+                    columns={loansPopin.columns}
                     dataSource={recentLoans}
                     pagination={false}
                     onRow={(row) => ({
@@ -227,6 +250,7 @@ export default function StaffDashboardScreen({
                       },
                     })}
                   />
+                  </div>
                 ),
               },
             ]}

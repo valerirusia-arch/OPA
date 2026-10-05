@@ -10,7 +10,6 @@
 
 import { useState } from "react";
 import { App, Badge, Button, Card, Dropdown, Result, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
@@ -21,7 +20,8 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTimer";
@@ -76,13 +76,15 @@ export default function AcquisitionCampaignsScreen({
     ],
   });
 
-  const columns: ColumnsType<Campaign> = [
+  const columns: PriorityColumn<Campaign>[] = [
     {
       title: t("acq.campaign.name"),
       dataIndex: "name",
       width: 260,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (value: string, row) => (
-        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : undefined}>
+        <Typography.Text style={row.status === "inactive" ? s.inactiveRow : s.identifier}>
           {value}
         </Typography.Text>
       ),
@@ -90,12 +92,14 @@ export default function AcquisitionCampaignsScreen({
     {
       title: t("acq.campaign.source"),
       dataIndex: "source",
+      popinText: (row) => row.source,
       render: (value: string) => <Typography.Text style={s.quiet}>{value}</Typography.Text>,
     },
     {
       title: t("acq.campaign.period"),
       dataIndex: "period",
       width: 280,
+      popinText: (row) => `${fmt(row.period[0])} – ${fmt(row.period[1])}`,
       render: (period: [string, string]) => (
         <Typography.Text style={s.dateCell}>{`${fmt(period[0])} – ${fmt(period[1])}`}</Typography.Text>
       ),
@@ -104,6 +108,9 @@ export default function AcquisitionCampaignsScreen({
       title: t("acq.col.status"),
       dataIndex: "status",
       width: 140,
+      // The key attribute — whether this campaign is running. Stays with
+      // Name at every width.
+      priority: "high",
       render: (status: AcquisitionStatus) => (
         <Badge
           status={status === "active" ? "success" : "default"}
@@ -180,6 +187,9 @@ export default function AcquisitionCampaignsScreen({
 
   const copy = confirmCopy();
 
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const popin = buildPopinTable(columns, tableWidth);
+
   return (
     <AdminShell
       sections={staffNavFor(viewer.role)}
@@ -204,11 +214,11 @@ export default function AcquisitionCampaignsScreen({
       >
         {canManage ? (
           <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
+            <div ref={tableRef}>
             <Table<Campaign>
               rowKey="id"
               tableLayout="fixed"
-              scroll={{ x: 940 }}
-              columns={decorateColumns(columns)}
+              columns={popin.columns}
               dataSource={rows}
               locale={{
                 emptyText: (
@@ -221,6 +231,7 @@ export default function AcquisitionCampaignsScreen({
               }}
               pagination={false}
             />
+            </div>
           </Card>
         ) : (
           <Card>

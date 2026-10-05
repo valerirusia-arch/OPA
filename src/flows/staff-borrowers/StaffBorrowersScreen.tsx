@@ -20,17 +20,18 @@
 
 import { useMemo, useState } from "react";
 import { Card, Input, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
+import { searchIcon } from "../../shared/ui/searchField";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { useT } from "../../shared/ui/i18n/useT";
 import { SessionTimeoutModal } from "../../features/Auth/ui/SessionTimeoutModal";
 import {
@@ -110,11 +111,14 @@ export default function StaffBorrowersScreen({
     });
   }, [borrowers, query, filters]);
 
-  const columns: ColumnsType<Borrower> = [
+  const columns: PriorityColumn<Borrower>[] = [
     {
       title: t("users.col.name"),
       key: "name",
       width: 148,
+      // The identifier — SAP's responsive-table guidance keeps this on
+      // screen at every width, alongside the one key attribute below.
+      priority: "high",
       // Cut with an ellipsis rather than wrapped; antd only raises the tooltip
       // when the text is actually truncated, so short names get no stray hover.
       render: (_value, row) => (
@@ -134,6 +138,10 @@ export default function StaffBorrowersScreen({
       title: t("users.col.email"),
       key: "email",
       width: 238,
+      // The in-table render dims this to secondary text to sit quietly next
+      // to Name; popped into its own line it IS the fact being shown, so it
+      // prints in the ordinary dark text SAP's own pop-in examples use.
+      popinText: (row) => row.profile.email,
       render: (_value, row) => (
         <Typography.Text style={s.secondary} ellipsis={{ tooltip: row.profile.email }}>
           {row.profile.email}
@@ -144,6 +152,10 @@ export default function StaffBorrowersScreen({
       title: t("borrowers.col.phone"),
       key: "phone",
       width: 138,
+      // Lowest priority to keep in the grid — it's in the search box
+      // already, so the row itself doesn't need to carry it at every width.
+      priority: "low",
+      popinText: (row) => row.profile.phone,
       // Ellipsised like the rest: a wrapped number would push its row taller
       // than every other one in the table.
       render: (_value, row) => (
@@ -171,6 +183,9 @@ export default function StaffBorrowersScreen({
       // with it instead of drifting.
       onHeaderCell: () => ({ style: { paddingInlineEnd: 34 } }),
       onCell: () => ({ style: { paddingInlineEnd: 34 } }),
+      // Street only, same as the in-table cell — State is its own popped
+      // field already, so the rest of the address stays on the record.
+      popinText: (row) => row.profile.street,
       render: (_value, row) => {
         const full = `${row.profile.street}, ${row.profile.city}, ${row.profile.state} ${row.profile.zip}`;
         return (
@@ -184,6 +199,9 @@ export default function StaffBorrowersScreen({
       title: t("borrowers.col.state"),
       key: "state",
       width: 58,
+      // Pops with Address, which it's read alongside — a state on its own,
+      // without the street it qualifies, isn't worth a grid column.
+      priority: "low",
       // A two-letter value under a five-letter heading: at the table's usual
       // 16px it drifts away from the address it belongs to. 8 pulls the pair
       // back together without touching any other column.
@@ -197,6 +215,9 @@ export default function StaffBorrowersScreen({
       // Enough for the longest status, "Co-borrower required", to sit in its
       // pill without being clipped.
       width: 180,
+      // The key attribute this list exists to show — stays with Name at
+      // every width.
+      priority: "high",
       render: (_value, row) => (
         <ApplicationStatusTag status={row.application?.status ?? "none"} />
       ),
@@ -207,9 +228,15 @@ export default function StaffBorrowersScreen({
       // Wide enough for the whole DO NOT LOAN marker plus the table's 24px
       // outer inset — a flag that runs off the card's edge is not a flag.
       width: 165,
+      // Story 10 calls this marker out by name as something that must stay
+      // "a visible ui element" — it doesn't get to be the thing that pops.
+      priority: "high",
       render: (_value, row) => (row.doNotLoan ? <DoNotLoanTag /> : null),
     },
   ];
+
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const popin = buildPopinTable(columns, tableWidth);
 
   return (
     <AdminShell
@@ -228,8 +255,8 @@ export default function StaffBorrowersScreen({
           <>
             <Input
               allowClear
-              prefix={<SearchOutlined />}
-              placeholder={t("borrowers.searchPlaceholder")}
+              prefix={<SearchOutlined style={searchIcon} />}
+              placeholder={t("filters.search")}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               style={styles.search}
@@ -240,19 +267,20 @@ export default function StaffBorrowersScreen({
         toolbarBelow={<BorrowerFilterChips value={filters} onChange={setFilters} />}
       >
         <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
+          {/* SEVEN WBS COLUMNS DO NOT FIT A NARROW SCREEN. This used to mean
+              a horizontal scroll; now the lowest-priority columns (Phone,
+              State, and below ~891px also Email and Address) print inline
+              under the name instead — SAP's responsive-table pop-in
+              pattern. The wrapping div is only here to measure the width
+              actually available to the table (see buildPopinTable). */}
+          <div ref={tableRef}>
           <Table<Borrower>
             rowKey="id"
             // Fixed, so the column widths above are honoured: with the
             // default auto layout a truncated cell lets its column collapse
             // and the neighbours take the room.
             tableLayout="fixed"
-            // SEVEN WBS COLUMNS DO NOT FIT A NARROW SCREEN. Without this the
-            // width-less Address column collapsed to nothing on a tablet and
-            // its header stacked one letter per line. A horizontal scroll below
-            // ~1120px keeps every column at its real width instead of crushing
-            // one — antd scrolls the table inside the card.
-            scroll={{ x: 1120 }}
-            columns={decorateColumns(columns)}
+            columns={popin.columns}
             dataSource={visible}
             // The whole row opens the record — a 1000px-wide row with one
             // 90px-wide place you are allowed to click is a target hunt. The
@@ -283,6 +311,7 @@ export default function StaffBorrowersScreen({
               style: page.pagination,
             }}
           />
+          </div>
         </Card>
       </AdminPage>
 

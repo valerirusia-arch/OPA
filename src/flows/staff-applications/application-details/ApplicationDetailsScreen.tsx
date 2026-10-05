@@ -219,7 +219,7 @@ export default function ApplicationDetailsScreen({
       { id: `ri${prev.length + 1}`, on, by: name, action: "audit.infoRequested", reason: note },
     ]);
     setStatus("pendingAction");
-    message.success(t("requestModal.send"));
+    message.success(t("audit.infoRequested"));
     scrollTo(requestsRef);
   };
 
@@ -872,7 +872,7 @@ export default function ApplicationDetailsScreen({
           ]);
           setApprovedAmount(amount);
           setChangingAmount(false);
-          message.success(t("amountModal.save"));
+          message.success(t("audit.amountChanged"));
           scrollTo(historyRef);
         }}
       />
@@ -883,7 +883,7 @@ export default function ApplicationDetailsScreen({
         onApprove={(note) => {
           console.log("approve application", record.id, note);
           settle("approved", "manual", note, "audit.approved");
-          message.success(t("appAction.approve"));
+          message.success(t("appAction.approveSuccess"));
         }}
       />
       <DeclineModal
@@ -892,7 +892,7 @@ export default function ApplicationDetailsScreen({
         onDecline={(reason) => {
           console.log("decline application", record.id, reason);
           settle("declined", "manual", reason, "audit.declined");
-          message.success(t("appAction.decline"));
+          message.success(t("appAction.declineSuccess"));
         }}
       />
       <OverrideModal
@@ -902,7 +902,7 @@ export default function ApplicationDetailsScreen({
         onOverride={(outcome, reason) => {
           console.log("override decision", record.id, outcome, reason);
           settle(outcome, "override", reason, "audit.overridden");
-          message.success(t("appAction.override"));
+          message.success(t("appAction.overrideSuccess"));
         }}
       />
     </AdminPage>

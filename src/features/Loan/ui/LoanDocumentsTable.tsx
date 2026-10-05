@@ -25,10 +25,10 @@
 // Dumb: it renders documents and reports a download.
 
 import { Col, Flex, Row, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { StatusPill } from "../../../shared/ui/StatusPill";
-import { decorateColumns } from "../../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../../shared/ui/tableColumns";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { getStyles, styles } from "./LoanDocumentsTable.styles";
 import type { LoanDocument } from "./types";
@@ -48,11 +48,14 @@ export function LoanDocumentsTable({
   const t = useT();
   const { token } = theme.useToken();
   const s = getStyles(token);
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
 
-  const columns: ColumnsType<LoanDocument> = [
+  const columns: PriorityColumn<LoanDocument>[] = [
     {
       title: t("loanPage.docName"),
       key: "name",
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (_v, row) => (
         <Typography.Link onClick={() => onDownload?.(row)} ellipsis>
           {row.name}
@@ -63,6 +66,7 @@ export function LoanDocumentsTable({
       title: t("loanPage.docType"),
       key: "type",
       width: 150,
+      popinText: (row) => row.type,
       /* A category, not a state — the same call the borrower's own documents
          table makes. Tags are for states here: "Signed" is one, "consent" is
          not, and a pill per row on both tables just counted boxes. */
@@ -72,6 +76,7 @@ export function LoanDocumentsTable({
       title: t("loanAdmin.uploadedBy"),
       key: "by",
       width: 180,
+      popinText: (row) => row.uploadedBy ?? t("loanAdmin.uploadedBySystem"),
       render: (_v, row) => (
         <Typography.Text type="secondary">
           {row.uploadedBy ?? t("loanAdmin.uploadedBySystem")}
@@ -82,6 +87,7 @@ export function LoanDocumentsTable({
       title: t("loanPage.docDate"),
       key: "on",
       width: 150,
+      popinText: (row) => row.on,
       render: (_v, row) => (
         <Typography.Text type="secondary">{row.on}</Typography.Text>
       ),
@@ -90,6 +96,8 @@ export function LoanDocumentsTable({
       title: t("loanAdmin.docComment"),
       key: "comment",
       width: 220,
+      // Least essential for scanning the list — often just a dash. Pops first.
+      priority: "low",
       render: (_v, row) =>
         row.comment ? (
           <Typography.Text>{row.comment}</Typography.Text>
@@ -100,6 +108,8 @@ export function LoanDocumentsTable({
         ),
     },
   ];
+
+  const popin = buildPopinTable(columns, tableWidth);
 
   return (
     <Flex vertical>
@@ -130,15 +140,16 @@ export function LoanDocumentsTable({
           title={t("loanPage.noDocuments")}
         />
       ) : (
+        <div ref={tableRef}>
         <Table<LoanDocument>
           rowKey="id"
           size="small"
           tableLayout="fixed"
-          columns={decorateColumns(columns)}
+          columns={popin.columns}
           dataSource={documents}
           pagination={false}
-          scroll={{ x: "max-content" }}
         />
+        </div>
       )}
     </Flex>
   );

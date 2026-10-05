@@ -19,17 +19,9 @@ export const styles = {
   /** One rhythm between bands: the page is four of them and an uneven gap
    *  between two would read as a grouping that is not there. */
   band: { marginBottom: 24 },
-  /**
-   * The band with nothing in it yet.
-   *
-   * The inset used to come from `Grid.useBreakpoint()` — 48 wide, 32 narrow —
-   * which is JS deciding a number CSS can interpolate, and this environment's
-   * breakpoint hook has already been caught reporting the wrong column count.
-   * `clamp` crosses the same range continuously and needs no render to know
-   * the width.
-   */
-  empty: { paddingBlock: "clamp(24px, 4vw, 36px)", textAlign: "center" },
-  emptyCopy: { maxWidth: 420 },
+  /* The empty band's own layout — drawing, title, sentence, button — now lives
+     in the shared `PageEmpty`, so the dashboard, loan and payments pages share
+     one size and spacing. */
   /** A table fills its card to the edges: the rows have their own inset and a
    *  second one around them reads as a table inside a box. */
   tableBody: { padding: 0 },

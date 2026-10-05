@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
+import type { CardSkin } from "./cardSkin";
 import { brand } from "../../theme/tokens";
 
 export const styles = {
@@ -29,12 +30,21 @@ export const styles = {
 export type CardTone = "opa";
 
 
-export const getStyles = (token: GlobalToken) => {
-  /* The face is dark, so it takes white ink and prints its own status pill. */
-  const inverted = true;
-  const ground = brand.cardSkin;
-  const ink = inverted ? brand.cardDarkInk : token.colorText;
-  const quiet = inverted ? brand.cardDarkQuiet : token.colorTextTertiary;
+export const getStyles = (token: GlobalToken, skin: CardSkin = "deep") => {
+  /*
+    TWO FINISHES, AND THE INK FOLLOWS THE GROUND.
+    
+    The deep face takes white; the designer's pale blue cannot — white on
+    #90D5FF is 1.6:1 — so it prints in the product's own warm ink. Everything
+    else on the card reads off this pair, which is why `inverted` is a value
+    and not a constant: the pill, the mark's tile and the quiet line all
+    follow it rather than each deciding for itself. See cardSkin.ts.
+  */
+  const inverted = skin === "deep";
+  const ground = inverted ? brand.cardSkin : brand.cardSkinLight;
+  const ink = inverted ? brand.cardDarkInk : brand.cardLightInk;
+  const quiet = inverted ? brand.cardDarkQuiet : brand.cardLightQuiet;
+  const pill = inverted ? brand.cardDarkPill : brand.cardLightPill;
   return ({
     /**
      * A CARD, not a recessed panel.
@@ -104,8 +114,8 @@ export const getStyles = (token: GlobalToken) => {
      * navy alike, because both are dark.
      */
     cutPill: {
-      background: brand.cardDarkPill,
-      color: brand.cardDarkInk,
+      background: pill,
+      color: ink,
       borderColor: "transparent",
     },
     /** The issuer line takes the finish's ink. */
@@ -217,7 +227,7 @@ export const getStyles = (token: GlobalToken) => {
     /** The expiry, as a footnote to the number rather than a corner block. */
     meta: {
       fontSize: 13,
-      color: inverted ? quiet : token.colorTextDescription,
+      color: quiet,
       fontVariantNumeric: "tabular-nums",
     },
   }) satisfies Record<string, CSSProperties>;
@@ -271,7 +281,7 @@ export const getMarkStyles = () => {
     // A circle, not a squircle — *"წრე გავაკეთოთ ოთხკუთხედის ნაცვლად."* It
     // holds the round flame disc, so a round tile is concentric with it.
     borderRadius: "50%",
-    background: brand.cardDarkPill,
+    background: pill,
     display: "flex",
   };
   return {
@@ -285,6 +295,8 @@ export const getMarkStyles = () => {
       position: "absolute",
       inset: "6%",
       borderRadius: "50%",
+      /* What the flame's cut-out shows: white on either finish — the
+         mark is OPA's artwork and its disc is part of it. */
       background: brand.cardDarkInk,
     },
     /** The mark itself, over the disc — see the note on `style` in Logo. */

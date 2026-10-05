@@ -10,30 +10,47 @@
 // card — a single line across a 900px page, which reads as a banner rather
 // than as a sentence: *"საბთაითლები ჩამოდროპე, ცოტა ძაან გაშლილადაა."*
 //
-// THE MEASURE IS 480. 420 held these to three lines where two would do — a
-// short sentence in a narrow column reads as more text than it is. 480 is
-// still well inside a comfortable measure, roughly 60 characters.
+// THE MEASURE IS 520. It went 420 -> 480 -> 520, each time for the same
+// reason: a short sentence in a narrow column reads as more text than it is.
+// 520 is roughly 70 characters, still inside a comfortable measure, and it is
+// what lets "…at the moment. Contact OPA support" finish its clause before
+// the line turns — *"ეს ცოტა გაშალე"*.
 //
-// AND THE LINES ARE BALANCED, not ragged. One of the gate's sentences broke as
-// "…show you what OPA can / cover." — one word alone on the second line, the
-// kind of break a reader notices instead of reading. `text-wrap: balance` is
-// the fix rather than a narrower width or a hand-placed break: the browser
-// evens the lines itself, so it holds for every sentence here and for the
-// Spanish that runs a third longer, neither of which a width tuned to one
-// English string would survive. Where it is unsupported it falls back to an
-// ordinary greedy wrap, which is what these had before.
+// AND THE WRAP IS `pretty`, NOT `balance`. Balance evens the two lines, which
+// sounds right and reads wrong here: it broke "Nothing has been refused. It
+// carries / on by itself…" in the middle of a clause purely to make the
+// halves the same length. `pretty` fills the line and only intervenes to stop
+// a last line holding one word — which was the original complaint that put
+// `balance` here ("…show you what OPA can / cover."), and the part worth
+// keeping. Where it is unsupported both fall back to an ordinary greedy wrap.
+//
+// A SENTENCE WHOSE BREAK REALLY MATTERS DOES NOT ARGUE WITH THE WIDTH — it is
+// written as two blocks (see `subLine` in ApplicationGate), because no single
+// measure can be right for every string, and the Spanish runs a third longer
+// than the English anyway.
 
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
+import { brand } from "../../theme/tokens";
 
-export const getPageResultStyles = (token: GlobalToken) =>
+/**
+ * `empty` opts apply to the asset-illustration empty states (loan, payments):
+ * their drawing is cropped tight to the shadow, so the title sits 24 below it
+ * and the sentence takes the caption grey. The title keeps antd Result's own
+ * size and weight (24px, regular) — the dashboard empty is matched to it. The
+ * gate (journey scenes, not cropped) calls this with no opts.
+ */
+export const getPageResultStyles = (token: GlobalToken, opts?: { empty?: boolean }) =>
   ({
-    title: { marginTop: token.margin },
+    title: {
+      marginTop: opts?.empty ? 24 : token.margin,
+    },
     subTitle: {
-      maxWidth: 480,
+      maxWidth: 520,
       marginInline: "auto",
       marginTop: token.marginXS,
-      textWrap: "balance",
+      textWrap: "pretty",
+      ...(opts?.empty ? { color: brand.sceneCaption } : {}),
     },
     extra: { marginTop: token.marginLG },
   }) satisfies Record<string, CSSProperties>;

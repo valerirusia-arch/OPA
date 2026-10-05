@@ -14,7 +14,7 @@
 
 import { Alert, Button, Flex, Result, Spin, Typography, theme } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { IdentityVerifiedMark } from "./IdentityVerifiedMark";
+import { JourneyScene } from "../../../shared/ui/scenes/JourneyScene";
 import { getStyles, styles } from "./IdentityStep.styles";
 
 export type IdentityStatus = "checking" | "verified" | "mismatch" | "unavailable";
@@ -67,7 +67,7 @@ export function IdentityStep({
   if (status === "verified") {
     return (
       <Result
-        icon={<IdentityVerifiedMark />}
+        icon={<JourneyScene variant="identity" size={140} />}
         title={t("identity.verifiedTitle")}
         subTitle={
           /* Two blocks, not one wrapping paragraph: the confirmation and what

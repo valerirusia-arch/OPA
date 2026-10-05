@@ -151,7 +151,7 @@ export const mockBorrowers: Borrower[] = [
       acquisition: {
         source: "Partner referral",
         referralPartner: "Casa Legal",
-        campaign: "Naturalisation drive 2026",
+        campaign: "Naturalization drive 2026",
       },
     },
   },
@@ -446,7 +446,7 @@ export const mockBorrowers: Borrower[] = [
       docsSigned: true,
       householdSize: 2,
       submitted: "18 May 2026",
-      referral: "Campaign: Naturalisation drive",
+      referral: "Campaign: Naturalization drive",
     },
     loan: {
       loanId: "app_9kd2mrb4",

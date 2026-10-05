@@ -78,7 +78,7 @@
 // empties, so the two sets cannot drift apart.
 
 import { brand } from "../../../theme/tokens";
-import { SceneFrame, Sheet } from "../../../shared/ui/scenes/SceneFrame";
+import { SceneFrame, Sheet } from "./SceneFrame";
 
 export type JourneySceneVariant =
   | "act"
@@ -91,98 +91,126 @@ export type JourneySceneVariant =
   | "declined"
   | "attention"
   | "person"
+  /** AN ACCOUNT created — the upright ID card with the finished check. The one
+   *  state that stands the card PORTRAIT: not the landscape person-card the
+   *  borrower and the identity check wear, and not the application sheet. */
+  | "verified"
+  /** IDENTITY verified — the landscape person-card with the finished check, the
+   *  way it was: *"აიდენთითი ისე დააბრუნე როგორც იყო."* A clock would say it is
+   *  still being looked at; the check says it matched. What separates it from
+   *  the new account is the card's orientation, and from the borrower, the
+   *  badge (check, not clock). */
+  | "identity"
   | "failed";
 
 export type JourneySceneProps = {
   variant?: JourneySceneVariant;
   /** Rendered width in px. The gate draws these at page size. */
   size?: number;
+  /** The status badge in the corner. On by default; off for the one state that
+   *  carries no status — the plain "start an application" invitation. */
+  badge?: boolean;
 };
 
-/** The contour weight. The grey itself is shared with every other drawing;
- *  this is a hair heavier than the empty states' 1.8, because these are
- *  page-sized and carrying a page rather than apologising for one. */
-const CONTOUR = 2.2;
+/** The outline weight for these illustrations. Thin on purpose — the heavier
+ *  line read as clumsy at page size, so it was brought down across every journey
+ *  scene (the empty states keep their own weight). *"სთროუკებს მოაკელ."* */
+const STROKE = 1.5;
 
-const LINE_PROPS = {
-  stroke: brand.sceneLine,
-  strokeWidth: CONTOUR,
-  fill: brand.white,
+/**
+ * ILLUSTRATION COLOUR IS CONSTANT; THE BADGE CARRIES THE STATUS.
+ *
+ * Every scene is drawn in one base palette — a teal outline, a teal figure and
+ * heading, light-blue body lines — and nothing in the drawing changes between
+ * states. Only the round status badge in the corner takes the state's colour.
+ * *"ილუსტრაციებს ფერი არ შეეცვლებათ, მხოლოდ ამ მრგვალ სტატუსებს."* This replaces
+ * the old per-state tinting, where the whole shape turned amber or red.
+ */
+const BASE = {
+  /** Outline and tint — person-card panel, photo disc, sparkles. */
+  soft: brand.sceneTealSoft,
+  /** The figure and the packet's heading bar. */
+  strong: brand.primary,
+  /** The packet's written-in body lines — a light blue. */
+  lines: brand.sceneSlateSoft,
+  /** The shape behind the subject. */
+  blob: brand.sceneTealBlob,
 } as const;
 
 /**
- * What each state is drawn in. `ink` is the sparkles now — the packet's own
- * contents are the same grey in every state; see `Packet`.
+ * THE ONE THING THAT CHANGES BY STATE — the badge fill. Teal is the identity (a
+ * move to make, in progress, a person, an invitation); green the finished mark;
+ * amber a state to attend to or a stop that is not a refusal; red a refusal.
  *
- * THE BLOB AND THE BADGE AGREE, in ten of the eleven. `done` is the
- * exception and it is deliberate, not an oversight: green is the one colour
- * this product spends on a single thing — the finished mark, and the one
- * green button it goes with. Tinting the shape behind it green as well would
- * make success the loudest illustration on any screen, which is the opposite
- * of how everything else here is held. It keeps the teal, and the check
- * carries the news on its own.
+ * Two the designer set against the earlier reading, by eye in context:
+ *   · `failed` — the co-borrower did not qualify — is RED. *"აქ წითელი."*
+ *   · `blocked` — the application was stopped — is AMBER, not red: red looked
+ *     wrong in the padlock, amber sits in it. *"წითელი არ გამოდგება,
+ *     ნარინჯისფერი ჩაჯდება."*
  */
-const TONE = {
-  act: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
-  done: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.success },
-  /* Teal, not green, and a clock rather than a check. Green and a tick mean
-     FINISHED, and an application that OPA is still reading is not — it was
-     wearing the same mark as a loan repaid in full: *"ეს მწვანე არ უნდა
-     იყოს... იმიტომ რომ ჩვენ არ დასრულებულა, ჯერ ოპა ცდილობს გადახედოს."* */
-  review: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
-  attention: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
-  /* The clock, as `review` wears it. It was bare, on the reasoning that
-     nothing has happened to this person yet and a mark would say it had —
-     but the clock does not say something happened, it says something is
-     being waited for, which is exactly this state. */
-  invite: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
-  person: { ink: brand.sceneTealSoft, blob: brand.sceneTealBlob, badge: brand.primary },
-  failed: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
-  declined: { ink: brand.sceneRedSoft, blob: brand.sceneRedBlob, badge: brand.danger },
-  blocked: { ink: brand.sceneRedSoft, blob: brand.sceneRedBlob, badge: brand.danger },
-  cancelled: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
-  ineligible: { ink: brand.sceneAmberSoft, blob: brand.sceneAmberBlob, badge: brand.warning },
-} satisfies Record<JourneySceneVariant, { ink: string; blob: string; badge: string | null }>;
+const BADGE = {
+  act: brand.primary,
+  done: brand.success,
+  review: brand.primary,
+  attention: brand.warning,
+  invite: brand.primary,
+  person: brand.primary,
+  verified: brand.success,
+  identity: brand.success,
+  failed: brand.danger,
+  declined: brand.danger,
+  blocked: brand.warning,
+  cancelled: brand.warning,
+  ineligible: brand.warning,
+} satisfies Record<JourneySceneVariant, string>;
+
+type SubjectTone = { soft: string; strong: string };
+
+/** The packet's colours, with the heading bar, the body lines and the outline
+ *  weight overridable independently of the tone (used to try the first state). */
+type PacketTone = SubjectTone & {
+  outlineWidth?: number;
+  heading?: string;
+  lines?: string;
+};
 
 /**
- * The packet: the shared sheet, drawn exactly as the empty states draw it.
+ * The packet — the application's sheet, drawn as a coloured illustration.
  *
- * ITS LINES WERE SOLID AND IN THE STATE'S OWN COLOUR, on the reasoning that
- * solid-versus-dashed was the one mark separating a record with something in
- * it from a record with nothing. It separated them too well: two documents
- * side by side in the same product, one written in teal and one in grey
- * dashes, read as two different objects rather than one page in two moments.
- * *"დოკუმენტში შიგნით ტექსტი ნაცრისფრად იყოს, როგორც დეშბორდზეა... მსგავსი
- * წყვეტილი ხაზები იყოს ყველგან."*
- *
- * So the sheet is now the same sheet everywhere and the STATE IS CARRIED BY
- * THE BADGE AND THE SHAPE BEHIND IT — which is the better division anyway:
- * the thing that changes between states is the thing that is drawn
- * differently, and the document, which does not change, is not.
- *
- * The heading bar stays. It is what makes this a form rather than three marks
- * on a page, and it is the one thing the empty record does not have: nothing
- * has been written there, not even a title.
+ * The OUTLINE is the soft tint, not the strong colour — the same light edge the
+ * person-card and the account badge wear, so a page full of these scenes reads
+ * evenly instead of the documents shouting in a heavy dark line:
+ * *"ძალიან მძიმე სთროუკი აქვს... დააბალანსე."* The one strong note is the
+ * heading bar, the way the person-card's one strong note is the figure. The
+ * written-in lines are the soft tint — solid, not dashed: there is an
+ * application, and the dashes are the empty states' way of saying there is not.
+ * The sheet shape itself is shared with the empty record through `Sheet`.
  */
-function Packet() {
+function Packet({ soft, strong, outlineWidth = STROKE, heading, lines }: PacketTone) {
+  /* The heading bar and the body lines default to the tone's strong/soft, but
+     can be overridden independently — the first state is being tried in a slate
+     pair rather than the teal, and with a thinner outline. */
+  const headingFill = heading ?? strong;
+  const lineFill = lines ?? soft;
   return (
     <>
-      <Sheet stroke={brand.sceneLine} strokeWidth={CONTOUR} />
+      <Sheet stroke={soft} strokeWidth={outlineWidth} />
 
-      <rect x={82} y={56} width={32} height={6} rx={3} fill={brand.sceneSoft} />
+      <rect x={82} y={56} width={34} height={6} rx={3} fill={headingFill} />
 
       {[
-        { y: 78, w: 46 },
-        { y: 92, w: 46 },
-        { y: 106, w: 30 },
+        { y: 76, w: 46 },
+        { y: 90, w: 46 },
+        { y: 104, w: 30 },
       ].map((line) => (
-        <path
+        <rect
           key={line.y}
-          d={`M82 ${line.y}h${line.w}`}
-          stroke={brand.sceneSoft}
-          strokeWidth={2.2}
-          strokeLinecap="round"
-          strokeDasharray="6 7"
+          x={82}
+          y={line.y}
+          width={line.w}
+          height={5}
+          rx={2.5}
+          fill={lineFill}
         />
       ))}
     </>
@@ -206,37 +234,44 @@ function Packet() {
  * are the same grey dashes as every other record in the set: this person's
  * part is not filled in, which is the whole state.
  */
-function PersonCard() {
+function PersonCard({ soft, strong }: SubjectTone) {
   return (
     <>
       <path
         d="M54 52a12 12 0 0 1 12-12h72a12 12 0 0 1 12 12v60a12 12 0 0 1-12 12H66a12 12 0 0 1-12-12V52Z"
-        {...LINE_PROPS}
+        fill={brand.white}
+        stroke={soft}
+        strokeWidth={STROKE}
         strokeLinejoin="round"
       />
 
-      {/* The picture on it. */}
-      <circle cx={82} cy={72} r={12} {...LINE_PROPS} />
-      <path
-        d="M68 102c0-7.7 6.3-14 14-14s14 6.3 14 14v2a3 3 0 0 1-3 3H71a3 3 0 0 1-3-3v-2Z"
-        {...LINE_PROPS}
-        strokeLinejoin="round"
-      />
+      {/* The picture on it: a tinted disc with the figure filled inside. */}
+      <defs>
+        <clipPath id="personCardAvatar">
+          <circle cx={82} cy={72} r={18} />
+        </clipPath>
+      </defs>
+      <circle cx={82} cy={72} r={18} fill={soft} />
+      <g clipPath="url(#personCardAvatar)">
+        <circle cx={82} cy={67} r={8} fill={strong} />
+        <circle cx={82} cy={95} r={13} fill={strong} />
+      </g>
 
       {/* And their details beside it. The last line is short twice over: a
-          real one ends early, and the badge's ring comes in at x=125. */}
+          real one ends early, and the badge's ring comes in at the corner. */}
       {[
-        { y: 72, w: 34 },
-        { y: 86, w: 34 },
-        { y: 100, w: 14 },
+        { y: 64, w: 36 },
+        { y: 78, w: 36 },
+        { y: 92, w: 18 },
       ].map((line) => (
-        <path
+        <rect
           key={line.y}
-          d={`M106 ${line.y}h${line.w}`}
-          stroke={brand.sceneSoft}
-          strokeWidth={2.2}
-          strokeLinecap="round"
-          strokeDasharray="6 7"
+          x={106}
+          y={line.y}
+          width={line.w}
+          height={5}
+          rx={2.5}
+          fill={soft}
         />
       ))}
     </>
@@ -253,6 +288,57 @@ function PersonCard() {
  * ten units. Sitting higher, the ring cut across the end of a line and the
  * packet read as a document with a hole punched in it.
  */
+/**
+ * AN ID BADGE — the new account, and the ONE scene drawn as a full illustration
+ * rather than in the grey line-art the rest of the set shares.
+ *
+ * WHY THIS ONE BREAKS THE GREY. The grey contour is, by design, the empty
+ * states' own hand — and on the account screen that is exactly the problem: a
+ * pale outline of a card reads as "nothing here yet" on the very screen that
+ * says you now HAVE something. *"ეს ცოტა ემფთი სთეითს ჰგავს... ცოტა უფრო ისე,
+ * რომ ეტყობოდეს რომ ილუსტრაციაა და არა ემფთი სთეითი."* So this one is filled
+ * and coloured: a teal figure in a tinted photo, the details written in rather
+ * than dashed, an eyelet and clip so it reads as a badge you now wear. Every
+ * colour is a theme token; the green check stays the finished mark.
+ */
+function IdCard() {
+  return (
+    <>
+      {/* The eyelet and clip — a badge you could hang, not just a card. */}
+      <circle cx={102} cy={13} r={6} fill={brand.white} stroke={brand.primary} strokeWidth={3} />
+      <rect x={96} y={18} width={12} height={10} rx={2} fill={brand.primary} />
+
+      <rect
+        x={60}
+        y={26}
+        width={84}
+        height={94}
+        rx={14}
+        fill={brand.white}
+        stroke={brand.sceneTealSoft}
+        strokeWidth={STROKE}
+        strokeLinejoin="round"
+      />
+
+      {/* The photo: a tinted disc with the figure clipped to sit within it. */}
+      <defs>
+        <clipPath id="idCardAvatar">
+          <circle cx={102} cy={60} r={24} />
+        </clipPath>
+      </defs>
+      <circle cx={102} cy={60} r={24} fill={brand.sceneTealSoft} />
+      <g clipPath="url(#idCardAvatar)">
+        <circle cx={102} cy={54} r={10} fill={brand.primary} />
+        <circle cx={102} cy={90} r={17} fill={brand.primary} />
+      </g>
+
+      {/* Name and email, written in rather than dashed — this account exists. */}
+      <rect x={82} y={96} width={40} height={5} rx={2.5} fill={brand.sceneTealSoft} />
+      <rect x={90} y={107} width={24} height={5} rx={2.5} fill={brand.sceneTealSoft} />
+    </>
+  );
+}
+
 function Badge({
   variant,
   fill,
@@ -323,7 +409,7 @@ function Badge({
             strokeLinejoin="round"
           />
         </>
-      ) : variant === "done" ? (
+      ) : variant === "done" || variant === "verified" || variant === "identity" ? (
         <path
           d="m133.5 112.5 5 5 10-10"
           fill="none"
@@ -359,19 +445,20 @@ function Badge({
   );
 }
 
-export function JourneyScene({ variant = "act", size = 200 }: JourneySceneProps) {
-  const tone = TONE[variant];
-
+export function JourneyScene({ variant = "act", size = 200, badge = true }: JourneySceneProps) {
   return (
-    <SceneFrame width={size} blob={tone.blob} spark={tone.ink}>
-      {variant === "person" ||
-      variant === "failed" ||
-      variant === "invite" ? (
-        <PersonCard />
+    <SceneFrame width={size} blob={BASE.blob} spark={BASE.soft}>
+      {variant === "verified" ? (
+        <IdCard />
+      ) : variant === "person" ||
+        variant === "failed" ||
+        variant === "invite" ||
+        variant === "identity" ? (
+        <PersonCard soft={BASE.soft} strong={BASE.strong} />
       ) : (
-        <Packet />
+        <Packet soft={BASE.soft} strong={BASE.strong} lines={BASE.lines} />
       )}
-      {tone.badge ? <Badge variant={variant} fill={tone.badge} /> : null}
+      {badge ? <Badge variant={variant} fill={BADGE[variant]} /> : null}
     </SceneFrame>
   );
 }

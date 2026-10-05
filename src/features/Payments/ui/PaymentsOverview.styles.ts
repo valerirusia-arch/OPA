@@ -13,6 +13,10 @@ export const styles = {
   /** The account's notice, above everything it is about. */
   card: { marginBottom: 24 },
   row: { marginBottom: 24 },
+  /** The answer's zone and the facts' zone, an even share each. `minWidth: 0`
+   *  so neither widens the row to fit its longest word. */
+  answer: { flex: "1 1 0", minWidth: 0 },
+  facts: { flex: "1 1 0", minWidth: 0 },
   /**
    * Equal-height cards, done with flex rather than percentage heights.
    *
@@ -46,4 +50,23 @@ export const getStyles = (token: GlobalToken) =>
   ({
     /** Reference material: a heading weight, but it opens like a link. */
     rulesLabel: { fontWeight: 500, color: token.colorText },
+    /**
+     * THE LINE BETWEEN THE ANSWER AND ITS FACTS.
+     *
+     * antd's vertical Divider is sized for inline use — 0.9em tall, with
+     * horizontal margins — so it drew a short tick between two tall blocks.
+     * `alignSelf: stretch` plus `height: auto` makes it the height of the
+     * row, which is what a split is. Its margins go, because the Flex gap
+     * already spaces the zones and a margin on top of it doubles the gutter
+     * on one side only.
+     */
+    splitVertical: {
+      alignSelf: "stretch",
+      height: "auto",
+      margin: 0,
+      borderInlineStartColor: token.colorSplit,
+    },
+    /** Stacked, the same line turned. The gap does the spacing, so the rule
+     *  keeps none of antd's own 24. */
+    splitHorizontal: { margin: 0, borderBlockStartColor: token.colorSplit },
   }) satisfies Record<string, CSSProperties>;

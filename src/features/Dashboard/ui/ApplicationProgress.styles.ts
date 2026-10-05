@@ -21,8 +21,13 @@ export const styles = {
     paddingInline: LEAD_PANEL_INSET,
     paddingBottom: LEAD_PANEL_INSET - 8,
   },
-  /** The row inside the recess: words on the left, the move on the right. */
-  detail: { width: "100%" },
+  /** The row inside the recess: words on the left, the move on the right.
+   *  The bottom margin is the gap to the "Steps so far" drawer, which was
+   *  sitting directly under the sentence with nothing between them —
+   *  *"საბთაითლებსა და ამ დროპდაუნს შორის სულ ოდნავ მეტი სფეისი იყოს"*. 12,
+   *  half the rule's own 24, so the drawer still reads as belonging to
+   *  this step rather than as a third section. */
+  detail: { width: "100%", marginBottom: 12 },
   /** `minWidth: 0` so the sentence wraps inside its own column instead of
    *  widening the row and pushing the button off the card. */
   /* The basis is what makes the row wrap rather than crush: below it the

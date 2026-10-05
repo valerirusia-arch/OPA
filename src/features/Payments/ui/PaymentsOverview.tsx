@@ -39,7 +39,7 @@
 // Dumb: everything arrives as props and leaves as a callback.
 
 import {
-  Button, Card, Collapse, Flex, Result, Tabs, Typography, theme,
+  Button, Card, Collapse, Divider, Flex, Grid, Result, Tabs, Typography, theme,
 } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { EmptyState } from "../../../shared/ui/EmptyState";
@@ -50,6 +50,8 @@ import { PageNotice } from "../../../shared/ui/PageNotice";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { leadPanelBody } from "../../../shared/ui/panel.styles";
 import { BalanceSummary } from "./BalanceSummary";
+import { balanceDetails } from "./balanceDetails";
+import { BalanceFacts } from "./BalanceFacts";
 import { PaymentHistory } from "./PaymentHistory";
 import { PaymentSchedule } from "./PaymentSchedule";
 import { getStyles, styles } from "./PaymentsOverview.styles";
@@ -96,6 +98,15 @@ export function PaymentsOverview({
   onStartApplication,
 }: PaymentsOverviewProps) {
   const t = useT();
+  /* The two-up only exists where there is room for it: below `lg` the facts
+     panel drops under the balance and each card sizes to its own content. */
+  const screens = Grid.useBreakpoint();
+  const sideBySide = screens.lg !== false;
+  /* Below sm the head has no room for "What you owe" AND "Make a payment" on
+     one line — the title wraps to two lines and squeezes against the link
+     instead. The arrow alone still says "there's somewhere to go"; the words
+     are what the head can't afford down here. */
+  const compactHeadAction = screens.sm === false;
   const { token } = theme.useToken();
   const s = getStyles(token);
 
@@ -103,10 +114,9 @@ export function PaymentsOverview({
     A PAGE WITH NOTHING TO REPAY, drawn as one thing.
 
     antd's `Result` rather than the table `EmptyState`: this is the whole page,
-    not a card that ran out of rows, and Result is what antd gives a page-sized
-    state — the artwork at illustration size, a real heading under it, and the
-    way forward last. Same furniture as /loan's empty states, and the mark is
-    the third in the same family.
+    not a card that ran out of rows. Its own drawing now, the `noPayment`
+    receipt — what is missing here is a payment. (The title/spacing consistency
+    with the dashboard is a later pass; for now only the illustration changed.)
   */
   if (!record) {
     /* Nothing at all: say what to do, not where else to look. And the same
@@ -117,10 +127,10 @@ export function PaymentsOverview({
     return (
       <Card>
         <Result
-          icon={<EmptyScene scale="page" />}
+          icon={<EmptyScene variant="noPayment" scale="page" />}
           title={t(nothingAtAll ? "payments.noLoanTitle" : "payments.noneTitle")}
           subTitle={t(nothingAtAll ? "payments.noLoanBody" : "payments.noneBody")}
-          styles={getPageResultStyles(token)}
+          styles={getPageResultStyles(token, { empty: true })}
           extra={
             <Button
               type="primary"
@@ -209,39 +219,89 @@ export function PaymentsOverview({
         the rest of this product speaks to borrowers in — and the figure keeps
         its own label.
       */}
+      {/*
+        ONE CARD, TWO ZONES, A RULE BETWEEN THEM.
+
+        The balance and its three facts were two cards in a 2/3 + 1/3 row.
+        They could not be made level: in a third of the page the facts have
+        to stack, which makes the narrow card the TALL one, and the figure
+        beside it then stretched over 90px of nothing. Widening the facts
+        only moved the problem.
+
+        Half a card each solves it by arithmetic rather than by compromise:
+        the facts get ~200px apiece, which is room to set their labels on one
+        line, so they go side by side and the block is shorter than the
+        figure it belongs to. One container, nothing to reconcile, and the
+        hairline does the work the gap between two cards was reaching for.
+        *"ეს ინფორმაცია, არსებული რაც მქონდა, მინდოდა უფრო კარგად
+        გადაგენაწილებინა."*
+      */}
       <Card
         title={t("payments.owedTitle")}
         /* Only where there is something payable. A way onward over a settled
            loan is a door onto nothing. */
         extra={
           next ? (
-            <Button type="link" style={styles.headAction} onClick={() => onPay?.()}>
-              {t("payments.makePayment")} <ArrowRightOutlined />
+            <Button
+              type="link"
+              style={styles.headAction}
+              onClick={() => onPay?.()}
+              aria-label={compactHeadAction ? t("payments.makePayment") : undefined}
+            >
+              {compactHeadAction ? null : t("payments.makePayment")}{" "}
+              <ArrowRightOutlined />
             </Button>
           ) : undefined
         }
         style={styles.card}
         styles={{ title: cardHeadTitle, body: leadPanelBody }}
       >
-        {/* `onPay` is withheld on purpose: the head carries the action now,
-            and the panel's own button would be the same door twice. */}
-        {/* THE THREE FIGURES ARE BACK — *"ფეიმენტზე 3 ინფო გვქონდა ქვემოთ,
-            ეგ დააბრუნე."* They also sit in the dashboard's fact tiles, and
-            that is not an accident to clean up: the dashboard states the loan
-            at a glance and this page is the one a borrower opens to act on
-            it, so WBS story 6's payoff and story 10's applied fees belong
-            beside the schedule they explain as much as they belong on the
-            summary. */}
-        <BalanceSummary
-          balance={record.balance}
-          next={next}
-          /* THE TWO FACTS A SETTLED STRIP SHOWS INSTEAD — see `settled` in
-             BalanceSummary. Both are read off the record this page already
-             has: the schedule's own sum, and the day the last successful
-             payment landed. */
-          totalRepaid={totalRepaid}
-          closedOn={closedOn}
-        />
+        {/* THE TWO ZONES SIT ON A COMMON BOTTOM EDGE — *"პროსტა დაბლა
+            დააელაინე რა"*. Centred, the facts floated against a taller block
+            and lined up with nothing; on the floor they finish level with
+            "Next on …", so the band reads as one row of type rather than two
+            blocks that happen to be adjacent. The rule keeps its own
+            `alignSelf: stretch`, so it still spans the full height. */}
+        <Flex
+          vertical={!sideBySide}
+          align={sideBySide ? "flex-end" : undefined}
+          gap={sideBySide ? 40 : 24}
+        >
+          {/* THE ANSWER. `showDetails` is off because the facts are the zone
+              beside it now, not small print under it. */}
+          <div style={styles.answer}>
+            <BalanceSummary
+              balance={record.balance}
+              next={next}
+              showDetails={false}
+            />
+          </div>
+
+          {/* The split. Vertical where the zones sit side by side, horizontal
+              where they stack — the same line either way, turned. */}
+          <Divider
+            type={sideBySide ? "vertical" : "horizontal"}
+            style={sideBySide ? s.splitVertical : s.splitHorizontal}
+          />
+
+          <div style={styles.facts}>
+            <BalanceFacts
+              stacked={!sideBySide}
+              /* THE SAME LIST THE CARD USED TO HOLD, built once in
+                 balanceDetails so the two zones cannot disagree. The settled
+                 loan swaps two of the three — see `balanceDetails`. */
+              details={balanceDetails(t, {
+                balance: record.balance,
+                /* THE TWO FACTS A SETTLED STRIP SHOWS INSTEAD. Both are read
+                   off the record this page already has: the schedule's own
+                   sum, and the day the last successful payment landed. */
+                totalRepaid,
+                closedOn,
+                settled: next === undefined,
+              })}
+            />
+          </div>
+        </Flex>
       </Card>
 
       {/* The record of the loan's repayment, in one card. Flush body and an

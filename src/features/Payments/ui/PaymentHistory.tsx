@@ -23,13 +23,13 @@
 
 import { Button, Flex, Table, Tooltip, Typography, theme } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
-import type { ColumnsType } from "antd/es/table";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { decorateColumns } from "../../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../../shared/ui/tableColumns";
 import { getStyles as getPageStyles } from "../../../shared/ui/AdminPage.styles";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { PaymentStatusTag } from "./PaymentTags";
-import { styles } from "./PaymentHistory.styles";
+import { styles, getStyles } from "./PaymentHistory.styles";
 import type { PaymentTransaction } from "./types";
 
 export type PaymentHistoryProps = {
@@ -71,6 +71,8 @@ export function PaymentHistory({
   const t = useT();
   const { token } = theme.useToken();
   const page = getPageStyles(token);
+  const s = getStyles(token);
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
 
   /** The digits, or who paid, per the rule above. */
   const methodOf = (transaction: PaymentTransaction) => {
@@ -95,14 +97,18 @@ export function PaymentHistory({
     );
   }
 
-  const columns: ColumnsType<PaymentTransaction> = [
+  const columns: PriorityColumn<PaymentTransaction>[] = [
     ...(showBorrower
       ? [
           {
             title: t("payments.borrower"),
             key: "borrower",
             width: "22%",
-            render: (_v: unknown, row: PaymentTransaction) => row.borrower,
+            // The identifier — stays on screen at every width.
+            priority: "high" as const,
+            render: (_v: unknown, row: PaymentTransaction) => (
+              <Typography.Text style={s.identifier}>{row.borrower}</Typography.Text>
+            ),
           },
         ]
       : []),
@@ -125,6 +131,7 @@ export function PaymentHistory({
       title: t("payments.method"),
       key: "card",
       width: "20%",
+      popinText: (row) => methodOf(row),
       render: (_v, row) => (
         <Typography.Text type="secondary">{methodOf(row)}</Typography.Text>
       ),
@@ -136,6 +143,9 @@ export function PaymentHistory({
       title: t("loanPage.status"),
       key: "status",
       width: "32%",
+      // The key attribute — whether the payment went through. Stays on
+      // screen at every width.
+      priority: "high",
       render: (_v, row) => (
         <Flex vertical gap={4} align="flex-start">
           <PaymentStatusTag status={row.status} />
@@ -186,21 +196,23 @@ export function PaymentHistory({
       : []),
   ];
 
+  const popin = buildPopinTable(columns, tableWidth);
+
   return (
+    <div ref={tableRef}>
     <Table<PaymentTransaction>
       rowKey="id"
       size="small"
       tableLayout="fixed"
-      columns={decorateColumns(columns)}
+      columns={popin.columns}
       dataSource={transactions}
       pagination={
         pageSize
           ? { pageSize, showSizeChanger: false, style: page.pagination }
           : false
       }
-      /* A minimum, not the content width. */
-      scroll={{ x: 640 }}
     />
+    </div>
   );
 }
 

@@ -343,7 +343,7 @@ export const mockRepaid: ApplicationSummary = {
 export const mockDeclined: ApplicationSummary = {
   ...mockUnderReview,
   status: "declined",
-  decisionNote: "OPA could not approve this application. Call support and somebody will go through it with you.",
+  decisionNote: "Call support and somebody will go through it with you.",
 };
 
 /** No application at all. */

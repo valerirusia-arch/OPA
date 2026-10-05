@@ -236,7 +236,7 @@ function ShowcaseInner() {
           </Carousel>
         </div>
         <Image width={120} src={tinyImg} />
-        <QRCode value="https://skiloope.com" size={96} />
+        <QRCode value="https://opa.example" size={96} />
         <Empty />
       </Section>
 
@@ -275,7 +275,7 @@ function ShowcaseInner() {
       </Section>
 
       <Section title="Other — Watermark">
-        <Watermark content="Skiloope">
+        <Watermark content="OPA">
           <div style={{ height: 120, width: 260, border: `1px solid ${token.colorBorder}`, borderRadius: token.borderRadius }} />
         </Watermark>
       </Section>

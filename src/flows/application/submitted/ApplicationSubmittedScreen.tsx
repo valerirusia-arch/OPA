@@ -21,7 +21,8 @@
 // borrower whose application is really waiting on somebody else should not be
 // told it is being reviewed.
 
-import { Button, Card, Flex, Result, Tag, Typography, theme } from "antd";
+import { useEffect } from "react";
+import { App, Button, Card, Flex, Result, Tag, Typography, theme } from "antd";
 import { useNavigate } from "@tanstack/react-router";
 import { AppHeader } from "../../../shared/ui/AppHeader";
 import { borrowerNav } from "../../../shared/ui/navigation";
@@ -32,8 +33,7 @@ import { useCustomerViewer } from "../../../shared/ui/viewerRole";
 import { pill } from "../../../shared/ui/tag.styles";
 import { useLoanRecord } from "../../loan/loanRecord";
 import { ContactDetails } from "../../../features/LoanApplication/ui/ContactDetails";
-import { InvitationMark } from "../../../features/LoanApplication/ui/InvitationMark";
-import { SubmittedMark } from "../../../features/LoanApplication/ui/SubmittedMark";
+import { GateScene } from "../../../shared/ui/scenes/GateScene";
 import { getStyles, styles } from "./ApplicationSubmittedScreen.styles";
 
 export type ApplicationSubmittedScreenProps = {
@@ -65,6 +65,7 @@ export default function ApplicationSubmittedScreen({
   const t = useT();
   const { token } = theme.useToken();
   const s = getStyles(token);
+  const { message } = App.useApp();
 
   /**
    * Whether underwriting is actually waiting on somebody else.
@@ -85,6 +86,38 @@ export default function ApplicationSubmittedScreen({
   const waiting = waitingOnCoBorrower ?? record?.status === "coBorrower";
   const failed = coBorrowerFailed ?? Boolean(record?.coBorrowerFailed);
   const failedName = coBorrowerName ?? record?.coBorrowerFailed ?? "";
+
+  /*
+    "IT WENT" — once, on arrival, and then gone.
+
+    The page states where the application IS; this states what the reader
+    just DID. The two are different kinds of fact and want different
+    lifetimes, which is the whole argument for a message rather than a line
+    on the card: a banner saying "sent successfully" is still sitting there
+    on the fourth visit, long after it stopped being true in any useful
+    sense.
+    *"უნდა ჩამოვიდეს ალერტი, რომ აპლიკაცია გაიგზავნა წარმატებით."*
+
+    Not on the co-borrower-failed branch: nothing was sent there, the
+    application came back.
+
+    `message` is read from `App.useApp()` and is stable, so the effect runs
+    on arrival and on a change of persona — which is exactly when the
+    sentence changes ("your application" / "your part").
+  */
+  useEffect(() => {
+    if (failed) return;
+    /* A KEY, so it can only ever be ONE. React's dev mode runs an effect
+       twice on mount and antd stacks messages, so without it every arrival
+       showed the sentence twice, one under the other. Keyed, the second call
+       replaces the first. */
+    message.success({
+      key: "application-sent",
+      content: t(
+        viewer.role === "coBorrower" ? "submitted.partSent" : "submitted.sent",
+      ),
+    });
+  }, [failed, message, t, viewer.role]);
 
   return (
     <>
@@ -107,7 +140,12 @@ export default function ApplicationSubmittedScreen({
             {failed ? (
               <Result
                 style={styles.result}
-                icon={<InvitationMark />}
+                /* THE SAME DRAWING THE GATE GIVES THIS STATE. What did not
+                   work out is a PERSON, in amber because it is a detour and
+                   not a refusal — the `coBorrowerFailed` gate says exactly
+                   this, and the two screens are the same news seen a minute
+                   apart. */
+                icon={<GateScene name="personAttention" />}
                 title={t("submitted.coBorrowerFailedTitle")}
                 subTitle={t("submitted.coBorrowerFailedBody", {
                   name: failedName,
@@ -128,7 +166,16 @@ export default function ApplicationSubmittedScreen({
             ) : (
               <Result
                 style={styles.result}
-                icon={<SubmittedMark />}
+                /* THE MAGNIFIER, NOT A TICK. A green check here would say
+                   the application was APPROVED, and nothing has been decided
+                   — what is true is that OPA has it and is reading it, which
+                   is the state this page describes and the drawing its own
+                   Application tab uses for it. That the application was SENT
+                   is a thing that just happened and then stops being news:
+                   it arrives as a message and leaves. *"ეს უნდა იყოს, და
+                   უნდა ჩამოვიდეს ალერტი რომ აპლიკაცია გაიგზავნა
+                   წარმატებით."* */
+                icon={<GateScene name="review" />}
                 /* THE CO-BORROWER SENT THEIR PART, NOT AN APPLICATION. They
                    joined somebody else's, and "your application is submitted"
                    claims something that is not theirs to claim. Same screen,

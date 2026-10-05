@@ -57,8 +57,8 @@ import { useIdleTimer, DEFAULT_IDLE_MS } from "../../features/Auth/ui/useIdleTim
 import { ApplicationProgress } from "../../features/Dashboard/ui/ApplicationProgress";
 import { StageFoot } from "../../features/Dashboard/ui/StageFoot";
 import { FactTiles } from "../../features/Dashboard/ui/FactTiles";
-import { PaymentHistory } from "../../features/Payments/ui/PaymentHistory";
 import { EmptyScene } from "../../shared/ui/scenes/EmptyScene";
+import { PageEmpty } from "../../shared/ui/PageEmpty";
 import { BalanceSummary } from "../../features/Payments/ui/BalanceSummary";
 import { stageCopy } from "../../features/Payments/ui/delinquency";
 import { hasOpenApplication, useLoanRecord, usePaymentsRecord } from "../loan/loanRecord";
@@ -105,13 +105,6 @@ export default function DashboardScreen({
 
   const paidCount = payments?.schedule.filter((row) => row.status === "paid").length ?? 0;
   const nextDue = payments?.schedule.find((row) => row.status !== "paid");
-  /* The last few attempts. Only once there is a loan to have paid against —
-     before funding an empty "Recent payments" card is a third block of blank
-     space on a page that already says, twice over, that nothing is open yet.
-     *"არ გვჭირდება ამის ემფთი სფეისი."* At funding the schedule exists but
-     nothing is paid, so the card can still be empty there; that empty state
-     is a loan with no payments yet, which is worth showing. */
-  const recent = payments ? payments.history.slice(0, 5) : [];
 
   /*
     THE FOUR FACTS.
@@ -191,6 +184,7 @@ export default function DashboardScreen({
                   frame below already say. *"დესქრიფშენი არ მინდა."* The other
                   states never had one; now none does. */}
             </Flex>
+
 
 
             {/*
@@ -334,110 +328,44 @@ export default function DashboardScreen({
                  *"ეს თაითლი არასწორია... წაშალეთ."* The greeting above already
                  names the page. */
               <Card style={styles.band}>
-                <Flex vertical align="center" gap={12} style={styles.empty}>
-                  {/* THE SAME DRAWING AS /loan AND /payments, not one of its
-                      own.
-
-                      It was `NoLoanMark` — a dashed card slot with a grey "+"
-                      badge, built when this was the only page that said "no
-                      loan". Three pages say it now, and they say it about the
-                      SAME state: there is no application, and the way out of
-                      it is the one button under this sentence. A drawing that
-                      changes between them would claim three situations where
-                      there is one, and an empty state's picture is there to
-                      name a CATEGORY — nothing here yet — not to say which
-                      page you are standing on. The heading, the sentence and
-                      the rail already do that, and do it better than a
-                      picture could.
-
-                      Neutral by default, which is what the old `muted` prop
-                      was for: the one colour on an empty dashboard belongs to
-                      the button. *"ფერი არ მინდა, ნაცრისფერი."* */}
-                  <EmptyScene />
-                  <Typography.Text type="secondary" style={styles.emptyCopy}>
-                    {t("dashboard.emptyBody")}
-                  </Typography.Text>
-                  {/* Filled blue: the one thing to do on an empty page, and the
-                      designer asked for the accent on it — *"cta ლურჯი ფერის
-                      იყოს."* */}
-                  <Button
-                    type="primary"
-                    size="large"
-                    onClick={() => navigate({ to: "/application" })}
-                  >
-                    {t("loanPage.startApplication")}
-                  </Button>
-                </Flex>
+                {/* The shared page-sized empty — one layout, size and spacing
+                    across the dashboard, the loan page and the payments page.
+                    The record drawing is the dashboard's own: there is no
+                    application yet, and the button is the way in. Filled blue —
+                    the one colour on an empty dashboard belongs to the CTA —
+                    *"cta ლურჯი ფერის იყოს."* */}
+                <PageEmpty
+                  illustration={<EmptyScene variant="empty" scale="page" />}
+                  title={t("dashboard.emptyTitle")}
+                  subtitle={t("dashboard.emptyBody")}
+                  action={
+                    <Button
+                      type="primary"
+                      size="large"
+                      onClick={() => navigate({ to: "/application" })}
+                    >
+                      {t("loanPage.startApplication")}
+                    </Button>
+                  }
+                />
               </Card>
             )}
 
-            {/* THE FOUR FACTS, UNDER THE ANSWER.
-                They led the page and they should not: they are four ways in,
-                and a way in is not what a borrower opens this page for. The
-                figure above is. */}
-            {/* ALWAYS THE FOUR. The page keeps its shape whatever state the
-                account is in — a dashboard that grows and shrinks is a
-                dashboard nobody learns. What an empty tile does NOT do is
-                print a dash: it shows its label and waits. */}
-            <div style={styles.band}>
-              <FactTiles items={tiles} emptyValue={t("dashboard.tileNothing")} />
-            </div>
+            {/* THE FOUR FACTS, UNDER THE ANSWER. They were moved above it
+                and moved straight back — *"ამათ ისევ შეუცვალე ადგილები რა"*.
+                Under is right for the same reason the empty-state rule gives:
+                until the loan is funded three of the four have no figure to
+                carry, and a row of placeholders leading the page is a header
+                made of blanks. The band above says where the application has
+                got to, which is true at every stage.
 
-            {/*
-              THE LAST FEW PAYMENTS, AT THE VERY FOOT.
-
-              Under the tiles, not above them. The tiles are four ways OUT of
-              this page and belong with the rest of its navigation; a table is
-              something you read, and reading comes before leaving.
-
-              WBS story 4 — "review payment history" — and the one thing this
-              page could not answer until now: whether the money actually left
-              the account. The balance says what is owed and the schedule says
-              when; neither says that October's payment went through and
-              November's failed.
-
-              FIVE ROWS, NOT TWELVE. The whole record is one click away and
-              this is a dashboard: what a borrower checks here is the last
-              thing that happened, not the year. The head carries the way to
-              the rest.
-
-              Drawn only once the schedule exists — before funding there is
-              nothing to have paid.
-            */}
-            {/* ONLY ONCE THERE IS A LOAN. With rows it is a flush table
-                (padding 0, corners clipped by the card); at funding, before the
-                first payment, it shows a compact "no payments yet". Before
-                there is any loan it is not drawn — an empty payments card on a
-                page that has no application is blank space nobody asked for. */}
-            {payments ? (
-              <Card
-                title={t("dashboard.recentTitle")}
-                /* `overflow: hidden` so the table's own square corners are cut
-                   by the card's radius; only where the body's padding is 0. */
-                style={recent.length > 0 ? styles.tableCard : styles.band}
-                styles={
-                  recent.length > 0
-                    ? { title: cardHeadTitle, body: styles.tableBody }
-                    : { title: cardHeadTitle }
-                }
-                extra={
-                  <Button
-                    type="link"
-                    iconPosition="end"
-                    icon={<ArrowRightOutlined />}
-                    onClick={() => navigate({ to: "/payments" })}
-                  >
-                    {t("dashboard.recentAll")}
-                  </Button>
-                }
-              >
-                <PaymentHistory
-                  transactions={recent}
-                  reader={viewer.role === "coBorrower" ? "coBorrower" : "borrower"}
-                />
-              </Card>
+                Only once there is an application or loan at all. *"ესენი
+                მოაშორე, მერე გამოჩნდეს."* */}
+            {live && record ? (
+              <div style={styles.band}>
+                <FactTiles items={tiles} emptyValue={t("dashboard.tileNothing")} />
+              </div>
             ) : null}
-
 
           </div>
         </div>

@@ -56,7 +56,7 @@ import { Card, Col, Divider, Flex, Grid, Row, Typography, theme } from "antd";
 import { ClockCircleOutlined, MailOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AppHeader } from "../../shared/ui/AppHeader";
-import { SupportMark } from "../../features/LoanApplication/ui/SupportMark";
+import { AssetScene } from "../../shared/ui/scenes/AssetScene";
 import { StatusPill } from "../../shared/ui/StatusPill";
 import { HeroBackdrop } from "../../shared/ui/HeroBackdrop";
 import { borrowerNav } from "../../shared/ui/navigation";
@@ -189,7 +189,9 @@ export default function ContactScreen({ userName, now }: ContactScreenProps) {
                         appears exactly when there is a column shaped to hold
                         it. It is the one thing on this panel that is not
                         information; it gives way to the fact. */}
-                    {screens.lg === false ? null : <SupportMark size={150} />}
+                    {screens.lg === false ? null : (
+                      <AssetScene name="noCallRecord" scale="card" center={false} />
+                    )}
                   </Flex>
 
                   {/* Pinned to the foot of the panel so this rule and the

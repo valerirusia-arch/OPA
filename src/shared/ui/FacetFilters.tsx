@@ -90,7 +90,9 @@ export function FacetFilters<V extends Record<string, string>>({
       {/* Brand colour, not antd's default red: this is a count of choices the
           reader made, not something that has gone wrong. */}
       <Badge count={activeCount} size="small" color={token.colorPrimary}>
-        <Button icon={<FilterOutlined />}>{t("filters.title")}</Button>
+        <Button icon={<FilterOutlined />} style={s.trigger}>
+          {t("filters.title")}
+        </Button>
       </Badge>
     </Popover>
   );
@@ -106,6 +108,8 @@ export function FacetFilterChips<V extends Record<string, string>>({
   onChange,
 }: Omit<FacetFiltersProps<V>, "empty">) {
   const t = useT();
+  const { token } = theme.useToken();
+  const s = getStyles(token);
   const active = facets.filter((facet) => value[facet.key] !== ALL);
 
   if (active.length === 0) return null;
@@ -119,7 +123,7 @@ export function FacetFilterChips<V extends Record<string, string>>({
           <Tag
             key={facet.key}
             variant="filled"
-            style={pill}
+            style={{ ...pill, ...s.chip }}
             closable
             closeIcon
             aria-label={t("filters.remove", { name: text })}

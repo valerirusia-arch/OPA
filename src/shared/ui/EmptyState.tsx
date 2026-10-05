@@ -40,9 +40,18 @@ export type EmptyStateProps = {
   variant?: EmptySceneVariant;
   /** Reserve a height so the surrounding card keeps its size. */
   minHeight?: number;
+  /** "muted" draws the title as a single quiet caption (grey, regular weight)
+   *  for empties that are one soft line rather than a heading + sentence. */
+  tone?: "default" | "muted";
 };
 
-export function EmptyState({ title, description, variant, minHeight }: EmptyStateProps) {
+export function EmptyState({
+  title,
+  description,
+  variant,
+  minHeight,
+  tone = "default",
+}: EmptyStateProps) {
   const { token } = theme.useToken();
   const s = getStyles(token);
 
@@ -55,7 +64,9 @@ export function EmptyState({ title, description, variant, minHeight }: EmptyStat
         imageStyle={styles.image}
         description={
           <>
-            <Typography.Text style={styles.title}>{title}</Typography.Text>
+            <Typography.Text style={tone === "muted" ? styles.titleMuted : styles.title}>
+              {title}
+            </Typography.Text>
             {description ? (
               <Typography.Text style={s.description}>{description}</Typography.Text>
             ) : null}

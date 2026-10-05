@@ -28,10 +28,10 @@ import {
   Typography,
   theme,
 } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { MoreOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
+import { searchIcon } from "../../shared/ui/searchField";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { ConfirmModal } from "../../shared/ui/ConfirmModal";
@@ -39,7 +39,8 @@ import { EmptyState } from "../../shared/ui/EmptyState";
 import { TABLE_EMPTY_MIN_HEIGHT } from "../../shared/ui/EmptyState.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
 import { useStaffViewer, type StaffRole } from "../../shared/ui/viewerRole";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { useT } from "../../shared/ui/i18n/useT";
 import { labelTag } from "../../shared/ui/tag.styles";
 import { StatusPill } from "../../shared/ui/StatusPill";
@@ -231,7 +232,7 @@ export default function StaffUsersScreen({
     ],
   });
 
-  const columns: ColumnsType<UserRow> = [
+  const columns: PriorityColumn<UserRow>[] = [
     {
       title: t("users.col.name"),
       dataIndex: "name",
@@ -239,9 +240,11 @@ export default function StaffUsersScreen({
       // password crowded together on the right. Everything but email is now
       // sized to its content plus an even gap; email keeps the slack.
       width: 220,
+      // The identifier — stays on screen at every width.
+      priority: "high",
       render: (name: string, row) => (
         <Typography.Text
-          style={row.status === "inactive" ? s.inactiveRow : undefined}
+          style={row.status === "inactive" ? s.inactiveRow : s.identifier}
         >
           {name}
         </Typography.Text>
@@ -250,6 +253,10 @@ export default function StaffUsersScreen({
     {
       title: t("users.col.email"),
       dataIndex: "email",
+      // Dimmed in the table to sit quietly beside Name; popped into its own
+      // line it prints in the ordinary dark text, matching SAP's own
+      // pop-in examples (the label is what's muted, not the fact itself).
+      popinText: (row) => row.email,
       render: (email: string) => (
         <Typography.Text style={s.quiet} ellipsis={{ tooltip: email }}>
           {email}
@@ -273,6 +280,9 @@ export default function StaffUsersScreen({
       title: t("users.col.status"),
       dataIndex: "status",
       width: 180,
+      // The key attribute — whether this account can sign in at all. Stays
+      // with Name at every width.
+      priority: "high",
       /*
         THE PRODUCT'S STATUS PILL, and it was an antd Badge.
         
@@ -413,6 +423,9 @@ export default function StaffUsersScreen({
 
   const copy = confirmCopy();
 
+  const [tableRef, tableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const popin = buildPopinTable(columns, tableWidth);
+
   return (
     <AdminShell
       sections={staffNavFor(role)}
@@ -431,8 +444,8 @@ export default function StaffUsersScreen({
             <>
               <Input
                 allowClear
-                prefix={<SearchOutlined />}
-                placeholder={t("users.searchPlaceholder")}
+                prefix={<SearchOutlined style={searchIcon} />}
+                placeholder={t("filters.search")}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 style={styles.search}
@@ -471,17 +484,18 @@ export default function StaffUsersScreen({
           </Card>
         ) : (
           <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
+            {/* Name/role/status/password/actions plus a flexible email column
+                used to mean a horizontal scroll; now Email/Role/Password
+                print inline under Name on a narrow screen, leaving Name and
+                Status (and the row menu, which has no label to pop with). */}
+            <div ref={tableRef}>
             <Table<UserRow>
               rowKey="id"
               // Fixed, so the column widths above are honoured: with the
               // default auto layout a truncated cell lets its column collapse
               // and the neighbours take the room.
               tableLayout="fixed"
-              // Name/role/status/password/actions are fixed at 842px plus a
-              // flexible email column; scroll horizontally on a narrow screen
-              // rather than crushing email to nothing.
-              scroll={{ x: 1060 }}
-              columns={decorateColumns(columns)}
+              columns={popin.columns}
               dataSource={visible}
               locale={{
                 emptyText: (
@@ -500,6 +514,7 @@ export default function StaffUsersScreen({
                 style: page.pagination,
               }}
             />
+            </div>
           </Card>
         )}
       </AdminPage>

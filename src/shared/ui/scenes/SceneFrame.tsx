@@ -29,8 +29,8 @@ const BOX = { w: 200, h: 150 } as const;
  * field — which is the only kind of depth this style allows itself.
  */
 const BLOB =
-  "M44 48C54 26 82 16 110 22C138 28 162 44 164 70C166 96 144 114 114 118" +
-  "C84 122 50 114 42 92C36 76 38 62 44 48Z";
+  "M47 66C45 46 65 33 95 33C127 33 159 39 161 65C163 89 143 105 113 108" +
+  "C83 111 55 105 50 89C46 79 49 76 47 66Z";
 
 /** A thin cross. Three of them, at three sizes, is what keeps a frame from
  *  looking like a cropped icon. */
@@ -82,9 +82,15 @@ export type SceneFrameProps = {
   spark: string;
   /** The subject, drawn between the blob and the ground. */
   children: ReactNode;
+  /**
+   * How large the subject sits inside the frame. 1 fills it; below 1 leaves more
+   * air around it, which is the empty-state set's look — the object small and
+   * calm in its space. Scaled about its feet so it stays on the ground.
+   */
+  subjectScale?: number;
 };
 
-export function SceneFrame({ width, blob, spark, children }: SceneFrameProps) {
+export function SceneFrame({ width, blob, spark, children, subjectScale = 1 }: SceneFrameProps) {
   return (
     <svg
       width={width}
@@ -122,7 +128,15 @@ export function SceneFrame({ width, blob, spark, children }: SceneFrameProps) {
         being a shadow and becomes a second object.
       */}
       <ellipse cx={96} cy={139} rx={50} ry={4} fill={brand.sceneBlob} />
-      {children}
+      {subjectScale === 1 ? (
+        children
+      ) : (
+        /* Shrunk about its feet (≈ the ground line), so the smaller subject
+           still stands on the ground rather than floating above it. */
+        <g transform={`translate(100 122) scale(${subjectScale}) translate(-100 -122)`}>
+          {children}
+        </g>
+      )}
       <Sparkle x={36} y={38} r={5.5} tone={spark} />
       <Sparkle x={170} y={46} r={4} tone={spark} />
       <Sparkle x={30} y={100} r={4.5} tone={spark} />

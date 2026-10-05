@@ -16,14 +16,14 @@
 
 import { useMemo, useState } from "react";
 import { App, Button, Card, Dropdown, Flex, Result, Row, Col, Select, Table, Typography, theme } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
 import { getStyles as getPageStyles } from "../../shared/ui/AdminPage.styles";
 import { staffNavFor } from "../../shared/ui/navigation";
-import { decorateColumns } from "../../shared/ui/tableColumns";
+import { buildPopinTable, useMeasuredWidth } from "../../shared/ui/tableColumns";
+import type { PriorityColumn } from "../../shared/ui/tableColumns";
 import { useStaffViewer } from "../../shared/ui/viewerRole";
 import { useT } from "../../shared/ui/i18n/useT";
 import type { TranslationKey } from "../../shared/ui/i18n/dictionary";
@@ -100,11 +100,19 @@ export default function AcquisitionPerformanceScreen({
   const page = getPageStyles(token);
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
 
-  const perfColumns: ColumnsType<PerfRow> = [
-    { title: t("acq.perf.colChannel"), dataIndex: "channel" },
+  const perfColumns: PriorityColumn<PerfRow>[] = [
+    // The identifier — stays on screen at every width.
+    { title: t("acq.perf.colChannel"), dataIndex: "channel", priority: "high" },
     { title: t("acq.perf.colLoans"), dataIndex: "loans", width: 140, align: "end" },
     { title: t("acq.perf.colReports"), dataIndex: "reports", width: 160, align: "end" },
-    { title: t("acq.perf.colApproval"), dataIndex: "approval", width: 160, align: "end" },
+    // The key attribute — the number this whole analysis is run to see.
+    {
+      title: t("acq.perf.colApproval"),
+      dataIndex: "approval",
+      width: 160,
+      align: "end",
+      priority: "high",
+    },
   ];
 
   // WBS: Analyse (like View and Search) names Admin and Underwriter; OPA Staff
@@ -163,6 +171,9 @@ export default function AcquisitionPerformanceScreen({
     console.log("create acquisition performance report", { dimension, value, report, format });
     message.success(t("acq.perf.created", { name: value ?? "" }));
   };
+
+  const [perfTableRef, perfTableWidth] = useMeasuredWidth<HTMLDivElement>();
+  const perfPopin = buildPopinTable(perfColumns, perfTableWidth);
 
   return (
     <AdminShell
@@ -251,13 +262,15 @@ export default function AcquisitionPerformanceScreen({
               {t("acq.perf.byChannel")}
             </Typography.Title>
             <Card style={page.tableCard} styles={{ body: page.tableCardBody }}>
+              <div ref={perfTableRef}>
               <Table<PerfRow>
                 rowKey="key"
-                scroll={{ x: 640 }}
-                columns={decorateColumns(perfColumns)}
+                tableLayout="fixed"
+                columns={perfPopin.columns}
                 dataSource={perfRows}
                 pagination={false}
               />
+              </div>
             </Card>
           </>
         ) : (
