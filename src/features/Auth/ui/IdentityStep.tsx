@@ -14,7 +14,7 @@
 
 import { Alert, Button, Flex, Result, Spin, Typography, theme } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { JourneyScene } from "../../../shared/ui/scenes/JourneyScene";
+import { GateScene } from "../../../shared/ui/scenes/GateScene";
 import { getStyles, styles } from "./IdentityStep.styles";
 
 export type IdentityStatus = "checking" | "verified" | "mismatch" | "unavailable";
@@ -67,7 +67,7 @@ export function IdentityStep({
   if (status === "verified") {
     return (
       <Result
-        icon={<JourneyScene variant="identity" size={140} />}
+        icon={<GateScene name="identityVerified" />}
         title={t("identity.verifiedTitle")}
         subTitle={
           /* Two blocks, not one wrapping paragraph: the confirmation and what
@@ -108,25 +108,45 @@ export function IdentityStep({
     );
   }
 
+  /* THE ONE REFUSAL IN REGISTRATION, and the only red state the WBS leaves
+     room for. "No account was created" is NOT one: the WBS first wrote that a
+     technical failure before account creation creates nothing, then updated
+     itself — "The account should be created before the Identity verification
+     is passed" — so by the time anything can fail, the account exists. What
+     can fail is the person behind it, which is this.
+
+     It reads as an outcome, like the verified state above and like the gate's
+     own states, rather than as a banner over a form that is no longer there.
+
+     It wears the SAME drawing as the verified state, in red: what succeeded or
+     failed here is one person, and showing the same person either way is what
+     makes the two screens one moment with two endings. */
   if (status === "mismatch") {
     return (
-      <Flex vertical style={styles.wrap}>
-        <Alert
-          type="error"
-          showIcon
-          style={styles.alert}
-          title={t("identity.mismatchTitle")}
-          description={t("identity.mismatchDescription")}
-        />
-        <Flex gap={12} justify="center" style={styles.actions}>
-          <Button type="primary" size="large" onClick={onEditDetails}>
-            {t("identity.reviewDetails")}
-          </Button>
-          <Button size="large" href="mailto:support@opa.example">
-            {t("identity.contactSupport")}
-          </Button>
-        </Flex>
-      </Flex>
+      <Result
+        icon={<GateScene name="identityDeclined" />}
+        title={t("identity.mismatchTitle")}
+        subTitle={
+          <Typography.Text type="secondary" style={styles.line}>
+            {t("identity.mismatchDescription")}
+          </Typography.Text>
+        }
+        styles={{
+          title: s.resultTitle,
+          subTitle: s.resultSubTitle,
+          extra: s.resultExtra,
+        }}
+        extra={
+          <Flex gap={12} justify="center">
+            <Button type="primary" size="large" onClick={onEditDetails}>
+              {t("identity.reviewDetails")}
+            </Button>
+            <Button size="large" href="mailto:support@opa.example">
+              {t("identity.contactSupport")}
+            </Button>
+          </Flex>
+        }
+      />
     );
   }
 

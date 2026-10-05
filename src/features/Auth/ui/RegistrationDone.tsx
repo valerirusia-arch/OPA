@@ -10,7 +10,7 @@
 
 import { Button, Result, Typography, theme } from "antd";
 import { useT } from "../../../shared/ui/i18n/useT";
-import { JourneyScene } from "../../../shared/ui/scenes/JourneyScene";
+import { GateScene } from "../../../shared/ui/scenes/GateScene";
 import { getStyles, styles } from "./RegistrationDone.styles";
 
 export type RegistrationDoneProps = {
@@ -30,7 +30,11 @@ export function RegistrationDone({
 
   return (
     <Result
-      icon={<JourneyScene variant="verified" size={140} />}
+      /* The designer's own drawing: an account card with a person on it, in
+         the green ramp, because this is the good ending of registration. Same
+         file, same pipeline and same size as every gate state — the product
+         has one illustration family, not one per screen. */
+      icon={<GateScene name="accountCreated" />}
       title={t("done.title")}
       subTitle={
         <>

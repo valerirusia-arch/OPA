@@ -1,6 +1,9 @@
 // src/shared/ui/scenes/GateScene.tsx
 //
-// The application gate's illustrations — the designer's own Figma exports.
+// The designer's own Figma exports, rendered. It started on the application
+// gate and the folder is still named for that, but the family now also carries
+// the registration outcomes — one drawing system, one processing pipeline, no
+// second set of machinery.
 // The processing is fixed and the same for every file: strip the white
 // export-card background and the baked pack label, recolour onto one of the
 // four illustration ramps in src/theme/tokens.ts, scale the subject (the
@@ -36,6 +39,9 @@ import person from "../../../assets/gate/person.svg";
 import paused from "../../../assets/gate/paused.svg";
 import personAttention from "../../../assets/gate/personAttention.svg";
 import expired from "../../../assets/gate/expired.svg";
+import accountCreated from "../../../assets/gate/accountCreated.svg";
+import identityVerified from "../../../assets/gate/identityVerified.svg";
+import identityDeclined from "../../../assets/gate/identityDeclined.svg";
 
 export type GateSceneName =
   /** A sheet and a pencil, teal. Nothing has been filled in yet. */
@@ -57,7 +63,13 @@ export type GateSceneName =
   /** The same two figures, amber. The person is what did not work out. */
   | "personAttention"
   /** An opened envelope, amber. An invitation that is over. */
-  | "expired";
+  | "expired"
+  /** An account card with a person on it, green. The account now exists. */
+  | "accountCreated"
+  /** A person with a tick, green. LexisNexis matched them. */
+  | "identityVerified"
+  /** The same person, red. The details did not match any record. */
+  | "identityDeclined";
 
 const ASSETS: Record<GateSceneName, string> = {
   start,
@@ -70,6 +82,9 @@ const ASSETS: Record<GateSceneName, string> = {
   paused,
   personAttention,
   expired,
+  accountCreated,
+  identityVerified,
+  identityDeclined,
 };
 
 /** The cropped viewBox the exports share: width 171, height 119. */
