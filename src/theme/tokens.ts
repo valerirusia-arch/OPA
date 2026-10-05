@@ -595,6 +595,15 @@ export const brand = {
   cardDarkQuiet: "rgba(255, 255, 255, 0.68)",
   cardLightEdge: "rgba(38, 36, 35, 0.08)",
 
+  /**
+   * THE CARD'S STATUS PILL — the sleeve finish's live overlay, drawn over the
+   * baked card so the status can change (Not used / In use). A solid light
+   * blue-grey ground with white ink, the designer's own choice:
+   * *"CBD8DE ... ბექგრაუნდს ეს ფერი მიეცი და ტექსტი თეთრი."*
+   */
+  cardPillBg: "#CBD8DE",
+  cardPillInk: "#FFFFFF",
+
   /** A payment card's face — the same warm/teal washes on a pale ground. */
   cardFace: [
     "radial-gradient(90% 150% at 6% 4%, rgba(30,124,151,0.34) 0%, rgba(30,124,151,0) 62%)",

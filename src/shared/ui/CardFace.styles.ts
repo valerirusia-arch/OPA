@@ -4,6 +4,9 @@ import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 import type { CardSkin } from "./cardSkin";
 import { brand } from "../../theme/tokens";
+import cardSvg from "../../assets/card/card.svg";
+import cardTealSvg from "../../assets/card/card-teal.svg";
+import cardSlateSvg from "../../assets/card/card-slate.svg";
 
 export const styles = {
   /** The two-column foot: holder left, expiry right. */
@@ -11,6 +14,74 @@ export const styles = {
   /** The card's name and the line under it, spaced by a fraction of the card
    *  so the block holds together at any width. */
   plateBlock: { gap: "1.4cqw" },
+} satisfies Record<string, CSSProperties>;
+
+/**
+ * THE SLEEVE FINISH — the designer's OWN exported card (src/assets/card/*.svg),
+ * drawn as a background image with ONE thing composed over it: the status pill.
+ *
+ * The gradient, the flame, "OPA", the holder and the thumb-notch are all in the
+ * file. The status was too, baked as one word — but the WBS card has two states
+ * (Not used / In use), so the pill is stripped from the file and drawn as a
+ * LIVE overlay here, reading `useCardStatus`. Nothing else is composed; no frame
+ * and no shadow. The files are cropped to the card's own bounds, so the image
+ * carries no empty space beside it.
+ *
+ * Quoted url() like AssetScene/GateScene: a file under Vite's 4KB inline limit
+ * arrives as a data: URI whose own url(…) parentheses break an unquoted
+ * declaration. These are ~39KB (they carry the flame PNG), so they are served
+ * as files — the quotes are for safety, not necessity.
+ */
+const cardBg: CSSProperties = {
+  position: "absolute",
+  inset: 0,
+  backgroundSize: "contain",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center",
+};
+
+export const sleeveStyles = {
+  /** The card is the background; the pill overlays it, so the face is a
+   *  positioning context AND a query container — the pill sizes in `cqw`, like
+   *  everything on this card, and a fixed aspect ratio maps cqw to the SVG's
+   *  own units in both axes. */
+  container: {
+    position: "relative",
+    width: "100%",
+    aspectRatio: "372 / 244",
+    containerType: "inline-size",
+  },
+  /** Card · original — the lockup in the three teals the designer drew. */
+  face: { ...cardBg, backgroundImage: `url("${cardSvg}")` },
+  /** Card · 008AA2 — the same card, ONE and AMERICA in a single teal. */
+  faceTeal: { ...cardBg, backgroundImage: `url("${cardTealSvg}")` },
+  /** Card · 53858E — the same again, in the quieter slate. */
+  faceSlate: { ...cardBg, backgroundImage: `url("${cardSlateSvg}")` },
+  /**
+   * THE LIVE STATUS PILL, where the baked one sat: bottom-right, 24 units
+   * (6.45cqw) in from the right edge and the foot, 25 units (6.72cqw) tall.
+   * Auto width, growing left from the right edge, so "Not used" and "In use"
+   * each fit. Solid pill ground, white ink — the designer's choice.
+   */
+  pill: {
+    position: "absolute",
+    right: "6.45cqw",
+    bottom: "6.45cqw",
+    height: "6.72cqw",
+    paddingInline: "3.49cqw",
+    borderRadius: 999,
+    background: brand.cardPillBg,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  pillText: {
+    fontSize: "3.4cqw",
+    lineHeight: 1,
+    fontWeight: 500,
+    color: brand.cardPillInk,
+    whiteSpace: "nowrap",
+  },
 } satisfies Record<string, CSSProperties>;
 
 /**

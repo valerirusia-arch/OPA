@@ -22,6 +22,7 @@ import {
 } from "@ant-design/icons";
 import { flattenRoutes, groupByFlow, resolvePath } from "./flatten";
 import { StageDock } from "./StageDock";
+import { CardStatusDock } from "./CardStatusDock";
 import {
   setViewerRole,
   useViewerRole,
@@ -116,6 +117,10 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
    */
   const cardSkin = useCardSkin();
   const showCardSkin = pathname.startsWith("/loan") || pathname.startsWith("/payments");
+  /* The card-status switch only makes sense where the sleeve card is drawn:
+     the loan page, on one of its two gradient finishes. */
+  const showCardStatus =
+    pathname.startsWith("/loan") && cardSkin !== "deep";
   const [hidden, setHidden] = useState(false);
 
   const all = useMemo(() => flattenRoutes(), []);
@@ -151,11 +156,14 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
   /* The dock stays when the bar is hidden: hiding the bar is for LOOKING at
      the design, and this is how you get to the state you want to look at. */
   const dock = isBorrowerView ? <StageDock pathname={pathname} /> : null;
+  /* The card-status preview rides alongside the stage dock, bottom left. */
+  const cardStatusDock = showCardStatus ? <CardStatusDock /> : null;
 
   if (hidden) {
     return (
       <>
         {dock}
+        {cardStatusDock}
         <Button
           size="small"
           icon={<ThunderboltOutlined />}
@@ -210,10 +218,11 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
 
             <Tag style={styles.pathTag}>{pathname}</Tag>
 
-            {/* Two candidate finishes for the card face, so the choice is
-                made by looking at the card rather than at two hex values. */}
+            {/* Three card finishes — the same card, the lockup in three teals
+                or in one of two single colours, so the choice is made by
+                looking at the card. */}
             {showCardSkin && (
-              <Tooltip title="Card face: the deep blue, or the designer's pale #90D5FF with dark ink.">
+              <Tooltip title="Your card's lockup, to compare: a single #008AA2, a single #53858E, or the original three teals. Only the letters of ONE and AMERICA change; the rest of the lockup stays white in all three.">
                 <Segmented<CardSkin>
                   size="small"
                   value={cardSkin}
@@ -254,6 +263,7 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
       {/* Spacer so the bar never covers the app's own header. */}
       <div style={spacer} />
       {dock}
+      {cardStatusDock}
     </>
   );
 }

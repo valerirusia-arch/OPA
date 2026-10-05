@@ -62,8 +62,10 @@ import { pill } from "./tag.styles";
 import { getFigureStyles } from "./figures.styles";
 import { CardBrandMark } from "./CardBrandMark";
 import { Logo } from "./Logo";
-import { getMarkStyles, getStyles, styles } from "./CardFace.styles";
+import { getMarkStyles, getStyles, sleeveStyles, styles } from "./CardFace.styles";
 import { useCardSkin } from "./cardSkin";
+import { CARD_STATUS_LABEL_KEYS, useCardStatus } from "./cardStatus";
+import { useT } from "./i18n/useT";
 
 export type CardFaceProps = {
   /**
@@ -161,11 +163,26 @@ export function CardFace({
      rather than wearing antd's chip. */
   const inverted = true;
   const { token } = theme.useToken();
-  /* Which finish, while the designer is choosing between two. See
+  /* Which finish, while the designer is choosing between three. See
      cardSkin.ts — the switch lives on the DevBar. */
   const skin = useCardSkin();
-  const s = getStyles(token, skin);
-  const marks = getMarkStyles(skin);
+
+  /* THE SLEEVE FINISH is a front-of-card drawing only — the lockup, the
+     holder and one status word, over a notched silhouette. A notched edge
+     cannot be a bordered box, so it is its own SVG (see SleeveFront). Anywhere
+     a number must show — the revealed card in the modal — sleeve falls back to
+     the deep finish below, which has a place for one. */
+  if (front || nameplate) {
+    if (skin === "sleeve" || skin === "sleeveTeal" || skin === "sleeveSlate") {
+      return <SleeveFront skin={skin} />;
+    }
+  }
+
+  /* The only drawn finish left is the deep card; a card-image finish that
+     reaches here (a number face, not the front) falls back to it. */
+  const faceSkin = "deep" as const;
+  const s = getStyles(token, faceSkin);
+  const marks = getMarkStyles(faceSkin);
   const figures = getFigureStyles(token);
 
   /* OPA'S OWN FRONT. It returns early rather than threading `front` through
@@ -279,6 +296,42 @@ export function CardFace({
         ) : null}
       </Flex>
     </Flex>
+  );
+}
+
+/* ── The sleeve finish ──────────────────────────────────────────────────────
+   The designer's OWN exported card, moved in whole (src/assets/card/card.svg):
+   the gradient, the flame, "OPA", the holder, the status pill and the
+   thumb-notch are all in the file. Nothing is drawn, composed or added here —
+   no frame, no shadow (*"მთლიანად, არანაირი ზედმეტი ჩრდილი"*). The export was
+   cropped to the card's own bounds so it carries no empty space beside it
+   (*"არ მისცე უხილავი სფეისი"*); the box just gives it the card's aspect ratio.
+
+   The holder and the status are part of the export, so they are static here;
+   Dev swaps the file for a live face when this finish is chosen, the same way
+   it replaces any black-box panel. */
+function SleeveFront({ skin }: { skin: "sleeve" | "sleeveTeal" | "sleeveSlate" }) {
+  /* One file per finish, so the switch is a lookup rather than a chain of
+     ternaries that has to grow every time a colour is added. */
+  const FACE = {
+    sleeve: sleeveStyles.face,
+    sleeveTeal: sleeveStyles.faceTeal,
+    sleeveSlate: sleeveStyles.faceSlate,
+  } as const;
+  /* The one live thing on the baked card: the status, where its pill was
+     stripped from the file. Not used before it is spent, In use after — the
+     card's two WBS states, driven by the floating preview switch. */
+  const status = useCardStatus();
+  const t = useT();
+  return (
+    <div style={sleeveStyles.container} role="img" aria-label="OPA card">
+      <div style={FACE[skin]} />
+      <div style={sleeveStyles.pill}>
+        <Typography.Text style={sleeveStyles.pillText}>
+          {t(CARD_STATUS_LABEL_KEYS[status])}
+        </Typography.Text>
+      </div>
+    </div>
   );
 }
 
