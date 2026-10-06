@@ -220,7 +220,6 @@ export default function AcquisitionSourcesScreen({
     >
       <AdminPage
         title={t("acq.source.title")}
-        subtitle={t("acq.source.lead")}
         extra={
           canManage ? (
             <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreating(true)}>

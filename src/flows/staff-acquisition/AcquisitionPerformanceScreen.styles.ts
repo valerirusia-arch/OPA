@@ -12,8 +12,15 @@ export const styles = {
    *  row instead of sitting at a fixed width with empty space beside them. */
   field: { width: "100%" },
   fieldLabel: { display: "block", marginBottom: 6 },
-  /** The action sits at the foot of its column, level with the selects above. */
-  actionCol: { display: "flex", alignItems: "flex-end" },
+  /** The action rides the same row as the selects and drops to the foot of its
+   *  column, so its button bottom-aligns with the select inputs rather than
+   *  floating in a block of empty space below them. Full width of its column,
+   *  so it reads as the row's one primary action. */
+  actionCol: { display: "flex", flexDirection: "column", justifyContent: "flex-end" },
+  /** The approval-rate cell: a fixed-width track so every bar is measured
+   *  against the same length, with the figure held to the right of it. */
+  approvalBar: { width: 72 },
+  approvalValue: { fontVariantNumeric: "tabular-nums", width: 44, textAlign: "end" },
   /** The results band's air above and below — between the filters and the
    *  by-channel table. */
   results: { marginTop: 24, marginBottom: 24 },

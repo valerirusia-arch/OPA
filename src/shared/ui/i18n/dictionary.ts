@@ -49,7 +49,7 @@ export const en = {
   "login.tabBorrowerShort": "Borrower",
   "login.tabStaff": "OPA staff",
   "login.rememberMe": "Remember me",
-  "login.forgotPassword": "Forgot Password?",
+  "login.forgotPassword": "Forgot password?",
   "login.submit": "Sign in",
   "login.noAccount": "Don't have an account?",
   "login.createAccount": "Create an account",
@@ -333,7 +333,7 @@ export const en = {
   "dashboard.stageRepaying": "Repaying",
   "dashboard.stageRepayingBody": "{amount} is taken on {due}, and on the 1st of each month after.",
   "dashboard.stageSettled": "Repaid in full",
-  "dashboard.stageSettledBody": "Every instalment on the schedule is paid. The loan is closed.",
+  "dashboard.stageSettledBody": "Every installment on the schedule is paid. The loan is closed.",
   "dashboard.stageOpenPayments": "Open payments",
   /* To /loan, where an application under review has its status, its
      documents and its decision. It used to read "Open the application" and
@@ -369,7 +369,7 @@ export const en = {
      honestly at every stage. No owner pill: the rail has nothing left to
      report. */
   "dashboard.applicationDone": "Repayment started",
-  /* PAID OFF — the one moment "complete" is literally true: every instalment
+  /* PAID OFF — the one moment "complete" is literally true: every installment
      paid, outstanding balance $0.00. This is the whole application-and-loan
      journey finished, so it is named for the journey, not the last phase:
      "Application completed", the frame this whole component reads in
@@ -454,7 +454,7 @@ export const en = {
   "dashboard.stepPaymentBody": "Taken from the card ending {card}.",
   "dashboard.stepLateFee": "A late fee is charged",
   "dashboard.stepLateFeeBody":
-    "On the 16th day after a due date: $5.00 or 5% of the missed instalment, whichever is less. One fee per missed payment.",
+    "On the 16th day after a due date: $5.00 or 5% of the missed installment, whichever is less. One fee per missed payment.",
   "dashboard.stepAcceleration": "The loan is accelerated",
   "dashboard.stepAccelerationBody":
     "Unless the past due balance of {amount} is paid within 30 days, the whole remaining balance falls due.",
@@ -462,7 +462,7 @@ export const en = {
   "dashboard.stepAcceleratedBody":
     "{amount}, interest and fees included, within 30 days of the notice of default.",
   "dashboard.stepFinal": "Final payment",
-  "dashboard.stepFinalBody": "The last instalment on the schedule. The loan closes with it.",
+  "dashboard.stepFinalBody": "The last installment on the schedule. The loan closes with it.",
 
   "notify.inbox": "Inbox",
   "notify.markAllRead": "Mark all as read",
@@ -551,7 +551,7 @@ export const en = {
   "validation.cardLuhn": "Check the card number. One of the digits is wrong",
   "validation.cardCvv": "CVV must be {count} digits",
   "validation.email": "Enter a valid email address",
-  "validation.phone": "Invalid phone number format",
+  "validation.phone": "Enter a valid phone number",
   "validation.ssn": "SSN must be 9 digits",
   "validation.zip": "ZIP code must be 5 digits",
   "validation.dobFuture": "Date of birth cannot be in the future",
@@ -719,7 +719,7 @@ export const en = {
   /* On a co-borrower's OWN file: the applications they co-sign. The only thing
      there that says they are one. WBS caps it at three. */
   "coBorrower.sponsoring": "Co-signs for",
-  "coBorrower.sponsoringCap": "A co-borrower may co-sign for up to 3 borrowers.",
+  "coBorrower.sponsoringCap": "A co-borrower may co-sign for up to three borrowers.",
   "coBorrower.emptyTitle": "No co-borrower",
   "coBorrower.emptyDescription": "This application has no co-borrower.",
   "loan.emptyTitle": "No loan yet",
@@ -937,7 +937,7 @@ export const en = {
   "coBorrowerStep.acceptedOn": "Accepted {date}",
   "coBorrowerStep.expiredOn": "Expired {date}",
   "coBorrowerStep.sponsorLimit": "One person can co-sign for up to three borrowers.",
-  // WBS assumption: "Co-borrowers can sponsor up to 3 borrowers." Stating the
+  // WBS assumption: "Co-borrowers can sponsor up to three borrowers." Stating the
   // rule was not enough — the invitation has to be refusable when it is hit.
   "coBorrowerStep.limitReached":
     "{name} is already a co-borrower on three applications, which is the limit. Invite somebody else.",
@@ -1539,7 +1539,6 @@ export const en = {
   "acq.activated": "{name} activated",
   "acq.deactivated": "{name} deactivated",
   "acq.source.title": "Acquisition sources",
-  "acq.source.lead": "Where your applications come from. Each source has a tracking code and can belong to a referral partner.",
   "acq.source.new": "New source",
   "acq.source.newTitle": "New acquisition source",
   "acq.source.editTitle": "Edit acquisition source",
@@ -1564,7 +1563,6 @@ export const en = {
   "acq.partner.noun": "partner",
   "acq.group.noun": "partner group",
   "acq.partners.title": "Referral partners",
-  "acq.partners.lead": "The referral partners who bring in borrowers, and the groups you organize them into.",
   "acq.partners.tabPartners": "Referral partners",
   "acq.partners.tabGroups": "Partner groups",
   "acq.partner.new": "New partner",
@@ -1579,7 +1577,6 @@ export const en = {
   "acq.group.code": "Code",
   "acq.campaign.noun": "campaign",
   "acq.campaign.title": "Marketing campaigns",
-  "acq.campaign.lead": "Marketing campaigns and the period each one runs. Every campaign ties back to an acquisition source.",
   "acq.campaign.new": "New campaign",
   "acq.campaign.newTitle": "New marketing campaign",
   "acq.campaign.editTitle": "Edit marketing campaign",
@@ -1597,7 +1594,6 @@ export const en = {
   "acq.campaign.empty": "No campaigns yet",
   "acq.campaign.emptyHint": "Create one to track a marketing push.",
   "acq.perf.title": "Lending performance",
-  "acq.perf.lead": "Create a credit or consumer-credit report scoped to one acquisition channel.",
   "acq.perf.analyzeBy": "Analyze by",
   "acq.perf.dimCampaign": "Campaign",
   "acq.perf.dimGroup": "Partner group",
@@ -1783,7 +1779,7 @@ export const en = {
   "doc.eConsent": "Electronic communications consent",
   "doc.privacyNotice": "Privacy notice",
   "doc.creditScoreDisclosure": "Credit score disclosure",
-  "doc.coBorrowerAcknowledgement": "Co-borrower acknowledgement",
+  "doc.coBorrowerAcknowledgement": "Co-borrower acknowledgment",
   "doc.caPrivacy": "California consumer privacy notice",
   "doc.nyDisclosure": "New York borrower disclosure",
   "doc.txDisclosure": "Texas consumer disclosure",
@@ -1846,6 +1842,10 @@ export const en = {
      თაითლი."* */
   "dashboard.standingTitle": "Where your loan stands",
   "payments.makePayment": "Make a payment",
+  /* A single-word version of the action, for a card head where "Make a
+     payment" beside the title pushes the title's own subject onto a second
+     line. One word leaves the card's name the whole first line. */
+  "payments.pay": "Pay",
   "payments.nothingDue": "Nothing left to pay",
   "payments.feesApplied": "Fees applied",
   "payments.payoffToday": "Pay off today",
@@ -1884,11 +1884,11 @@ export const en = {
      ჩაატიო."* */
   "payments.pastDueInline": "{amount} past due",
   /* THE PERCENTAGE, AND NOTHING ELSE. It read "{percent}% repaid · {paid} of
-     {total} instalments", which put three facts under a bar that draws one —
-     and the instalment count is the Payments tile's own sentence. A bar needs
+     {total} installments", which put three facts under a bar that draws one —
+     and the installment count is the Payments tile's own sentence. A bar needs
      its number, not a caption. */
   "payments.progressLine": "{percent}%",
-  /* Under the row of instalment capsules. Counts, not a percentage: nobody
+  /* Under the row of installment capsules. Counts, not a percentage: nobody
      repays 25% of anything, they repay twelve payments.
 
      IT SAYS BOTH NUMBERS. "9 to go" was tried and the designer sent it back
@@ -1932,7 +1932,7 @@ export const en = {
   "payments.noteInsufficient": "There were not enough funds in the account.",
   "payments.notePending": "Repay is still processing this payment.",
   "payments.noteRefunded": "This payment was refunded and the balance has been adjusted.",
-  "payments.noteReversed": "The bank reversed this payment, so it no longer counts towards the balance.",
+  "payments.noteReversed": "The bank reversed this payment, so it no longer counts toward the balance.",
 
   // WBS stories 7 and 8.
   "payments.cardPrivacy": "Cards are private to whoever added them.",
@@ -2402,7 +2402,7 @@ const es: Record<TranslationKey, string> = {
   "validation.cardLuhn": "Revisa el número de la tarjeta: algún dígito es incorrecto",
   "validation.cardCvv": "El CVV debe tener {count} dígitos",
   "validation.email": "Ingresa un correo electrónico válido",
-  "validation.phone": "Formato de teléfono no válido",
+  "validation.phone": "Ingresa un número de teléfono válido",
   "validation.ssn": "SSN no válido: debe tener 9 dígitos",
   "validation.zip": "El código postal debe tener 5 dígitos",
   "validation.dobFuture": "La fecha de nacimiento no puede estar en el futuro",
@@ -2543,7 +2543,7 @@ const es: Record<TranslationKey, string> = {
     "Este prestatario no ha iniciado una solicitud de préstamo.",
   "coBorrower.openRecord": "Abrir su ficha de prestatario",
   "coBorrower.sponsoring": "Avala a",
-  "coBorrower.sponsoringCap": "Un coprestatario puede avalar hasta 3 prestatarios.",
+  "coBorrower.sponsoringCap": "Un coprestatario puede avalar hasta tres prestatarios.",
   "coBorrower.emptyTitle": "Sin coprestatario",
   "coBorrower.emptyDescription": "Esta solicitud no tiene coprestatario.",
   "loan.emptyTitle": "Todavía no hay préstamo",
@@ -3082,7 +3082,6 @@ const es: Record<TranslationKey, string> = {
   "acq.activated": "{name} activada",
   "acq.deactivated": "{name} desactivada",
   "acq.source.title": "Fuentes de captación",
-  "acq.source.lead": "De dónde vienen tus solicitudes. Cada fuente tiene un código de seguimiento y puede pertenecer a un socio de referencia.",
   "acq.source.new": "Nueva fuente",
   "acq.source.newTitle": "Nueva fuente de captación",
   "acq.source.editTitle": "Editar fuente de captación",
@@ -3107,7 +3106,6 @@ const es: Record<TranslationKey, string> = {
   "acq.partner.noun": "socio",
   "acq.group.noun": "grupo de socios",
   "acq.partners.title": "Socios de referencia",
-  "acq.partners.lead": "Los socios de referencia que traen prestatarios y los grupos en los que los organizas.",
   "acq.partners.tabPartners": "Socios de referencia",
   "acq.partners.tabGroups": "Grupos de socios",
   "acq.partner.new": "Nuevo socio",
@@ -3122,7 +3120,6 @@ const es: Record<TranslationKey, string> = {
   "acq.group.code": "Código",
   "acq.campaign.noun": "campaña",
   "acq.campaign.title": "Campañas de marketing",
-  "acq.campaign.lead": "Campañas de marketing y el período en que se ejecuta cada una. Cada campaña se vincula a una fuente de captación.",
   "acq.campaign.new": "Nueva campaña",
   "acq.campaign.newTitle": "Nueva campaña de marketing",
   "acq.campaign.editTitle": "Editar campaña de marketing",
@@ -3136,7 +3133,6 @@ const es: Record<TranslationKey, string> = {
   "acq.campaign.empty": "Aún no hay campañas",
   "acq.campaign.emptyHint": "Crea una para hacer seguimiento de una acción de marketing.",
   "acq.perf.title": "Rendimiento de préstamos",
-  "acq.perf.lead": "Crea un informe de crédito o de crédito al consumidor acotado a un canal de captación.",
   "acq.perf.analyzeBy": "Analizar por",
   "acq.perf.dimCampaign": "Campaña",
   "acq.perf.dimGroup": "Grupo de socios",
@@ -3343,6 +3339,7 @@ const es: Record<TranslationKey, string> = {
   "payments.owedTitle": "Lo que debes",
   "dashboard.standingTitle": "Cómo va tu préstamo",
   "payments.makePayment": "Hacer un pago",
+  "payments.pay": "Pagar",
   "payments.nothingDue": "No queda nada por pagar",
   "payments.feesApplied": "Recargos",
   "payments.payoffToday": "Liquidar hoy",

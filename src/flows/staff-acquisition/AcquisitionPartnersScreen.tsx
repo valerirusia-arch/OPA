@@ -319,7 +319,6 @@ export default function AcquisitionPartnersScreen({
     >
       <AdminPage
         title={t("acq.partners.title")}
-        subtitle={t("acq.partners.lead")}
         extra={
           canManage ? (
             <Button

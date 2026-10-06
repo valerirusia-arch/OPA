@@ -15,8 +15,9 @@
 // Dumb: local selection, simulated export.
 
 import { useMemo, useState } from "react";
-import { App, Button, Card, Dropdown, Flex, Result, Row, Col, Select, Table, Typography, theme } from "antd";
+import { App, Button, Card, Dropdown, Flex, Progress, Result, Row, Col, Select, Table, Typography, theme } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
+import { brand } from "../../theme/tokens";
 import { useNavigate } from "@tanstack/react-router";
 import { AdminShell } from "../../shared/ui/AdminShell";
 import { AdminPage } from "../../shared/ui/AdminPage";
@@ -105,13 +106,33 @@ export default function AcquisitionPerformanceScreen({
     { title: t("acq.perf.colChannel"), dataIndex: "channel", priority: "high" },
     { title: t("acq.perf.colLoans"), dataIndex: "loans", width: 140, align: "end" },
     { title: t("acq.perf.colReports"), dataIndex: "reports", width: 160, align: "end" },
-    // The key attribute — the number this whole analysis is run to see.
+    // The key attribute — the number this whole analysis is run to see. A short
+    // track behind the figure so the channels can be compared at a glance, not
+    // read one percentage at a time; one calm brand teal, no invented
+    // good/bad bands, so the bar shows magnitude and nothing it does not know.
     {
       title: t("acq.perf.colApproval"),
       dataIndex: "approval",
-      width: 160,
+      width: 184,
       align: "end",
       priority: "high",
+      render: (approval: string) => {
+        const pct = Math.max(0, Math.min(100, parseInt(approval, 10) || 0));
+        return (
+          <Flex align="center" justify="flex-end" gap={10}>
+            <div style={styles.approvalBar}>
+              <Progress
+                percent={pct}
+                showInfo={false}
+                size="small"
+                strokeColor={brand.sceneTealLine}
+                trailColor={token.colorFillSecondary}
+              />
+            </div>
+            <Typography.Text style={styles.approvalValue}>{approval}</Typography.Text>
+          </Flex>
+        );
+      },
     },
   ];
 
@@ -188,13 +209,17 @@ export default function AcquisitionPerformanceScreen({
     >
       <AdminPage
         title={t("acq.perf.title")}
-        subtitle={canView ? t("acq.perf.lead") : undefined}
       >
         {canView ? (
           <>
+            {/* THE REPORT'S SCOPE, AS ONE ROW. The three selects and the button
+                that runs them share a line and bottom-align, so the action sits
+                where the eye finishes reading the filters instead of across a
+                block of empty space below them. The button wraps under the
+                selects, full width, on a narrow screen. */}
             <Card>
-              <Row gutter={16} style={styles.controls}>
-                <Col xs={24} md={8} style={styles.field}>
+              <Row gutter={16} align="bottom" style={styles.controls}>
+                <Col xs={24} md={8} lg={6}>
                   <Typography.Text style={styles.fieldLabel}>{t("acq.perf.analyzeBy")}</Typography.Text>
                   <Select<Dimension>
                     size="large"
@@ -208,7 +233,7 @@ export default function AcquisitionPerformanceScreen({
                   />
                 </Col>
 
-                <Col xs={24} md={8} style={styles.field}>
+                <Col xs={24} md={8} lg={7}>
                   <Typography.Text style={styles.fieldLabel}>{t(DIMENSION_LABEL[dimension])}</Typography.Text>
                   <Select
                     size="large"
@@ -221,7 +246,7 @@ export default function AcquisitionPerformanceScreen({
                   />
                 </Col>
 
-                <Col xs={24} md={8} style={styles.field}>
+                <Col xs={24} md={8} lg={6}>
                   <Typography.Text style={styles.fieldLabel}>{t("acq.perf.reportType")}</Typography.Text>
                   <Select<ReportKind>
                     size="large"
@@ -231,26 +256,26 @@ export default function AcquisitionPerformanceScreen({
                     options={reportOptions}
                   />
                 </Col>
-              </Row>
 
-              <Flex justify="flex-end" style={{ marginTop: 24 }}>
-                <Dropdown
-                  trigger={["click"]}
-                  placement="bottomRight"
-                  disabled={!value}
-                  menu={{
-                    items: [
-                      { key: "xlsx", label: t("queue.exportXlsx") },
-                      { key: "csv", label: t("queue.exportCsv") },
-                    ],
-                    onClick: ({ key }) => run(key as "xlsx" | "csv"),
-                  }}
-                >
-                  <Button type="primary" size="large" icon={<DownloadOutlined />} disabled={!value}>
-                    {t("acq.perf.create")}
-                  </Button>
-                </Dropdown>
-              </Flex>
+                <Col xs={24} md={24} lg={5} style={styles.actionCol}>
+                  <Dropdown
+                    trigger={["click"]}
+                    placement="bottomRight"
+                    disabled={!value}
+                    menu={{
+                      items: [
+                        { key: "xlsx", label: t("queue.exportXlsx") },
+                        { key: "csv", label: t("queue.exportCsv") },
+                      ],
+                      onClick: ({ key }) => run(key as "xlsx" | "csv"),
+                    }}
+                  >
+                    <Button type="primary" size="large" icon={<DownloadOutlined />} disabled={!value} block>
+                      {t("acq.perf.create")}
+                    </Button>
+                  </Dropdown>
+                </Col>
+              </Row>
             </Card>
 
             {/* THE ANALYSIS, from the wireframe: totals then a row per channel.

@@ -37,7 +37,7 @@
 //
 // Dumb: reads the same records every other screen reads, and navigates.
 
-import { Button, Card, Flex, Typography } from "antd";
+import { Button, Card, Flex, Grid, Typography } from "antd";
 import {
   ArrowRightOutlined,
   BankOutlined,
@@ -84,6 +84,15 @@ export default function DashboardScreen({
   const t = useT();
   const { idle, reset: staySignedIn } = useIdleTimer(idleMs);
   const unreadCount = useUnreadCount(viewer.role);
+
+  /* The head action is a full sentence where there is room and one word where
+     there is not: "Make a payment" beside this card's long title crowds the
+     title onto a second line on a phone, so below the tablet breakpoint it
+     shortens to the verb alone. Same `Grid.useBreakpoint` the payments card's
+     head action reads; `md` rather than `sm` because this title ("Where your
+     loan stands") is longer than that one's and needs the room sooner. */
+  const screens = Grid.useBreakpoint();
+  const payActionLabel = screens.md ? t("payments.makePayment") : t("payments.pay");
 
   const record = useLoanRecord();
   const payments = usePaymentsRecord();
@@ -225,7 +234,7 @@ export default function DashboardScreen({
                       style={styles.headAction}
                       onClick={() => navigate({ to: "/payments" })}
                     >
-                      {t("payments.makePayment")} <ArrowRightOutlined />
+                      {payActionLabel} <ArrowRightOutlined />
                     </Button>
                   ) : undefined
                 }
