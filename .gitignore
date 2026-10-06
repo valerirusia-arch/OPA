@@ -38,3 +38,10 @@ storybook-static
 .mcp.json
 .agents/
 .claude/skills/higgsfield-*
+
+# Remotion: the video toolkit's skill bundle, installed with
+# `npx skills add remotion-dev/skills`. Same call as Higgsfield above — the
+# symlinks point into the ignored .agents/ tree, so committing them would
+# leave dangling links in a fresh clone. skills-lock.json carries the record
+# needed to reinstall it.
+.claude/skills/remotion-*
