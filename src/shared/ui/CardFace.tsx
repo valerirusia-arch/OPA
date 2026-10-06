@@ -173,7 +173,7 @@ export function CardFace({
      a number must show — the revealed card in the modal — sleeve falls back to
      the deep finish below, which has a place for one. */
   if (front || nameplate) {
-    if (skin === "sleeve" || skin === "sleeveTeal" || skin === "sleeveSlate") {
+    if (skin === "sleeve" || skin === "sleeveSlate") {
       return <SleeveFront skin={skin} />;
     }
   }
@@ -310,12 +310,11 @@ export function CardFace({
    The holder and the status are part of the export, so they are static here;
    Dev swaps the file for a live face when this finish is chosen, the same way
    it replaces any black-box panel. */
-function SleeveFront({ skin }: { skin: "sleeve" | "sleeveTeal" | "sleeveSlate" }) {
+function SleeveFront({ skin }: { skin: "sleeve" | "sleeveSlate" }) {
   /* One file per finish, so the switch is a lookup rather than a chain of
      ternaries that has to grow every time a colour is added. */
   const FACE = {
     sleeve: sleeveStyles.face,
-    sleeveTeal: sleeveStyles.faceTeal,
     sleeveSlate: sleeveStyles.faceSlate,
   } as const;
   /* The one live thing on the baked card: the status, where its pill was

@@ -5,7 +5,6 @@ import type { GlobalToken } from "antd";
 import type { CardSkin } from "./cardSkin";
 import { brand } from "../../theme/tokens";
 import cardSvg from "../../assets/card/card.svg";
-import cardTealSvg from "../../assets/card/card-teal.svg";
 import cardSlateSvg from "../../assets/card/card-slate.svg";
 
 export const styles = {
@@ -53,8 +52,6 @@ export const sleeveStyles = {
   },
   /** Card · original — the lockup in the three teals the designer drew. */
   face: { ...cardBg, backgroundImage: `url("${cardSvg}")` },
-  /** Card · 008AA2 — the same card, ONE and AMERICA in a single teal. */
-  faceTeal: { ...cardBg, backgroundImage: `url("${cardTealSvg}")` },
   /** Card · 53858E — the same again, in the quieter slate. */
   faceSlate: { ...cardBg, backgroundImage: `url("${cardSlateSvg}")` },
   /**
