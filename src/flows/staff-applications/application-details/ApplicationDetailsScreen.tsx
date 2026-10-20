@@ -38,6 +38,7 @@ import { App, Alert, Button, Card, Col, Divider, Flex, Result, Row, Segmented, T
 import { ArrowRightOutlined, FileTextOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { AdminShell } from "../../../shared/ui/AdminShell";
+import { useDevChrome } from "../../_devbar/devChrome";
 import { AdminPage } from "../../../shared/ui/AdminPage";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { staffNavFor } from "../../../shared/ui/navigation";
@@ -133,6 +134,9 @@ export default function ApplicationDetailsScreen({
    * page is arranged.
    */
   const [layout, setLayout] = useState<"panel" | "split">("panel");
+  /* The switch is dev chrome, so it goes with the rest of it on SHIFT+D.
+     The CHOICE stays: hiding the control must not rearrange the page. */
+  const devChrome = useDevChrome();
   /* The split layout's "Request information", as a dialog off the header button
      rather than a standing panel. */
   const [reqInfoOpen, setReqInfoOpen] = useState(false);
@@ -776,20 +780,22 @@ export default function ApplicationDetailsScreen({
           Pinned bottom-right, the same idea as the borrower side's demo dock,
           so the designer can flip between the two arrangements to show a team
           lead. *"ფლოატედ ბათონად, ლეიაუთის ნაწილი არ უნდა იყოს."* */}
-      <Flex align="center" gap={6} style={s.layoutSwitch}>
-        <Typography.Text type="secondary" style={s.layoutSwitchLabel}>
-          {t("appDetail.layout")}
-        </Typography.Text>
-        <Segmented
-          size="small"
-          value={layout}
-          onChange={(value) => setLayout(value as "panel" | "split")}
-          options={[
-            { label: t("appDetail.layoutPanel"), value: "panel" },
-            { label: t("appDetail.layoutSplit"), value: "split" },
-          ]}
-        />
-      </Flex>
+      {devChrome && (
+        <Flex align="center" gap={6} style={s.layoutSwitch}>
+          <Typography.Text type="secondary" style={s.layoutSwitchLabel}>
+            {t("appDetail.layout")}
+          </Typography.Text>
+          <Segmented
+            size="small"
+            value={layout}
+            onChange={(value) => setLayout(value as "panel" | "split")}
+            options={[
+              { label: t("appDetail.layoutPanel"), value: "panel" },
+              { label: t("appDetail.layoutSplit"), value: "split" },
+            ]}
+          />
+        </Flex>
+      )}
 
       {layout === "panel" ? (
         /* PANEL — the product's current arrangement: the evidence in a wide

@@ -8,9 +8,6 @@
 import type { CSSProperties } from "react";
 import type { GlobalToken } from "antd";
 
-export const hiddenToggle: CSSProperties = {
-  position: "fixed", top: 8, left: 8, zIndex: 9999,
-};
 export const barInner: CSSProperties = { height: "100%" };
 export const tagFlush: CSSProperties = { margin: 0 };
 export const selectStyle: CSSProperties = { width: 340 };

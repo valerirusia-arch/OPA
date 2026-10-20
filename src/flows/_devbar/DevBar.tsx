@@ -13,12 +13,12 @@
 // It reads src/flows/routes.tsx (plain data — no loaders/guards) and builds a
 // jump-to-any-screen switcher. Nothing here fetches, stores, or guards.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Button, Flex, Segmented, Select, Space, Tag, Tooltip, theme } from "antd";
 import {
   AppstoreOutlined, BgColorsOutlined, BookOutlined, EyeInvisibleOutlined,
-  MailOutlined, NodeIndexOutlined, ThunderboltOutlined,
+  MailOutlined, NodeIndexOutlined,
 } from "@ant-design/icons";
 import { flattenRoutes, groupByFlow, resolvePath } from "./flatten";
 import { StageDock } from "./StageDock";
@@ -37,8 +37,9 @@ import {
   type CardSkin,
 } from "../../shared/ui/cardSkin";
 import {
-  getStyles, hiddenToggle, barInner, tagFlush, selectStyle, spacer,
+  getStyles, barInner, tagFlush, selectStyle, spacer,
 } from "./DevBar.styles";
+import { setDevChrome, toggleDevChrome, useDevChrome } from "./devChrome";
 
 // Where Storybook runs locally (see the `dev` script in package.json).
 const STORYBOOK_URL = "http://localhost:6006";
@@ -88,6 +89,25 @@ type Props = {
   onToggleTheme?: () => void;
 };
 
+/**
+ * Is the focus somewhere a capital D is a capital D?
+ *
+ * Only TEXT entry counts. antd's Segmented and Radio park focus on a hidden
+ * `input[type=radio]`, so a blanket "any INPUT" guard swallowed the shortcut
+ * for the rest of the session after one press on the role switch — which
+ * looks exactly like the shortcut being broken.
+ */
+const TYPED_INTO = new Set(["TEXTAREA", "SELECT"]);
+const NOT_TEXT_INPUT = new Set([
+  "radio", "checkbox", "button", "submit", "reset", "range", "color", "file",
+]);
+
+const isTyping = (el: Element | null): boolean => {
+  if (!(el instanceof HTMLElement)) return false;
+  if (el.isContentEditable || TYPED_INTO.has(el.tagName)) return true;
+  return el instanceof HTMLInputElement && !NOT_TEXT_INPUT.has(el.type);
+};
+
 /** Dev gate only. No hooks in here — that's the whole point of the split. */
 export function DevBar(props: Props) {
   if (!import.meta.env.DEV) return null;
@@ -121,7 +141,29 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
      the loan page, on one of its two gradient finishes. */
   const showCardStatus =
     pathname.startsWith("/loan") && cardSkin !== "deep";
-  const [hidden, setHidden] = useState(false);
+  /* Shared, not local: the stage dock, the card dock and the staff page's
+     layout switch hide with the bar. See devChrome.ts. */
+  const shown = useDevChrome();
+
+  /**
+   * SHIFT+D shows and hides the whole dev toolbar.
+   *
+   * With everything hidden there is no button left to press, so the way back
+   * has to be a key. Shift+D and not a bare letter because a bare one would
+   * fire while someone types into the prototype's own forms; the guard below
+   * covers the rest (a capital D typed into a field is still a capital D).
+   */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key !== "D" && e.key !== "d") return;
+      if (isTyping(document.activeElement)) return;
+      e.preventDefault();
+      toggleDevChrome();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const all = useMemo(() => flattenRoutes(), []);
 
@@ -159,22 +201,10 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
   /* The card-status preview rides alongside the stage dock, bottom left. */
   const cardStatusDock = showCardStatus ? <CardStatusDock /> : null;
 
-  if (hidden) {
-    return (
-      <>
-        {dock}
-        {cardStatusDock}
-        <Button
-          size="small"
-          icon={<ThunderboltOutlined />}
-          onClick={() => setHidden(false)}
-          style={hiddenToggle}
-        >
-          Dev
-        </Button>
-      </>
-    );
-  }
+  /* Hidden means HIDDEN: bar, both docks, the staff page's layout switch, and
+     the toggle itself — nothing of the tool left in the frame. SHIFT+D is the
+     way back; see the effect above and devChrome.ts. */
+  if (!shown) return null;
 
   return (
     <>
@@ -254,8 +284,8 @@ function DevBarPanel({ isDark, onToggleTheme }: Props) {
                 <Button size="small" icon={<BgColorsOutlined />} onClick={onToggleTheme} />
               </Tooltip>
             )}
-            <Tooltip title="Hide bar">
-              <Button size="small" icon={<EyeInvisibleOutlined />} onClick={() => setHidden(true)} />
+            <Tooltip title="Hide every dev control — bar, docks, layout switch. Shift+D brings it all back.">
+              <Button size="small" icon={<EyeInvisibleOutlined />} onClick={() => setDevChrome(false)} />
             </Tooltip>
           </Space>
         </Flex>
