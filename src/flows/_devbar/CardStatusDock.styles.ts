@@ -9,7 +9,10 @@ export const styles = {
   readout: { width: 96 },
 } satisfies Record<string, CSSProperties>;
 
-export const getStyles = (token: GlobalToken) =>
+/** Height of the stage dock plus a gap — what the card dock clears on a phone. */
+const STAGE_DOCK_CLEARANCE = 72;
+
+export const getStyles = (token: GlobalToken, compact = false) =>
   ({
     /**
      * Floating, bottom LEFT — the stage dock owns bottom right, and these are
@@ -20,7 +23,9 @@ export const getStyles = (token: GlobalToken) =>
     dock: {
       position: "fixed",
       left: 16,
-      bottom: 16,
+      /* Side by side the two docks collide below ~576px, so here this one
+         drops ABOVE the stage dock instead of overlapping it. */
+      bottom: compact ? 16 + STAGE_DOCK_CLEARANCE : 16,
       zIndex: 9999,
       padding: "8px 12px",
       borderRadius: 999,

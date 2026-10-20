@@ -11,6 +11,7 @@ export const en = {
   "common.back": "Back",
   "common.continue": "Continue",
   "common.cancel": "Cancel",
+  "common.close": "Close",
   "common.done": "Done",
   "common.backToSignIn": "Back to sign in",
 
@@ -1989,6 +1990,7 @@ const es: Record<TranslationKey, string> = {
   "common.back": "Atrás",
   "common.continue": "Continuar",
   "common.cancel": "Cancelar",
+  "common.close": "Cerrar",
   "common.done": "Listo",
   "common.backToSignIn": "Volver al inicio de sesión",
 

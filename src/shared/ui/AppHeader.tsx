@@ -32,6 +32,7 @@ import {
 import { InitialsAvatar } from "./InitialsAvatar";
 import { Link } from "@tanstack/react-router";
 import { LanguageSwitcher, type Language } from "./LanguageSwitcher";
+import { Logo } from "./Logo";
 import { LogoLockup } from "./LogoLockup";
 import { useT } from "./i18n/useT";
 import type { NavItem } from "./navigation";
@@ -118,8 +119,13 @@ export function AppHeader({
         />
       ) : null}
 
+      {/* On a phone the full "ONE percent for AMERICA" lockup plus the burger
+          and the account cluster overran 375px — the bar's contents spilled
+          past the window and took the page into a sideways scroll. The brand's
+          flame mark says the same thing in a quarter of the width, so the
+          narrow bar uses it and the wide bar keeps the lockup. */}
       <Link to="/" aria-label={t("header.home")}>
-        <LogoLockup />
+        {compact ? <Logo height={32} /> : <LogoLockup />}
       </Link>
 
       {compact ? (

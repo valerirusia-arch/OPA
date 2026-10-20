@@ -33,7 +33,7 @@
 // Dumb: it renders what it is handed and reports that it was opened.
 
 import { useState } from "react";
-import { Button, Flex, Modal, Typography, theme } from "antd";
+import { Button, Flex, Typography, theme } from "antd";
 import {
   CheckOutlined,
   CopyOutlined,
@@ -42,6 +42,7 @@ import {
   LockOutlined,
 } from "@ant-design/icons";
 import { CardFace } from "../../../shared/ui/CardFace";
+import { ResponsiveModal } from "../../../shared/ui/ResponsiveModal";
 import { Logo } from "../../../shared/ui/Logo";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { getStyles, styles } from "./VirtualCardModal.styles";
@@ -202,7 +203,12 @@ export function VirtualCardModal({
        under its picture, because that is what a reader is here to confirm; a
        bar across the top saying "Your OPA card" over a card said it first and
        said it smaller. */
-    <Modal
+    /* On a phone this opens as a bottom sheet instead — the card details are
+       read and typed into a form on the same device, so the dialog belongs
+       under the thumb, full width, rising from the foot of the screen rather
+       than floating in the middle. ResponsiveModal keeps the centred dialog on
+       desktop. */
+    <ResponsiveModal
       open={open}
       onCancel={onCancel}
       destroyOnHidden
@@ -266,7 +272,7 @@ export function VirtualCardModal({
           {t("loanPage.cardIssuerNote")}
         </Typography.Text>
       </Flex>
-    </Modal>
+    </ResponsiveModal>
   );
 }
 

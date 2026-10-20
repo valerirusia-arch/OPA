@@ -20,7 +20,7 @@
 // Borrower and co-borrower only. The back office reads its own lists and none
 // of these stages would change them.
 
-import { Button, Flex, Tag, Tooltip, Typography, theme } from "antd";
+import { Button, Flex, Grid, Tag, Tooltip, Typography, theme } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useCustomerViewer } from "../../shared/ui/viewerRole";
 import { setStage, stageLabel, stagesForPath, useBorrowerStage } from "../loan/loanRecord";
@@ -33,7 +33,8 @@ export type StageDockProps = {
 
 export function StageDock({ pathname }: StageDockProps) {
   const { token } = theme.useToken();
-  const s = getStyles(token);
+  const compact = !Grid.useBreakpoint().sm;
+  const s = getStyles(token, compact);
   const stage = useBorrowerStage();
   /* The walk depends on WHO is looking as much as on where they are: a
      co-borrower has no "no application" state to step through. */
@@ -69,7 +70,7 @@ export function StageDock({ pathname }: StageDockProps) {
         {/* The label is the point of the control, so it gets the room: a
             fixed width, so pressing through the journey does not make the
             dock jump about under the cursor. */}
-        <Flex vertical style={styles.readout}>
+        <Flex vertical style={compact ? styles.readoutCompact : styles.readout}>
           {/* Off-list: the prototype is in a stage this page does not draw
               differently — say so rather than counting it as zero. */}
           <Typography.Text style={s.counter}>

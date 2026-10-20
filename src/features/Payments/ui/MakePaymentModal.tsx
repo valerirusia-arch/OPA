@@ -32,7 +32,8 @@
 //
 // Dumb: the result arrives as a prop. Nothing here charges anything.
 
-import { Alert, Button, Flex, Form, InputNumber, Modal, Radio, Result, Select, Tabs, Typography, theme } from "antd";
+import { Alert, Button, Flex, Form, InputNumber, Radio, Result, Select, Tabs, Typography, theme } from "antd";
+import { ResponsiveModal } from "../../../shared/ui/ResponsiveModal";
 import { useT } from "../../../shared/ui/i18n/useT";
 import { useAuthRules } from "../../Auth/ui/validation";
 import { formatAmount, toAmount } from "./money";
@@ -181,20 +182,38 @@ export function MakePaymentModal({
   );
 
   return (
-    <Modal
+    /* A phone opens this as a bottom sheet: the Pay button lands at the foot of
+       the screen, under the thumb, where a long dialog's primary action should
+       be. ResponsiveModal keeps the centred dialog on desktop. */
+    <ResponsiveModal
       open={open}
       title={attempt ? undefined : t("payments.payTitle")}
       onCancel={onClose}
       destroyOnHidden
       width={560}
-      okText={t("payments.payAmount", { amount })}
-      cancelText={t("common.cancel")}
-      okButtonProps={{ disabled: blocked, loading: submitting, size: "large" }}
-      cancelButtonProps={{ size: "large" }}
-      onOk={() => form.submit()}
-      /* The result is its own screen: the form's buttons would offer to pay a
-         second time for something that has already gone through. */
-      footer={attempt ? null : undefined}
+      /* The footer is written out rather than left to Modal's okText/onOk,
+         because the bottom sheet has no built-in OK/Cancel bar — one node
+         renders on both surfaces. The result is its own screen, so it has no
+         footer: the form's buttons would offer to pay a second time for
+         something that has already gone through. */
+      footer={
+        attempt ? null : (
+          <Flex gap={12} justify="flex-end">
+            <Button size="large" onClick={onClose}>
+              {t("common.cancel")}
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              disabled={blocked}
+              loading={submitting}
+              onClick={() => form.submit()}
+            >
+              {t("payments.payAmount", { amount })}
+            </Button>
+          </Flex>
+        )
+      }
     >
       {attempt ? (
         <Result
@@ -350,7 +369,7 @@ export function MakePaymentModal({
           {note}
         </Form>
       )}
-    </Modal>
+    </ResponsiveModal>
   );
 }
 

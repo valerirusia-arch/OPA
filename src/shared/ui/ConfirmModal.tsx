@@ -9,7 +9,8 @@
 // Dumb: it decides nothing. The caller says what it asks and what happens.
 
 import type { ReactNode } from "react";
-import { Button, Flex, Modal, Typography } from "antd";
+import { Button, Flex, Typography } from "antd";
+import { ResponsiveModal } from "./ResponsiveModal";
 import { useT } from "./i18n/useT";
 import { styles } from "./ConfirmModal.styles";
 
@@ -37,7 +38,7 @@ export function ConfirmModal({
   const t = useT();
 
   return (
-    <Modal open={open} onCancel={onCancel} footer={null} destroyOnHidden width={440}>
+    <ResponsiveModal open={open} onCancel={onCancel} footer={null} destroyOnHidden width={440}>
       <Typography.Title level={4} style={styles.title}>
         {title}
       </Typography.Title>
@@ -51,7 +52,7 @@ export function ConfirmModal({
           {confirmLabel}
         </Button>
       </Flex>
-    </Modal>
+    </ResponsiveModal>
   );
 }
 

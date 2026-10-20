@@ -45,10 +45,10 @@ export const styles = {
    *  small now that nothing but the mark and the state is printed on it. */
   /* A step up from 160 — *"სულ ოდნავ შეგიძლია აქ ეს ბარათი გაზარდო."* */
   face: { width: 190, maxWidth: "100%" },
-  /** Air above the card. The reference opens with a clear band before its
-   *  first object — measured at ~104 from the modal's top, of which the body
-   *  inset is 36. */
-  head: { marginTop: 16 },
+  /** Air above the card. On the phone sheet the grab-handle header already
+   *  gives the card a band above it, so this is small — the generous original
+   *  band left the card floating low under a tall void. */
+  head: { marginTop: 4 },
   /** The card's own name, centred under it. */
   title: { marginTop: 18, marginBottom: 0, textAlign: "center" },
   /** The padlock and the sentence. `flex-start` in case the sentence wraps —
@@ -77,7 +77,7 @@ export const getStyles = (token: GlobalToken) =>
      * the only one between here and a drawn box.
      */
     list: {
-      marginTop: 36,
+      marginTop: 20,
       border: `1px solid ${token.colorBorderSecondary}`,
       borderRadius: 16,
       overflow: "hidden",

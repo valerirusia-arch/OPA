@@ -91,7 +91,14 @@ export function PaymentSchedule({
           {
             title: t("payments.borrower"),
             key: "borrower",
-            width: "26%",
+            /* Widths are PIXELS, not percentages, on purpose: the pop-in fit
+               calculation (tableColumns.tsx) measures real column widths, and a
+               "%" string reads to it as the 160px default — so every column
+               looked the same width and Status was kept on a phone where it
+               had no room, clipping its pill instead of popping. With
+               `tableLayout="fixed"` a wide table still spreads these
+               proportionally, so the desktop layout is unchanged. */
+            width: 200,
             // The identifier — stays on screen at every width.
             priority: "high" as const,
             render: (_v: unknown, row: Installment) => (
@@ -104,7 +111,7 @@ export function PaymentSchedule({
             /* "#" in the wireframe: the position in the schedule, nothing more. */
             title: t("payments.number"),
             key: "number",
-            width: "7%",
+            width: 56,
             priority: "high" as const,
             render: (_v: unknown, row: Installment) => (
               <Typography.Text type="secondary">{row.number}</Typography.Text>
@@ -121,7 +128,7 @@ export function PaymentSchedule({
      * cell sits under its own label. `scroll.x` below is a MINIMUM: under it
      * the table scrolls in its card rather than crushing the dates.
      */
-    { title: t("payments.dueDate"), key: "due", width: "24%", render: (_v, row) => row.due },
+    { title: t("payments.dueDate"), key: "due", width: 160, render: (_v, row) => row.due },
     {
       /*
        * Right-aligned, and that is not a preference.
@@ -137,7 +144,7 @@ export function PaymentSchedule({
        */
       title: t("loanPage.payment"),
       key: "amount",
-      width: "16%",
+      width: 112,
       align: "end",
       render: (_v, row) => (
         <Typography.Text
@@ -151,17 +158,19 @@ export function PaymentSchedule({
     {
       title: t("loanPage.status"),
       key: "status",
+      /* Wide enough for the longest pill ("Scheduled", "Accelerated") plus its
+         dot and padding, so it never clips while it is still in the table. */
+      width: 150,
       /*
-       * A couple of points wider than before: Status now has to keep
-       * standing on its own, next to Pay now, in the narrowest layouts
-       * where Due date and Amount have already popped below — see the note
-       * on the actions column's `priority`. At 20% "Scheduled" marginally
-       * overflowed its own cell at exactly that width.
+       * MEDIUM, so it drops into the pop-in BEFORE the Pay now action — the
+       * order the designer asked for: *"ჯერ სტატუსი უნდა ჩამოიდროპოს და მერე
+       * ფეი ნავ, ფეი ნავ ბოლოს იდროპება."* It used to be `high`, level with
+       * Pay now, which (being further right) popped first and left Status
+       * standing in a cell too narrow to hold its pill — the clip the phone
+       * showed. On a phone it now folds into the card as a labelled line
+       * above the action.
        */
-      width: "23%",
-      // The key attribute — whether this installment is paid, due, or
-      // overdue. Stays on screen at every width.
-      priority: "high",
+      priority: "medium",
       render: (_v, row) => <InstallmentStatusTag status={row.status} />,
     },
     ...(hasFees
@@ -169,7 +178,7 @@ export function PaymentSchedule({
           {
             title: t("payments.feesApplied"),
             key: "fee",
-            width: "15%",
+            width: 104,
             align: "end" as const,
             // Rare — most schedules have no fee at all. Pops first.
             priority: "low" as const,
@@ -198,7 +207,7 @@ export function PaymentSchedule({
              * Due/Amount leave behind, so this can't be as tight as the
              * eventual rendered link is.
              */
-            width: "18%",
+            width: 120,
             align: "end" as const,
             /*
              * Pops like any other column rather than surviving every pop —
@@ -241,7 +250,23 @@ export function PaymentSchedule({
     decides which lines get one.
   */
 
-  const popin = buildPopinTable(columns, tableWidth);
+  /*
+   * BELOW A PHONE WIDTH, FOLD THE WHOLE ROW INTO ONE STACKED CARD.
+   *
+   * Between tablet and desktop the progressive pop-in is right: it drops the
+   * lowest-priority column only when it has to. But on a phone that same
+   * "keep what fits" leaves a cramped two-column row — the identifier and
+   * whatever still squeezes in beside it (the action pinned top-right, the
+   * rest stacked below), which reads as two half-rows rather than one record.
+   *
+   * So under 560px the table is handed a width of 1, which pops every column
+   * but the identifier: each row becomes a single vertical card — #, then Due
+   * date, Amount, Status, Fees and finally Pay now, in that order — the layout
+   * the designer asked for: *"ჯერ სტატუსი უნდა ჩამოიდროპოს და მერე ფეი ნავ, ფეი
+   * ნავ ბოლოს იდროპება."*
+   */
+  const STACK_BELOW = 560;
+  const popin = buildPopinTable(columns, tableWidth < STACK_BELOW ? 1 : tableWidth);
 
   return (
     <div ref={tableRef}>

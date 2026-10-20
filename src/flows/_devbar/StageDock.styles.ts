@@ -13,9 +13,12 @@ export const styles = {
    * between presses — which is exactly the gesture this control exists for.
    */
   readout: { width: 168 },
+  /** Narrow screens: the readout takes whatever room the pill has instead of
+   *  a fixed 168, so the dock stays inside the viewport. */
+  readoutCompact: { flex: 1, minWidth: 0 },
 } satisfies Record<string, CSSProperties>;
 
-export const getStyles = (token: GlobalToken) =>
+export const getStyles = (token: GlobalToken, compact = false) =>
   ({
     /**
      * Floating, bottom right, over everything.
@@ -29,6 +32,9 @@ export const getStyles = (token: GlobalToken) =>
       position: "fixed",
       right: 16,
       bottom: 16,
+      /* On a phone it spans the width between the gutters, so it can never
+         run off the right edge. */
+      ...(compact ? { left: 16 } : null),
       zIndex: 9999,
       padding: "8px 12px",
       borderRadius: 999,

@@ -12,7 +12,7 @@
 // only where the sleeve card is on screen — the loan page, with a sleeve
 // skin — see DevBar.
 
-import { Button, Flex, Tag, Tooltip, Typography, theme } from "antd";
+import { Button, Flex, Grid, Tag, Tooltip, Typography, theme } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import {
   CARD_STATUSES,
@@ -25,7 +25,8 @@ import { getStyles, styles } from "./CardStatusDock.styles";
 
 export function CardStatusDock() {
   const { token } = theme.useToken();
-  const s = getStyles(token);
+  const compact = !Grid.useBreakpoint().sm;
+  const s = getStyles(token, compact);
   const t = useT();
   const status = useCardStatus();
 
